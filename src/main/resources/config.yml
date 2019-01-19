@@ -1,0 +1,52 @@
+greenhouses:
+   # World Name where Greenhouses will operate
+   worldName:
+     - world
+     - creative
+     - ASkyBlock
+     - AcidIsland
+
+   # Console message level.
+   # List the levels of debug or messages you want.
+   # 0 = no messages except for warnings or severe errors
+   # 1 = normal messages (default)
+   # 2 and higher - debug levels - no need to use these unless you want to try debug
+   debug:
+   - 1
+
+   ### Permissions limits
+   # Set the maximum number of greenhouses a player can build
+   # using greenhouses.limit.<number>
+   # This is the default max. -1 is unlimited
+   maxgreenhouses: -1
+   # To have extra greenhouses deleted upon login set the following to true
+   deleteextras: false
+
+   ### Weather and ecosystem settings
+
+   # How often it should snow in the g/h when the weather is raining, in seconds
+   snowspeed: 30
+   # Chance of any snow falling in a greenhouse when the snow tick occurs
+   # (1.0 = always, 0.0 = never)
+   snowchance: 1
+   # How many blocks should get snow 1 = all of them, 0 = none, 0.1 = 1 in 10
+   snowdensity: 0.1
+
+   # Biome activity
+   # How often should greenhouse biomes be checked to make sure they are still valid
+   ecotick: 5
+   # How often should plants potentially grow in minutes if bonemeal is in the hopper
+   planttick: 1
+   # How often should blocks potentially convert, in minutes 
+   # Example: dirt-> sand in desert greenhouse
+   blocktick: 2
+   # How often should mobs be potentially spawned in a greenhouse, in minutes
+   mobtick: 5
+
+
+   ### Default settings for greenhouse actions 
+   # Allow lava or water to flow out of a greenhouse, e.g. through the door, floor
+   allowflowout: false
+   # Allow lava or water to flow into a greenhouse, e.g., through the door
+   allowflowin: false
+   
