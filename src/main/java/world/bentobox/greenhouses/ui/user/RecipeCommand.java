@@ -5,13 +5,8 @@ package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
-import world.bentobox.greenhouses.ui.Locale;
-import world.bentobox.greenhouses.util.Util;
 
 /**
  * @author tastybento
@@ -43,7 +38,7 @@ public class RecipeCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-
+        /*
         // Second arg
         int recipeNumber = 0;
         try {
@@ -88,7 +83,7 @@ public class RecipeCommand extends CompositeCommand {
             }
         } else {
             player.sendMessage(ChatColor.YELLOW + Locale.recipenootherblocks);
-        }
+        }*/
         return true;
     }
 

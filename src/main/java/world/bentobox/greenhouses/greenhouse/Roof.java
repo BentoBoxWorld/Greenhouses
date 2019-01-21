@@ -2,6 +2,7 @@ package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,27 +10,33 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-import world.bentobox.greenhouses.Greenhouses;
-
 /**
  * Contains the parameters of a greenhouse roof
  * @author tastybento
  *
  */
 public class Roof {
+    private final Location location;
     private int minX;
     private int maxX;
     private int minZ;
     private int maxZ;
     private int height;
     private boolean roofFound;
-    private final static List<String> ROOFBLOCKS = Arrays.asList("GLASS","STAINED_GLASS","HOPPER","TRAP_DOOR","IRON_TRAPDOOR","GLOWSTONE");
-
+    public final static List<Material> ROOFBLOCKS = Arrays.stream(Material.values())
+            .filter(Material::isBlock) // Blocks only, no items
+            .filter(m -> !m.name().contains("DOOR")) // No doors
+            .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
+                    || m.name().contains("GLASS") // All glass blocks
+                    || m.equals(Material.HOPPER) // Hoppers
+                    || m.equals(Material.GLOWSTONE)) // Glowstone
+            .collect(Collectors.toList());
     /**
      * Finds a roof from a starting location under the roof and characterizes it
      * @param loc
      */
-    public Roof(Greenhouses plugin, Location loc) {
+    public Roof(Location loc) {
+        this.location = loc;
         World world = loc.getWorld();
         // This section tries to find a roof block
         // Try just going up - this covers every case except if the player is standing under a hole
@@ -43,18 +50,18 @@ public class Roof {
         for (int radius = 0; radius < 100; radius++) {
             for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius; x++) {
                 for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius; z++) {
-                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius) 
+                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius)
                             && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
                         //player.sendBlockChange(new Location(world,x,roofY,z), Material.GLASS, (byte)(radius % 14));
                         Block b = world.getBlockAt(x,roofY,z);
-                        plugin.logger(3,"Checking column " + x + " " + z );					
+                        //plugin.logger(3,"Checking column " + x + " " + z );
                         if (!Walls.isWallBlock(b.getType())) {
                             // Look up
                             for (int y = roofY; y < world.getMaxHeight(); y++) {
-                                if (ROOFBLOCKS.contains(world.getBlockAt(x,y,z).getType().name())) {
+                                if (ROOFBLOCKS.contains(world.getBlockAt(x,y,z).getType())) {
                                     roofFound = true;
                                     loc = new Location(world,x,y,z);
-                                    plugin.logger(3,"Roof block found at " + x + " " + y + " " + z + " of type " + loc.getBlock().getType().toString());
+                                    //plugin.logger(3,"Roof block found at " + x + " " + y + " " + z + " of type " + loc.getBlock().getType().toString());
                                     break;
                                 }
                             }
@@ -87,10 +94,10 @@ public class Roof {
         int maxz = maxZ;
         // Now we have some idea of the mins and maxes, check each block and see if it goes further
         do {
-            plugin.logger(3, "Roof minx=" + minx);
-            plugin.logger(3, "Roof maxx=" + maxx);
-            plugin.logger(3, "Roof minz=" + minz);
-            plugin.logger(3, "Roof maxz=" + maxz);
+            //plugin.logger(3, "Roof minx=" + minx);
+            //plugin.logger(3, "Roof maxx=" + maxx);
+            //plugin.logger(3, "Roof minz=" + minz);
+            //plugin.logger(3, "Roof maxz=" + maxz);
             minx = minX;
             maxx = maxX;
             minz = minZ;
@@ -118,7 +125,7 @@ public class Roof {
         Location maxz = height.clone();
         Location minz = height.clone();
         int limit = 0;
-        while (ROOFBLOCKS.contains(maxx.getBlock().getType().name()) && limit < 100) {
+        while (ROOFBLOCKS.contains(maxx.getBlock().getType()) && limit < 100) {
             limit++;
             maxx.add(new Vector(1,0,0));
         }
@@ -126,7 +133,7 @@ public class Roof {
             maxX = maxx.getBlockX()-1;
         }
 
-        while (ROOFBLOCKS.contains(minx.getBlock().getType().name()) && limit < 200) {
+        while (ROOFBLOCKS.contains(minx.getBlock().getType()) && limit < 200) {
             limit++;
             minx.subtract(new Vector(1,0,0));
         }
@@ -134,15 +141,15 @@ public class Roof {
             minX = minx.getBlockX() + 1;
         }
 
-        while (ROOFBLOCKS.contains(maxz.getBlock().getType().name()) && limit < 300) {
+        while (ROOFBLOCKS.contains(maxz.getBlock().getType()) && limit < 300) {
             limit++;
             maxz.add(new Vector(0,0,1));
-        } 
+        }
         if (maxz.getBlockZ() - 1 > maxZ) {
             maxZ = maxz.getBlockZ() - 1;
         }
 
-        while (ROOFBLOCKS.contains(minz.getBlock().getType().name()) && limit < 400) {
+        while (ROOFBLOCKS.contains(minz.getBlock().getType()) && limit < 400) {
             limit++;
             minz.subtract(new Vector(0,0,1));
         }
@@ -221,14 +228,19 @@ public class Roof {
     }
 
     /**
-     * Check if roof block
-     * @param blockType
-     * @return true if this is a roof block
+     * @return the location
      */
-    public boolean isRoofBlock(Material blockType) {
-        if (ROOFBLOCKS.contains(blockType.name())) {
-            return true;
-        }
-        return false;
+    public Location getLocation() {
+        return location;
+    }
+
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Roof [location=" + location + ", minX=" + minX + ", maxX=" + maxX + ", minZ=" + minZ + ", maxZ=" + maxZ
+                + ", height=" + height + ", roofFound=" + roofFound + "]";
     }
 }

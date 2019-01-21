@@ -1,5 +1,5 @@
-name: WelcomeWarps
-main: world.bentobox.warps.Warp
+name: Greenhouses
+main: world.bentobox.greenhouses.Greenhouses
 version: ${version}
 
 authors: tastybento
@@ -7,16 +7,6 @@ authors: tastybento
 softdepend: AcidIsland, BSkyBlock
 
 permissions:
-  bskyblock.island.warp:
-    description: Player can use warp or warps commands
+  greenhouses.make:
+    description: Player can make a greenhouse
     default: true
-  bskyblock.island.addwarp:
-    description: Player can create a welcome warp sign
-    default: true
-  acidisland.island.warp:
-    description: Player can use warp or warps commands
-    default: true
-  acidisland.island.addwarp:
-    description: Player can create a welcome warp sign
-    default: true
-

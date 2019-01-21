@@ -5,26 +5,24 @@ package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.greenhouses.greenhouse.Greenhouse;
-import world.bentobox.greenhouses.ui.Locale;
+import world.bentobox.greenhouses.Greenhouses;
 
 /**
  * @author tastybento
  *
  */
-public class GhCommand extends CompositeCommand {
+public class UserCommand extends CompositeCommand {
 
     /**
+     * @param gh
      * @param parent
      * @param label
      * @param aliases
      */
-    public GhCommand(CompositeCommand parent) {
-        super(parent, "greenhouse", "gh");
+    public UserCommand(Greenhouses gh, CompositeCommand parent) {
+        super(gh, parent, "greenhouse", "gh");
     }
 
     /* (non-Javadoc)
@@ -37,11 +35,11 @@ public class GhCommand extends CompositeCommand {
         this.setParametersHelp("greenhouses.command.parameters");
         this.setDescription("greenhouses.command.description");
 
-        new InfoCommand(this);
-        new ListCommand(this);
+        //new InfoCommand(this);
+        //new ListCommand(this);
         new MakeCommand(this);
-        new RecipeCommand(this);
-        new RemoveCommand(this);
+        //new RecipeCommand(this);
+        //new RemoveCommand(this);
     }
 
     /* (non-Javadoc)
@@ -49,14 +47,8 @@ public class GhCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        final Greenhouse greenhouseInNow = players.getInGreenhouse(player);
-        if (greenhouseInNow==null || greenhouseInNow.getOwner().equals(playerUUID)) {
-            player.openInventory(plugin.getRecipeInv(player));
-            return true;
-        } else {
-            player.sendMessage(ChatColor.RED + Locale.errornotowner);
-            return true;
-        }
+        this.showHelp(this, user);
+        return true;
     }
 
 }

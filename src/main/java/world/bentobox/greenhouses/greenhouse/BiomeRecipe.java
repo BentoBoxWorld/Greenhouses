@@ -2,27 +2,27 @@ package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
-import world.bentobox.greenhouses.ui.Locale;
+import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
-public class BiomeRecipe {
+public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private Greenhouses plugin;
     private Biome type;
     private Material icon; // Biome icon for control panel
@@ -53,16 +53,17 @@ public class BiomeRecipe {
 
     private String permission = "";
     private Random random = new Random();
+    private Map<Material, Integer> missingBlocks;
 
     /**
      * @param type
      * @param priority
      */
-    public BiomeRecipe(Greenhouses plugin, Biome type, int priority) {
-        this.plugin = plugin;
+    public BiomeRecipe(Greenhouses addon, Biome type, int priority) {
+        this.plugin = addon;
         this.type = type;
         this.priority = priority;
-        plugin.logger(3,"" + type.toString() + " priority " + priority);
+        //addon.logger(3,"" + type.toString() + " priority " + priority);
         mobLimit = 9; // Default
     }
 
@@ -75,7 +76,7 @@ public class BiomeRecipe {
     public void addConvBlocks(Material oldMaterial, Material newMaterial, double convChance, Material localMaterial) {
         double probability = Math.min(convChance/100 , 1D);
         conversionBlocks.put(oldMaterial, new GreenhouseBlockConversions(oldMaterial, newMaterial, probability, localMaterial));
-        plugin.logger(1,"   " + convChance + "% chance for " + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
+        //plugin.logger(1,"   " + convChance + "% chance for " + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
     }
 
 
@@ -85,12 +86,13 @@ public class BiomeRecipe {
      * @param mobSpawnOn
      */
     public void addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
-        plugin.logger(1,"   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
+        //plugin.logger(1,"   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = ((double)mobProbability/100);
+        double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
-        if ((1D - mobTree.lastKey()) >= probability) {
+        if ((1D - lastProb) >= probability) {
             // Add to probability tree
-            mobTree.put(mobTree.lastKey() + probability, new GreenhouseMob(mobType, mobSpawnOn));
+            mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
         } else {
             plugin.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType.toString());
         }
@@ -106,13 +108,14 @@ public class BiomeRecipe {
     public void addPlants(Material plantMaterial, int plantProbability, Material plantGrowOn) {
         double probability = ((double)plantProbability/100);
         // Add up all the probabilities in the list so far
-        if ((1D - plantTree.lastKey()) >= probability) {
+        double lastProb = plantTree.isEmpty() ? 0D : plantTree.lastKey();
+        if ((1D - lastProb) >= probability) {
             // Add to probability tree
-            plantTree.put(plantTree.lastKey() + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
+            plantTree.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
             plugin.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
         }
-        plugin.logger(1,"   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
+        //plugin.logger(1,"   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
     }
 
     /**
@@ -121,31 +124,24 @@ public class BiomeRecipe {
      */
     public void addReqBlocks(Material blockMaterial, int blockQty) {
         requiredBlocks.put(blockMaterial, blockQty);
-        plugin.logger(1,"   " + blockMaterial + " x " + blockQty);
+        //plugin.logger(1,"   " + blockMaterial + " x " + blockQty);
     }
 
     // Check required blocks
     /**
      * Checks greenhouse meets recipe requirements. If player is not null, a explanation of
      * any failures will be provided.
-     * @param pos1
-     * @param pos2
-     * @param player
-     * @return true if a cube defined by pos1 and pos2 meet this biome recipe.
+     * @return true if meet this biome recipe.
      */
-    public boolean checkRecipe(Location pos1, Location pos2, Player player) {
-        plugin.logger(3,"Checking for biome " + type.toString());
-        long area = (pos2.getBlockX()-pos1.getBlockX()-1) * (pos2.getBlockZ()-pos1.getBlockZ()-1);
-        plugin.logger(3,"area =" + area);
-        plugin.logger(3,"Pos1 = " + pos1.toString());
-        plugin.logger(3,"Pos1 = " + pos2.toString());
-        boolean pass = true;
+    public Set<GreenhouseResult> checkRecipe(Greenhouse gh) {
+        Set<GreenhouseResult> result = new HashSet<>();
+        long area = gh.getArea();
         Map<Material, Integer> blockCount = new HashMap<>();
         // Look through the greenhouse and count what is in there
-        for (int y = pos1.getBlockY(); y<pos2.getBlockY();y++) {
-            for (int x = pos1.getBlockX()+1;x<pos2.getBlockX();x++) {
-                for (int z = pos1.getBlockZ()+1;z<pos2.getBlockZ();z++) {
-                    Block b = pos1.getWorld().getBlockAt(x, y, z);
+        for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
+            for (int x = (int) (gh.getFootprint().getMinX()+1); x < gh.getFootprint().getMaxX(); x++) {
+                for (int z = (int) (gh.getFootprint().getMinY()+1); z < gh.getFootprint().getMaxY(); z++) {
+                    Block b = gh.getWorld().getBlockAt(x, y, z);
                     if (!b.getType().equals(Material.AIR)) {
                         blockCount.putIfAbsent(b.getType(), 0);
                         blockCount.merge(b.getType(), 1, Integer::sum);
@@ -161,64 +157,41 @@ public class BiomeRecipe {
                 || en.getKey().equals(Material.PACKED_ICE))
                 .mapToInt(Map.Entry::getValue).sum();
         double iceRatio = (double)ice/(double)area * 100;
-        plugin.logger(3,"water req=" + waterCoverage + " lava req=" + lavaCoverage + " ice req="+iceCoverage);
-        plugin.logger(3,"waterRatio=" + waterRatio + " lavaRatio=" + lavaRatio + " iceRatio="+iceRatio);
+        //plugin.logger(3,"water req=" + waterCoverage + " lava req=" + lavaCoverage + " ice req="+iceCoverage);
+        //plugin.logger(3,"waterRatio=" + waterRatio + " lavaRatio=" + lavaRatio + " iceRatio="+iceRatio);
 
 
         // Check required ratios - a zero means none of these are allowed, e.g.desert has no water
         if (waterCoverage == 0 && waterRatio > 0) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipenowater);
-            }
-            pass=false;
+            result.add(GreenhouseResult.FAIL_NO_WATER);
         }
         if (lavaCoverage == 0 && lavaRatio > 0) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipenolava);
-            }
-            pass=false;
+            result.add(GreenhouseResult.FAIL_NO_LAVA);
         }
         if (iceCoverage == 0 && iceRatio > 0) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipenoice);
-            }
-            pass=false;
+            result.add(GreenhouseResult.FAIL_NO_ICE);
         }
         if (waterCoverage > 0 && waterRatio < waterCoverage) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipewatermustbe.replace("[coverage]", String.valueOf(waterCoverage)));
-            }
-            pass=false;
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_WATER);
         }
         if (lavaCoverage > 0 && lavaRatio < lavaCoverage) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipelavamustbe.replace("[coverage]", String.valueOf(lavaCoverage)));
-            }
-            pass=false;
-
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_LAVA);
         }
         if (iceCoverage > 0 && iceRatio < iceCoverage) {
-            if (player != null) {
-                player.sendMessage(ChatColor.RED + Locale.recipeicemustbe.replace("[coverage]", String.valueOf(iceCoverage)));
-            }
-            pass=false;
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_ICE);
         }
         // Compare to the required blocks
-        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
+        missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
         // Remove any entries that are 0 or less
         missingBlocks.values().removeIf(v -> v <= 0);
-        if (!missingBlocks.isEmpty()) {
-            pass = false;
-        }
-        missingBlocks.forEach((k,v) -> player.sendMessage(ChatColor.RED + Locale.recipemissing + " " + Util.prettifyText(k.toString()) + " x " + v));
-        return pass;
+        return result;
     }
 
     /**
      * @param b
      */
     public void convertBlock(Block b) {
-        plugin.logger(3,"try to convert block");
+        //plugin.logger(3,"try to convert block");
         GreenhouseBlockConversions bc = conversionBlocks.get(b.getType());
         if (bc == null || random.nextDouble() > bc.getProbability()) {
             return;
@@ -226,7 +199,7 @@ public class BiomeRecipe {
         // Check if the block is in the right area, up, down, n,s,e,w
         if (ADJ_BLOCKS.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
             // Convert!
-            plugin.logger(3,"Convert block");
+            //plugin.logger(3,"Convert block");
             b.setType(bc.getNewMaterial());
         }
     }
@@ -333,18 +306,20 @@ public class BiomeRecipe {
 
     /**
      * Plants a plant on block bl if it makes sense.
-     * @param bl
-     * @return
+     * @param bl - block
+     * @return true if successful
      */
-    public void growPlant(Block bl) {
+    public boolean growPlant(Block bl) {
         if (bl.getType() != Material.AIR) {
-            return;
+            return false;
         }
-        getRandomPlant().ifPresent(p -> {
+        return getRandomPlant().map(p -> {
             if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(true)) {
                 bl.setType(p.getPlantMaterial());
+                return true;
             }
-        });
+            return false;
+        }).orElse(false);
     }
 
     /**
@@ -358,9 +333,9 @@ public class BiomeRecipe {
      */
     public void setIcecoverage(int icecoverage) {
         if (icecoverage == 0) {
-            plugin.logger(1,"   No Ice Allowed");
+            //plugin.logger(1,"   No Ice Allowed");
         } else if (icecoverage > 0) {
-            plugin.logger(1,"   Ice > " + icecoverage + "%");
+            //plugin.logger(1,"   Ice > " + icecoverage + "%");
         }
         this.iceCoverage = icecoverage;
     }
@@ -377,9 +352,9 @@ public class BiomeRecipe {
      */
     public void setLavacoverage(int lavacoverage) {
         if (lavacoverage == 0) {
-            plugin.logger(1,"   No Lava Allowed");
+            //plugin.logger(1,"   No Lava Allowed");
         } else if (lavacoverage > 0) {
-            plugin.logger(1,"   Lava > " + lavacoverage + "%");
+            //plugin.logger(1,"   Lava > " + lavacoverage + "%");
         }
         this.lavaCoverage = lavacoverage;
     }
@@ -424,11 +399,23 @@ public class BiomeRecipe {
      */
     public void setWatercoverage(int watercoverage) {
         if (watercoverage == 0) {
-            plugin.logger(1,"   No Water Allowed");
+            //plugin.logger(1,"   No Water Allowed");
         } else if (watercoverage > 0) {
-            plugin.logger(1,"   Water > " + watercoverage + "%");
+            //plugin.logger(1,"   Water > " + watercoverage + "%");
         }
         this.waterCoverage = watercoverage;
+    }
+
+    /**
+     * @return the missingBlocks
+     */
+    public Map<Material, Integer> getMissingBlocks() {
+        return missingBlocks;
+    }
+
+    @Override
+    public int compareTo(BiomeRecipe o) {
+        return Integer.compare(o.getPriority(), this.getPriority());
     }
 
 }

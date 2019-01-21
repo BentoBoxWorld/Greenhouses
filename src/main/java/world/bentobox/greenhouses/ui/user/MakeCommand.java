@@ -5,14 +5,16 @@ package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
 
-import org.apache.commons.lang.math.NumberUtils;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
-import world.bentobox.greenhouses.greenhouse.Greenhouse;
-import world.bentobox.greenhouses.ui.Locale;
+import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.managers.GreenhouseManager.GhResult;
+import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 /**
  * @author tastybento
@@ -27,7 +29,6 @@ public class MakeCommand extends CompositeCommand {
      */
     public MakeCommand(CompositeCommand parent) {
         super(parent, "make");
-        // TODO Auto-generated constructor stub
     }
 
     /* (non-Javadoc)
@@ -44,62 +45,75 @@ public class MakeCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        // Sets up a greenhouse
-        final Greenhouse greenhouseN = players.getInGreenhouse(player);
-        if (greenhouseN != null) {
-            // alreadyexists
-            player.sendMessage(ChatColor.RED + Locale.erroralreadyexists);
+
+        // TODO Check permission
+        // Find the physical the greenhouse
+        Location location = user.getLocation().add(new Vector(0,1,0));
+        // Check if there's a gh here already
+        if (((Greenhouses)this.getAddon()).getManager().getMap().getGreenhouse(location).isPresent()) {
+            user.sendRawMessage("You are in a greenhouse already!" );
             return true;
         }
-        // Check if they are at their limit
-        if (plugin.players.isAtLimit(player)) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', Locale.infonomore));
-        } else {
-            // Try to make greenhouse
-            Greenhouse g = plugin.tryToMakeGreenhouse(player);
-            if (g == null) {
-                // norecipe
-                player.sendMessage(ChatColor.RED + Locale.errornorecipe);
-                return true;
-            }
-            // Greenhouse is made
+        GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, null);
+
+        if (result.getResults().isEmpty()) {
+            // Success
+            user.sendMessage("general.success");
+            user.sendRawMessage(result.getFinder().getGh().getBiomeRecipe().getFriendlyName());
+            return true;
+        }
+        result.getResults().forEach(r -> sendErrorMessage(user, r));
+        if (!result.getFinder().getRedGlass().isEmpty()) {
+            // Show red glass
+            result.getFinder().getRedGlass().forEach(rg -> {
+                user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData());
+            });
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+                result.getFinder().getRedGlass().forEach(rg -> {
+                    user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData());
+                });
+            }, 120L);
         }
         return true;
-
-        // Second arg
-    case 2:
-        if (split[0].equalsIgnoreCase("make")) {
-            // Sets up a greenhouse for a specific biome
-            if (players.getInGreenhouse(player) != null) {
-                // alreadyexists
-                player.sendMessage(ChatColor.RED + Locale.erroralreadyexists);
-                return true;
-            }
-            // Check if they are at their limit
-            if (plugin.players.isAtLimit(player)) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', Locale.infonomore));
-            } else {
-                // Check we are in a greenhouse
-                try {
-                    if (NumberUtils.isNumber(split[1])) {
-                        int recipeNum = Integer.valueOf(split[1]);
-                        List<BiomeRecipe> recipeList = plugin.getBiomeRecipes();
-                        if (recipeNum < 1 || recipeNum > recipeList.size()) {
-                            player.sendMessage(ChatColor.RED + Locale.errornorecipe);
-                            return true;
-                        }
-                        if (plugin.tryToMakeGreenhouse(player,recipeList.get(recipeNum)) == null) {
-                            // Failed for some reason - maybe permissions
-                            player.sendMessage(ChatColor.RED + Locale.errornorecipe);
-                            return true;
-                        }
-                    }
-                } catch (Exception e) {
-                    player.sendMessage(ChatColor.RED + Locale.errornorecipe);
-                    return true;
-                }
-            }
-            return true;
-        }
-
     }
+
+    private void sendErrorMessage(User user, GreenhouseResult r) {
+        user.sendRawMessage(r.name());
+        switch (r) {
+        case FAIL_BAD_ROOF_BLOCKS:
+            break;
+        case FAIL_BAD_WALL_BLOCKS:
+            break;
+        case FAIL_BELOW:
+            break;
+        case FAIL_BLOCKS_ABOVE:
+            break;
+        case FAIL_HOLE_IN_ROOF:
+            break;
+        case FAIL_HOLE_IN_WALL:
+            break;
+        case FAIL_NO_ROOF:
+            break;
+        case FAIL_TOO_MANY_DOORS:
+            break;
+        case FAIL_TOO_MANY_HOPPERS:
+            break;
+        case FAIL_UNEVEN_WALLS:
+            break;
+        case FAIL_INSUFFICIENT_ICE:
+            break;
+        case FAIL_INSUFFICIENT_LAVA:
+            break;
+        case FAIL_INSUFFICIENT_WATER:
+            break;
+        case FAIL_NO_ICE:
+            break;
+        case FAIL_NO_LAVA:
+            break;
+        case FAIL_NO_WATER:
+            break;
+        default:
+            break;
+        }
+    }
+}

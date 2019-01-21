@@ -5,16 +5,16 @@ biomes:
     # The name of the icon. Can use & for color codes, e.g. &c
     friendlyname: "Beach"
     # The biome of the recipe. Allows multiple recipes for the same biome.
-    biome: BEACHES
+    biome: BEACH
     # The icon is shown in the panel. It must be a Bukkit Material
     icon: SAND
     # Priority is used if the greenhouse can be more than one biome. The highest
     # priority wins
     priority: 0
     # Contents - The minimum requirement for this biome.
-    # Format is Material:Type/Durability (optional):Number of blocks
-    # So SAND:1:1 would require 1 block of red sand (durability of 1 = red sand)
-    contents: SAND:1
+    # Format is Material: Number of blocks
+    contents:
+      SAND: 1
     # The number of blocks in the greenhouse that must be water, ice or lava
     # Floor area * this % = number of blocks required
     watercoverage: 50
@@ -34,7 +34,7 @@ biomes:
     # Format:
     # Entity name: % chance:Block on which the mob will spawn
     mobs:
-      SQUID: 10:STATIONARY_WATER
+      SQUID: 10:WATER
     # The minimum number of blocks each mob requires.
     # Mobs will not spawn if there is more than 1 per this number of
     # blocks in the greenhouse. e.g., in this case only 2 mobs will spawn if the
@@ -42,45 +42,51 @@ biomes:
     moblimit: 9
   Snowy_beach:
     friendlyname: "Snowy beach"
-    biome: COLD_BEACH
+    biome: SNOWY_BEACH
     icon: SNOW_BLOCK
     priority: 21
-    contents: SAND:1
+    contents:
+      SAND: 1
     watercoverage: 50
     icecoverage: 10
   ThreeWolfMoon:
     friendlyname: "Three Wolf Moon Forest"
     # Could do with more wolves, but the magic works with 3.
-    # If you are using 1.8 or earlier, this biome should be COLD_TAIGA
-    biome: TAIGA_COLD
-    icon: SAPLING
+    biome: TAIGA
+    icon: SPRUCE_SAPLING
     priority: 20
-    contents: LOG:3 LEAVES:3 GRASS:3
+    contents:
+      SPRUCE_LOG: 3
+      SPRUCE_LEAVES: 3
+      GRASS: 3
     icecoverage: 10
     plants:
-      LONG_GRASS:1: 10:GRASS
+      TALL_GRASS: 10:GRASS
     mobs:
       WOLF: 10:SNOW
     moblimit: 9
   Cold_Rabbit:
     friendlyname: "Cold Taiga Forest"
-    # If you are using 1.8 or earlier, this biome should be COLD_TAIGA
-    biome: TAIGA_COLD
-    icon: SAPLING
+    biome: TAIGA_HILLS
+    icon: SPRUCE_SAPLING
     priority: 20
-    contents: LOG:3 LEAVES:3 GRASS:3
+    contents:
+      SPRUCE_LOG: 3
+      SPRUCE_LEAVES: 3
+      GRASS: 3
     icecoverage: 10
     plants:
-      LONG_GRASS:1: 10:GRASS
+      TALL_GRASS: 10:GRASS
     mobs:
       RABBIT: 10:SNOW
     moblimit: 9
   DESERT:
     friendlyname: "Desert"
-    biome: "Desert"
+    biome: DESERT
     icon: DEAD_BUSH
     priority: 3
-    contents: SAND:1
+    contents:
+      SAND: 1
     # No water allowed
     watercoverage: 0
     # No ice allowed
@@ -88,27 +94,33 @@ biomes:
     plants:
       DEAD_BUSH: 10:SAND
       CACTUS: 10:SAND
-    # Conversions (see below for another variation)
+    # Conversions
     # Format is:
-    # Original Block Material:Durability:Chance of change:New Block Material:Durability
-    # So, for below, regular dirt (durability 0) has a 30% chance of changing into regular sand.
-    conversions: DIRT:0:30:SAND:0
+    # Original Block: % chance:New Block:Adjacent Block
+    # So, for below, dirt has a 30% chance of changing into SAND if it is next to SAND!
+    conversions:
+      DIRT: 30:SAND:SAND
   FOREST:
     friendlyname: "Flowery forest"
     biome: FOREST
-    icon: RED_ROSE
+    icon: ROSE_RED
     priority: 4
-    contents: LOG:3 LEAVES:4 GRASS:4
+    contents:
+      OAK_LOG: 3
+      OAK_LEAVES: 4
+      GRASS: 4
     plants:
-      RED_ROSE:8: 2:GRASS
-      DOUBLE_PLANT:5: 4:GRASS
-      LONG_GRASS:1: 20:GRASS
-  HELL:
+      PINK_TULIP: 2:GRASS
+      ORANGE_TULIP: 2:GRASS
+      SUNFLOWER: 4:GRASS
+      TALL_GRASS: 20:GRASS
+  NETHER:
     friendlyname: "&cNether"
-    biome: HELL
+    biome: NETHER
     icon: LAVA_BUCKET
     priority: 5
-    contents: NETHERRACK:1
+    contents:
+      NETHERRACK: 1
     # Lava required, no ice or water allowed
     lavacoverage: 21
     icecoverage: 0
@@ -121,26 +133,30 @@ biomes:
     biome: JUNGLE
     icon: VINE
     priority: 6
-    contents: GRASS:4 LOG:3:3 LEAVES:3:4
+    contents:
+      GRASS: 4
+      JUNGLE_LOG: 3
+      JUNGLE_LEAVES: 4
     plants:
-      YELLOW_FLOWER: 20:GRASS
-      MELON_BLOCK: 10:GRASS
-      RED_ROSE: 20:GRASS
-      DOUBLE_PLANT:3: 20:GRASS
-      LONG_GRASS:2: 20:GRASS
-  MUSHROOM_ISLAND:
-    friendlyname: "Mushroom Island"
-    biome: MUSHROOM_ISLAND
+      DANDELION: 20:GRASS
+      MELON: 10:GRASS
+      ROSE_BUSH: 20:GRASS
+      FERN: 20:GRASS
+      TALL_GRASS: 20:GRASS
+  MUSHROOM_FIELDS:
+    friendlyname: "Mushroom Fields"
+    biome: MUSHROOM_FIELDS
     icon: RED_MUSHROOM
     priority: 11
-    contents: MYCEL:2
+    contents:
+      MYCELIUM: 2
     # Water required at 30%
     watercoverage: 30
     plants:
-      BROWN_MUSHROOM: 10:MYCEL
-      RED_MUSHROOM: 10:MYCEL
+      BROWN_MUSHROOM: 10:MYCELIUM
+      RED_MUSHROOM: 10:MYCELIUM
     mobs:
-      MUSHROOM_COW: 10:MYCEL
+      MUSHROOM_COW: 10:MYCELIUM
     moblimit: 9
   OCEAN:
     biome: OCEAN
@@ -149,16 +165,17 @@ biomes:
     # Lots of water required!
     watercoverage: 95
     mobs:
-      SQUID: 10:STATIONARY_WATER
+      SQUID: 10:WATER
     moblimit: 9
   PLAINS:
     friendlyname: "Horse Plains"
     biome: PLAINS
     icon: GRASS
     priority: 1
-    contents: GRASS:3
+    contents:
+      GRASS: 3
     plants:
-      LONG_GRASS:1: 10:GRASS
+      TALL_GRASS: 10:GRASS
     mobs:
       HORSE: 10:GRASS
     moblimit: 9
@@ -167,32 +184,41 @@ biomes:
     biome: RIVER
     icon: CLAY
     priority: 10
-    contents: SAND:1
+    contents:
+      SAND: 1
     # 50% water required
     watercoverage: 50
     # Conversions - in this case, an adjacent block is required to convert
     # Format is:
-    # Original Block:Durability:% chance:New Block:Durability:Adjacent Block:Durability
+    # Original Block: % chance:New Block:Adjacent Block
     # So, for below, dirt has a 50% chance of changing into clay if it is next to water!
-    conversions: DIRT:0:50:CLAY:0:STATIONARY_WATER:0
+    conversions:
+      DIRT: 50:CLAY:WATER
   SAVANNA:
     biome: SAVANNA
-    icon: LEAVES
+    icon: ACACIA_LEAVES
     priority: 11
-    contents: LOG_2:3 LEAVES_2:4 GRASS:4
+    contents:
+      ACACIA_LOG: 3
+      ACACIA_LEAVES: 4
+      GRASS: 4
     plants:
-      DOUBLE_PLANT:2: 10:GRASS
-  SWAMPLAND:
+      TALL_GRASS: 10:GRASS
+  SWAMP:
     friendlyname: "&2Slimy Swamp"
-    icon: WATER_LILY
+    biome: SWAMP
+    icon: LILY_PAD
     priority: 13
-    contents: GRASS:4 LOG:3 LEAVES:4
+    contents:
+      GRASS: 4
+      OAK_LOG: 3
+      OAK_LEAVES: 4
     # 50% water coverage required
     watercoverage: 50
     plants:
       RED_MUSHROOM: 20:GRASS
       BROWN_MUSHROOM: 20:GRASS
-      WATER_LILY: 5:STATIONARY_WATER
+      LILY_PAD: 5:WATER
     mobs:
-      SLIME: 5:STATIONARY_WATER
+      SLIME: 5:WATER
     moblimit: 3
