@@ -14,6 +14,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 
@@ -76,7 +77,7 @@ public class RecipeManager {
                     b.setPermission(biomeRecipe.getString("permission",""));
                     // Set the icon
                     b.setIcon(Material.valueOf(biomeRecipe.getString("icon", "SAPLING")));
-                    b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipe.getString("friendlyname", "")));
+                    b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipe.getString("friendlyname", Util.prettifyText(type))));
                     // A value of zero on these means that there must be NO coverage, e.g., desert. If the value is not present, then the default is -1
                     b.setWatercoverage(biomeRecipe.getInt("watercoverage",-1));
                     b.setLavacoverage(biomeRecipe.getInt("lavacoverage",-1));

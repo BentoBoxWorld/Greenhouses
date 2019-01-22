@@ -227,4 +227,13 @@ public class Walls {
     public static boolean isWallBlock(Material blockType) {
         return WALL_BLOCKS.contains(blockType);
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Walls [minX=" + minX + ", maxX=" + maxX + ", minZ=" + minZ + ", maxZ=" + maxZ + ", floor=" + floor
+                + "]";
+    }
 }

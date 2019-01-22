@@ -12,11 +12,13 @@ import world.bentobox.bentobox.database.Database;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
-import world.bentobox.greenhouses.managers.GreenhouseMap.AddResult;
 
 public class GreenhouseManager {
 
-    // No result = success
+    /**
+     * Result of greenhouse making
+     *
+     */
     public enum GreenhouseResult {
         FAIL_NO_ROOF,
         FAIL_BELOW,
@@ -33,7 +35,12 @@ public class GreenhouseManager {
         FAIL_NO_ICE,
         FAIL_INSUFFICIENT_WATER,
         FAIL_INSUFFICIENT_LAVA,
-        FAIL_INSUFFICIENT_ICE
+        FAIL_INSUFFICIENT_ICE,
+        FAIL_NO_ISLAND,
+        FAIL_OVERLAPPING,
+        NULL,
+        SUCCESS,
+        FAIL_NO_RECIPE_FOUND
     }
 
     private Greenhouses addon;
@@ -60,7 +67,7 @@ public class GreenhouseManager {
     public void loadGreenhouses() {
         addon.log("Loading greenhouses...");
         handler.loadObjects().forEach(g -> {
-            AddResult result = map.addGreenhouse(g);
+            GreenhouseResult result = map.addGreenhouse(g);
             switch (result) {
             case FAIL_NO_ISLAND:
             case FAIL_OVERLAPPING:
@@ -141,14 +148,15 @@ public class GreenhouseManager {
             }
             return new GhResult().setFinder(finder).setResults(resultSet);
         }
+
         // Try ordered recipes
-        addon.getRecipes().getBiomeRecipes().stream().sorted()
-        .filter(r -> r.checkRecipe(finder.getGh()).isEmpty()).findFirst()
-        .ifPresent(r -> {
-            // Success - set recipe and add to map
-            finder.getGh().setBiomeRecipe(r);
-            map.addGreenhouse(finder.getGh());
-        });
+        resultSet.add(addon.getRecipes().getBiomeRecipes().stream().sorted()
+                .filter(r -> r.checkRecipe(finder.getGh()).isEmpty()).findFirst()
+                .map(r -> {
+                    // Success - set recipe and add to map
+                    finder.getGh().setBiomeRecipe(r);
+                    return map.addGreenhouse(finder.getGh());
+                }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
         return new GhResult().setFinder(finder).setResults(resultSet);
     }
 

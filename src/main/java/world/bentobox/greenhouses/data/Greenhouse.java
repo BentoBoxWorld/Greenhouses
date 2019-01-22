@@ -19,6 +19,17 @@ import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
  */
 public class Greenhouse implements DataObject {
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Greenhouse [uniqueId=" + uniqueId + ", location=" + location + ", footprint=" + footprint
+                + ", ceilingHeight=" + ceilingHeight + ", originalBiome=" + originalBiome + ", greenhouseBiome="
+                + greenhouseBiome + ", roofHopperLocation=" + roofHopperLocation + ", biomeRecipe=" + biomeRecipe.getName()
+                + ", broken=" + broken + "]";
+    }
+
     private String uniqueId = UUID.randomUUID().toString();
     private Location location;
     private Rectangle footprint;
@@ -190,6 +201,21 @@ public class Greenhouse implements DataObject {
      */
     public World getWorld() {
         return this.getLocation().getWorld();
+    }
+
+    /**
+     * Checks if a location is inside the greenhouse
+     * @param location2 - location to check
+     * @return true if inside the greenhouse
+     */
+    public boolean contains(Location location2) {
+        return (location.getWorld().equals(location2.getWorld())
+                && location2.getBlockY() <= this.ceilingHeight
+                && location2.getBlockY() >= this.getFloorHeight()
+                && location2.getBlockX() >= (int)this.footprint.getMinX()
+                && location2.getBlockX() <= (int)this.footprint.getMaxX()
+                && location2.getBlockZ() >= (int)this.footprint.getMinY()
+                && location2.getBlockZ() <= (int)this.footprint.getMaxY());
     }
 
 }

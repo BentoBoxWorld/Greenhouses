@@ -7,20 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 public class GreenhouseMap {
 
-    public enum AddResult {
-        SUCCESS,
-        FAIL_OVERLAPPING,
-        FAIL_NO_ISLAND,
-        NULL
-    }
     private Greenhouses addon;
     private Map<Island, List<Greenhouse>> greenhouses = new HashMap<>();
 
@@ -34,22 +30,22 @@ public class GreenhouseMap {
     /**
      * Try to add a greenhouse
      * @param greenhouse - greenhouse object
-     * @return {@link AddResult#SUCCESS}, {@link AddResult#FAIL_NO_ISLAND} or {@link AddResult#FAIL_OVERLAPPING}
+     * @return result {@link GreenhouseResult}
      */
-    public AddResult addGreenhouse(Greenhouse greenhouse) {
+    public GreenhouseResult addGreenhouse(Greenhouse greenhouse) {
         if (greenhouse.getLocation() == null) {
-            return AddResult.NULL;
+            return GreenhouseResult.NULL;
         }
         return addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
             // Check if overlapping
             if (!isOverlapping(greenhouse)) {
                 greenhouses.get(i).add(greenhouse);
-                return AddResult.SUCCESS;
+                return GreenhouseResult.SUCCESS;
             } else {
-                return AddResult.FAIL_OVERLAPPING;
+                return GreenhouseResult.FAIL_OVERLAPPING;
             }
-        }).orElse(AddResult.FAIL_NO_ISLAND);
+        }).orElse(GreenhouseResult.FAIL_NO_ISLAND);
     }
 
     /**
@@ -62,10 +58,20 @@ public class GreenhouseMap {
     }
 
     private Optional<Greenhouse> getXZGreenhouse(Location location) {
-        return addon.getIslands().getIslandAt(location).map(i -> {
-            greenhouses.putIfAbsent(i, new ArrayList<>());
-            return greenhouses.get(i).stream().filter(g -> g.getFootprint().contains(location.getX(), location.getY())).findFirst();
-        }).orElse(Optional.empty());
+        return addon.getIslands().getIslandAt(location)
+                .filter(i -> greenhouses.containsKey(i))
+                .map(i -> {
+                    for (Greenhouse gh : greenhouses.get(i)) {
+                        Bukkit.getLogger().info("Trying " + location);
+                        Bukkit.getLogger().info(gh.toString());
+                        if (gh.contains(location)) {
+                            Bukkit.getLogger().info("inside gh");
+                            return Optional.of(gh);
+                        }
+                    }
+                    Bukkit.getLogger().info("None found");
+                    return null;
+                }).orElse(Optional.empty());
     }
 
     /**
