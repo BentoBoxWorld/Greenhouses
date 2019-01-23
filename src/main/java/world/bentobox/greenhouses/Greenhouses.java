@@ -10,9 +10,6 @@ import org.bukkit.World;
 
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
-import world.bentobox.greenhouses.listeners.GreenhouseEvents;
-import world.bentobox.greenhouses.listeners.GreenhouseGuard;
-import world.bentobox.greenhouses.listeners.SnowTracker;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.ui.user.UserCommand;
@@ -42,11 +39,10 @@ public class Greenhouses extends Addon {
             this.setState(State.DISABLED);
             return;
         }
-        // Load manager
-        manager = new GreenhouseManager(this);
         // Load recipes
         recipes = new RecipeManager(this);
-
+        // Load manager
+        manager = new GreenhouseManager(this);
         // Register commands for AcidIsland and BSkyBlock
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> gm.getDescription().getName().equals("AcidIsland") || gm.getDescription().getName().equals("BSkyBlock"))
@@ -57,10 +53,7 @@ public class Greenhouses extends Addon {
             activeWorlds.add(gm.getOverWorld());
         });
 
-        // Register listeners
-        this.registerListener(new SnowTracker(this));
-        this.registerListener(new GreenhouseEvents(this));
-        this.registerListener(new GreenhouseGuard(this));
+        this.registerListener(manager);
 
     }
 

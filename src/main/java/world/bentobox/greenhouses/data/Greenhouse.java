@@ -11,7 +11,9 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 
 import world.bentobox.bentobox.database.objects.DataObject;
+import world.bentobox.bentobox.database.objects.adapters.Adapter;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.greenhouse.Walls;
 
 /**
  * @author tastybento
@@ -25,32 +27,31 @@ public class Greenhouse implements DataObject {
     @Override
     public String toString() {
         return "Greenhouse [uniqueId=" + uniqueId + ", location=" + location + ", footprint=" + footprint
-                + ", ceilingHeight=" + ceilingHeight + ", originalBiome=" + originalBiome + ", greenhouseBiome="
-                + greenhouseBiome + ", roofHopperLocation=" + roofHopperLocation + ", biomeRecipe=" + biomeRecipe.getName()
+                + ", ceilingHeight=" + ceilingHeight + ", originalBiome=" + originalBiome
+                + ", roofHopperLocation=" + roofHopperLocation + ", biomeRecipe=" + biomeRecipe.getName()
                 + ", broken=" + broken + "]";
     }
 
     private String uniqueId = UUID.randomUUID().toString();
     private Location location;
+    @Adapter(RectangleSerializer.class)
     private Rectangle footprint;
     private int ceilingHeight;
     private Biome originalBiome;
-    private Biome greenhouseBiome;
     private Location roofHopperLocation;
+    @Adapter(BiomeRecipeSerializer.class)
     private BiomeRecipe biomeRecipe;
     private boolean broken;
 
+    /**
+     * Constructor for database
+     */
     public Greenhouse() {}
 
-    /**
-     * @param world
-     * @param footprint
-     * @param ceilingHeight
-     */
-    public Greenhouse(World world, Rectangle footprint, int floorHeight, int ceilingHeight) {
-        this.location = new Location(world, footprint.getMinX(), floorHeight, footprint.getMinY());
-        this.footprint = footprint;
+    public Greenhouse(World world, Walls walls, int ceilingHeight) {
+        this.location = new Location(world, walls.getMinX(), walls.getFloor(), walls.getMinZ());
         this.ceilingHeight = ceilingHeight;
+        this.footprint = new Rectangle(walls.getMinX(), walls.getMinZ(), walls.getWidth(), walls.getLength());
     }
 
     /**
@@ -79,13 +80,6 @@ public class Greenhouse implements DataObject {
      */
     public Rectangle getFootprint() {
         return footprint;
-    }
-
-    /**
-     * @return the greenhouseBiome
-     */
-    public Biome getGreenhouseBiome() {
-        return greenhouseBiome;
     }
 
     /**
@@ -150,13 +144,6 @@ public class Greenhouse implements DataObject {
      */
     public void setFootprint(Rectangle floor) {
         this.footprint = floor;
-    }
-
-    /**
-     * @param greenhouseBiome the greenhouseBiome to set
-     */
-    public void setGreenhouseBiome(Biome greenhouseBiome) {
-        this.greenhouseBiome = greenhouseBiome;
     }
 
     /**

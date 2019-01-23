@@ -7,13 +7,19 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
+import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.listeners.GreenhouseEvents;
+import world.bentobox.greenhouses.listeners.GreenhouseGuard;
+import world.bentobox.greenhouses.listeners.SnowTracker;
 
-public class GreenhouseManager {
+public class GreenhouseManager implements Listener {
 
     /**
      * Result of greenhouse making
@@ -52,9 +58,17 @@ public class GreenhouseManager {
         this.addon = addon;
         handler = new Database<>(addon, Greenhouse.class);
         map = new GreenhouseMap(addon);
+    }
+
+    @EventHandler
+    public void startManager(BentoBoxReadyEvent e) {
         loadGreenhouses();
         // Start ecosystems
         new EcoSystemManager(addon, this);
+        // Register listeners
+        addon.registerListener(new SnowTracker(addon));
+        addon.registerListener(new GreenhouseEvents(addon));
+        addon.registerListener(new GreenhouseGuard(addon));
     }
 
     public GreenhouseMap getMap() {
@@ -75,13 +89,14 @@ public class GreenhouseManager {
                 addon.logError(result.name());
                 break;
             case SUCCESS:
+                activateGreenhouse(g);
                 break;
             default:
                 break;
 
             }
         });
-        addon.log("Loaded greenhouses.");
+        addon.log("Loaded " + map.getSize() + " greenhouses.");
     }
 
     /**
@@ -145,6 +160,7 @@ public class GreenhouseManager {
                 // Success - set recipe and add to map
                 finder.getGh().setBiomeRecipe(greenhouseRecipe);
                 map.addGreenhouse(finder.getGh());
+                activateGreenhouse(finder.getGh());
             }
             return new GhResult().setFinder(finder).setResults(resultSet);
         }
@@ -155,9 +171,19 @@ public class GreenhouseManager {
                 .map(r -> {
                     // Success - set recipe and add to map
                     finder.getGh().setBiomeRecipe(r);
+                    activateGreenhouse(finder.getGh());
                     return map.addGreenhouse(finder.getGh());
                 }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
         return new GhResult().setFinder(finder).setResults(resultSet);
+    }
+
+    private void activateGreenhouse(Greenhouse gh) {
+        for (int x = gh.getFootprint().x; x < gh.getFootprint().x + gh.getFootprint().width; x++) {
+            for (int z = gh.getFootprint().y; z < gh.getFootprint().y + gh.getFootprint().height; z++) {
+                gh.getWorld().setBiome(x, z, gh.getBiomeRecipe().getBiome());
+            }
+        }
+
     }
 
     /**

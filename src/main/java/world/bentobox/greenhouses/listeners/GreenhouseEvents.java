@@ -95,12 +95,12 @@ public class GreenhouseEvents implements Listener {
         // from is a greenhouse
         if (from.isPresent() && !to.isPresent()) {
             // Exiting
-            user.sendRawMessage("Leaving " + to.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
+            user.sendRawMessage("Leaving " + from.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
             return;
         }
         if (!from.isPresent() && to.isPresent()) {
             // Entering
-            user.sendRawMessage("Entering " + from.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
+            user.sendRawMessage("Entering " + to.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
             return;
         }
 

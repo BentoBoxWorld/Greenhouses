@@ -1,10 +1,8 @@
 package world.bentobox.greenhouses.managers;
 
-import java.awt.Rectangle;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -33,9 +31,8 @@ public class GreenhouseFinder {
         }
         // Find the walls
         Walls walls = new Walls(roof);
-        Bukkit.getLogger().info("DEBUG: walls = " + walls.toString());
         // Make the initial greenhouse
-        gh = new Greenhouse(location.getWorld(), new Rectangle(walls.getMinX(), walls.getMinZ(), walls.getMaxX(), walls.getMaxZ()), walls.getFloor(), roof.getHeight());
+        gh = new Greenhouse(location.getWorld(), walls, roof.getHeight());
         // Set the original biome
         gh.setOriginalBiome(location.getBlock().getBiome());
 
@@ -173,7 +170,7 @@ public class GreenhouseFinder {
     }
 
     /**
-     * @return the gh
+     * @return the greenhouse
      */
     public Greenhouse getGh() {
         return gh;

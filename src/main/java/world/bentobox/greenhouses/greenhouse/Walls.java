@@ -228,6 +228,20 @@ public class Walls {
         return WALL_BLOCKS.contains(blockType);
     }
 
+    /**
+     * @return width of the space
+     */
+    public int getWidth() {
+        return Math.abs(maxX - minX);
+    }
+
+    /**
+     * @return length of the space
+     */
+    public int getLength() {
+        return Math.abs(maxZ - minZ);
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -236,4 +250,6 @@ public class Walls {
         return "Walls [minX=" + minX + ", maxX=" + maxX + ", minZ=" + minZ + ", maxZ=" + maxZ + ", floor=" + floor
                 + "]";
     }
+
+
 }

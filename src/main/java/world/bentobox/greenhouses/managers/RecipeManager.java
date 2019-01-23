@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +23,7 @@ public class RecipeManager {
 
     private static final int MAXIMUM_INVENTORY_SIZE = 49;
     private Greenhouses addon;
-    private List<BiomeRecipe> biomeRecipes = new ArrayList<>();
+    private static List<BiomeRecipe> biomeRecipes = new ArrayList<>();
 
     public RecipeManager(Greenhouses addon) {
         this.addon = addon;
@@ -33,6 +34,15 @@ public class RecipeManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get BiomeRecipe by name
+     * @param name - name
+     * @return Optional BiomeRecipe found
+     */
+    public static Optional<BiomeRecipe> getBiomeRecipies(String name) {
+        return biomeRecipes.stream().filter(r -> r.getName().equals(name)).findFirst();
     }
 
     /**

@@ -151,7 +151,7 @@ public class EcoSystemManager {
             gh.setRoofHopperLocation(null);
             return null;
         }
-        return (Hopper)gh.getRoofHopperLocation().getBlock().getBlockData();
+        return (Hopper)gh.getRoofHopperLocation().getBlock().getState();
     }
 
     public void cancel() {

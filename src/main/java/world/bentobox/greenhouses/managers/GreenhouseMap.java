@@ -36,7 +36,10 @@ public class GreenhouseMap {
         if (greenhouse.getLocation() == null) {
             return GreenhouseResult.NULL;
         }
+        Bukkit.getLogger().info("Adding greenhouse " + greenhouse.getLocation());
+        Bukkit.getLogger().info("Island = " + addon.getIslands().getIslandAt(greenhouse.getLocation()).isPresent());
         return addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
+            Bukkit.getLogger().info("Island found!");
             greenhouses.putIfAbsent(i, new ArrayList<>());
             // Check if overlapping
             if (!isOverlapping(greenhouse)) {
@@ -60,18 +63,8 @@ public class GreenhouseMap {
     private Optional<Greenhouse> getXZGreenhouse(Location location) {
         return addon.getIslands().getIslandAt(location)
                 .filter(i -> greenhouses.containsKey(i))
-                .map(i -> {
-                    for (Greenhouse gh : greenhouses.get(i)) {
-                        Bukkit.getLogger().info("Trying " + location);
-                        Bukkit.getLogger().info(gh.toString());
-                        if (gh.contains(location)) {
-                            Bukkit.getLogger().info("inside gh");
-                            return Optional.of(gh);
-                        }
-                    }
-                    Bukkit.getLogger().info("None found");
-                    return null;
-                }).orElse(Optional.empty());
+                .map(i -> greenhouses.get(i).stream().filter(g -> g.contains(location)).findFirst())
+                .orElse(Optional.empty());
     }
 
     /**
@@ -116,5 +109,12 @@ public class GreenhouseMap {
      */
     public List<Greenhouse> getGreenhouses() {
         return greenhouses.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * @return number of greenhouses loaded
+     */
+    public int getSize() {
+        return greenhouses.values().stream().mapToInt(List::size).sum();
     }
 }
