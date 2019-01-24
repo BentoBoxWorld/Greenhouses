@@ -1,21 +1,17 @@
 package world.bentobox.greenhouses.listeners;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
-import org.bukkit.block.data.type.Snow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -32,7 +28,6 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class SnowTracker implements Listener {
     private final Greenhouses addon;
-    private final static List<Biome> SNOWBIOMES = Arrays.stream(Biome.values()).filter(b -> b.name().contains("COLD") || b.name().contains("ICE") || b.name().contains("FROZEN")).collect(Collectors.toList());
     private Map<World, BukkitTask> snowTasks;
 
     public SnowTracker(Greenhouses addon) {
@@ -46,16 +41,18 @@ public class SnowTracker implements Listener {
 
     @EventHandler
     public void onWeatherChangeEvent(final WeatherChangeEvent e) {
+        addon.log("DEBUG: weather change");
         if (!addon.getActiveWorlds().contains(e.getWorld())) {
             return;
         }
+        addon.log("DEBUG: in worlds");
         if (e.toWeatherState()) {
             // It's raining
-            //addon.logger(3,"It's raining!");
+            addon.log("It's raining!");
             startSnow(e.getWorld());
         } else {
             // It's stopped raining!
-            //addon.logger(3,"Stopped raining!");
+            addon.log("Stopped raining!");
             stopSnow(e.getWorld());
         }
     }
@@ -73,17 +70,17 @@ public class SnowTracker implements Listener {
     }
 
     private void shakeGlobes(World world) {
-        addon.getManager().getMap().getGreenhouses().stream().filter(g -> SNOWBIOMES.contains(g.getBiomeRecipe().getBiome()))
+        addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
         .filter(g -> g.getLocation().getWorld().equals(world))
         .filter(g -> !g.isBroken())
         .filter(g -> g.getRoofHopperLocation() != null)
         .filter(g -> g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER))
-        .filter(g -> ((Hopper)g.getRoofHopperLocation().getBlock()).getInventory().contains(Material.WATER_BUCKET))
+        .filter(g -> ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET))
         .forEach(this::removeWaterBucketAndShake);
     }
 
     private void removeWaterBucketAndShake(Greenhouse g) {
-        Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock());
+        Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
         h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
         h.getInventory().addItem(new ItemStack(Material.BUCKET));
         // Scatter snow
@@ -97,7 +94,7 @@ public class SnowTracker implements Listener {
             for (int z = (int)gh.getFootprint().getMinY() + 1; z < (int)gh.getFootprint().getMaxY(); z++) {
                 for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
-                    if (b.getType().equals(Material.AIR)) {
+                    if (b.getType().equals(Material.AIR) || b.getType().equals(Material.SNOW)) {
                         b.getWorld().spawnParticle(Particle.SNOWBALL, b.getLocation(), 5);
                     } else {
                         // Add snow
@@ -106,7 +103,7 @@ public class SnowTracker implements Listener {
                         } else {
                             // Not water
                             if (Math.random() < addon.getSettings().getSnowDensity() && !b.isLiquid()) {
-                                addSnow(b);
+                                b.getRelative(BlockFace.UP).setType(Material.SNOW);
                             }
                         }
 
@@ -122,14 +119,4 @@ public class SnowTracker implements Listener {
         }
         return result;
     }
-
-    private void addSnow(Block b) {
-        Block above = b.getRelative(BlockFace.UP);
-        if (above.getType().equals(Material.SNOW) || above.getType().equals(Material.AIR)) {
-            above.setType(Material.SNOW);
-            Snow snow = (Snow)above;
-            snow.setLayers(Math.min(snow.getMaximumLayers(), snow.getLayers() + 1));
-        }
-    }
-
 }

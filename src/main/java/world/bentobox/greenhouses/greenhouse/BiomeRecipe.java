@@ -285,9 +285,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private Optional<GreenhousePlant> getRandomPlant() {
         // Grow a random plant that can grow
-        Double key = plantTree.ceilingKey(random.nextDouble());
+        double r = random.nextDouble();
+        Double key = plantTree.ceilingKey(r);
         return key == null ? Optional.empty() : Optional.ofNullable(plantTree.get(key));
-
     }
 
     /**

@@ -58,10 +58,10 @@ biomes:
     contents:
       SPRUCE_LOG: 3
       SPRUCE_LEAVES: 3
-      GRASS: 3
+      GRASS_BLOCK: 3
     icecoverage: 10
     plants:
-      TALL_GRASS: 10:GRASS
+      TALL_GRASS: 10:GRASS_BLOCK
     mobs:
       WOLF: 10:SNOW
     moblimit: 9
@@ -73,10 +73,10 @@ biomes:
     contents:
       SPRUCE_LOG: 3
       SPRUCE_LEAVES: 3
-      GRASS: 3
+      GRASS_BLOCK: 3
     icecoverage: 10
     plants:
-      TALL_GRASS: 10:GRASS
+      TALL_GRASS: 10:GRASS_BLOCK
     mobs:
       RABBIT: 10:SNOW
     moblimit: 9
@@ -108,12 +108,12 @@ biomes:
     contents:
       OAK_LOG: 3
       OAK_LEAVES: 4
-      GRASS: 4
+      GRASS_BLOCK: 4
     plants:
-      PINK_TULIP: 2:GRASS
-      ORANGE_TULIP: 2:GRASS
-      SUNFLOWER: 4:GRASS
-      TALL_GRASS: 20:GRASS
+      PINK_TULIP: 2:GRASS_BLOCK
+      ORANGE_TULIP: 2:GRASS_BLOCK
+      SUNFLOWER: 4:GRASS_BLOCK
+      TALL_GRASS: 20:GRASS_BLOCK
   NETHER:
     friendlyname: "&cNether"
     biome: NETHER
@@ -134,15 +134,15 @@ biomes:
     icon: VINE
     priority: 6
     contents:
-      GRASS: 4
+      GRASS_BLOCK: 4
       JUNGLE_LOG: 3
       JUNGLE_LEAVES: 4
     plants:
-      DANDELION: 20:GRASS
-      MELON: 10:GRASS
-      ROSE_BUSH: 20:GRASS
-      FERN: 20:GRASS
-      TALL_GRASS: 20:GRASS
+      DANDELION: 20:GRASS_BLOCK
+      MELON: 10:GRASS_BLOCK
+      ROSE_BUSH: 20:GRASS_BLOCK
+      FERN: 20:GRASS_BLOCK
+      TALL_GRASS: 20:GRASS_BLOCK
   MUSHROOM_FIELDS:
     friendlyname: "Mushroom Fields"
     biome: MUSHROOM_FIELDS
@@ -170,14 +170,14 @@ biomes:
   PLAINS:
     friendlyname: "Horse Plains"
     biome: PLAINS
-    icon: GRASS
+    icon: GRASS_BLOCK
     priority: 1
     contents:
-      GRASS: 3
+      GRASS_BLOCK: 3
     plants:
-      TALL_GRASS: 10:GRASS
+      TALL_GRASS: 10:GRASS_BLOCK
     mobs:
-      HORSE: 10:GRASS
+      HORSE: 10:GRASS_BLOCK
     moblimit: 9
   RIVER:
     friendlyname: "Clay river"
@@ -201,23 +201,23 @@ biomes:
     contents:
       ACACIA_LOG: 3
       ACACIA_LEAVES: 4
-      GRASS: 4
+      GRASS_BLOCK: 4
     plants:
-      TALL_GRASS: 10:GRASS
+      TALL_GRASS: 10:GRASS_BLOCK
   SWAMP:
     friendlyname: "&2Slimy Swamp"
     biome: SWAMP
     icon: LILY_PAD
     priority: 13
     contents:
-      GRASS: 4
+      GRASS_BLOCK: 4
       OAK_LOG: 3
       OAK_LEAVES: 4
     # 50% water coverage required
     watercoverage: 50
     plants:
-      RED_MUSHROOM: 20:GRASS
-      BROWN_MUSHROOM: 20:GRASS
+      RED_MUSHROOM: 20:GRASS_BLOCK
+      BROWN_MUSHROOM: 20:GRASS_BLOCK
       LILY_PAD: 5:WATER
     mobs:
       SLIME: 5:WATER

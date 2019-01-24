@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -92,7 +93,8 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            setBoneMeal(gh, bonemeal - getAvailableBlocks(gh).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum());
+            int bonemealUsed = getAvailableBlocks(gh).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
+            setBoneMeal(gh, bonemeal - bonemealUsed);
         }
 
     }
@@ -112,7 +114,7 @@ public class EcoSystemManager {
     }
 
     /**
-     * Get a list of the highest block inside the greenhouse
+     * Get a list of the lowest level air blocks inside the greenhouse
      * @param gh - greenhouse
      * @return List of blocks
      */
@@ -122,8 +124,8 @@ public class EcoSystemManager {
             for (int z = (int)gh.getFootprint().getMinY() + 1; z < (int)gh.getFootprint().getMaxY(); z++) {
                 for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
-                    if (!b.getType().equals(Material.AIR)) {
-                        result.add(b);
+                    if (!b.getType().equals(Material.AIR) && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
+                        result.add(b.getRelative(BlockFace.UP));
                         break;
                     }
                 }

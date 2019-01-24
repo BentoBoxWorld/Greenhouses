@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import world.bentobox.bentobox.database.objects.Island;
@@ -36,10 +35,7 @@ public class GreenhouseMap {
         if (greenhouse.getLocation() == null) {
             return GreenhouseResult.NULL;
         }
-        Bukkit.getLogger().info("Adding greenhouse " + greenhouse.getLocation());
-        Bukkit.getLogger().info("Island = " + addon.getIslands().getIslandAt(greenhouse.getLocation()).isPresent());
         return addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
-            Bukkit.getLogger().info("Island found!");
             greenhouses.putIfAbsent(i, new ArrayList<>());
             // Check if overlapping
             if (!isOverlapping(greenhouse)) {
