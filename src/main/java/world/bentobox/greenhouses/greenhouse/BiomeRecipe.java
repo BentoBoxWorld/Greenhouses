@@ -129,9 +129,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     // Check required blocks
     /**
-     * Checks greenhouse meets recipe requirements. If player is not null, a explanation of
-     * any failures will be provided.
-     * @return true if meet this biome recipe.
+     * Checks greenhouse meets recipe requirements.
+     * @return GreenhouseResult - result
      */
     public Set<GreenhouseResult> checkRecipe(Greenhouse gh) {
         Set<GreenhouseResult> result = new HashSet<>();
@@ -275,9 +274,25 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     /**
+     * Spawn a mob on block b if it makes sense and random change suggests it
+     * @param b - block
+     * @return true if a mob was spawned
+     */
+    public boolean spawnMob(Block b) {
+        if (b.getY() == 0) {
+            return false;
+        }
+        return getRandomMob()
+                // Check if the spawn on block matches, if it exists
+                .filter(m -> m.getMobSpawnOn().map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
+                // If spawn occurs, return true
+                .map(m -> b.getWorld().spawnEntity(b.getLocation(), m.getMobType()) == null ? false : true).orElse(false);
+    }
+
+    /**
      * @return a mob that can spawn in the greenhouse
      */
-    public Optional<GreenhouseMob> getRandomMob() {
+    private Optional<GreenhouseMob> getRandomMob() {
         // Return a random mob that can spawn in the biome or empty
         Double key = mobTree.ceilingKey(random.nextDouble());
         return key == null ? Optional.empty() : Optional.ofNullable(mobTree.get(key));
@@ -418,4 +433,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         return Integer.compare(o.getPriority(), this.getPriority());
     }
 
+    /**
+     * @return true if this recipe has no mobs that may spawn
+     */
+    public boolean noMobs() {
+        return mobTree.isEmpty();
+    }
+
+    /**
+     * @return the mob types that may spawn due to this recipe
+     */
+    public Set<EntityType> getMobTypes() {
+        return mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
+    }
 }

@@ -2,6 +2,7 @@ package world.bentobox.greenhouses.managers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,10 +41,7 @@ public class EcoSystemManager {
         long plantTick = addon.getSettings().getPlantTick() * 60 * 20; // In minutes
         if (plantTick > 0) {
             addon.log("Kicking off flower growing scheduler every " + addon.getSettings().getPlantTick() + " minutes");
-            plantTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> {
-                g.getMap().getGreenhouses().forEach(gh -> growPlants(gh));
-            }, 80L, plantTick);
-
+            plantTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::growPlants), 80L, plantTick);
         } else {
             addon.log("Flower growth disabled.");
         }
@@ -53,11 +51,7 @@ public class EcoSystemManager {
 
         if (blockTick > 0) {
             addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + " minutes");
-            blockTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> {
-                addon.log("Servicing greenhouse biome");
-
-
-            }, 60L, blockTick);
+            blockTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::convertBlocks), 60L, blockTick);
         } else {
             addon.log("Block conversion disabled.");
         }
@@ -65,9 +59,7 @@ public class EcoSystemManager {
         long ecoTick = addon.getSettings().getEcoTick() * 60 * 20; // In minutes
         if (ecoTick > 0) {
             addon.log("Kicking off greenhouse verify scheduler every " + addon.getSettings().getEcoTick() + " minutes");
-            ecoTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> {
-                // Todo
-            }, ecoTick, ecoTick);
+            ecoTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::verify), ecoTick, ecoTick);
 
         } else {
             addon.log("Greenhouse verification disabled.");
@@ -76,17 +68,47 @@ public class EcoSystemManager {
         long mobTick = addon.getSettings().getMobTick() * 60 * 20; // In minutes
         if (mobTick > 0) {
             addon.log("Kicking off mob populator scheduler every " + addon.getSettings().getMobTick() + " minutes");
-            mobTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> {
-            }, 120L, mobTick);
-
+            mobTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::addMobs), 120L, mobTick);
         } else {
             addon.log("Mob disabled.");
         }
 
     }
 
+    private void convertBlocks(Greenhouse gh) {
+        getAvailableBlocks(gh).stream().forEach(gh.getBiomeRecipe()::convertBlock);
+    }
+
+    private void verify(Greenhouse gh) {
+        if (!gh.getBiomeRecipe().checkRecipe(gh).isEmpty()) {
+            addon.log("Greenhouse failed verification at " + gh.getLocation());
+            g.removeGreenhouse(gh);
+        }
+    }
+
+    private void addMobs(Greenhouse gh) {
+        if (gh.getBiomeRecipe().noMobs()) {
+            return;
+        }
+        // Count mobs in greenhouse
+        long sum = gh.getWorld().getEntities().stream()
+                .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
+                .filter(e -> gh.contains(e.getLocation())).count();
+        // Get the blocks in the greenhouse where spawning could occur
+        Iterator<Block> it = getAvailableBlocks(gh).iterator();
+        // Check if the greenhouse is full
+        while (it.hasNext() && (sum == 0 || gh.getArea() / sum > gh.getBiomeRecipe().getMobLimit())) {
+            // Spawn something if chance says so
+            if (gh.getBiomeRecipe().spawnMob(it.next())) {
+                // Add a mob to the sum in the greenhouse
+                addon.log("spawned mob");
+                sum++;
+            }
+        }
+    }
+
     /**
-     * Growns plants in the greenhouse
+     * Grow plants in the greenhouse
      * @param gh - greenhouse
      */
     private void growPlants(Greenhouse gh) {
