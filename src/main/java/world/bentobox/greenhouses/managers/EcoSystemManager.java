@@ -21,10 +21,10 @@ import world.bentobox.greenhouses.data.Greenhouse;
  * @author tastybento
  *
  */
-public class EcoSystemManager {
+class EcoSystemManager {
 
-    private Greenhouses addon;
-    private GreenhouseManager g;
+    private final Greenhouses addon;
+    private final GreenhouseManager g;
     private BukkitTask plantTask;
     private BukkitTask mobTask;
     private BukkitTask blockTask;
@@ -76,7 +76,7 @@ public class EcoSystemManager {
     }
 
     private void convertBlocks(Greenhouse gh) {
-        getAvailableBlocks(gh).stream().forEach(gh.getBiomeRecipe()::convertBlock);
+        getAvailableBlocks(gh).forEach(gh.getBiomeRecipe()::convertBlock);
     }
 
     private void verify(Greenhouse gh) {

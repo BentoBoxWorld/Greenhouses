@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.data;
 
 import java.awt.Rectangle;
@@ -11,7 +8,7 @@ import world.bentobox.bentobox.database.objects.adapters.AdapterInterface;
  * @author tastybento
  *
  */
-public class RectangleSerializer implements AdapterInterface<Rectangle, String> {
+class RectangleSerializer implements AdapterInterface<Rectangle, String> {
 
     @Override
     public Rectangle deserialize(Object object) {

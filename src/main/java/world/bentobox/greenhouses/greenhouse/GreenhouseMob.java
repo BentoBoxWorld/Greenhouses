@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
-public class GreenhouseMob {
+class GreenhouseMob {
     private final EntityType mobType;
     private final Material mobSpawnOn;
     /**

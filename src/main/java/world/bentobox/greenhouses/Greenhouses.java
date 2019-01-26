@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses;
 
 import java.util.ArrayList;
@@ -23,7 +20,7 @@ public class Greenhouses extends Addon {
     private GreenhouseManager manager;
     private Settings settings;
     private RecipeManager recipes;
-    private List<World> activeWorlds = new ArrayList<>();
+    private final List<World> activeWorlds = new ArrayList<>();
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#onEnable()

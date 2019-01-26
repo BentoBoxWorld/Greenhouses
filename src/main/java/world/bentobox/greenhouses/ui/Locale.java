@@ -9,7 +9,7 @@ import java.util.List;
  * @author ben
  * All the text strings in the game sent to players
  */
-public class Locale {
+class Locale {
     
     public static String  generalnotavailable;
     public static String  generalgreenhouses;
@@ -43,7 +43,7 @@ public class Locale {
     public static String  messagesremovedmessage;
     public static String  messagesecolost;
     public static String  infotitle;
-    public static List<String>  infoinstructions = new ArrayList<String>();
+    public static List<String>  infoinstructions = new ArrayList<>();
     public static String  infoinfo;
     public static String  infonone;
     public static String  recipehint;

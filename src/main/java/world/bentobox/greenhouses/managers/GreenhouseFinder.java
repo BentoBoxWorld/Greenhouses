@@ -16,7 +16,7 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 public class GreenhouseFinder {
 
     private Greenhouse gh;
-    private Set<Location> redGlass = new HashSet<Location>();
+    private final Set<Location> redGlass = new HashSet<>();
 
 
     public Set<GreenhouseResult> find(Location location) {
@@ -56,9 +56,9 @@ public class GreenhouseFinder {
         // The y height where other blocks were found
         // If this is the bottom layer, the player has most likely uneven walls
         int otherBlockLayer = -1;
-        int wallBlockCount = 0;
+        int wallBlockCount;
 
-        int y = 0;
+        int y;
         for (y = world.getMaxHeight() - 1; y >= walls.getFloor(); y--) {
             int doorCount = 0;
             int hopperCount = 0;
@@ -123,7 +123,6 @@ public class GreenhouseFinder {
                 // This is the floor
                 break;
             } else {
-                wallBlockCount = 0;
                 wallDoors += doorCount;
                 ghHopper += hopperCount;
                 if (airHole) {

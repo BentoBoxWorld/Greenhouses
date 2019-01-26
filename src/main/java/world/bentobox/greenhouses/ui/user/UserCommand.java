@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
@@ -16,10 +13,8 @@ import world.bentobox.greenhouses.Greenhouses;
 public class UserCommand extends CompositeCommand {
 
     /**
-     * @param gh
-     * @param parent
-     * @param label
-     * @param aliases
+     * @param gh - addon
+     * @param parent - parent command
      */
     public UserCommand(Greenhouses gh, CompositeCommand parent) {
         super(gh, parent, "greenhouse", "gh");

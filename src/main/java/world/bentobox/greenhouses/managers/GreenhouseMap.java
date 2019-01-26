@@ -16,8 +16,8 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 public class GreenhouseMap {
 
-    private Greenhouses addon;
-    private Map<Island, List<Greenhouse>> greenhouses = new HashMap<>();
+    private final Greenhouses addon;
+    private final Map<Island, List<Greenhouse>> greenhouses = new HashMap<>();
 
     /**
      * @param addon - addon
@@ -58,9 +58,7 @@ public class GreenhouseMap {
 
     private Optional<Greenhouse> getXZGreenhouse(Location location) {
         return addon.getIslands().getIslandAt(location)
-                .filter(i -> greenhouses.containsKey(i))
-                .map(i -> greenhouses.get(i).stream().filter(g -> g.contains(location)).findFirst())
-                .orElse(Optional.empty());
+                .filter(greenhouses::containsKey).flatMap(i -> greenhouses.get(i).stream().filter(g -> g.contains(location)).findFirst());
     }
 
     /**

@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.ui.admin;
 
 import java.util.List;
@@ -12,16 +9,13 @@ import world.bentobox.bentobox.api.user.User;
  * @author tastybento
  *
  */
-public class GreenhousesAdminInfoCommand extends CompositeCommand {
+class GreenhousesAdminInfoCommand extends CompositeCommand {
 
     /**
-     * @param parent
-     * @param label
-     * @param aliases
+     * @param parent - parent user command, e.g, /island
      */
     public GreenhousesAdminInfoCommand(CompositeCommand parent) {
         super(parent, "info");
-        // TODO Auto-generated constructor stub
     }
 
     /* (non-Javadoc)

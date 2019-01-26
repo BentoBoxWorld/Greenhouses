@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.ui.admin;
 
 import java.util.List;
@@ -12,12 +9,10 @@ import world.bentobox.bentobox.api.user.User;
  * @author tastybento
  *
  */
-public class GreenhousesAdminReloadCommand extends CompositeCommand {
+class GreenhousesAdminReloadCommand extends CompositeCommand {
 
     /**
-     * @param addon
-     * @param label
-     * @param aliases
+     * @param parent - parent command
      */
     public GreenhousesAdminReloadCommand(CompositeCommand parent) {
         super(parent, "reload");

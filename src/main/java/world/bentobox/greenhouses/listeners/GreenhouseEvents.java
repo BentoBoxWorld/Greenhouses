@@ -35,7 +35,7 @@ public class GreenhouseEvents implements Listener {
 
     /**
      * Permits water to be placed in the Nether if in a greenhouse and in an acceptable biome
-     * @param event
+     * @param e - event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
     public void onPlayerInteract(PlayerInteractEvent e) {
@@ -62,7 +62,7 @@ public class GreenhouseEvents implements Listener {
         if (plugin.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).isPresent()) {
             e.setCancelled(true);
             e.getBlock().setType(Material.WATER);
-        };
+        }
     }
 
     /**
@@ -98,10 +98,9 @@ public class GreenhouseEvents implements Listener {
             user.sendRawMessage("Leaving " + from.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
             return;
         }
-        if (!from.isPresent() && to.isPresent()) {
+        if (!from.isPresent()) {
             // Entering
             user.sendRawMessage("Entering " + to.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
-            return;
         }
 
     }
@@ -118,7 +117,7 @@ public class GreenhouseEvents implements Listener {
 
     /**
      * Checks is broken blocks cause the greenhouse to fail
-     * @param e
+     * @param e - event
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
     public void onBlockBreak(final BlockBreakEvent e) {
@@ -139,7 +138,7 @@ public class GreenhouseEvents implements Listener {
 
     /**
      * Prevents placing of blocks above the greenhouses
-     * @param e
+     * @param e - event
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
     public void onPlayerBlockPlace(final BlockPlaceEvent e) {
@@ -160,7 +159,7 @@ public class GreenhouseEvents implements Listener {
 
     /**
      * Check to see if anyone is sneaking a block over a greenhouse by using a piston
-     * @param e
+     * @param e - event
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
     public void onPistonPush(final BlockPistonExtendEvent e) {

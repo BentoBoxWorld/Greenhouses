@@ -2,7 +2,7 @@ package world.bentobox.greenhouses.greenhouse;
 
 import org.bukkit.Material;
 
-public class GreenhouseBlockConversions {
+class GreenhouseBlockConversions {
     private final Material oldMaterial;
     private final Material newMaterial;
     private final double probability;

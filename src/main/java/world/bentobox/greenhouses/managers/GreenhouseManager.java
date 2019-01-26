@@ -49,10 +49,10 @@ public class GreenhouseManager implements Listener {
         FAIL_NO_RECIPE_FOUND
     }
 
-    private Greenhouses addon;
+    private final Greenhouses addon;
     // Greenhouses
-    private GreenhouseMap map;
-    private Database<Greenhouse> handler;
+    private final GreenhouseMap map;
+    private final Database<Greenhouse> handler;
 
     public GreenhouseManager(Greenhouses addon) {
         this.addon = addon;
@@ -78,7 +78,7 @@ public class GreenhouseManager implements Listener {
     /**
      * Load all known greenhouses
      */
-    public void loadGreenhouses() {
+    private void loadGreenhouses() {
         addon.log("Loading greenhouses...");
         handler.loadObjects().forEach(g -> {
             GreenhouseResult result = map.addGreenhouse(g);
@@ -109,7 +109,7 @@ public class GreenhouseManager implements Listener {
 
     /**
      * Removes the greenhouse from the world and resets biomes
-     * @param g
+     * @param g - greenhouse
      */
     public void removeGreenhouse(Greenhouse g) {
         map.removeGreenhouse(g);
@@ -141,12 +141,11 @@ public class GreenhouseManager implements Listener {
     /**
      * Checks that a greenhouse meets specs and makes it
      * If type is stated then only this specific type will be checked
-     * @param user
-     * @param greenhouseRecipe
-     * @return
+     * @param location - location to start search from
+     * @param greenhouseRecipe - recipe requested, or null for a best-effort search
+     * @return - greenhouse result {@link GhResult}
      */
     public GhResult tryToMakeGreenhouse(Location location, BiomeRecipe greenhouseRecipe) {
-        addon.log("Player location is " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
         GreenhouseFinder finder = new GreenhouseFinder();
         Set<GreenhouseResult> resultSet = finder.find(location);
         if (!resultSet.isEmpty()) {
@@ -211,7 +210,7 @@ public class GreenhouseManager implements Listener {
         /**
          * @param results the results to set
          */
-        public GhResult setResults(Set<GreenhouseResult> results) {
+        GhResult setResults(Set<GreenhouseResult> results) {
             this.results = results;
             return this;
         }
@@ -219,7 +218,7 @@ public class GreenhouseManager implements Listener {
         /**
          * @param finder the finder to set
          */
-        public GhResult setFinder(GreenhouseFinder finder) {
+        GhResult setFinder(GreenhouseFinder finder) {
             this.finder = finder;
             return this;
         }

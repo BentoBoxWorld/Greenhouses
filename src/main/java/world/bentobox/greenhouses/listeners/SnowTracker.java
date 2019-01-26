@@ -28,7 +28,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class SnowTracker implements Listener {
     private final Greenhouses addon;
-    private Map<World, BukkitTask> snowTasks;
+    private final Map<World, BukkitTask> snowTasks;
 
     public SnowTracker(Greenhouses addon) {
         this.addon = addon;
@@ -87,7 +87,7 @@ public class SnowTracker implements Listener {
         getAirBlocks(g);
     }
 
-    private List<Block> getAirBlocks(Greenhouse gh) {
+    private void getAirBlocks(Greenhouse gh) {
         List<Block> waterBlocks = new ArrayList<>();
         List<Block> result = new ArrayList<>();
         for (int x = (int)gh.getFootprint().getMinX() + 1; x < (int)gh.getFootprint().getMaxX(); x++) {
@@ -117,6 +117,5 @@ public class SnowTracker implements Listener {
         if (maxSize > 0) {
             waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
         }
-        return result;
     }
 }

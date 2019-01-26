@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.bukkit.Material;
 
-public class GreenhousePlant {
+class GreenhousePlant {
     private final Material plantMaterial;
     private final Material plantGrownOn;
     /**

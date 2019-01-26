@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.data;
 
 import java.awt.Rectangle;

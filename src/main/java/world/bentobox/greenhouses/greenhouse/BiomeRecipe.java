@@ -23,7 +23,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
-    private Greenhouses plugin;
+    private final Greenhouses addon;
     private Biome type;
     private Material icon; // Biome icon for control panel
     private int priority;
@@ -34,17 +34,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     // Content requirements
     // Material, Type, Qty. There can be more than one type of material required
-    private Map<Material, Integer> requiredBlocks = new HashMap<>();
+    private final Map<Material, Integer> requiredBlocks = new HashMap<>();
     // Plants
-    private TreeMap<Double, GreenhousePlant> plantTree = new TreeMap<>();
+    private final TreeMap<Double, GreenhousePlant> plantTree = new TreeMap<>();
 
     // Mobs
     // Entity Type, Material to Spawn on, Probability
-    private TreeMap<Double, GreenhouseMob> mobTree = new TreeMap<>();
+    private final TreeMap<Double, GreenhouseMob> mobTree = new TreeMap<>();
 
     // Conversions
     // Original Material, Original Type, New Material, New Type, Probability
-    private Map<Material, GreenhouseBlockConversions> conversionBlocks = new HashMap<>();
+    private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new HashMap<>();
 
     private int mobLimit;
     private int waterCoverage;
@@ -52,18 +52,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private int lavaCoverage;
 
     private String permission = "";
-    private Random random = new Random();
+    private final Random random = new Random();
     private Map<Material, Integer> missingBlocks;
 
     /**
-     * @param type
-     * @param priority
+     * @param type - biome
+     * @param priority - priority (higher is better)
      */
     public BiomeRecipe(Greenhouses addon, Biome type, int priority) {
-        this.plugin = addon;
+        this.addon = addon;
         this.type = type;
         this.priority = priority;
-        //addon.logger(3,"" + type.toString() + " priority " + priority);
         mobLimit = 9; // Default
     }
 
@@ -76,17 +75,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public void addConvBlocks(Material oldMaterial, Material newMaterial, double convChance, Material localMaterial) {
         double probability = Math.min(convChance/100 , 1D);
         conversionBlocks.put(oldMaterial, new GreenhouseBlockConversions(oldMaterial, newMaterial, probability, localMaterial));
-        //plugin.logger(1,"   " + convChance + "% chance for " + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
+        addon.log("   " + convChance + "% chance for " + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
     }
 
 
     /**
-     * @param mobType
-     * @param mobProbability
-     * @param mobSpawnOn
+     * @param mobType - entity type
+     * @param mobProbability - reltive probability
+     * @param mobSpawnOn - material to spawn on
      */
     public void addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
-        //plugin.logger(1,"   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
+        addon.log("   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = ((double)mobProbability/100);
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
@@ -94,7 +93,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             // Add to probability tree
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
         } else {
-            plugin.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType.toString());
+            addon.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType.toString());
         }
     }
 
@@ -113,18 +112,18 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             // Add to probability tree
             plantTree.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
-            plugin.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
+            addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
         }
-        //plugin.logger(1,"   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
+        addon.log("   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
     }
 
     /**
-     * @param blockMaterial
-     * @param blockQty
+     * @param blockMaterial - block material
+     * @param blockQty - number of blocks required
      */
     public void addReqBlocks(Material blockMaterial, int blockQty) {
         requiredBlocks.put(blockMaterial, blockQty);
-        //plugin.logger(1,"   " + blockMaterial + " x " + blockQty);
+        addon.log("   " + blockMaterial + " x " + blockQty);
     }
 
     // Check required blocks
@@ -156,9 +155,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 || en.getKey().equals(Material.PACKED_ICE))
                 .mapToInt(Map.Entry::getValue).sum();
         double iceRatio = (double)ice/(double)area * 100;
-        //plugin.logger(3,"water req=" + waterCoverage + " lava req=" + lavaCoverage + " ice req="+iceCoverage);
-        //plugin.logger(3,"waterRatio=" + waterRatio + " lavaRatio=" + lavaRatio + " iceRatio="+iceRatio);
-
 
         // Check required ratios - a zero means none of these are allowed, e.g.desert has no water
         if (waterCoverage == 0 && waterRatio > 0) {
@@ -187,10 +183,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     /**
-     * @param b
+     * Check if block should be converted
+     * @param b - block to check
      */
     public void convertBlock(Block b) {
-        //plugin.logger(3,"try to convert block");
         GreenhouseBlockConversions bc = conversionBlocks.get(b.getType());
         if (bc == null || random.nextDouble() > bc.getProbability()) {
             return;
@@ -198,7 +194,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         // Check if the block is in the right area, up, down, n,s,e,w
         if (ADJ_BLOCKS.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
             // Convert!
-            //plugin.logger(3,"Convert block");
             b.setType(bc.getNewMaterial());
         }
     }
@@ -269,7 +264,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * @return the priority
      */
-    public int getPriority() {
+    private int getPriority() {
         return priority;
     }
 
@@ -286,7 +281,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> m.getMobSpawnOn().map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
                 // If spawn occurs, return true
-                .map(m -> b.getWorld().spawnEntity(b.getLocation(), m.getMobType()) == null ? false : true).orElse(false);
+                .map(m -> b.getWorld().spawnEntity(b.getLocation(), m.getMobType()) != null).orElse(false);
     }
 
     /**
@@ -338,21 +333,21 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     /**
-     * @param set the friendly name
+     * @param friendlyName - set the friendly name
      */
     public void setFriendlyName(String friendlyName) {
         this.friendlyName = friendlyName;
     }
     /**
-     * @param icecoverage the icecoverage to set
+     * @param iceCoverage the ice coverage to set
      */
-    public void setIcecoverage(int icecoverage) {
-        if (icecoverage == 0) {
-            //plugin.logger(1,"   No Ice Allowed");
-        } else if (icecoverage > 0) {
-            //plugin.logger(1,"   Ice > " + icecoverage + "%");
+    public void setIcecoverage(int iceCoverage) {
+        if (iceCoverage == 0) {
+            addon.log("   No Ice Allowed");
+        } else if (iceCoverage > 0) {
+            addon.log("   Ice > " + iceCoverage + "%");
         }
-        this.iceCoverage = icecoverage;
+        this.iceCoverage = iceCoverage;
     }
 
     /**
@@ -363,15 +358,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     /**
-     * @param lavaCoverage the lavaCoverage to set
+     * @param lavaCoverage the lava coverage to set
      */
-    public void setLavacoverage(int lavacoverage) {
-        if (lavacoverage == 0) {
-            //plugin.logger(1,"   No Lava Allowed");
-        } else if (lavacoverage > 0) {
-            //plugin.logger(1,"   Lava > " + lavacoverage + "%");
+    public void setLavacoverage(int lavaCoverage) {
+        if (lavaCoverage == 0) {
+            addon.log("   No Lava Allowed");
+        } else if (lavaCoverage > 0) {
+            addon.log("   Lava > " + lavaCoverage + "%");
         }
-        this.lavaCoverage = lavacoverage;
+        this.lavaCoverage = lavaCoverage;
     }
 
     /**
@@ -410,15 +405,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     /**
-     * @param waterCoverage the waterCoverage to set
+     * @param waterCoverage the water coverage to set
      */
-    public void setWatercoverage(int watercoverage) {
-        if (watercoverage == 0) {
-            //plugin.logger(1,"   No Water Allowed");
-        } else if (watercoverage > 0) {
-            //plugin.logger(1,"   Water > " + watercoverage + "%");
+    public void setWatercoverage(int waterCoverage) {
+        if (waterCoverage == 0) {
+            addon.log("   No Water Allowed");
+        } else if (waterCoverage > 0) {
+            addon.log("   Water > " + waterCoverage + "%");
         }
-        this.waterCoverage = watercoverage;
+        this.waterCoverage = waterCoverage;
     }
 
     /**

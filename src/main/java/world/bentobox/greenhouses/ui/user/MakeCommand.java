@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
@@ -20,12 +17,10 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
  * @author tastybento
  *
  */
-public class MakeCommand extends CompositeCommand {
+class MakeCommand extends CompositeCommand {
 
     /**
-     * @param parent
-     * @param label
-     * @param aliases
+     * @param parent - parent command
      */
     public MakeCommand(CompositeCommand parent) {
         super(parent, "make");
@@ -65,14 +60,8 @@ public class MakeCommand extends CompositeCommand {
         result.getResults().forEach(r -> sendErrorMessage(user, r));
         if (!result.getFinder().getRedGlass().isEmpty()) {
             // Show red glass
-            result.getFinder().getRedGlass().forEach(rg -> {
-                user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData());
-            });
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                result.getFinder().getRedGlass().forEach(rg -> {
-                    user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData());
-                });
-            }, 120L);
+            result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData()));
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
         }
         return true;
     }

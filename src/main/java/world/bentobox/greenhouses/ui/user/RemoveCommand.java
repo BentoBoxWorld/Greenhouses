@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.ui.user;
 
 import java.util.List;
@@ -12,12 +9,10 @@ import world.bentobox.bentobox.api.user.User;
  * @author tastybento
  *
  */
-public class RemoveCommand extends CompositeCommand {
+class RemoveCommand extends CompositeCommand {
 
     /**
-     * @param parent
-     * @param label
-     * @param aliases
+     * @param parent - parent command
      */
     public RemoveCommand(CompositeCommand parent) {
         super(parent, "make");

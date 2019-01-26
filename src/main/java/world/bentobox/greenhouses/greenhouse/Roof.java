@@ -21,7 +21,7 @@ public class Roof {
     private int maxX;
     private int minZ;
     private int maxZ;
-    private int height;
+    private final int height;
     private boolean roofFound;
     public final static List<Material> ROOFBLOCKS = Arrays.stream(Material.values())
             .filter(Material::isBlock) // Blocks only, no items
@@ -33,7 +33,7 @@ public class Roof {
             .collect(Collectors.toList());
     /**
      * Finds a roof from a starting location under the roof and characterizes it
-     * @param loc
+     * @param loc - starting location
      */
     public Roof(Location loc) {
         this.location = loc;
@@ -42,8 +42,7 @@ public class Roof {
         // Try just going up - this covers every case except if the player is standing under a hole
         roofFound = false;
         // This does a ever-growing check around the player to find a roof block. It is possible for the player
-        // to be outside the greenhouse in this situation, so a check is done later to mkae sure the player is inside
-        //if (!roofFound) {
+        // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
         int roofY = loc.getBlockY();
         // If the roof was not found start going around in circles until something is found
         // Expand in ever increasing squares around location until a wall block is found
@@ -88,16 +87,12 @@ public class Roof {
         minZ = loc.getBlockZ();
         maxZ = loc.getBlockZ();
         expandCoords(loc);
-        int minx = minX;
-        int maxx = maxX;
-        int minz = minZ;
-        int maxz = maxZ;
+        int minx;
+        int maxx;
+        int minz;
+        int maxz;
         // Now we have some idea of the mins and maxes, check each block and see if it goes further
         do {
-            //plugin.logger(3, "Roof minx=" + minx);
-            //plugin.logger(3, "Roof maxx=" + maxx);
-            //plugin.logger(3, "Roof minz=" + minz);
-            //plugin.logger(3, "Roof maxz=" + maxz);
             minx = minX;
             maxx = maxX;
             minz = minZ;
@@ -117,7 +112,7 @@ public class Roof {
     /**
      * This takes any location and tries to go as far as possible in NWSE directions finding contiguous roof blocks
      * up to 100 in any direction
-     * @param height
+     * @param height - location to start search
      */
     private void expandCoords(Location height) {
         Location maxx = height.clone();

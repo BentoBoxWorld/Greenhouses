@@ -15,41 +15,24 @@ public class Walls {
     private int minZ;
     private int maxZ;
     private int floor;
-    private boolean useRoofMaxX;
-    private boolean useRoofMinX;
-    private boolean useRoofMaxZ;
-    private boolean useRoofMinZ;
 
     public final static List<Material> WALL_BLOCKS = Arrays.stream(Material.values())
             .filter(Material::isBlock) // Blocks only, no items
-            .filter(m -> !m.name().contains("TRAPDOOR")) // No trapdoors
+            .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
             .filter(m -> m.name().contains("DOOR") // All doors
                     || m.name().contains("GLASS") // All glass blocks
                     || m.equals(Material.HOPPER) // Hoppers
                     || m.equals(Material.GLOWSTONE)) // Glowstone
             .collect(Collectors.toList());
 
+    public final static List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
+
     public Walls(Roof roof) {
         // The player is under the roof
         // Assume the player is inside the greenhouse they are trying to create
         Location loc = roof.getLocation();
         World world = roof.getLocation().getWorld();
-        // Find the floor - defined as the last y under the roof where there are no wall blocks
-        int wallBlockCount = 0;
-        int y = roof.getHeight();
-        do {
-            wallBlockCount = 0;
-            for (int x = roof.getMinX(); x <= roof.getMaxX(); x++) {
-                for (int z = roof.getMinZ(); z <= roof.getMaxZ(); z++) {
-                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getType())) {
-                        wallBlockCount++;
-                    }
-                }
-            }
-
-        } while( y-- > 0 && wallBlockCount > 0);
-        floor = y + 1;
-        //addon.logger(3,"#1 Floor found at " + floor);
+        floor = getFloorY(world, roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ());
         // Now start with the player's x and z location
         int radiusMinX = 0;
         int radiusMaxX = 0;
@@ -69,14 +52,14 @@ public class Walls {
             maxX = loc.getBlockX() + radiusMaxX;
             minZ = loc.getBlockZ() - radiusMinZ;
             maxZ = loc.getBlockZ() + radiusMaxZ;
-            y = roof.getHeight() - 1;
+            int y;
             for (y = roof.getHeight() - 1; y > floor; y--) {
                 for (int x = minX; x <= maxX; x++) {
                     for (int z = minZ; z <= maxZ; z++) {
                         // Only look around outside edge
                         if (!((x > minX && x < maxX) && (z > minZ && z < maxZ))) {
                             // Look at block faces
-                            for (BlockFace bf: BlockFace.values()) {
+                            for (BlockFace bf: ORDINALS) {
                                 switch (bf) {
                                 case EAST:
                                     // positive x
@@ -142,7 +125,12 @@ public class Walls {
         minZ--;
         maxZ++;
         // Find the floor again, only looking within the walls
-        y = roof.getHeight();
+        floor = getFloorY(world, roof.getHeight(), minX, maxX, minZ,maxZ);
+    }
+
+    private int getFloorY(World world, int y, int minX, int maxX, int minZ, int maxZ) {
+        // Find the floor - defined as the last y under the roof where there are no wall blocks
+        int wallBlockCount;
         do {
             wallBlockCount = 0;
             for (int x = minX; x <= maxX; x++) {
@@ -154,7 +142,8 @@ public class Walls {
             }
 
         } while( y-- > 0 && wallBlockCount > 0);
-        floor = y + 1;
+        return y + 1;
+
     }
 
     /**
@@ -180,36 +169,6 @@ public class Walls {
      */
     public int getMaxZ() {
         return maxZ;
-    }
-    /**
-     * @return the useRoofMaxX
-     */
-    public boolean useRoofMaxX() {
-        return useRoofMaxX;
-    }
-    /**
-     * @return the useRoofMinX
-     */
-    public boolean useRoofMinX() {
-        return useRoofMinX;
-    }
-    /**
-     * @return the useRoofMaxZ
-     */
-    public boolean useRoofMaxZ() {
-        return useRoofMaxZ;
-    }
-    /**
-     * @return the useRoofMinZ
-     */
-    public boolean useRoofMinZ() {
-        return useRoofMinZ;
-    }
-    /**
-     * @return the wallBlocks
-     */
-    public List<Material> getWallBlocks() {
-        return WALL_BLOCKS;
     }
 
     public int getArea() {
