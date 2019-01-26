@@ -39,57 +39,8 @@ public class SnowTracker implements Listener {
 
     }
 
-    @EventHandler
-    public void onWeatherChangeEvent(final WeatherChangeEvent e) {
-        addon.log("DEBUG: weather change");
-        if (!addon.getActiveWorlds().contains(e.getWorld())) {
-            return;
-        }
-        addon.log("DEBUG: in worlds");
-        if (e.toWeatherState()) {
-            // It's raining
-            addon.log("It's raining!");
-            startSnow(e.getWorld());
-        } else {
-            // It's stopped raining!
-            addon.log("Stopped raining!");
-            stopSnow(e.getWorld());
-        }
-    }
-
-    private void stopSnow(World world) {
-        if (snowTasks.containsKey(world)) {
-            snowTasks.get(world).cancel();
-            snowTasks.remove(world);
-        }
-    }
-
-    private void startSnow(World world) {
-        // Start timer
-        snowTasks.putIfAbsent(world, Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), () -> shakeGlobes(world), 0L, 100L)); // every 5 seconds
-    }
-
-    private void shakeGlobes(World world) {
-        addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
-        .filter(g -> g.getLocation().getWorld().equals(world))
-        .filter(g -> !g.isBroken())
-        .filter(g -> g.getRoofHopperLocation() != null)
-        .filter(g -> g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER))
-        .filter(g -> ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET))
-        .forEach(this::removeWaterBucketAndShake);
-    }
-
-    private void removeWaterBucketAndShake(Greenhouse g) {
-        Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
-        h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
-        h.getInventory().addItem(new ItemStack(Material.BUCKET));
-        // Scatter snow
-        getAirBlocks(g);
-    }
-
     private void getAirBlocks(Greenhouse gh) {
         List<Block> waterBlocks = new ArrayList<>();
-        List<Block> result = new ArrayList<>();
         for (int x = (int)gh.getFootprint().getMinX() + 1; x < (int)gh.getFootprint().getMaxX(); x++) {
             for (int z = (int)gh.getFootprint().getMinY() + 1; z < (int)gh.getFootprint().getMaxY(); z++) {
                 for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
@@ -116,6 +67,50 @@ public class SnowTracker implements Listener {
         int maxSize = waterBlocks.size() - (gh.getArea() / gh.getBiomeRecipe().getWaterCoverage());
         if (maxSize > 0) {
             waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
+        }
+    }
+
+    @EventHandler
+    public void onWeatherChangeEvent(final WeatherChangeEvent e) {
+        if (!addon.getActiveWorlds().contains(e.getWorld())) {
+            return;
+        }
+        if (e.toWeatherState()) {
+            // It's raining
+            startSnow(e.getWorld());
+        } else {
+            // It's stopped raining!
+            stopSnow(e.getWorld());
+        }
+    }
+
+    private void removeWaterBucketAndShake(Greenhouse g) {
+        Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
+        h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
+        h.getInventory().addItem(new ItemStack(Material.BUCKET));
+        // Scatter snow
+        getAirBlocks(g);
+    }
+
+    private void shakeGlobes(World world) {
+        addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
+        .filter(g -> g.getLocation().getWorld().equals(world))
+        .filter(g -> !g.isBroken())
+        .filter(g -> g.getRoofHopperLocation() != null)
+        .filter(g -> g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER))
+        .filter(g -> ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET))
+        .forEach(this::removeWaterBucketAndShake);
+    }
+
+    private void startSnow(World world) {
+        // Start timer
+        snowTasks.putIfAbsent(world, Bukkit.getScheduler().runTaskTimer(addon.getPlugin(), () -> shakeGlobes(world), 0L, 100L)); // every 5 seconds
+    }
+
+    private void stopSnow(World world) {
+        if (snowTasks.containsKey(world)) {
+            snowTasks.get(world).cancel();
+            snowTasks.remove(world);
         }
     }
 }

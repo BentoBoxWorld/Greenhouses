@@ -13,6 +13,7 @@ import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.greenhouse.Walls;
 
 /**
+ * Greenhouse object
  * @author tastybento
  *
  */

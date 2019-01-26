@@ -4,8 +4,10 @@ import java.util.List;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.greenhouses.Greenhouses;
 
 /**
+ * Command to remove a greenhouse
  * @author tastybento
  *
  */
@@ -15,8 +17,7 @@ class RemoveCommand extends CompositeCommand {
      * @param parent - parent command
      */
     public RemoveCommand(CompositeCommand parent) {
-        super(parent, "make");
-        // TODO Auto-generated constructor stub
+        super(parent, "remove");
     }
 
     /* (non-Javadoc)
@@ -24,8 +25,9 @@ class RemoveCommand extends CompositeCommand {
      */
     @Override
     public void setup() {
-        // TODO Auto-generated method stub
-
+        this.setPermission("greenhouses.player");
+        this.setOnlyPlayer(true);
+        this.setDescription("greenhouses.commands.user.remove.description");
     }
 
     /* (non-Javadoc)
@@ -33,20 +35,22 @@ class RemoveCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        /*
-        final Greenhouse greenhouseNow = ((Greenhouses)getAddon()).getInGreenhouse(user);
-        if (greenhouseNow != null) {
-            if (greenhouseNow.getOwner().equals(user.getUniqueId())) {
-                user.sendMessage(ChatColor.RED + Locale.errorremoving);
-                plugin.removeGreenhouse(greenhouseNow);
-                return true;
-            }
-            user.sendMessage(ChatColor.RED + Locale.errornotyours);
-        } else {
-            user.sendMessage(ChatColor.RED + Locale.errornotinside);
-        }*/
+        // Check flag
+        if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
+            user.sendMessage("greenhouses.errors.no-rank");
+            return false;
+        }
+        Greenhouses addon = ((Greenhouses)this.getAddon());
+        // Remove greenhouse if it exists
+        if (!addon.getManager().getMap().getGreenhouse(user.getLocation()).map(gh -> {
+            user.sendMessage("general.success");
+            addon.getManager().removeGreenhouse(gh);
+            return true;
+        }).orElse(false)) {
+            user.sendMessage("greenhouses.errors.not-inside");
+            return false;
+        }
         return true;
-
     }
 
 }

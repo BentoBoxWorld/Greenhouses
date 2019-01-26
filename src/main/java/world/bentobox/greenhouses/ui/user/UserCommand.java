@@ -25,7 +25,7 @@ public class UserCommand extends CompositeCommand {
      */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.command");
+        this.setPermission("greenhouses.player");
         this.setOnlyPlayer(true);
         this.setParametersHelp("greenhouses.command.parameters");
         this.setDescription("greenhouses.command.description");
@@ -34,7 +34,7 @@ public class UserCommand extends CompositeCommand {
         //new ListCommand(this);
         new MakeCommand(this);
         //new RecipeCommand(this);
-        //new RemoveCommand(this);
+        new RemoveCommand(this);
     }
 
     /* (non-Javadoc)

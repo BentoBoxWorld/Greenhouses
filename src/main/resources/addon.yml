@@ -4,9 +4,24 @@ version: ${version}
 
 authors: tastybento
 
-softdepend: AcidIsland, BSkyBlock
+softdepend: AcidIsland, BSkyBlock, SkyGrid
 
-permissions:
-  greenhouses.make:
-    description: Player can make a greenhouse
-    default: true
+permissions:    
+  bskyblock.greenhouses.player:
+     description: Gives access to player commands
+     default: true
+  bskyblock.greenhouses.admin:
+     description: Gives access to admin commands
+     default: op
+  acidisland.greenhouses.player:
+     description: Gives access to player commands
+     default: true
+  acidisland.greenhouses.admin:
+     description: Gives access to admin commands
+     default: op
+  skygrid.greenhouses.player:
+     description: Gives access to player commands
+     default: true
+  skygrid.greenhouses.admin:
+     description: Gives access to admin commands
+     default: op

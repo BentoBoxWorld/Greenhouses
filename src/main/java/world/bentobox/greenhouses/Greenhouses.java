@@ -3,10 +3,12 @@ package world.bentobox.greenhouses;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
+import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.ui.user.UserCommand;
@@ -21,6 +23,7 @@ public class Greenhouses extends Addon {
     private Settings settings;
     private RecipeManager recipes;
     private final List<World> activeWorlds = new ArrayList<>();
+    public final static Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS).build();
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#onEnable()
@@ -42,15 +45,17 @@ public class Greenhouses extends Addon {
         manager = new GreenhouseManager(this);
         // Register commands for AcidIsland and BSkyBlock
         getPlugin().getAddonsManager().getGameModeAddons().stream()
-        .filter(gm -> gm.getDescription().getName().equals("AcidIsland") || gm.getDescription().getName().equals("BSkyBlock"))
+        .filter(gm -> settings.getGameModes().contains(gm.getDescription().getName()))
         .forEach(gm ->  {
             // Register command
             gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd));
             // Store active world
             activeWorlds.add(gm.getOverWorld());
         });
-
+        // Register greenhouse manager
         this.registerListener(manager);
+        // Register protection flag with BentoBox
+        getPlugin().getFlagsManager().registerFlag(GREENHOUSES);
 
     }
 
@@ -62,7 +67,9 @@ public class Greenhouses extends Addon {
         if (manager != null) {
             manager.saveGreenhouses();
         }
-
+        if (settings != null) {
+            new Config<>(this, Settings.class).saveConfigObject(settings);
+        }
     }
 
     /**

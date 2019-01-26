@@ -14,6 +14,7 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GhResult;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 /**
+ * Command to try to make a greenhouse
  * @author tastybento
  *
  */
@@ -31,8 +32,10 @@ class MakeCommand extends CompositeCommand {
      */
     @Override
     public void setup() {
-        // TODO Auto-generated method stub
-
+        this.setPermission("greenhouses.player");
+        this.setOnlyPlayer(true);
+        this.setParametersHelp("greenhouses.commands.user.make.parameters");
+        this.setDescription("greenhouses.commands.user.make.description");
     }
 
     /* (non-Javadoc)
@@ -40,69 +43,31 @@ class MakeCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-
-        // TODO Check permission
+        // Check flag
+        if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
+            user.sendMessage("greenhouses.errors.no-rank");
+            return false;
+        }
         // Find the physical the greenhouse
         Location location = user.getLocation().add(new Vector(0,1,0));
         // Check if there's a gh here already
         if (((Greenhouses)this.getAddon()).getManager().getMap().getGreenhouse(location).isPresent()) {
-            user.sendRawMessage("You are in a greenhouse already!" );
-            return true;
+            user.sendMessage("greenhouses.commands.user.make.error.already");
+            return false;
         }
         GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, null);
 
         if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
             // Success
-            user.sendMessage("general.success");
-            user.sendRawMessage(result.getFinder().getGh().getBiomeRecipe().getName());
+            user.sendMessage("greenhouses.commands.user.make.success", "[biome]", result.getFinder().getGh().getBiomeRecipe().getFriendlyName());
             return true;
         }
-        result.getResults().forEach(r -> sendErrorMessage(user, r));
+        result.getResults().forEach(r -> user.sendMessage("greenhouses.commands.user.make.error." + r.name()));
         if (!result.getFinder().getRedGlass().isEmpty()) {
             // Show red glass
             result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData()));
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
         }
         return true;
-    }
-
-    private void sendErrorMessage(User user, GreenhouseResult r) {
-        user.sendRawMessage(r.name());
-        switch (r) {
-        case FAIL_BAD_ROOF_BLOCKS:
-            break;
-        case FAIL_BAD_WALL_BLOCKS:
-            break;
-        case FAIL_BELOW:
-            break;
-        case FAIL_BLOCKS_ABOVE:
-            break;
-        case FAIL_HOLE_IN_ROOF:
-            break;
-        case FAIL_HOLE_IN_WALL:
-            break;
-        case FAIL_NO_ROOF:
-            break;
-        case FAIL_TOO_MANY_DOORS:
-            break;
-        case FAIL_TOO_MANY_HOPPERS:
-            break;
-        case FAIL_UNEVEN_WALLS:
-            break;
-        case FAIL_INSUFFICIENT_ICE:
-            break;
-        case FAIL_INSUFFICIENT_LAVA:
-            break;
-        case FAIL_INSUFFICIENT_WATER:
-            break;
-        case FAIL_NO_ICE:
-            break;
-        case FAIL_NO_LAVA:
-            break;
-        case FAIL_NO_WATER:
-            break;
-        default:
-            break;
-        }
     }
 }

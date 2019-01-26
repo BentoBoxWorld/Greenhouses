@@ -1,10 +1,9 @@
 greenhouses:
-   # World Name where Greenhouses will operate
-   worldName:
-     - world
-     - creative
-     - ASkyBlock
-     - AcidIsland
+   # BentoBox GameModes that will use Greenhouses
+   game-modes:
+   - BSkyBlock
+   - AcidIsland
+   - SkyGrid
 
    # Console message level.
    # List the levels of debug or messages you want.

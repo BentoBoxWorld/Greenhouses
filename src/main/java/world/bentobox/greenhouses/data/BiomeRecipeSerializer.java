@@ -8,7 +8,7 @@ import world.bentobox.greenhouses.managers.RecipeManager;
  * @author tastybento
  *
  */
-class BiomeRecipeSerializer implements AdapterInterface<BiomeRecipe, String> {
+public class BiomeRecipeSerializer implements AdapterInterface<BiomeRecipe, String> {
 
     @Override
     public BiomeRecipe deserialize(Object object) {

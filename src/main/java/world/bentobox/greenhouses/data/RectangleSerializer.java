@@ -8,7 +8,7 @@ import world.bentobox.bentobox.database.objects.adapters.AdapterInterface;
  * @author tastybento
  *
  */
-class RectangleSerializer implements AdapterInterface<Rectangle, String> {
+public class RectangleSerializer implements AdapterInterface<Rectangle, String> {
 
     @Override
     public Rectangle deserialize(Object object) {
