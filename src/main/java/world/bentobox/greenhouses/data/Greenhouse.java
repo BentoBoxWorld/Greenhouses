@@ -7,8 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 
+import com.google.gson.annotations.Expose;
+
 import world.bentobox.bentobox.database.objects.DataObject;
 import world.bentobox.bentobox.database.objects.adapters.Adapter;
+import world.bentobox.greenhouses.data.adapters.BiomeRecipeAdapter;
+import world.bentobox.greenhouses.data.adapters.RectangleAdapter;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.greenhouse.Walls;
 
@@ -30,15 +34,23 @@ public class Greenhouse implements DataObject {
                 + ", broken=" + broken + "]";
     }
 
+    @Expose
     private String uniqueId = UUID.randomUUID().toString();
+    @Expose
     private Location location;
-    @Adapter(RectangleSerializer.class)
+    @Expose
+    @Adapter(RectangleAdapter.class)
     private Rectangle footprint;
+    @Expose
     private int ceilingHeight;
+    @Expose
     private Biome originalBiome;
+    @Expose
     private Location roofHopperLocation;
-    @Adapter(BiomeRecipeSerializer.class)
+    @Expose
+    @Adapter(BiomeRecipeAdapter.class)
     private BiomeRecipe biomeRecipe;
+
     private boolean broken;
 
     /**
