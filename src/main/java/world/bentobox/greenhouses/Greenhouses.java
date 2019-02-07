@@ -43,7 +43,7 @@ public class Greenhouses extends Addon {
         recipes = new RecipeManager(this);
         // Load manager
         manager = new GreenhouseManager(this);
-        // Register commands for AcidIsland and BSkyBlock
+        // Register commands for 
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().contains(gm.getDescription().getName()))
         .forEach(gm ->  {

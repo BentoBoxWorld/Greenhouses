@@ -10,15 +10,17 @@ import org.bukkit.util.Vector;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GhResult;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.ui.panel.Panel;
 
 /**
  * Command to try to make a greenhouse
  * @author tastybento
  *
  */
-class MakeCommand extends CompositeCommand {
+class MakeCommand extends CompositeCommand  {
 
     /**
      * @param parent - parent command
@@ -43,6 +45,14 @@ class MakeCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        if (args.isEmpty()) {
+            new Panel((Greenhouses)this.getAddon()).ShowPanel(user);
+            return true;
+        }
+        return makeGreenhouse(user, null);
+    }
+    
+    private boolean makeGreenhouse(User user, BiomeRecipe br) {
         // Check flag
         if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
             user.sendMessage("greenhouses.errors.no-rank");
@@ -55,7 +65,7 @@ class MakeCommand extends CompositeCommand {
             user.sendMessage("greenhouses.commands.user.make.error.already");
             return false;
         }
-        GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, null);
+        GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br);
 
         if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
             // Success
@@ -70,4 +80,5 @@ class MakeCommand extends CompositeCommand {
         }
         return true;
     }
+    
 }

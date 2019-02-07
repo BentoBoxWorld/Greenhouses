@@ -12,6 +12,8 @@ import world.bentobox.greenhouses.Greenhouses;
  */
 public class UserCommand extends CompositeCommand {
 
+    private MakeCommand makeCommand;
+
     /**
      * @param gh - addon
      * @param parent - parent command
@@ -32,7 +34,7 @@ public class UserCommand extends CompositeCommand {
 
         //new InfoCommand(this);
         //new ListCommand(this);
-        new MakeCommand(this);
+        makeCommand = new MakeCommand(this);
         //new RecipeCommand(this);
         new RemoveCommand(this);
     }
@@ -44,6 +46,13 @@ public class UserCommand extends CompositeCommand {
     public boolean execute(User user, String label, List<String> args) {
         this.showHelp(this, user);
         return true;
+    }
+
+    /**
+     * @return the makeCommand
+     */
+    public MakeCommand getMakeCommand() {
+        return makeCommand;
     }
 
 }
