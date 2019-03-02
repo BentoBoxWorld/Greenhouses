@@ -47,15 +47,15 @@ greenhouses:
           FAIL_NO_LAVA: "&cLava is required to make this recipe"
           FAIL_NO_WATER: "&cWater is required to make this recipe"
         success: "&2You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
-       info:
-         title: "&A[How To Build A Greenhouse]"
-         instructions: |
-           &EMake a box out of out of glass with 4 walls and a flat glass
-           &Eroof and add up to &F4 doors &Ein the walls.
-           &EPlace &F1 hopper &Ein a wall or roof and add water buckets.
-           &Eto make snow and/or bonemeal to grow plants automatically.
-           &ECheck the biome recipes for what blocks must be inside a
-           &Egreenhouse to make one successfully." 
+      info:
+        title: "&A[How To Build A Greenhouse]"
+        instructions: |
+          &EMake a box out of out of glass with 4 walls and a flat glass
+          &Eroof and add up to &F4 doors &Ein the walls.
+          &EPlace &F1 hopper &Ein a wall or roof and add water buckets.
+          &Eto make snow and/or bonemeal to grow plants automatically.
+          &ECheck the biome recipes for what blocks must be inside a
+          &Egreenhouse to make one successfully. 
 
 
 general:

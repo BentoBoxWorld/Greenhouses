@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package world.bentobox.greenhouses.ui.panel;
 
@@ -37,6 +37,7 @@ public class PanelClick implements ClickHandler {
     @Override
     public boolean onClick(Panel panel, User user, ClickType clickType, int slot) {
         if (user.hasPermission(br.getPermission())) {
+            user.closeInventory();
             makeGreenhouse(user, br);
         }
         return true;

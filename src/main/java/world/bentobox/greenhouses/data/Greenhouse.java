@@ -187,10 +187,11 @@ public class Greenhouse implements DataObject {
     }
 
     /**
-     * @return area of greenhouse
+     *
+     * @return internal area of greenhouse
      */
     public int getArea() {
-        return this.footprint.height * this.footprint.width;
+        return (this.footprint.height - 2) * (this.footprint.width - 2);
     }
 
     /**

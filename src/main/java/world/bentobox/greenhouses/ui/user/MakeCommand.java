@@ -51,7 +51,7 @@ class MakeCommand extends CompositeCommand  {
         }
         return makeGreenhouse(user, null);
     }
-    
+
     private boolean makeGreenhouse(User user, BiomeRecipe br) {
         // Check flag
         if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
@@ -80,5 +80,5 @@ class MakeCommand extends CompositeCommand  {
         }
         return true;
     }
-    
+
 }

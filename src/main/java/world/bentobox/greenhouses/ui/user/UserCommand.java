@@ -1,5 +1,6 @@
 package world.bentobox.greenhouses.ui.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -44,8 +45,10 @@ public class UserCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        this.showHelp(this, user);
-        return true;
+        if (args.isEmpty() && getPlugin().getIslands().getIsland(getWorld(), user.getUniqueId()) != null) {
+            return getSubCommand("make").map(c -> c.execute(user, c.getLabel(), new ArrayList<>())).orElse(false);
+        }
+        return showHelp(this, user);
     }
 
     /**

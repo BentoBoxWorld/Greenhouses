@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -432,13 +433,13 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return true if this recipe has no mobs that may spawn
      */
     public boolean noMobs() {
-        return mobTree.isEmpty();
+        return mobTree == null ? false : mobTree.isEmpty();
     }
 
     /**
      * @return the mob types that may spawn due to this recipe
      */
     public Set<EntityType> getMobTypes() {
-        return mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
+        return mobTree == null ? Collections.emptySet() : mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
     }
 }
