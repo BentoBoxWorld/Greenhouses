@@ -5,8 +5,8 @@ import java.util.List;
 
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
+import world.bentobox.bentobox.api.configuration.ConfigObject;
 import world.bentobox.bentobox.api.configuration.StoreAt;
-import world.bentobox.bentobox.database.objects.DataObject;
 
 
 /**
@@ -16,7 +16,7 @@ import world.bentobox.bentobox.database.objects.DataObject;
 @StoreAt(filename="config.yml", path="addons/Greenhouses") // Explicitly call out what name this should have.
 @ConfigComment("Greenhouses Configuration [version]")
 @ConfigComment("")
-public class Settings implements DataObject {
+public class Settings implements ConfigObject {
 
     // General
     @ConfigComment("BentoBox GameModes that will use Greenhouses")
@@ -60,15 +60,6 @@ public class Settings implements DataObject {
     @ConfigEntry(path = "greenhouses.allowflowin")
     private boolean allowFlowIn;
 
-
-
-
-    @Override
-    public String getUniqueId() {
-        return "config";
-    }
-    @Override
-    public void setUniqueId(String uniqueId) {}
     /**
      * @return the gameModes
      */
