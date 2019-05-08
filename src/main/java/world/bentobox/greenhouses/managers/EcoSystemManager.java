@@ -76,7 +76,7 @@ class EcoSystemManager {
     }
 
     private void convertBlocks(Greenhouse gh) {
-        getAvailableBlocks(gh).forEach(gh.getBiomeRecipe()::convertBlock);
+        getAvailableBlocks(gh).stream().map(b -> b.getRelative(BlockFace.DOWN)).forEach(gh.getBiomeRecipe()::convertBlock);
     }
 
     private void verify(Greenhouse gh) {
