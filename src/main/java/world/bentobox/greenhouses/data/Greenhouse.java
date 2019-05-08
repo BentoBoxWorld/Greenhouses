@@ -1,20 +1,18 @@
 package world.bentobox.greenhouses.data;
 
-import java.awt.Rectangle;
 import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.util.BoundingBox;
 
 import com.google.gson.annotations.Expose;
 
 import world.bentobox.bentobox.database.objects.DataObject;
-import world.bentobox.bentobox.database.objects.adapters.Adapter;
-import world.bentobox.greenhouses.data.adapters.BiomeRecipeAdapter;
-import world.bentobox.greenhouses.data.adapters.RectangleAdapter;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.greenhouse.Walls;
+import world.bentobox.greenhouses.managers.RecipeManager;
 
 /**
  * Greenhouse object
@@ -23,33 +21,18 @@ import world.bentobox.greenhouses.greenhouse.Walls;
  */
 public class Greenhouse implements DataObject {
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Greenhouse [uniqueId=" + uniqueId + ", location=" + location + ", footprint=" + footprint
-                + ", ceilingHeight=" + ceilingHeight + ", originalBiome=" + originalBiome
-                + ", roofHopperLocation=" + roofHopperLocation + ", biomeRecipe=" + biomeRecipe.getName()
-                + ", broken=" + broken + "]";
-    }
-
     @Expose
     private String uniqueId = UUID.randomUUID().toString();
     @Expose
     private Location location;
     @Expose
-    @Adapter(RectangleAdapter.class)
-    private Rectangle footprint;
-    @Expose
-    private int ceilingHeight;
+    private BoundingBox boundingBox;
     @Expose
     private Biome originalBiome;
     @Expose
     private Location roofHopperLocation;
     @Expose
-    @Adapter(BiomeRecipeAdapter.class)
-    private BiomeRecipe biomeRecipe;
+    private String biomeRecipeName;
 
     private boolean broken;
 
@@ -60,22 +43,22 @@ public class Greenhouse implements DataObject {
 
     public Greenhouse(World world, Walls walls, int ceilingHeight) {
         this.location = new Location(world, walls.getMinX(), walls.getFloor(), walls.getMinZ());
-        this.ceilingHeight = ceilingHeight;
-        this.footprint = new Rectangle(walls.getMinX(), walls.getMinZ(), walls.getWidth(), walls.getLength());
+        Location location2 = new Location(world, walls.getMaxX(), ceilingHeight, walls.getMaxZ());
+        this.boundingBox = BoundingBox.of(location, location2);
     }
 
     /**
      * @return the biomeRecipe
      */
-    public BiomeRecipe getBiomeRecipe() {
-        return biomeRecipe;
+    public String getBiomeRecipeName() {
+        return biomeRecipeName;
     }
 
     /**
      * @return the ceilingHeight
      */
     public int getCeilingHeight() {
-        return ceilingHeight;
+        return (int) boundingBox.getMaxY();
     }
 
     /**
@@ -83,13 +66,6 @@ public class Greenhouse implements DataObject {
      */
     public int getFloorHeight() {
         return location.getBlockY();
-    }
-
-    /**
-     * @return the floor
-     */
-    public Rectangle getFootprint() {
-        return footprint;
     }
 
     /**
@@ -129,10 +105,10 @@ public class Greenhouse implements DataObject {
     }
 
     /**
-     * @param biomeRecipe the biomeRecipe to set
+     * @param biomeRecipeName the biomeRecipe to set
      */
-    public void setBiomeRecipe(BiomeRecipe biomeRecipe) {
-        this.biomeRecipe = biomeRecipe;
+    public void setBiomeRecipeName(String biomeRecipeName) {
+        this.biomeRecipeName = biomeRecipeName;
     }
 
     /**
@@ -140,20 +116,6 @@ public class Greenhouse implements DataObject {
      */
     public void setBroken(boolean broken) {
         this.broken = broken;
-    }
-
-    /**
-     * @param ceilingHeight the ceilingHeight to set
-     */
-    public void setCeilingHeight(int ceilingHeight) {
-        this.ceilingHeight = ceilingHeight;
-    }
-
-    /**
-     * @param floor the floor to set
-     */
-    public void setFootprint(Rectangle floor) {
-        this.footprint = floor;
     }
 
     /**
@@ -177,6 +139,20 @@ public class Greenhouse implements DataObject {
         this.roofHopperLocation = roofHopperLocation;
     }
 
+    /**
+     * @return the boundingBox
+     */
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    /**
+     * @param boundingBox the boundingBox to set
+     */
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.database.objects.DataObject#setUniqueId(java.lang.String)
      */
@@ -191,7 +167,7 @@ public class Greenhouse implements DataObject {
      * @return internal area of greenhouse
      */
     public int getArea() {
-        return (this.footprint.height - 2) * (this.footprint.width - 2);
+        return ((int)boundingBox.getWidthX() - 2) * ((int)boundingBox.getWidthZ() - 2);
     }
 
     /**
@@ -207,13 +183,24 @@ public class Greenhouse implements DataObject {
      * @return true if inside the greenhouse
      */
     public boolean contains(Location location2) {
-        return (location.getWorld().equals(location2.getWorld())
-                && location2.getBlockY() <= this.ceilingHeight
-                && location2.getBlockY() >= this.getFloorHeight()
-                && location2.getBlockX() >= (int)this.footprint.getMinX()
-                && location2.getBlockX() <= (int)this.footprint.getMaxX()
-                && location2.getBlockZ() >= (int)this.footprint.getMinY()
-                && location2.getBlockZ() <= (int)this.footprint.getMaxY());
+        return location.getWorld().equals(location2.getWorld()) && boundingBox.contains(location2.toVector());
+    }
+
+    /**
+     * Set the biome recipe
+     * @param greenhouseRecipe - biome recipe
+     */
+    public void setBiomeRecipe(BiomeRecipe greenhouseRecipe) {
+        this.biomeRecipeName = greenhouseRecipe.getName();
+
+    }
+
+    /**
+     * Get the biome recipe for this greenhouse
+     * @return biome recipe or null
+     */
+    public BiomeRecipe getBiomeRecipe() {
+        return RecipeManager.getBiomeRecipies(biomeRecipeName).orElse(null);
     }
 
 }

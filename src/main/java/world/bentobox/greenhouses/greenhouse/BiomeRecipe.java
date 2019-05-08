@@ -24,7 +24,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
-    private final Greenhouses addon;
+    private Greenhouses addon;
     private Biome type;
     private Material icon; // Biome icon for control panel
     private int priority;
@@ -55,6 +55,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private String permission = "";
     private final Random random = new Random();
     private Map<Material, Integer> missingBlocks;
+
+    public BiomeRecipe() {}
 
     /**
      * @param type - biome
@@ -138,8 +140,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Map<Material, Integer> blockCount = new HashMap<>();
         // Look through the greenhouse and count what is in there
         for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
-            for (int x = (int) (gh.getFootprint().getMinX()+1); x < gh.getFootprint().getMaxX(); x++) {
-                for (int z = (int) (gh.getFootprint().getMinY()+1); z < gh.getFootprint().getMaxY(); z++) {
+            for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
+                for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
                     Block b = gh.getWorld().getBlockAt(x, y, z);
                     if (!b.getType().equals(Material.AIR)) {
                         blockCount.putIfAbsent(b.getType(), 0);
@@ -442,4 +444,5 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public Set<EntityType> getMobTypes() {
         return mobTree == null ? Collections.emptySet() : mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
     }
+
 }

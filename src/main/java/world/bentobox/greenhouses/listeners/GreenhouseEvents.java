@@ -125,10 +125,10 @@ public class GreenhouseEvents implements Listener {
         plugin.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).ifPresent(g -> {
             // Check to see if wall or roof block broken
             if ((e.getBlock().getLocation().getBlockY() == g.getCeilingHeight())
-                    || e.getBlock().getLocation().getBlockX() == g.getFootprint().getMinX()
-                    || e.getBlock().getLocation().getBlockX() == g.getFootprint().getMaxX()
-                    || e.getBlock().getLocation().getBlockZ() == g.getFootprint().getMinY()
-                    || e.getBlock().getLocation().getBlockZ() == g.getFootprint().getMaxY()
+                    || e.getBlock().getLocation().getBlockX() == (int)g.getBoundingBox().getMinX()
+                    || e.getBlock().getLocation().getBlockX() == (int)g.getBoundingBox().getMaxX()
+                    || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMinY()
+                    || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxY()
                     ) {
                 user.sendMessage("greenhouses.broken");
                 plugin.getManager().getMap().removeGreenhouse(g);

@@ -142,8 +142,8 @@ class EcoSystemManager {
      */
     private List<Block> getAvailableBlocks(Greenhouse gh) {
         List<Block> result = new ArrayList<>();
-        for (int x = (int)gh.getFootprint().getMinX() + 1; x < (int)gh.getFootprint().getMaxX(); x++) {
-            for (int z = (int)gh.getFootprint().getMinY() + 1; z < (int)gh.getFootprint().getMaxY(); z++) {
+        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
+            for (int z = (int)gh.getBoundingBox().getMinY() + 1; z < (int)gh.getBoundingBox().getMaxY(); z++) {
                 for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
                     if (!b.getType().equals(Material.AIR) && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {

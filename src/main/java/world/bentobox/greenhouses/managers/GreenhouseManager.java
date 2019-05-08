@@ -116,8 +116,8 @@ public class GreenhouseManager implements Listener {
         addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
         if (g.getOriginalBiome().equals(Biome.NETHER) || g.getOriginalBiome().equals(Biome.DESERT)
                 || g.getOriginalBiome().equals(Biome.DESERT_HILLS)) {
-            for (int x = (int)g.getFootprint().getMinX(); x<= (int)g.getFootprint().getMaxX(); x++) {
-                for (int z = (int)g.getFootprint().getMinY(); z<= (int)g.getFootprint().getMinY(); z++) {
+            for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x++) {
+                for (int z = (int)g.getBoundingBox().getMinY(); z<= (int)g.getBoundingBox().getMinY(); z++) {
                     // Set back to the original biome
                     g.getLocation().getWorld().setBiome(x, z, g.getOriginalBiome());
                     for (int y = g.getFloorHeight(); y< g.getCeilingHeight(); y++) {
@@ -158,7 +158,7 @@ public class GreenhouseManager implements Listener {
             if (resultSet.isEmpty()) {
                 // Success - set recipe and add to map
                 finder.getGh().setBiomeRecipe(greenhouseRecipe);
-                map.addGreenhouse(finder.getGh());
+                resultSet.add(map.addGreenhouse(finder.getGh()));
                 activateGreenhouse(finder.getGh());
             }
             return new GhResult().setFinder(finder).setResults(resultSet);
@@ -177,8 +177,8 @@ public class GreenhouseManager implements Listener {
     }
 
     private void activateGreenhouse(Greenhouse gh) {
-        for (int x = gh.getFootprint().x; x < gh.getFootprint().x + gh.getFootprint().width; x++) {
-            for (int z = gh.getFootprint().y; z < gh.getFootprint().y + gh.getFootprint().height; z++) {
+        for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x++) {
+            for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z++) {
                 gh.getWorld().setBiome(x, z, gh.getBiomeRecipe().getBiome());
             }
         }
@@ -221,6 +221,14 @@ public class GreenhouseManager implements Listener {
         GhResult setFinder(GreenhouseFinder finder) {
             this.finder = finder;
             return this;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            return "GhResult [results=" + results + ", finder=" + finder + "]";
         }
 
 
