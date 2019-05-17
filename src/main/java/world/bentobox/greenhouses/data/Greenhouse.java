@@ -26,6 +26,7 @@ public class Greenhouse implements DataObject {
     @Expose
     private Location location;
     @Expose
+    // Min coords are inside, max coords are outside
     private BoundingBox boundingBox;
     @Expose
     private Biome originalBiome;
@@ -43,7 +44,7 @@ public class Greenhouse implements DataObject {
 
     public Greenhouse(World world, Walls walls, int ceilingHeight) {
         this.location = new Location(world, walls.getMinX(), walls.getFloor(), walls.getMinZ());
-        Location location2 = new Location(world, walls.getMaxX(), ceilingHeight, walls.getMaxZ());
+        Location location2 = new Location(world, walls.getMaxX() + 1, ceilingHeight + 1, walls.getMaxZ() + 1);
         this.boundingBox = BoundingBox.of(location, location2);
     }
 
