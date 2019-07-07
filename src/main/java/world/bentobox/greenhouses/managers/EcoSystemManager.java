@@ -21,7 +21,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
  * @author tastybento
  *
  */
-class EcoSystemManager {
+public class EcoSystemManager {
 
     private final Greenhouses addon;
     private final GreenhouseManager g;
@@ -101,7 +101,6 @@ class EcoSystemManager {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next())) {
                 // Add a mob to the sum in the greenhouse
-                addon.log("spawned mob");
                 sum++;
             }
         }
@@ -143,8 +142,8 @@ class EcoSystemManager {
     private List<Block> getAvailableBlocks(Greenhouse gh) {
         List<Block> result = new ArrayList<>();
         for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinY() + 1; z < (int)gh.getBoundingBox().getMaxY(); z++) {
-                for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
+            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
+                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
                     if (!b.getType().equals(Material.AIR) && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
                         result.add(b.getRelative(BlockFace.UP));

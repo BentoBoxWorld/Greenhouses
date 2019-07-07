@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.greenhouse;
 
 import static org.junit.Assert.fail;

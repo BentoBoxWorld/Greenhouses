@@ -53,6 +53,7 @@ public class GreenhouseManager implements Listener {
     // Greenhouses
     private final GreenhouseMap map;
     private final Database<Greenhouse> handler;
+    private EcoSystemManager ecoMgr;
 
     public GreenhouseManager(Greenhouses addon) {
         this.addon = addon;
@@ -64,7 +65,7 @@ public class GreenhouseManager implements Listener {
     public void startManager(BentoBoxReadyEvent e) {
         loadGreenhouses();
         // Start ecosystems
-        new EcoSystemManager(addon, this);
+        ecoMgr = new EcoSystemManager(addon, this);
         // Register listeners
         addon.registerListener(new SnowTracker(addon));
         addon.registerListener(new GreenhouseEvents(addon));
@@ -79,6 +80,7 @@ public class GreenhouseManager implements Listener {
      * Load all known greenhouses
      */
     private void loadGreenhouses() {
+        map.clear();
         addon.log("Loading greenhouses...");
         handler.loadObjects().forEach(g -> {
             GreenhouseResult result = map.addGreenhouse(g);
@@ -112,12 +114,13 @@ public class GreenhouseManager implements Listener {
      * @param g - greenhouse
      */
     public void removeGreenhouse(Greenhouse g) {
+        handler.deleteObject(g);
         map.removeGreenhouse(g);
         addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
         if (g.getOriginalBiome().equals(Biome.NETHER) || g.getOriginalBiome().equals(Biome.DESERT)
                 || g.getOriginalBiome().equals(Biome.DESERT_HILLS)) {
             for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x++) {
-                for (int z = (int)g.getBoundingBox().getMinY(); z<= (int)g.getBoundingBox().getMinY(); z++) {
+                for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMinZ(); z++) {
                     // Set back to the original biome
                     g.getLocation().getWorld().setBiome(x, z, g.getOriginalBiome());
                     for (int y = g.getFloorHeight(); y< g.getCeilingHeight(); y++) {
@@ -160,6 +163,7 @@ public class GreenhouseManager implements Listener {
                 finder.getGh().setBiomeRecipe(greenhouseRecipe);
                 resultSet.add(map.addGreenhouse(finder.getGh()));
                 activateGreenhouse(finder.getGh());
+                handler.saveObject(finder.getGh());
             }
             return new GhResult().setFinder(finder).setResults(resultSet);
         }
@@ -171,6 +175,7 @@ public class GreenhouseManager implements Listener {
                     // Success - set recipe and add to map
                     finder.getGh().setBiomeRecipe(r);
                     activateGreenhouse(finder.getGh());
+                    handler.saveObject(finder.getGh());
                     return map.addGreenhouse(finder.getGh());
                 }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
         return new GhResult().setFinder(finder).setResults(resultSet);
@@ -232,5 +237,12 @@ public class GreenhouseManager implements Listener {
         }
 
 
+    }
+
+    /**
+     * @return the ecoMgr
+     */
+    public EcoSystemManager getEcoMgr() {
+        return ecoMgr;
     }
 }

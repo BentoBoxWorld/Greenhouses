@@ -66,7 +66,6 @@ class MakeCommand extends CompositeCommand  {
             return false;
         }
         GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br);
-        getAddon().getPlugin().logDebug(result);
         if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
             // Success
             user.sendMessage("greenhouses.commands.user.make.success", "[biome]", result.getFinder().getGh().getBiomeRecipe().getFriendlyName());

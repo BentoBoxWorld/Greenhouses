@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -329,6 +330,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         return getRandomPlant().map(p -> {
             if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(true)) {
                 bl.setType(p.getPlantMaterial());
+                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
             return false;

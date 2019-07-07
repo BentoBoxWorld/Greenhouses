@@ -12,6 +12,9 @@ protection:
         &bcontrol greenhouses   
 
 greenhouses:
+  general:
+   greenhouses: "Greenhouses"
+   
   errors:
     move: "Move to a greenhouse you own first."
     no-rank: "&cYou do not have rank to do that."
@@ -21,6 +24,21 @@ greenhouses:
     alreadyexists: "Greenhouse already exists!"
     norecipe: "Cannot make a greenhouse!"
     
+  event:
+   broke: "You broke this greenhouse! Reverting biome to [biome]!"
+   entering: "Entering [biome] greenhouse"
+   leaving: "Leaving [biome] greenhouse"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] recipe]"
+   watermustbe: "Water > [coverage]% of floor area."
+   icemustbe: "Ice blocks > [coverage]% of floor area."
+   lavamustbe: "Lava > [coverage]% of floor area."
+   minimumblockstitle: "[Minimum blocks required]"
+   nootherblocks: "No other blocks required."
+   missing: "Greenhouse is missing"
+
   commands:
     user:
       remove:
@@ -58,12 +76,7 @@ greenhouses:
           &Egreenhouse to make one successfully. 
 
 
-general:
-   notavailable: "Greenhouses are not available in this world"
-   greenhouses: "Greenhouses"
-   biome: "Biome"
-   owner: "Owner"
-
+######### Old locale for reference
 help:
    help: "help"
    make: "Tries to make a greenhouse"
@@ -108,7 +121,7 @@ info:
      &EPlace &F1 hopper &Ein a wall or roof and add water buckets.
      &Eto make snow and/or bonemeal to grow plants automatically.
      &ECheck the biome recipes for what blocks must be inside a
-     &Egreenhouse to make one successfully." 
+     &Egreenhouse to make one successfully. 
    info: "[Greenhouse Info]"
    none: "None"
    nomore: "&4You cannot build any more greenhouses!"

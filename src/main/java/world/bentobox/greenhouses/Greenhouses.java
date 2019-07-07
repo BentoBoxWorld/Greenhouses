@@ -43,7 +43,7 @@ public class Greenhouses extends Addon {
         recipes = new RecipeManager(this);
         // Load manager
         manager = new GreenhouseManager(this);
-        // Register commands for 
+        // Register commands for
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().contains(gm.getDescription().getName()))
         .forEach(gm ->  {
@@ -66,6 +66,7 @@ public class Greenhouses extends Addon {
     public void onDisable() {
         if (manager != null) {
             manager.saveGreenhouses();
+            manager.getEcoMgr().cancel();
         }
         if (settings != null) {
             new Config<>(this, Settings.class).saveConfigObject(settings);

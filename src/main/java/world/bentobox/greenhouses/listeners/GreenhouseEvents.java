@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 
@@ -88,19 +89,19 @@ public class GreenhouseEvents implements Listener {
         // to is a greenhouse
         if (to.isPresent() && from.isPresent() && !to.equals(from)) {
             // Leaving greenhouse, entering another
-            user.sendRawMessage("Leaving " + to.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
-            user.sendRawMessage("Entering " + from.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
+            user.sendMessage("greenhouses.event.leaving", "[biome]", to.get().getBiomeRecipe().getFriendlyName());
+            user.sendMessage("greenhouses.event.entering", "[biome]",  from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
         // from is a greenhouse
         if (from.isPresent() && !to.isPresent()) {
             // Exiting
-            user.sendRawMessage("Leaving " + from.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
+            user.sendMessage("greenhouses.event.leaving", "[biome]", from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
         if (!from.isPresent()) {
             // Entering
-            user.sendRawMessage("Entering " + to.get().getBiomeRecipe().getFriendlyName() + " greenhouse");
+            user.sendMessage("greenhouses.event.entering", "[biome]", to.get().getBiomeRecipe().getFriendlyName());
         }
 
     }
@@ -130,8 +131,8 @@ public class GreenhouseEvents implements Listener {
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMinZ()
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxZ() - 1
                     ) {
-                user.sendMessage("greenhouses.broken");
-                plugin.getManager().getMap().removeGreenhouse(g);
+                user.sendMessage("greenhouses.event.broke", "[biome]", Util.prettifyText(g.getOriginalBiome().name()));
+                plugin.getManager().removeGreenhouse(g);
             }
         });
     }

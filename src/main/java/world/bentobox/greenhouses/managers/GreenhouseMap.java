@@ -48,6 +48,13 @@ public class GreenhouseMap {
     }
 
     /**
+     * Clear the greenhouse map
+     */
+    public void clear() {
+        greenhouses.clear();
+    }
+
+    /**
      * Try to get greenhouse at location
      * @param location - location
      * @return Optional greenhouse or empty
@@ -91,7 +98,7 @@ public class GreenhouseMap {
      * Removes the greenhouse from the map
      * @param greenhouse - greenhouse
      */
-    public void removeGreenhouse(Greenhouse greenhouse) {
+    protected void removeGreenhouse(Greenhouse greenhouse) {
         addon.getIslands().getIslandAt(greenhouse.getLocation()).ifPresent(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
             greenhouses.get(i).remove(greenhouse);
