@@ -12,11 +12,13 @@ import org.bukkit.event.Listener;
 
 import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.database.Database;
+import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.listeners.GreenhouseEvents;
 import world.bentobox.greenhouses.listeners.GreenhouseGuard;
+import world.bentobox.greenhouses.listeners.IslandChangeEvents;
 import world.bentobox.greenhouses.listeners.SnowTracker;
 
 public class GreenhouseManager implements Listener {
@@ -70,6 +72,7 @@ public class GreenhouseManager implements Listener {
         addon.registerListener(new SnowTracker(addon));
         addon.registerListener(new GreenhouseEvents(addon));
         addon.registerListener(new GreenhouseGuard(addon));
+        addon.registerListener(new IslandChangeEvents(addon));
     }
 
     public GreenhouseMap getMap() {
@@ -244,5 +247,15 @@ public class GreenhouseManager implements Listener {
      */
     public EcoSystemManager getEcoMgr() {
         return ecoMgr;
+    }
+
+    /**
+     * Removes all greenhouses on island
+     * @param island - island
+     */
+    public void removeGreenhouses(Island island) {
+        map.getGreenhouses(island).forEach(handler::deleteObject);
+        map.removeGreenhouses(island);
+
     }
 }

@@ -178,7 +178,7 @@ biomes:
       TALL_GRASS: 10:GRASS_BLOCK
     mobs:
       HORSE: 10:GRASS_BLOCK
-    moblimit: 9
+    moblimit: 1
   RIVER:
     friendlyname: "Clay river"
     biome: RIVER

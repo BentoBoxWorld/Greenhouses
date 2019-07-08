@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.managers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,16 +101,32 @@ public class GreenhouseMap {
      */
     protected void removeGreenhouse(Greenhouse greenhouse) {
         addon.getIslands().getIslandAt(greenhouse.getLocation()).ifPresent(i -> {
-            greenhouses.putIfAbsent(i, new ArrayList<>());
-            greenhouses.get(i).remove(greenhouse);
+            if (greenhouses.containsKey(i)) greenhouses.get(i).remove(greenhouse);
         });
     }
+
+    /**
+     * @param island
+     */
+    public void removeGreenhouses(Island island) {
+        greenhouses.remove(island);
+    }
+
 
     /**
      * @return a list of all the Greenhouses
      */
     public List<Greenhouse> getGreenhouses() {
         return greenhouses.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * Get all greenhouses on island
+     * @param island - island
+     * @return list of islands or empty list
+     */
+    public List<Greenhouse> getGreenhouses(Island island) {
+        return greenhouses.getOrDefault(island, Collections.emptyList());
     }
 
     /**

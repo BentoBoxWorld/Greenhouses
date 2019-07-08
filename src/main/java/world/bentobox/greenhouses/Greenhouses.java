@@ -66,7 +66,7 @@ public class Greenhouses extends Addon {
     public void onDisable() {
         if (manager != null) {
             manager.saveGreenhouses();
-            manager.getEcoMgr().cancel();
+            if (manager.getEcoMgr() != null) manager.getEcoMgr().cancel();
         }
         if (settings != null) {
             new Config<>(this, Settings.class).saveConfigObject(settings);
