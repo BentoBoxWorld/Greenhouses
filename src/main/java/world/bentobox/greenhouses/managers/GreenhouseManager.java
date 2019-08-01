@@ -1,5 +1,7 @@
 package world.bentobox.greenhouses.managers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -85,10 +87,13 @@ public class GreenhouseManager implements Listener {
     private void loadGreenhouses() {
         map.clear();
         addon.log("Loading greenhouses...");
+        List<Greenhouse> toBeRemoved = new ArrayList<>();
         handler.loadObjects().forEach(g -> {
             GreenhouseResult result = map.addGreenhouse(g);
             switch (result) {
             case FAIL_NO_ISLAND:
+                // Delete the failed greenhouse
+                toBeRemoved.add(g);
             case FAIL_OVERLAPPING:
             case NULL:
                 addon.logError(result.name());
@@ -102,6 +107,8 @@ public class GreenhouseManager implements Listener {
             }
         });
         addon.log("Loaded " + map.getSize() + " greenhouses.");
+        // Remove the old or outdated greenhouses
+        toBeRemoved.forEach(handler::deleteObject);
     }
 
     /**
@@ -120,12 +127,12 @@ public class GreenhouseManager implements Listener {
         handler.deleteObject(g);
         map.removeGreenhouse(g);
         addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
-        if (g.getOriginalBiome().equals(Biome.NETHER) || g.getOriginalBiome().equals(Biome.DESERT)
-                || g.getOriginalBiome().equals(Biome.DESERT_HILLS)) {
-            for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x++) {
-                for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMinZ(); z++) {
-                    // Set back to the original biome
-                    g.getLocation().getWorld().setBiome(x, z, g.getOriginalBiome());
+        for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x++) {
+            for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMaxZ(); z++) {
+                // Set back to the original biome
+                g.getLocation().getWorld().setBiome(x, z, g.getOriginalBiome());
+                if (g.getOriginalBiome().equals(Biome.NETHER) || g.getOriginalBiome().equals(Biome.DESERT)
+                        || g.getOriginalBiome().equals(Biome.DESERT_HILLS)) {
                     for (int y = g.getFloorHeight(); y< g.getCeilingHeight(); y++) {
                         Block b = g.getLocation().getWorld().getBlockAt(x, y, z);
                         // Remove any water
