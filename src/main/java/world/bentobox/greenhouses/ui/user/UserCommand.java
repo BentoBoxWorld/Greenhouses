@@ -20,7 +20,7 @@ public class UserCommand extends CompositeCommand {
      * @param parent - parent command
      */
     public UserCommand(Greenhouses gh, CompositeCommand parent) {
-        super(gh, parent, "greenhouse", "gh");
+        super(gh, parent, "greenhouse", "gh", "greenhouses");
     }
 
     /* (non-Javadoc)
