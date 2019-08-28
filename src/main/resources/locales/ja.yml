@@ -19,12 +19,17 @@ greenhouses:
     norecipe: 温室を作ることができません！
   event:
     broke: あなたはこの温室を壊しました！バイオームを[バイオーム]に戻しています！
+    entering: "[biome]温室に入る"
+    leaving: "[biome]温室を離れる"
   recipe:
     blockscolor: "＆f"
     title: "[[biome]レシピ]"
     minimumblockstitle: "[必要な最小ブロック]"
     nootherblocks: 他のブロックは必要ありません。
     missing: 温室がありません
+    watermustbe: 水&gt; [coverage]床面積の％。
+    icemustbe: 氷のブロック&gt;床面積の[coverage]％。
+    lavamustbe: 溶岩&gt; [coverage]床面積の％。
   commands:
     user:
       remove:
@@ -47,6 +52,10 @@ greenhouses:
           FAIL_NO_ICE: このレシピを作成するには＆cIceが必要です
           FAIL_NO_LAVA: このレシピを作成するには＆cLavaが必要です
           FAIL_NO_WATER: このレシピを作成するには＆cWaterが必要です
+          FAIL_BAD_ROOF_BLOCKS: "＆c屋根には許可されていないブロックが含まれています！"
+          FAIL_BAD_WALL_BLOCKS: "＆c壁には許可されていないブロックが含まれています！"
+        parameters: "<レシピ>"
+        success: "＆2あなたは[biome]バイオーム温室を無事に作成しました！バイオームは次のテレポートまたはログインで同期します。"
       info:
         title: "＆A [温室の作り方]"
         instructions: "4つの壁と平らなガラスでガラスから箱を作ります\n ＆Eroofし、＆F4ドアを追加します＆Ein the wall。
@@ -59,8 +68,10 @@ help:
   list: 作成可能なすべての温室バイオームをリストします
   recipe: 温室バイオームの作り方を説明します
   opengui: Greenhouse GUIを開きます
+  help: 手助け
 list:
   title: "[温室効果バイオームのレシピ]"
+  info: "/ greenhouse recipe <番号>を使用する各温室の作り方の詳細を見る"
 error:
   greenhouseProtected: 温室保護
   move: 最初に所有する温室に移動します。
@@ -70,8 +81,14 @@ error:
   notinside: あなたは温室の中にいません！
   alreadyexists: 温室はすでに存在します！
   norecipe: 温室を作ることができません！
+  tooexpensive: あなたは余裕がない[price]
 messages:
   removed: この温室はもうありません...
+  enter: "[owner]の[biome]温室に入る！"
+  leave: "[owner]の温室を離れます。"
+  youarein: あなたは今[owner]の[biome]温室にいます！
+  removedmessage: あなたの[biome]温室はもうありません！
+  ecolost: "[location]の温室はエコシステムを失い、撤去されました。"
 info:
   title: "＆A [温室の作り方]"
   info: "[温室情報]"
@@ -80,6 +97,9 @@ info:
   onemore: "＆6温室をもう1つ構築できます。"
   youcanbuild: "＆A温室を最大[number]個まで構築できます！"
   unlimited: "＆A温室を無制限に構築できます！"
+  instructions: "＆E 4つの壁と平らなガラスの＆E屋根でガラスから箱を作り、壁に＆F 4のドア＆Eを追加します。 ＆E壁と屋根に＆F 1ホッパー＆Eを配置し、ウォーターバケツ＆Eを追加して雪や骨粉を作り、植物を自動的に成長させます。
+    ＆Eバイオームレシピを確認して、＆E温室内で正常にブロックを作成するために必要なブロックを確認します。"
+  welcome: "＆B ようこそ！手順についてはここをクリックしてください"
 recipe:
   blockscolor: "＆f"
   hint: "/ greenhouse listを使用して、レシピ番号のリストを表示します！"
@@ -90,10 +110,15 @@ recipe:
   minimumblockstitle: "[必要な最小ブロック]"
   nootherblocks: 他のブロックは必要ありません。
   missing: 温室がありません
+  wrongnumber: レシピ番号は1から[size]の間でなければなりません
+  watermustbe: 水> [coverage]床面積の％。
+  icemustbe: 氷のブロック&gt;床面積の[coverage]％。
+  lavamustbe: 溶岩> [coverage]床面積の％。
 event:
   fix: 温室を修理してから、もう一度作ります。
   cannotplace: ブロックを温室の上に置くことはできません！
   pistonerror: ピストンは温室の上でブロックを押すことができません！
+  broke: あなたはこの温室を壊しました！バイオームを[biome]に戻しています！
 limits:
   noneallowed: 許可により温室が許可されないため、[number]は削除されました。
   limitedto: 許可により温室が[limit]に制限されるため、[number]が削除されました。
