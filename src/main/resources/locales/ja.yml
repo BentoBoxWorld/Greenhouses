@@ -1,137 +1,135 @@
 ---
-protection:
-  flags:
-    GREENHOUSE:
-      name: 温室
-      description: |
-        ＆b次のユーザーを切り替えます
-         ＆bcontrol温室
-greenhouses:
-  general:
-    greenhouses: 温室
-  errors:
-    move: 最初に所有する温室に移動します。
-    no-rank: "＆cあなたにはそれをするランクがありません。"
-    notyours: これはあなたの温室ではありません！
-    not-inside: "＆cあなたは温室の中にいません！"
-    tooexpensive: あなたは余裕がない[価格]
-    alreadyexists: 温室はすでに存在します！
-    norecipe: 温室を作ることができません！
-  event:
-    broke: あなたはこの温室を壊しました！バイオームを[バイオーム]に戻しています！
-    entering: "[biome]温室に入る"
-    leaving: "[biome]温室を離れる"
-  recipe:
-    blockscolor: "＆f"
-    title: "[[biome]レシピ]"
-    minimumblockstitle: "[必要な最小ブロック]"
-    nootherblocks: 他のブロックは必要ありません。
-    missing: 温室がありません
-    watermustbe: 水&gt; [coverage]床面積の％。
-    icemustbe: 氷のブロック&gt;床面積の[coverage]％。
-    lavamustbe: 溶岩&gt; [coverage]床面積の％。
-  commands:
-    user:
-      remove:
-        description: あなたが所有者である場合、あなたが立っている温室を取り除きます
-      make:
-        description: 温室を作ってみる
-        error:
-          already: "＆cここには温室がすでにあります！"
-          FAIL_BELOW: "＆c温室を作るには、温室内にいる必要があります"
-          FAIL_BLOCKS_ABOVE: "＆c温室の上にブロックを置くことはできません！赤いガラスブロックに問題のあるブロックが表示されます。"
-          FAIL_HOLE_IN_ROOF: "＆c屋根に穴があるか、平らではありません！赤いガラスブロックが問題を示しているはずです。"
-          FAIL_HOLE_IN_WALL: "＆c壁に穴が開いています！"
-          FAIL_NO_ROOF: "＆c屋根がないようです！"
-          FAIL_TOO_MANY_DOORS: "＆c温室には4つ以上のドアを置くことはできません！"
-          FAIL_TOO_MANY_HOPPERS: "＆c壁または屋根に使用できるホッパーは1つだけです。"
-          FAIL_UNEVEN_WALLS: "＆c壁が不均一です。赤いガラスブロックに問題のあるブロックが表示されます。"
-          FAIL_INSUFFICIENT_ICE: "＆cこのレシピを作成するには氷が足りません"
-          FAIL_INSUFFICIENT_LAVA: "＆cこのレシピを作るには溶岩が足りません"
-          FAIL_INSUFFICIENT_WATER: "＆cこのレシピを作るのに水が足りません"
-          FAIL_NO_ICE: このレシピを作成するには＆cIceが必要です
-          FAIL_NO_LAVA: このレシピを作成するには＆cLavaが必要です
-          FAIL_NO_WATER: このレシピを作成するには＆cWaterが必要です
-          FAIL_BAD_ROOF_BLOCKS: "＆c屋根には許可されていないブロックが含まれています！"
-          FAIL_BAD_WALL_BLOCKS: "＆c壁には許可されていないブロックが含まれています！"
-        parameters: "<レシピ>"
-        success: "＆2あなたは[biome]バイオーム温室を無事に作成しました！バイオームは次のテレポートまたはログインで同期します。"
-      info:
-        title: "＆A [温室の作り方]"
-        instructions: "4つの壁と平らなガラスでガラスから箱を作ります\n ＆Eroofし、＆F4ドアを追加します＆Ein the wall。
-          \n ＆F1＆F1ホッパー＆Ein壁または屋根にバケツを追加します。 \n ＆Etoは、植物を自動的に成長させるために雪や骨粉を作ります。 \n
-          ＆Eブロック内にあるブロックのバイオームレシピを確認する\n ＆Egreenhouseを使用して作成しました。 \n"
-help:
-  make: 温室を作ろうとする
-  remove: あなたが所有者である場合、あなたが立っている温室を取り除きます
-  info: 温室の作り方
-  list: 作成可能なすべての温室バイオームをリストします
-  recipe: 温室バイオームの作り方を説明します
-  opengui: Greenhouse GUIを開きます
-  help: 手助け
-list:
-  title: "[温室効果バイオームのレシピ]"
-  info: "/ greenhouse recipe <番号>を使用する各温室の作り方の詳細を見る"
-error:
-  greenhouseProtected: 温室保護
-  move: 最初に所有する温室に移動します。
-  notowner: それを行うには、この温室の所有者でなければなりません。
-  removing: 温室を撤去！
-  notyours: これはあなたの温室ではありません！
-  notinside: あなたは温室の中にいません！
-  alreadyexists: 温室はすでに存在します！
-  norecipe: 温室を作ることができません！
-  tooexpensive: あなたは余裕がない[price]
-messages:
-  removed: この温室はもうありません...
-  enter: "[owner]の[biome]温室に入る！"
-  leave: "[owner]の温室を離れます。"
-  youarein: あなたは今[owner]の[biome]温室にいます！
-  removedmessage: あなたの[biome]温室はもうありません！
-  ecolost: "[location]の温室はエコシステムを失い、撤去されました。"
-info:
-  title: "＆A [温室の作り方]"
-  info: "[温室情報]"
-  none: 無し
-  nomore: "＆4これ以上温室を建設することはできません！"
-  onemore: "＆6温室をもう1つ構築できます。"
-  youcanbuild: "＆A温室を最大[number]個まで構築できます！"
-  unlimited: "＆A温室を無制限に構築できます！"
-  instructions: "＆E 4つの壁と平らなガラスの＆E屋根でガラスから箱を作り、壁に＆F 4のドア＆Eを追加します。 ＆E壁と屋根に＆F 1ホッパー＆Eを配置し、ウォーターバケツ＆Eを追加して雪や骨粉を作り、植物を自動的に成長させます。
-    ＆Eバイオームレシピを確認して、＆E温室内で正常にブロックを作成するために必要なブロックを確認します。"
-  welcome: "＆B ようこそ！手順についてはここをクリックしてください"
-recipe:
-  blockscolor: "＆f"
-  hint: "/ greenhouse listを使用して、レシピ番号のリストを表示します！"
-  title: "[[biome]レシピ]"
-  nowater: 水は許可されません。
-  noice: 氷は許可されていません。
-  nolava: 溶岩は許可されていません。
-  minimumblockstitle: "[必要な最小ブロック]"
-  nootherblocks: 他のブロックは必要ありません。
-  missing: 温室がありません
-  wrongnumber: レシピ番号は1から[size]の間でなければなりません
-  watermustbe: 水> [coverage]床面積の％。
-  icemustbe: 氷のブロック&gt;床面積の[coverage]％。
-  lavamustbe: 溶岩> [coverage]床面積の％。
-event:
-  fix: 温室を修理してから、もう一度作ります。
-  cannotplace: ブロックを温室の上に置くことはできません！
-  pistonerror: ピストンは温室の上でブロックを押すことができません！
-  broke: あなたはこの温室を壊しました！バイオームを[biome]に戻しています！
-limits:
-  noneallowed: 許可により温室が許可されないため、[number]は削除されました。
-  limitedto: 許可により温室が[limit]に制限されるため、[number]が削除されました。
 adminHelp:
-  reload: ファイルから設定をリロードします。
   info: あなたがいる温室に関する情報を提供します
-reload:
-  configReloaded: ファイルから構成が再ロードされました。
+  reload: ファイルから設定をリロードします。
 admininfo:
   error: ゲーム内でのみ利用可能な温室情報
   error2: 温室で情報を確認してください。
   flags: "[温室旗]"
-news:
-  headline: "[温室ニュース]"
 controlpanel:
   title: "＆A温室"
+error:
+  alreadyexists: 温室はすでに存在します！
+  greenhouseProtected: 温室保護
+  move: 最初に所有する温室に移動します。
+  norecipe: 温室を作ることができません！
+  notinside: あなたは温室の中にいません！
+  notowner: それを行うには、この温室の所有者でなければなりません。
+  notyours: これはあなたの温室ではありません！
+  removing: 温室を撤去！
+  tooexpensive: あなたは余裕がない[price]
+event:
+  broke: あなたはこの温室を壊しました！バイオームを[biome]に戻しています！
+  cannotplace: ブロックを温室の上に置くことはできません！
+  fix: 温室を修理してから、もう一度作ります。
+  pistonerror: ピストンは温室の上でブロックを押すことができません！
+greenhouses:
+  commands:
+    user:
+      info:
+        title: "＆A [温室の作り方]"
+        instructions: 4つの壁と平らなガラス屋根でガラスから箱を作り、壁に最大4つのドアを追加します。 1つのホッパーを壁または屋根に置き、水バケツを追加します。
+          雪や骨粉を作り、植物を自動的に育てます。 バイオームレシピを確認して、温室内で正常にブロックするために必要なブロックを確認してください。
+      make:
+        description: 温室を作ってみる
+        error:
+          already: "＆cここには温室がすでにあります！"
+          FAIL_BAD_ROOF_BLOCKS: "＆c屋根には許可されていないブロックが含まれています！"
+          FAIL_BAD_WALL_BLOCKS: "＆c壁には許可されていないブロックが含まれています！"
+          FAIL_BELOW: "＆c温室を作るには、温室内にいる必要があります"
+          FAIL_BLOCKS_ABOVE: "＆c温室の上にブロックを置くことはできません！赤いガラスブロックに問題のあるブロックが表示されます。"
+          FAIL_HOLE_IN_ROOF: "＆c屋根に穴があるか、平らではありません！赤いガラスブロックが問題を示しているはずです。"
+          FAIL_HOLE_IN_WALL: "＆c壁に穴が開いています！"
+          FAIL_INSUFFICIENT_ICE: "＆cこのレシピを作成するには氷が足りません"
+          FAIL_INSUFFICIENT_LAVA: "＆cこのレシピを作るには溶岩が足りません"
+          FAIL_INSUFFICIENT_WATER: "＆cこのレシピを作るのに水が足りません"
+          FAIL_NO_ROOF: "＆c屋根がないようです！"
+          FAIL_TOO_MANY_DOORS: "＆c温室には4つ以上のドアを置くことはできません！"
+          FAIL_TOO_MANY_HOPPERS: "＆c壁または屋根に使用できるホッパーは1つだけです。"
+          FAIL_UNEVEN_WALLS: "＆c壁が不均一です。赤いガラスブロックに問題のあるブロックが表示されます。"
+          FAIL_NO_ICE: このレシピを作成するには＆c氷が必要です
+          FAIL_NO_LAVA: このレシピを作成するには＆c溶岩が必要です
+          FAIL_NO_WATER: このレシピを作成するには＆c水が必要です
+        parameters: "<レシピ>"
+        success: "＆2あなたは[biome]バイオーム温室を無事に作成しました！バイオームは次のテレポートまたはログインで同期します。"
+      remove:
+        description: あなたが所有者である場合、あなたが立っている温室を取り除きます
+  errors:
+    alreadyexists: 温室はすでに存在します！
+    move: 最初に所有する温室に移動します。
+    no-rank: "＆cあなたにはそれをするランクがありません。"
+    norecipe: 温室を作ることができません！
+    not-inside: "＆cあなたは温室の中にいません！"
+    notyours: これはあなたの温室ではありません！
+  general:
+    greenhouses: 温室
+  recipe:
+    blockscolor: "＆f"
+    minimumblockstitle: "[必要な最小ブロック]"
+    missing: 温室がありません
+    nootherblocks: 他のブロックは必要ありません。
+    title: "[[biome]レシピ]"
+    watermustbe: 水>[coverage]床面積の％。
+    icemustbe: 氷のブロック>床面積の[coverage]％。
+    lavamustbe: 溶岩> [coverage]床面積の％。
+  event:
+    broke: "&c温室を壊しました！バイオームを [biome]に戻しています！"
+    entering: "[biome]の温室に入る"
+    leaving: "[biome]の温室を離れる"
+help:
+  help: 手助け
+  info: 温室の作り方
+  list: 作成可能なすべての温室バイオームをリストします
+  make: 温室を作ろうとする
+  recipe: 温室バイオームの作り方を説明します
+  remove: あなたが所有者である場合、あなたが立っている温室を取り除きます
+  opengui: 温室のGUI
+info:
+  info: "[温室情報]"
+  instructions: "＆E 4つの壁と平らなガラスの＆E屋根でガラスから箱を作り、壁に＆F 4のドア＆Eを追加します。 ＆E壁と屋根に＆F 1ホッパー＆Eを配置し、ウォーターバケツ＆Eを追加して雪や骨粉を作り、植物を自動的に成長させます。
+    ＆Eバイオームレシピを確認して、＆E温室内で正常にブロックを作成するために必要なブロックを確認します。"
+  nomore: "＆4これ以上温室を建設することはできません！"
+  none: 無し
+  onemore: "＆6温室をもう1つ構築できます。"
+  title: "＆A [温室の作り方]"
+  unlimited: "＆A温室を無制限に構築できます！"
+  welcome: "＆B ようこそ！手順についてはここをクリックしてください"
+  youcanbuild: "＆A温室を最大[number]個まで構築できます！"
+limits:
+  limitedto: 許可により温室が[limit]に制限されるため、[number]が削除されました。
+  noneallowed: 許可により温室が許可されないため、[number]は削除されました。
+list:
+  title: "[温室効果バイオームのレシピ]"
+  info: "/greenhouse recipe <番号>を使用する各温室の作り方の詳細を見る"
+messages:
+  ecolost: "[location]の温室はエコシステムを失い、撤去されました。"
+  leave: "[owner]の温室を離れます。"
+  removed: この温室はもうありません...
+  enter: "[owner]の[biome]の温室に入る！"
+  youarein: あなたは今[owner]の[biome]の温室にいます！
+  removedmessage: あなたの[biome]の温室はもうありません！
+news:
+  headline: "[温室ニュース]"
+protection:
+  flags:
+    GREENHOUSE:
+      name: 温室
+      description: |-
+        ＆b誰が温室を制御できるかを
+         ＆b設定する
+recipe:
+  blockscolor: "＆f"
+  hint: "/ greenhouse listを使用して、レシピ番号のリストを表示します！"
+  icemustbe: 氷のブロック&gt;床面積の[coverage]％。
+  lavamustbe: 溶岩> [coverage]床面積の％。
+  minimumblockstitle: "[必要な最小ブロック]"
+  missing: 温室がありません
+  noice: 氷は許可されていません。
+  nolava: 溶岩は許可されていません。
+  nootherblocks: 他のブロックは必要ありません。
+  nowater: 水は許可されません。
+  title: "[[biome]レシピ]"
+  watermustbe: 水> [coverage]床面積の％。
+  wrongnumber: レシピ番号は1から[size]の間でなければなりません
+reload:
+  configReloaded: ファイルから構成が再ロードされました。
