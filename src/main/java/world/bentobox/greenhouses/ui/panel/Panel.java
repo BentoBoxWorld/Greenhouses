@@ -50,7 +50,7 @@ public class Panel {
             d.add(user.getTranslation("greenhouses.recipe.icemustbe", "[coverage]", String.valueOf(br.getIceCoverage())));
         }
         if (br.getRecipeBlocks().isEmpty()) {
-            d.add(user.getTranslation("greenhouses.recipe.nootherbocks"));
+            d.add(user.getTranslation("greenhouses.recipe.nootherblocks"));
         }
         return d;
     }
