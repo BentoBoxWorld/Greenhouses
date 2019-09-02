@@ -102,8 +102,8 @@ biomes:
       DIRT: 30:SAND:SAND
   FOREST:
     friendlyname: "Flowery forest"
-    biome: FOREST
-    icon: ROSE_RED
+    biome: FLOWER_FOREST
+    icon: RED_TULIP
     priority: 4
     contents:
       OAK_LOG: 3
