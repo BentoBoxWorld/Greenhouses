@@ -61,6 +61,7 @@ greenhouses:
     norecipe: 温室を作ることができません！
     not-inside: "＆cあなたは温室の中にいません！"
     notyours: これはあなたの温室ではありません！
+    tooexpensive: あなたは余裕がない[price]
   general:
     greenhouses: 温室
   recipe:
