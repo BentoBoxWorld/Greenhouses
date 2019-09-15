@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -104,21 +105,23 @@ public class EcoSystemManager {
                 }
             }
         }
-        long sum = gh.getWorld().getEntities().stream()
-                .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
-                .filter(e -> gh.contains(e.getLocation())).count();
-        // Get the blocks in the greenhouse where spawning could occur
-        Iterator<Block> it = getAvailableBlocks(gh).iterator();
-        // Check if the greenhouse is full
-        while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
-            // Spawn something if chance says so
-            if (gh.getBiomeRecipe().spawnMob(it.next())) {
-                // Add a mob to the sum in the greenhouse
-                sum++;
+        Bukkit.getScheduler().runTaskLater(addon.getPlugin(), () -> {
+            long sum = gh.getWorld().getEntities().stream()
+                    .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
+                    .filter(e -> gh.contains(e.getLocation())).count();
+            // Get the blocks in the greenhouse where spawning could occur
+            Iterator<Block> it = getAvailableBlocks(gh).iterator();
+            // Check if the greenhouse is full
+            while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
+                // Spawn something if chance says so
+                if (gh.getBiomeRecipe().spawnMob(it.next())) {
+                    // Add a mob to the sum in the greenhouse
+                    sum++;
+                }
             }
-        }
-        // Unload chunks again
-        chunks.forEach(p -> gh.getWorld().unloadChunk(p.x, p.z));
+            // Unload chunks again
+            chunks.forEach(p -> gh.getWorld().unloadChunk(p.x, p.z));
+        }, 20L);
     }
 
     /**
