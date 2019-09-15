@@ -25,6 +25,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class EcoSystemManager {
 
+    private static final int PLANTS_PER_BONEMEAL = 6;
     private final Greenhouses addon;
     private final GreenhouseManager g;
     private BukkitTask plantTask;
@@ -132,8 +133,11 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            int bonemealUsed = getAvailableBlocks(gh).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
-            setBoneMeal(gh, bonemeal - bonemealUsed);
+            int plantsGrown = getAvailableBlocks(gh).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
+            if (plantsGrown > 0) {
+                setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
+            }
+
         }
 
     }

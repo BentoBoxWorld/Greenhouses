@@ -328,7 +328,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             return false;
         }
         return getRandomPlant().map(p -> {
-            if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(true)) {
+            if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(false)) {
                 bl.setType(p.getPlantMaterial());
                 bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
                 return true;
