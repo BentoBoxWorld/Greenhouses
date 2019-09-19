@@ -43,7 +43,8 @@ public class GreenhouseEvents implements Listener {
         if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)) {
             return;
         }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.WATER_BUCKET)) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.WATER_BUCKET)
+                && plugin.getManager().getMap().getGreenhouse(e.getClickedBlock().getLocation()).isPresent()) {
             e.setCancelled(true);
             e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.WATER);
             e.getItem().setType(Material.BUCKET);
@@ -120,7 +121,7 @@ public class GreenhouseEvents implements Listener {
      * Checks is broken blocks cause the greenhouse to fail
      * @param e - event
      */
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onBlockBreak(final BlockBreakEvent e) {
         User user = User.getInstance(e.getPlayer());
         plugin.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).ifPresent(g -> {
