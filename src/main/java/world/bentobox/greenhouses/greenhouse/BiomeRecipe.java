@@ -17,6 +17,8 @@ import org.bukkit.Particle;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EntityType;
 
 import world.bentobox.bentobox.util.Util;
@@ -329,7 +331,18 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         return getRandomPlant().map(p -> {
             if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(false)) {
-                bl.setType(p.getPlantMaterial());
+                BlockData dataBottom = p.getPlantMaterial().createBlockData();
+                if (dataBottom instanceof Bisected) {
+                    ((Bisected) dataBottom).setHalf(Bisected.Half.BOTTOM);
+                    BlockData dataTop = p.getPlantMaterial().createBlockData();
+                    ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
+                    if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
+                        bl.setBlockData(dataBottom, false);
+                        bl.getRelative(BlockFace.UP).setBlockData(dataTop, false);
+                    }
+                } else {
+                    bl.setBlockData(dataBottom, false); 
+                }
                 bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
