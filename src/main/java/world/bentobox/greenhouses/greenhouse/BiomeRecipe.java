@@ -57,7 +57,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private String permission = "";
     private final Random random = new Random();
-    private Map<Material, Integer> missingBlocks;
+    
 
     public BiomeRecipe() {}
 
@@ -146,13 +146,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
                 for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
                     Block b = gh.getWorld().getBlockAt(x, y, z);
-                    if (!b.getType().equals(Material.AIR)) {
-                        blockCount.putIfAbsent(b.getType(), 0);
-                        blockCount.merge(b.getType(), 1, Integer::sum);
+                    Material type = b.getType();
+                    if (!type.equals(Material.AIR)) {
+                        blockCount.putIfAbsent(type, 0);
+                        blockCount.merge(type, 1, Integer::sum);
                     }
                 }
             }
         }
+        blockCount.forEach((k,v) -> System.out.println(k + " " + v));
         // Calculate % water, ice and lava ratios
         double waterRatio = (double)blockCount.getOrDefault(Material.WATER, 0)/area * 100;
         double lavaRatio = (double)blockCount.getOrDefault(Material.LAVA, 0)/area * 100;
@@ -179,12 +181,21 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             result.add(GreenhouseResult.FAIL_INSUFFICIENT_LAVA);
         }
         if (iceCoverage > 0 && iceRatio < iceCoverage) {
+            System.out.println("Ice coverage = " + iceCoverage + " and ice ratio = " + iceRatio);
             result.add(GreenhouseResult.FAIL_INSUFFICIENT_ICE);
         }
+        requiredBlocks.forEach((k,v) -> System.out.println("Req " + k + " " + v));
         // Compare to the required blocks
-        missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
+        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
+        missingBlocks.forEach((k,v) -> System.out.println("Missing " + k + " " + v));
+        
         // Remove any entries that are 0 or less
         missingBlocks.values().removeIf(v -> v <= 0);
+        missingBlocks.forEach((k,v) -> System.out.println("Missing after " + k + " " + v));
+        if (!missingBlocks.isEmpty()) {
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
+            gh.setMissingBlocks(missingBlocks);
+        }
         return result;
     }
 
@@ -432,13 +443,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             addon.log("   Water > " + waterCoverage + "%");
         }
         this.waterCoverage = waterCoverage;
-    }
-
-    /**
-     * @return the missingBlocks
-     */
-    public Map<Material, Integer> getMissingBlocks() {
-        return missingBlocks;
     }
 
     @Override

@@ -64,7 +64,9 @@ greenhouses:
           FAIL_NO_ICE: "&cIce is required to make this recipe"
           FAIL_NO_LAVA: "&cLava is required to make this recipe"
           FAIL_NO_WATER: "&cWater is required to make this recipe"
+          FAIL_INSUFFICIENT_BLOCKS: "&cMore blocks are required to make this recipe!"
         success: "&2You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
+        missing-blocks: "&cMissing [material] x [number]"
       info:
         title: "&A[How To Build A Greenhouse]"
         instructions: |

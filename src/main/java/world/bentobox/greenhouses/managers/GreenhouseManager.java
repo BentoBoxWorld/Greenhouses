@@ -50,7 +50,8 @@ public class GreenhouseManager implements Listener {
         FAIL_OVERLAPPING,
         NULL,
         SUCCESS,
-        FAIL_NO_RECIPE_FOUND
+        FAIL_NO_RECIPE_FOUND,
+        FAIL_INSUFFICIENT_BLOCKS
     }
 
     private final Greenhouses addon;

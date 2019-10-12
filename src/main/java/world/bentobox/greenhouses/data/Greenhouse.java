@@ -1,8 +1,10 @@
 package world.bentobox.greenhouses.data;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
@@ -36,6 +38,8 @@ public class Greenhouse implements DataObject {
     private String biomeRecipeName;
 
     private boolean broken;
+    
+    private Map<Material, Integer> missingBlocks;
 
     /**
      * Constructor for database
@@ -202,6 +206,20 @@ public class Greenhouse implements DataObject {
      */
     public BiomeRecipe getBiomeRecipe() {
         return RecipeManager.getBiomeRecipies(biomeRecipeName).orElse(null);
+    }
+
+    /**
+     * @param missingBlocks the missingBlocks to set
+     */
+    public void setMissingBlocks(Map<Material, Integer> missingBlocks) {
+        this.missingBlocks = missingBlocks;
+    }
+
+    /**
+     * @return the missingBlocks
+     */
+    public Map<Material, Integer> getMissingBlocks() {
+        return missingBlocks;
     }
 
 }
