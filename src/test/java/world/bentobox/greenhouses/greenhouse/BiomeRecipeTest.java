@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.util.BoundingBox;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,7 +35,7 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Bukkit.class, BentoBox.class})
 public class BiomeRecipeTest {
-    
+
     private BiomeRecipe br;
     @Mock
     private Greenhouses addon;
@@ -60,7 +61,7 @@ public class BiomeRecipeTest {
         when(gh.getFloorHeight()).thenReturn(100);
         when(gh.getCeilingHeight()).thenReturn(120);
         bb = new BoundingBox(10, 100, 10, 20, 120, 20);
-        when(gh.getBoundingBox()).thenReturn(bb);        
+        when(gh.getBoundingBox()).thenReturn(bb);
         when(gh.getWorld()).thenReturn(world);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
         when(block.getType()).thenReturn(Material.AIR,
@@ -87,6 +88,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addConvBlocks(org.bukkit.Material, org.bukkit.Material, double, org.bukkit.Material)}.
      */
+    @Ignore
     @Test
     public void testAddConvBlocks() {
         fail("Not yet implemented");
@@ -95,6 +97,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
      */
+    @Ignore
     @Test
     public void testAddMobs() {
         fail("Not yet implemented");
@@ -103,6 +106,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
      */
+    @Ignore
     @Test
     public void testAddPlants() {
         fail("Not yet implemented");
@@ -111,6 +115,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addReqBlocks(org.bukkit.Material, int)}.
      */
+    @Ignore
     @Test
     public void testAddReqBlocks() {
         fail("Not yet implemented");
@@ -124,7 +129,7 @@ public class BiomeRecipeTest {
         Set<GreenhouseResult> result = br.checkRecipe(gh);
         assertTrue(result.isEmpty());
     }
-    
+
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#checkRecipe(world.bentobox.greenhouses.data.Greenhouse)}.
      */
@@ -133,12 +138,13 @@ public class BiomeRecipeTest {
         br.addReqBlocks(Material.ACACIA_LEAVES, 3);
         Set<GreenhouseResult> result = br.checkRecipe(gh);
         assertFalse(result.isEmpty());
-        
+
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
      */
+    @Ignore
     @Test
     public void testConvertBlock() {
         fail("Not yet implemented");
@@ -147,6 +153,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getBiome()}.
      */
+    @Ignore
     @Test
     public void testGetBiome() {
         fail("Not yet implemented");
@@ -155,6 +162,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getBlockConvert()}.
      */
+    @Ignore
     @Test
     public void testGetBlockConvert() {
         fail("Not yet implemented");
@@ -163,6 +171,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getFriendlyName()}.
      */
+    @Ignore
     @Test
     public void testGetFriendlyName() {
         fail("Not yet implemented");
@@ -171,6 +180,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getIceCoverage()}.
      */
+    @Ignore
     @Test
     public void testGetIceCoverage() {
         fail("Not yet implemented");
@@ -179,6 +189,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getIcon()}.
      */
+    @Ignore
     @Test
     public void testGetIcon() {
         fail("Not yet implemented");
@@ -187,6 +198,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getLavaCoverage()}.
      */
+    @Ignore
     @Test
     public void testGetLavaCoverage() {
         fail("Not yet implemented");
@@ -195,6 +207,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobLimit()}.
      */
+    @Ignore
     @Test
     public void testGetMobLimit() {
         fail("Not yet implemented");
@@ -203,6 +216,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getName()}.
      */
+    @Ignore
     @Test
     public void testGetName() {
         fail("Not yet implemented");
@@ -211,6 +225,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getPermission()}.
      */
+    @Ignore
     @Test
     public void testGetPermission() {
         fail("Not yet implemented");
@@ -219,6 +234,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
+    @Ignore
     @Test
     public void testSpawnMob() {
         fail("Not yet implemented");
@@ -227,6 +243,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getRecipeBlocks()}.
      */
+    @Ignore
     @Test
     public void testGetRecipeBlocks() {
         fail("Not yet implemented");
@@ -235,6 +252,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getWaterCoverage()}.
      */
+    @Ignore
     @Test
     public void testGetWaterCoverage() {
         fail("Not yet implemented");
@@ -243,6 +261,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
      */
+    @Ignore
     @Test
     public void testGrowPlant() {
         fail("Not yet implemented");
@@ -251,6 +270,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setFriendlyName(java.lang.String)}.
      */
+    @Ignore
     @Test
     public void testSetFriendlyName() {
         fail("Not yet implemented");
@@ -259,6 +279,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setIcecoverage(int)}.
      */
+    @Ignore
     @Test
     public void testSetIcecoverage() {
         fail("Not yet implemented");
@@ -267,6 +288,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setIcon(org.bukkit.Material)}.
      */
+    @Ignore
     @Test
     public void testSetIcon() {
         fail("Not yet implemented");
@@ -275,6 +297,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setLavacoverage(int)}.
      */
+    @Ignore
     @Test
     public void testSetLavacoverage() {
         fail("Not yet implemented");
@@ -283,6 +306,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setMobLimit(int)}.
      */
+    @Ignore
     @Test
     public void testSetMobLimit() {
         fail("Not yet implemented");
@@ -291,6 +315,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setName(java.lang.String)}.
      */
+    @Ignore
     @Test
     public void testSetName() {
         fail("Not yet implemented");
@@ -299,6 +324,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setPermission(java.lang.String)}.
      */
+    @Ignore
     @Test
     public void testSetPermission() {
         fail("Not yet implemented");
@@ -307,6 +333,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setPriority(int)}.
      */
+    @Ignore
     @Test
     public void testSetPriority() {
         fail("Not yet implemented");
@@ -315,14 +342,17 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setType(org.bukkit.block.Biome)}.
      */
+    @Ignore
     @Test
     public void testSetType() {
         fail("Not yet implemented");
     }
 
     /**
+     *
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setWatercoverage(int)}.
      */
+    @Ignore
     @Test
     public void testSetWatercoverage() {
         fail("Not yet implemented");
@@ -331,6 +361,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMissingBlocks()}.
      */
+    @Ignore
     @Test
     public void testGetMissingBlocks() {
         fail("Not yet implemented");
@@ -339,6 +370,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#compareTo(world.bentobox.greenhouses.greenhouse.BiomeRecipe)}.
      */
+    @Ignore
     @Test
     public void testCompareTo() {
         fail("Not yet implemented");
@@ -347,6 +379,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#noMobs()}.
      */
+    @Ignore
     @Test
     public void testNoMobs() {
         fail("Not yet implemented");
@@ -355,6 +388,7 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobTypes()}.
      */
+    @Ignore
     @Test
     public void testGetMobTypes() {
         fail("Not yet implemented");
