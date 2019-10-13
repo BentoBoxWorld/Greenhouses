@@ -1,25 +1,40 @@
 package world.bentobox.greenhouses.greenhouse;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.Bisected.Half;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -49,12 +64,18 @@ public class BiomeRecipeTest {
     private World world;
     @Mock
     private Block block;
+    @Mock
+    private Location location;
+    @Mock
+    private BlockData bd;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class);
+        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
         type = Biome.BADLANDS;
         // Greenhouse
         when(gh.getArea()).thenReturn(100);
@@ -64,18 +85,25 @@ public class BiomeRecipeTest {
         when(gh.getBoundingBox()).thenReturn(bb);
         when(gh.getWorld()).thenReturn(world);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
+        // Block
         when(block.getType()).thenReturn(Material.AIR,
                 Material.GRASS_BLOCK, Material.GRASS_BLOCK,
                 Material.WATER,
                 Material.BLUE_ICE, Material.PACKED_ICE, Material.ICE,
                 Material.LAVA,
                 Material.AIR);
+        when(block.getWorld()).thenReturn(world);
+        when(block.getLocation()).thenReturn(location);
         // Set up default recipe
         br = new BiomeRecipe(addon, type, 0);
         br.setIcecoverage(2); // 1%
         br.setLavacoverage(1); // 1%
         br.setWatercoverage(1); // 1%
         br.addReqBlocks(Material.GRASS_BLOCK, 2);
+        br.setFriendlyName("name");
+        br.setName("name2");
+        br.setIcon(Material.ACACIA_BOAT);
+        br.setPermission("perm");
     }
 
     /**
@@ -88,37 +116,76 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addConvBlocks(org.bukkit.Material, org.bukkit.Material, double, org.bukkit.Material)}.
      */
-    @Ignore
     @Test
     public void testAddConvBlocks() {
-        fail("Not yet implemented");
+        Material oldMaterial = Material.SAND;
+        Material newMaterial = Material.CLAY;
+        double convChance = 100D;
+        Material localMaterial = Material.WATER;
+        br.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
+        verify(addon).log(eq("   100.0% chance for Sand to convert to Clay"));
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
      */
-    @Ignore
     @Test
     public void testAddMobs() {
-        fail("Not yet implemented");
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 50;
+        Material mobSpawnOn = Material.GRASS_PATH;
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        verify(addon).log(eq("   50% chance for Cat to spawn on Grass Path."));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
+     */
+    @Test
+    public void testAddMobsOver100Percent() {
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 50;
+        Material mobSpawnOn = Material.GRASS_PATH;
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        verify(addon).logError(eq("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT"));
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
      */
-    @Ignore
     @Test
     public void testAddPlants() {
-        fail("Not yet implemented");
+        Material plantMaterial = Material.JUNGLE_SAPLING;
+        int plantProbability = 20;
+        Material plantGrowOn = Material.DIRT;
+        br.addPlants(plantMaterial, plantProbability, plantGrowOn);
+        verify(addon).log(eq("   20% chance for Jungle Sapling to grow on Dirt"));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
+     */
+    @Test
+    public void testAddPlantsOver100Percent() {
+        Material plantMaterial = Material.JUNGLE_SAPLING;
+        int plantProbability = 60;
+        Material plantGrowOn = Material.DIRT;
+        br.addPlants(plantMaterial, plantProbability, plantGrowOn);
+        br.addPlants(plantMaterial, plantProbability, plantGrowOn);
+        verify(addon).logError(eq("Plant chances add up to > 100% in BADLANDS biome recipe! Skipping JUNGLE_SAPLING"));
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addReqBlocks(org.bukkit.Material, int)}.
      */
-    @Ignore
     @Test
     public void testAddReqBlocks() {
-        fail("Not yet implemented");
+        Material blockMaterial = Material.BLACK_CONCRETE;
+        int blockQty = 30;
+        br.addReqBlocks(blockMaterial, blockQty);
+        verify(addon).log(eq("   BLACK_CONCRETE x 30"));
     }
 
     /**
@@ -144,254 +211,407 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
      */
-    @Ignore
     @Test
     public void testConvertBlock() {
-        fail("Not yet implemented");
+        // Setup
+        this.testAddConvBlocks();
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        Block ab = mock(Block.class);
+        when(ab.getType()).thenReturn(Material.WATER);
+        when(b.getRelative(any())).thenReturn(ab);
+        br.convertBlock(b);
+        verify(b).setType(Material.CLAY);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testConvertBlockNoWater() {
+        // Setup
+        this.testAddConvBlocks();
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        Block ab = mock(Block.class);
+        when(ab.getType()).thenReturn(Material.SAND);
+        when(b.getRelative(any())).thenReturn(ab);
+        br.convertBlock(b);
+        verify(b, never()).setType(Material.CLAY);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testConvertBlockNoConverts() {
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        br.convertBlock(b);
+        verify(b, never()).setType(Material.CLAY);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testConvertBlockNoProbability() {
+        // Setup
+        Material oldMaterial = Material.SAND;
+        Material newMaterial = Material.CLAY;
+        double convChance = 0D;
+        Material localMaterial = Material.WATER;
+        br.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
+
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        Block ab = mock(Block.class);
+        when(ab.getType()).thenReturn(Material.WATER);
+        when(b.getRelative(any())).thenReturn(ab);
+        br.convertBlock(b);
+        verify(b, never()).setType(Material.CLAY);
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getBiome()}.
      */
-    @Ignore
     @Test
     public void testGetBiome() {
-        fail("Not yet implemented");
+        assertEquals(Biome.BADLANDS, br.getBiome());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getBlockConvert()}.
      */
-    @Ignore
     @Test
     public void testGetBlockConvert() {
-        fail("Not yet implemented");
+        assertFalse(br.getBlockConvert());
+        this.testAddConvBlocks();
+        assertTrue(br.getBlockConvert());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getFriendlyName()}.
      */
-    @Ignore
     @Test
     public void testGetFriendlyName() {
-        fail("Not yet implemented");
+        assertEquals("name", br.getFriendlyName());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getIceCoverage()}.
      */
-    @Ignore
     @Test
     public void testGetIceCoverage() {
-        fail("Not yet implemented");
+        assertEquals(2, br.getIceCoverage());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getIcon()}.
      */
-    @Ignore
     @Test
     public void testGetIcon() {
-        fail("Not yet implemented");
+        assertEquals(Material.ACACIA_BOAT, br.getIcon());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getLavaCoverage()}.
      */
-    @Ignore
     @Test
     public void testGetLavaCoverage() {
-        fail("Not yet implemented");
+        assertEquals(1, br.getLavaCoverage());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobLimit()}.
      */
-    @Ignore
     @Test
     public void testGetMobLimit() {
-        fail("Not yet implemented");
+        assertEquals(9, br.getMobLimit());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getName()}.
      */
-    @Ignore
     @Test
     public void testGetName() {
-        fail("Not yet implemented");
+        assertEquals("name2", br.getName());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getPermission()}.
      */
-    @Ignore
     @Test
     public void testGetPermission() {
-        fail("Not yet implemented");
+        assertEquals("perm", br.getPermission());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
-    @Ignore
+    @Test
+    public void testSpawnMobyZero() {
+        when(block.getY()).thenReturn(0);
+        assertFalse(br.spawnMob(block));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnNoMobs() {
+        when(block.getY()).thenReturn(10);
+        assertFalse(br.spawnMob(block));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
     @Test
     public void testSpawnMob() {
-        fail("Not yet implemented");
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Entity cat = mock(Cat.class);
+        when(world.spawnEntity(any(), any())).thenReturn(cat);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertTrue(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
     }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnMobWrongSurface() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Entity cat = mock(Cat.class);
+        when(world.spawnEntity(any(), any())).thenReturn(cat);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertFalse(br.spawnMob(block));
+        verify(world, never()).spawnEntity(eq(location), eq(EntityType.CAT));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnMobFailToSpawn() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertFalse(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
+    }
+
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getRecipeBlocks()}.
      */
-    @Ignore
     @Test
     public void testGetRecipeBlocks() {
-        fail("Not yet implemented");
+        assertEquals(1, br.getRecipeBlocks().size());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getWaterCoverage()}.
      */
-    @Ignore
     @Test
     public void testGetWaterCoverage() {
-        fail("Not yet implemented");
+        assertEquals(1, br.getWaterCoverage());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
      */
-    @Ignore
     @Test
-    public void testGrowPlant() {
-        fail("Not yet implemented");
+    public void testGrowPlantNotAir() {
+        when(block.getType()).thenReturn(Material.SOUL_SAND);
+        assertFalse(br.growPlant(block));
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setFriendlyName(java.lang.String)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
      */
-    @Ignore
     @Test
-    public void testSetFriendlyName() {
-        fail("Not yet implemented");
+    public void testGrowPlantNoPlants() {
+        when(block.getType()).thenReturn(Material.AIR);
+        assertFalse(br.growPlant(block));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantPlantsYZero() {
+        when(block.getY()).thenReturn(0);
+        when(block.getType()).thenReturn(Material.AIR);
+        assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
+        assertFalse(br.growPlant(block));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantPlants() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(ob);
+        assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
+        assertTrue(br.growPlant(block));
+        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(block).setBlockData(eq(bd), eq(false));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantPlantsDoublePlant() {
+        Bisected bisected = mock(Bisected.class);
+        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
+        when(block.getRelative(eq(BlockFace.UP))).thenReturn(block);
+        assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
+        assertTrue(br.growPlant(block));
+        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(bisected).setHalf(eq(Half.BOTTOM));
+        verify(bisected).setHalf(eq(Half.TOP));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantPlantsDoublePlantNoRoom() {
+        Bisected bisected = mock(Bisected.class);
+        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
+        when(block.getRelative(eq(BlockFace.UP))).thenReturn(ob);
+        assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
+        assertFalse(br.growPlant(block));
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setIcecoverage(int)}.
      */
-    @Ignore
     @Test
     public void testSetIcecoverage() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setIcon(org.bukkit.Material)}.
-     */
-    @Ignore
-    @Test
-    public void testSetIcon() {
-        fail("Not yet implemented");
+        verify(addon).log("   Ice > 2%");
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setLavacoverage(int)}.
      */
-    @Ignore
     @Test
     public void testSetLavacoverage() {
-        fail("Not yet implemented");
+        verify(addon).log("   Lava > 1%");
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setMobLimit(int)}.
      */
-    @Ignore
     @Test
     public void testSetMobLimit() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setName(java.lang.String)}.
-     */
-    @Ignore
-    @Test
-    public void testSetName() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setPermission(java.lang.String)}.
-     */
-    @Ignore
-    @Test
-    public void testSetPermission() {
-        fail("Not yet implemented");
+        br.setMobLimit(0);
+        assertEquals(0, br.getMobLimit());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setPriority(int)}.
      */
-    @Ignore
     @Test
     public void testSetPriority() {
-        fail("Not yet implemented");
+        br.setPriority(20);
+        assertEquals(20, br.getPriority());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setType(org.bukkit.block.Biome)}.
      */
-    @Ignore
     @Test
     public void testSetType() {
-        fail("Not yet implemented");
+        br.setType(Biome.BADLANDS_PLATEAU);
+        assertEquals(Biome.BADLANDS_PLATEAU, br.getBiome());
     }
 
     /**
      *
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#setWatercoverage(int)}.
      */
-    @Ignore
     @Test
     public void testSetWatercoverage() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMissingBlocks()}.
-     */
-    @Ignore
-    @Test
-    public void testGetMissingBlocks() {
-        fail("Not yet implemented");
+        verify(addon).log("   Water > 1%");
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#compareTo(world.bentobox.greenhouses.greenhouse.BiomeRecipe)}.
+     * Only priorty is compared
      */
-    @Ignore
     @Test
     public void testCompareTo() {
-        fail("Not yet implemented");
+        assertEquals(0, br.compareTo(br));
+        BiomeRecipe a = new BiomeRecipe();
+        a.setPriority(20);
+        assertEquals(1, br.compareTo(a));
+        assertEquals(-1, a.compareTo(br));
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#noMobs()}.
      */
-    @Ignore
     @Test
     public void testNoMobs() {
-        fail("Not yet implemented");
+        assertTrue(br.noMobs());
+        this.testAddMobs();
+        assertFalse(br.noMobs());
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobTypes()}.
      */
-    @Ignore
     @Test
     public void testGetMobTypes() {
-        fail("Not yet implemented");
+        assertTrue(br.getMobTypes().isEmpty());
+        this.testAddMobs();
+        assertFalse(br.getMobTypes().isEmpty());
     }
 
 }

@@ -89,8 +89,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param mobType - entity type
      * @param mobProbability - reltive probability
      * @param mobSpawnOn - material to spawn on
+     * @return true if add is successful
      */
-    public void addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
+    public boolean addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
         addon.log("   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = ((double)mobProbability/100);
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
@@ -98,8 +99,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         if ((1D - lastProb) >= probability) {
             // Add to probability tree
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
+            return true;
         } else {
             addon.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType.toString());
+            return false;
         }
     }
 
@@ -109,8 +112,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param plantMaterial - plant type
      * @param plantProbability - probability of growing
      * @param plantGrowOn - material on which it must grow
+     * @return true if add is successful
      */
-    public void addPlants(Material plantMaterial, int plantProbability, Material plantGrowOn) {
+    public boolean addPlants(Material plantMaterial, int plantProbability, Material plantGrowOn) {
         double probability = ((double)plantProbability/100);
         // Add up all the probabilities in the list so far
         double lastProb = plantTree.isEmpty() ? 0D : plantTree.lastKey();
@@ -119,8 +123,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             plantTree.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
             addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
+            return false;
         }
         addon.log("   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
+        return true;
     }
 
     /**
@@ -275,7 +281,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * @return the priority
      */
-    private int getPriority() {
+    public int getPriority() {
         return priority;
     }
 
@@ -344,6 +350,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                     if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
                         bl.setBlockData(dataBottom, false);
                         bl.getRelative(BlockFace.UP).setBlockData(dataTop, false);
+                    } else {
+                        return false; // No room
                     }
                 } else {
                     bl.setBlockData(dataBottom, false);
