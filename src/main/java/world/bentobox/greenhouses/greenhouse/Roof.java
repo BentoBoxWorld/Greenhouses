@@ -51,9 +51,7 @@ public class Roof {
                 for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius; z++) {
                     if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius)
                             && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
-                        //player.sendBlockChange(new Location(world,x,roofY,z), Material.GLASS, (byte)(radius % 14));
-                        Block b = world.getBlockAt(x,roofY,z);
-                        //plugin.logger(3,"Checking column " + x + " " + z );
+                        Block b = world.getBlockAt(x, roofY, z);
                         if (!Walls.isWallBlock(b.getType())) {
                             // Look up
                             for (int y = roofY; y < world.getMaxHeight(); y++) {
@@ -86,7 +84,7 @@ public class Roof {
         maxX = loc.getBlockX();
         minZ = loc.getBlockZ();
         maxZ = loc.getBlockZ();
-        expandCoords(loc);
+        expandCoords(world, loc.toVector());
         int minx;
         int maxx;
         int minz;
@@ -100,7 +98,7 @@ public class Roof {
             for (int x = minx; x <= maxx; x++) {
                 for (int z = minz; z <= maxz; z++) {
                     // This will push out the coords if possible
-                    expandCoords(new Location(world, x, loc.getBlockY(), z));
+                    expandCoords(world, new Vector(x, loc.getBlockY(), z));
                 }
             }
             // Repeat until nothing changes
@@ -114,13 +112,14 @@ public class Roof {
      * up to 100 in any direction
      * @param height - location to start search
      */
-    private void expandCoords(Location height) {
-        Location maxx = height.clone();
-        Location minx = height.clone();
-        Location maxz = height.clone();
-        Location minz = height.clone();
+    private void expandCoords(World world, Vector height) {
+        Location maxx = height.toLocation(world);
+        Location minx = height.toLocation(world);
+        Location maxz = height.toLocation(world);
+        Location minz = height.toLocation(world);
         int limit = 0;
-        while (ROOFBLOCKS.contains(maxx.getBlock().getType()) && limit < 100) {
+        while (ROOFBLOCKS
+                .contains(world.getBlockAt(maxx).getType()) && limit < 100) {
             limit++;
             maxx.add(new Vector(1,0,0));
         }
@@ -128,7 +127,7 @@ public class Roof {
             maxX = maxx.getBlockX()-1;
         }
 
-        while (ROOFBLOCKS.contains(minx.getBlock().getType()) && limit < 200) {
+        while (ROOFBLOCKS.contains(world.getBlockAt(minx).getType()) && limit < 200) {
             limit++;
             minx.subtract(new Vector(1,0,0));
         }
@@ -136,7 +135,7 @@ public class Roof {
             minX = minx.getBlockX() + 1;
         }
 
-        while (ROOFBLOCKS.contains(maxz.getBlock().getType()) && limit < 300) {
+        while (ROOFBLOCKS.contains(world.getBlockAt(maxz).getType()) && limit < 300) {
             limit++;
             maxz.add(new Vector(0,0,1));
         }
@@ -144,7 +143,7 @@ public class Roof {
             maxZ = maxz.getBlockZ() - 1;
         }
 
-        while (ROOFBLOCKS.contains(minz.getBlock().getType()) && limit < 400) {
+        while (ROOFBLOCKS.contains(world.getBlockAt(minz).getType()) && limit < 400) {
             limit++;
             minz.subtract(new Vector(0,0,1));
         }
@@ -152,53 +151,33 @@ public class Roof {
             minZ = minz.getBlockZ() + 1;
         }
     }
+    
     /**
      * @return the minX
      */
     public int getMinX() {
         return minX;
     }
-    /**
-     * @param minX the minX to set
-     */
-    public void setMinX(int minX) {
-        this.minX = minX;
-    }
+    
     /**
      * @return the maxX
      */
     public int getMaxX() {
         return maxX;
     }
-    /**
-     * @param maxX the maxX to set
-     */
-    public void setMaxX(int maxX) {
-        this.maxX = maxX;
-    }
+    
     /**
      * @return the minZ
      */
     public int getMinZ() {
         return minZ;
     }
-    /**
-     * @param minZ the minZ to set
-     */
-    public void setMinZ(int minZ) {
-        this.minZ = minZ;
-    }
+    
     /**
      * @return the maxZ
      */
     public int getMaxZ() {
         return maxZ;
-    }
-    /**
-     * @param maxZ the maxZ to set
-     */
-    public void setMaxZ(int maxZ) {
-        this.maxZ = maxZ;
     }
 
     /**

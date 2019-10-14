@@ -14,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.util.BoundingBox;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,13 +74,6 @@ public class BiomeRecipeTest {
         br.setLavacoverage(1); // 1%
         br.setWatercoverage(1); // 1%
         br.addReqBlocks(Material.GRASS_BLOCK, 2);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
