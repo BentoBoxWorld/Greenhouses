@@ -67,6 +67,9 @@ greenhouses:
           FAIL_INSUFFICIENT_BLOCKS: "&cMore blocks are required to make this recipe!"
         success: "&2You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
         missing-blocks: "&cMissing [material] x [number]"
+        unknown-recipe: "&cUnknown recipe"
+        try-these: "&cTry one of these:"
+        recipe-format: "&3[name]"
       info:
         title: "&A[How To Build A Greenhouse]"
         instructions: |

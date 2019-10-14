@@ -39,22 +39,25 @@ public class SnowTracker implements Listener {
 
     }
 
-    private void getAirBlocks(Greenhouse gh) {
+    private boolean getAirBlocks(Greenhouse gh) {
+        boolean createdSnow = false;
         List<Block> waterBlocks = new ArrayList<>();
         for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinY() + 1; z < (int)gh.getBoundingBox().getMaxY(); z++) {
-                for (int y = gh.getCeilingHeight() - 1; y >= gh.getFloorHeight(); y--) {
+            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
+                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
-                    if (b.getType().equals(Material.AIR) || b.getType().equals(Material.SNOW)) {
+                    Material type = b.getType();
+                    if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {
                         b.getWorld().spawnParticle(Particle.SNOWBALL, b.getLocation(), 5);
                     } else {
                         // Add snow
-                        if (b.getType().equals(Material.WATER)) {
+                        if (type.equals(Material.WATER)) {
                             waterBlocks.add(b);
                         } else {
                             // Not water
                             if (Math.random() < addon.getSettings().getSnowDensity() && !b.isLiquid()) {
                                 b.getRelative(BlockFace.UP).setType(Material.SNOW);
+                                createdSnow = true;
                             }
                         }
 
@@ -68,6 +71,7 @@ public class SnowTracker implements Listener {
         if (maxSize > 0) {
             waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
         }
+        return createdSnow;
     }
 
     @EventHandler
@@ -85,11 +89,12 @@ public class SnowTracker implements Listener {
     }
 
     private void removeWaterBucketAndShake(Greenhouse g) {
-        Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
-        h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
-        h.getInventory().addItem(new ItemStack(Material.BUCKET));
         // Scatter snow
-        getAirBlocks(g);
+        if (getAirBlocks(g)) {
+            Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
+            h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
+            h.getInventory().addItem(new ItemStack(Material.BUCKET));
+        }
     }
 
     private void shakeGlobes(World world) {

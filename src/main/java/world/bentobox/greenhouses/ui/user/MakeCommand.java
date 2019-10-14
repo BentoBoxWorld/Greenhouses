@@ -1,6 +1,10 @@
 package world.bentobox.greenhouses.ui.user;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,7 +12,9 @@ import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
+import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GhResult;
@@ -49,7 +55,35 @@ class MakeCommand extends CompositeCommand  {
             new Panel((Greenhouses)this.getAddon()).ShowPanel(user);
             return true;
         }
-        return makeGreenhouse(user, null);
+        // Check recipe given matches
+        BiomeRecipe br = getRecipe(user, args.get(0));
+        if (br == null) {
+            user.sendMessage("greenhouses.commands.user.make.unknown-recipe");
+            user.sendMessage("greenhouses.commands.user.make.try-these");
+            getRecipes(user).forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.recipe-format", TextVariables.NAME, v.getName()));
+            return false;
+        }
+        return makeGreenhouse(user, br);
+    }
+
+    /**
+     * Get a recipe for user
+     * @param user - user
+     * @param arg - given string
+     * @return recipe or null if unknown
+     */
+    private BiomeRecipe getRecipe(User user, String arg) {
+        return getRecipes(user).get(arg);
+    }
+    /**
+     * Get a string list of recipies the player has permission to use
+     * @param user - user
+     * @return list
+     */
+    private Map<String, BiomeRecipe> getRecipes(User user) {
+        return ((Greenhouses)getAddon()).getRecipes().getBiomeRecipes().stream()
+                .filter(br -> user.hasPermission(br.getPermission()))
+                .collect(Collectors.toMap(br -> br.getName(), br -> br));
     }
 
     private boolean makeGreenhouse(User user, BiomeRecipe br) {
@@ -77,7 +111,15 @@ class MakeCommand extends CompositeCommand  {
             result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData()));
             Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
         }
+        if (br != null && result.getResults().contains(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)) {
+            result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));
+        }
         return true;
+    }
+
+    @Override
+    public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
+        return Optional.of(new ArrayList<String>(this.getRecipes(user).keySet()));
     }
 
 }
