@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -42,8 +43,8 @@ public class SnowTracker implements Listener {
     private boolean getAirBlocks(Greenhouse gh) {
         boolean createdSnow = false;
         List<Block> waterBlocks = new ArrayList<>();
-        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
+        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX() -1; x++) {
+            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ() - 1; z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
                     Material type = b.getType();
@@ -55,7 +56,9 @@ public class SnowTracker implements Listener {
                             waterBlocks.add(b);
                         } else {
                             // Not water
-                            if (Math.random() < addon.getSettings().getSnowDensity() && !b.isLiquid()) {
+                            if (Math.random() < addon.getSettings().getSnowDensity() 
+                                    && !b.isLiquid() 
+                                    && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
                                 b.getRelative(BlockFace.UP).setType(Material.SNOW);
                                 createdSnow = true;
                             }
@@ -67,13 +70,27 @@ public class SnowTracker implements Listener {
             }
         }
         // Check if any water blocks can be turned to ice
+        /*
+         * TODO - find a way to calculate water blocks
         int maxSize = waterBlocks.size() - (gh.getArea() / gh.getBiomeRecipe().getWaterCoverage());
         if (maxSize > 0) {
             waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
         }
+        */
         return createdSnow;
     }
 
+    /**
+     * TODO finish
+     * @param e
+     */
+    @EventHandler
+    public void onBlockFormEvent(final BlockFormEvent e) {
+       if (e.getNewState().getType().equals(Material.SNOW) && addon.getManager().getMap().isAboveGreenhouse(e.getBlock().getLocation())) {
+           e.setCancelled(true);
+       }
+    }
+    
     @EventHandler
     public void onWeatherChangeEvent(final WeatherChangeEvent e) {
         if (!addon.getActiveWorlds().contains(e.getWorld())) {
