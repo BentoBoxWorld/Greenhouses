@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Biome;
@@ -19,7 +20,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -294,11 +298,31 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         if (b.getY() == 0) {
             return false;
         }
+        // Center spawned mob
+        Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
         return getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> m.getMobSpawnOn().map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
-                // If spawn occurs, return true
-                .map(m -> b.getWorld().spawnEntity(b.getLocation(), m.getMobType()) != null).orElse(false);
+                // If spawn occurs, check if it can fit inside greenhouse
+                .map(m -> {
+                    Entity entity = b.getWorld().spawnEntity(spawnLoc, m.getMobType());
+                    if (entity != null) {
+                        return addon
+                                .getManager()
+                                .getMap()
+                                .getGreenhouse(b.getLocation()).map(gh -> {
+                                    BoundingBox interior = gh.getBoundingBox().clone();
+                                    interior.expand(-1, -1, -1);
+                                    if (!interior.contains(entity.getBoundingBox())) {
+                                        entity.remove();
+                                        return false;
+                                    }
+                                    return true;
+                                }).orElse(false);
+                    }
+                    return false;
+                }).orElse(false);
+
     }
 
     /**

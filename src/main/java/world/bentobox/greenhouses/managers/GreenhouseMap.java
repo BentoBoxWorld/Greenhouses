@@ -79,6 +79,16 @@ public class GreenhouseMap {
     }
 
     /**
+     * Check if a location is in a specific greenhouse
+     * @param gh - greenhouse
+     * @param location - location to check
+     * @return true if inside
+     */
+    public boolean inGreenhouse(Greenhouse gh, Location location) {
+        return getGreenhouse(location).map(gh::equals).orElse(false);
+    }
+
+    /**
      * Check if location is above a greenhouse
      * @param location - location
      * @return true if above a known greenhouse
@@ -135,4 +145,6 @@ public class GreenhouseMap {
     public int getSize() {
         return greenhouses.values().stream().mapToInt(List::size).sum();
     }
+
+
 }

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -28,7 +29,9 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +43,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.managers.GreenhouseMap;
 
 /**
  * @author tastybento
@@ -67,6 +72,14 @@ public class BiomeRecipeTest {
     private Location location;
     @Mock
     private BlockData bd;
+    @Mock
+    private BentoBox plugin;
+    @Mock
+    private GreenhouseManager mgr;
+    @Mock
+    private GreenhouseMap map;
+    @Mock
+    private BukkitScheduler scheduler;
 
     /**
      * @throws java.lang.Exception
@@ -93,6 +106,8 @@ public class BiomeRecipeTest {
                 Material.AIR);
         when(block.getWorld()).thenReturn(world);
         when(block.getLocation()).thenReturn(location);
+        when(location.clone()).thenReturn(location);
+        when(location.add(any(Vector.class))).thenReturn(location);
         // Set up default recipe
         br = new BiomeRecipe(addon, type, 0);
         br.setIcecoverage(2); // 1%
@@ -103,6 +118,17 @@ public class BiomeRecipeTest {
         br.setName("name2");
         br.setIcon(Material.ACACIA_BOAT);
         br.setPermission("perm");
+        // Plugin
+        when(addon.getPlugin()).thenReturn(plugin);
+        // Manager
+        when(addon.getManager()).thenReturn(mgr);
+        // GH Map
+        when(mgr.getMap()).thenReturn(map);
+        Optional<Greenhouse> optionalGh = Optional.of(gh);
+        when(map.getGreenhouse(any(Location.class))).thenReturn(optionalGh);
+        // Bukkit Scheduler
+        when(Bukkit.getScheduler()).thenReturn(scheduler);
+
     }
 
     /**
@@ -364,6 +390,31 @@ public class BiomeRecipeTest {
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
     @Test
+    public void testSpawnMobOutsideWall() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.CAT;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Entity cat = mock(Cat.class);
+        // Same box as greenhouse
+        when(cat.getBoundingBox()).thenReturn(bb);
+        when(world.spawnEntity(any(), any())).thenReturn(cat);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertFalse(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
+        verify(location).add(any(Vector.class));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
     public void testSpawnMob() {
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.GRASS_PATH);
@@ -374,12 +425,16 @@ public class BiomeRecipeTest {
         Material mobSpawnOn = Material.GRASS_PATH;
 
         Entity cat = mock(Cat.class);
+        // Exactly 1 block smaller than the greenhouse blocks
+        BoundingBox small = new BoundingBox(11, 101, 11, 19, 119, 19);
+        when(cat.getBoundingBox()).thenReturn(small);
         when(world.spawnEntity(any(), any())).thenReturn(cat);
 
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
         verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
+        verify(location).add(any(Vector.class));
     }
 
     /**
