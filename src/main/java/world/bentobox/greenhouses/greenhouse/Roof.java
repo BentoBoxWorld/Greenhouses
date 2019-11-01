@@ -15,12 +15,8 @@ import org.bukkit.util.Vector;
  * @author tastybento
  *
  */
-public class Roof {
+public class Roof extends MinMaxXZ {
     private final Location location;
-    private int minX;
-    private int maxX;
-    private int minZ;
-    private int maxZ;
     private final int height;
     private boolean roofFound;
 
@@ -158,40 +154,6 @@ public class Roof {
         }
     }
 
-    /**
-     * @return the minX
-     */
-    public int getMinX() {
-        return minX;
-    }
-
-    /**
-     * @return the maxX
-     */
-    public int getMaxX() {
-        return maxX;
-    }
-
-    /**
-     * @return the minZ
-     */
-    public int getMinZ() {
-        return minZ;
-    }
-
-    /**
-     * @return the maxZ
-     */
-    public int getMaxZ() {
-        return maxZ;
-    }
-
-    /**
-     * @return the area
-     */
-    public int getArea() {
-        return (maxX - minX) * (maxZ - minZ);
-    }
     /**
      * @return the roofFound
      */

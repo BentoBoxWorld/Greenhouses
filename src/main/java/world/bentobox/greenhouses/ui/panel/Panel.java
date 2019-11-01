@@ -12,6 +12,7 @@ import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 
 public class Panel {
 
+    private static final String COVERAGE = "[coverage]";
     private Greenhouses addon;
 
     public Panel(Greenhouses addon) {
@@ -41,13 +42,13 @@ public class Panel {
             br.getRecipeBlocks().forEach(b -> d.add(user.getTranslation("greenhouses.recipe.blockscolor") + b));
         }
         if (br.getWaterCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.watermustbe", "[coverage]", String.valueOf(br.getWaterCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.watermustbe", COVERAGE, String.valueOf(br.getWaterCoverage())));
         }
         if (br.getLavaCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.lavamustbe", "[coverage]", String.valueOf(br.getLavaCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.lavamustbe", COVERAGE, String.valueOf(br.getLavaCoverage())));
         }
         if (br.getIceCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.icemustbe", "[coverage]", String.valueOf(br.getIceCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.icemustbe", COVERAGE, String.valueOf(br.getIceCoverage())));
         }
         if (br.getRecipeBlocks().isEmpty()) {
             d.add(user.getTranslation("greenhouses.recipe.nootherblocks"));

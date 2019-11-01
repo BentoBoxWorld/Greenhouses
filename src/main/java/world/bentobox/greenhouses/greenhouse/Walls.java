@@ -9,14 +9,10 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
-public class Walls {
-    private int minX;
-    private int maxX;
-    private int minZ;
-    private int maxZ;
+public class Walls extends MinMaxXZ {
     private int floor;
 
-    public static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
+    private static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
 
     /**
      * @return list of valid wall blocks
@@ -149,36 +145,6 @@ public class Walls {
         } while( y-- > 0 && wallBlockCount > 0);
         return y + 1;
 
-    }
-
-    /**
-     * @return the minXX
-     */
-    public int getMinX() {
-        return minX;
-    }
-    /**
-     * @return the maxXX
-     */
-    public int getMaxX() {
-        return maxX;
-    }
-    /**
-     * @return the minZZ
-     */
-    public int getMinZ() {
-        return minZ;
-    }
-    /**
-     * @return the maxZZ
-     */
-    public int getMaxZ() {
-        return maxZ;
-    }
-
-    public int getArea() {
-        // Get interior area
-        return (maxX - minX) * (maxZ - minZ);
     }
 
     /**

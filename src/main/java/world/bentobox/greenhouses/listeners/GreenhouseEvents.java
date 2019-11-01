@@ -98,12 +98,12 @@ public class GreenhouseEvents implements Listener {
         // from is a greenhouse
         if (from.isPresent() && !to.isPresent()) {
             // Exiting
-            user.sendMessage("greenhouses.event.leaving", "BIOME", from.get().getBiomeRecipe().getFriendlyName());
+            user.sendMessage("greenhouses.event.leaving", BIOME, from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
         if (!from.isPresent()) {
             // Entering
-            user.sendMessage("greenhouses.event.entering", "BIOME", to.get().getBiomeRecipe().getFriendlyName());
+            user.sendMessage("greenhouses.event.entering", BIOME, to.get().getBiomeRecipe().getFriendlyName());
         }
 
     }
@@ -133,7 +133,7 @@ public class GreenhouseEvents implements Listener {
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMinZ()
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxZ() - 1
                     ) {
-                user.sendMessage("greenhouses.event.broke", "BIOME", Util.prettifyText(g.getOriginalBiome().name()));
+                user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
                 plugin.getManager().removeGreenhouse(g);
             }
         });
