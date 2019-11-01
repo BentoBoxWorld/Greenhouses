@@ -2,9 +2,11 @@ package world.bentobox.greenhouses.managers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -94,36 +96,33 @@ public class EcoSystemManager {
         if (gh.getBiomeRecipe().noMobs()) {
             return;
         }
-        // Count mobs in greenhouse
-        // Load chunks
-        List<Pair<Integer, Integer>> chunks = new ArrayList<>();
+        // Check greenhouse chunks are loaded
         for (double blockX = gh.getBoundingBox().getMinX(); blockX < gh.getBoundingBox().getMaxX(); blockX+=16) {
             for (double blockZ = gh.getBoundingBox().getMinZ(); blockZ < gh.getBoundingBox().getMaxZ(); blockZ+=16) {
                 int chunkX = (int)(blockX / 16);
                 int chunkZ = (int)(blockZ / 16);
                 if (!gh.getWorld().isChunkLoaded(chunkX, chunkZ)) {
-                    gh.getWorld().loadChunk(chunkX, chunkZ);
-                    chunks.add(new Pair<>(chunkX, chunkZ));
+                    return;
                 }
             }
         }
-        Bukkit.getScheduler().runTaskLater(addon.getPlugin(), () -> {
-            long sum = gh.getWorld().getEntities().stream()
-                    .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
-                    .filter(e -> gh.contains(e.getLocation())).count();
-            // Get the blocks in the greenhouse where spawning could occur
-            Iterator<Block> it = getAvailableBlocks(gh).iterator();
-            // Check if the greenhouse is full
-            while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
-                // Spawn something if chance says so
-                if (gh.getBiomeRecipe().spawnMob(it.next())) {
-                    // Add a mob to the sum in the greenhouse
-                    sum++;
-                }
+        // Count the entities in the greenhouse
+        long sum = gh.getWorld().getEntities().stream()
+                .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
+                .filter(e -> gh.contains(e.getLocation())).count();
+        Bukkit.getLogger().info("DEBUG: found " + sum);
+        // Get the blocks in the greenhouse where spawning could occur
+        List<Block> list = new ArrayList<>(getAvailableBlocks(gh));
+        Collections.shuffle(list, new Random(System.currentTimeMillis()));
+        Iterator<Block> it = list.iterator();
+        // Check if the greenhouse is full
+        while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
+            // Spawn something if chance says so
+            if (gh.getBiomeRecipe().spawnMob(it.next())) {
+                // Add a mob to the sum in the greenhouse
+                sum++;
             }
-            // Unload chunks again
-            chunks.forEach(p -> gh.getWorld().unloadChunk(p.x, p.z));
-        }, 20L);
+        }
     }
 
     /**
