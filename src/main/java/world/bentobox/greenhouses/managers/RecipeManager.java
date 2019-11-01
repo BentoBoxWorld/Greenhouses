@@ -74,41 +74,41 @@ public class RecipeManager {
         addon.log("Loaded " + biomeRecipes.size() + " biome recipes.");
     }
 
-    private void processEntries(String type, ConfigurationSection biomeSection) {
+    private void processEntries(String biomeType, ConfigurationSection biomeSection) {
         try {
-            ConfigurationSection biomeRecipe = biomeSection.getConfigurationSection(type);
+            ConfigurationSection biomeRecipeConfig = biomeSection.getConfigurationSection(biomeType);
             Biome thisBiome;
-            if (biomeRecipe.contains("biome")) {
+            if (biomeRecipeConfig.contains("biome")) {
                 // Try and get the biome via the biome setting
-                thisBiome = Biome.valueOf(biomeRecipe.getString("biome").toUpperCase());
+                thisBiome = Biome.valueOf(biomeRecipeConfig.getString("biome").toUpperCase());
             } else {
                 // Old style, where type was the biome name
-                thisBiome = Biome.valueOf(type);
+                thisBiome = Biome.valueOf(biomeType);
             }
-            int priority = biomeRecipe.getInt("priority", 0);
+            int priority = biomeRecipeConfig.getInt("priority", 0);
 
             // Create the biome recipe
-            BiomeRecipe b = getBiomeRecipe(biomeRecipe, type, thisBiome, priority);
+            BiomeRecipe biomeRecipe = getBiomeRecipe(biomeRecipeConfig, biomeType, thisBiome, priority);
 
             // Set the needed blocks
-            ConfigurationSection reqContents = biomeRecipe.getConfigurationSection("contents");
+            ConfigurationSection reqContents = biomeRecipeConfig.getConfigurationSection("contents");
             if (reqContents != null) {
                 for (String rq : reqContents.getKeys(false)) {
-                    parseReqBlock(b, rq, reqContents);
+                    parseReqBlock(biomeRecipe, rq, reqContents);
                 }
             }
 
             // Load plants
-            loadPlants(biomeRecipe, b);
+            loadPlants(biomeRecipeConfig, biomeRecipe);
 
             // Load mobs!
-            loadMobs(biomeRecipe, b);
+            loadMobs(biomeRecipeConfig, biomeRecipe);
 
             // Load block conversions
-            loadBlockConversions(biomeRecipe, b);
+            loadBlockConversions(biomeRecipeConfig, biomeRecipe);
 
             // Add the recipe to the list
-            biomeRecipes.add(b);
+            biomeRecipes.add(biomeRecipe);
         } catch (Exception e) {
             addon.logError("Problem loading biome recipe - skipping! " + e.getMessage());
             StringBuilder validBiomes = new StringBuilder();
@@ -120,26 +120,26 @@ public class RecipeManager {
 
     }
 
-    private BiomeRecipe getBiomeRecipe(ConfigurationSection biomeRecipe, String type, Biome thisBiome, int priority) {
+    private BiomeRecipe getBiomeRecipe(ConfigurationSection biomeRecipeConfig, String biomeType, Biome thisBiome, int priority) {
         BiomeRecipe b = new BiomeRecipe(addon, thisBiome, priority);
         // Set the name
-        b.setName(type);
-        addon.log("Adding biome recipe for " + type);
+        b.setName(biomeType);
+        addon.log("Adding biome recipe for " + biomeType);
         // Set the permission
-        b.setPermission(biomeRecipe.getString("permission",""));
+        b.setPermission(biomeRecipeConfig.getString("permission",""));
         // Set the icon
-        b.setIcon(Material.valueOf(biomeRecipe.getString("icon", "SAPLING")));
-        b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipe.getString("friendlyname", Util.prettifyText(type))));
+        b.setIcon(Material.valueOf(biomeRecipeConfig.getString("icon", "SAPLING")));
+        b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipeConfig.getString("friendlyname", Util.prettifyText(biomeType))));
         // A value of zero on these means that there must be NO coverage, e.g., desert. If the value is not present, then the default is -1
-        b.setWatercoverage(biomeRecipe.getInt("watercoverage",-1));
-        b.setLavacoverage(biomeRecipe.getInt("lavacoverage",-1));
-        b.setIcecoverage(biomeRecipe.getInt("icecoverage",-1));
-        b.setMobLimit(biomeRecipe.getInt("moblimit", 9));
+        b.setWatercoverage(biomeRecipeConfig.getInt("watercoverage",-1));
+        b.setLavacoverage(biomeRecipeConfig.getInt("lavacoverage",-1));
+        b.setIcecoverage(biomeRecipeConfig.getInt("icecoverage",-1));
+        b.setMobLimit(biomeRecipeConfig.getInt("moblimit", 9));
         return b;
     }
 
-    private void loadPlants(ConfigurationSection biomeSection, BiomeRecipe b) {
-        ConfigurationSection temp = biomeSection.getConfigurationSection("plants");
+    private void loadPlants(ConfigurationSection biomeRecipeConfig, BiomeRecipe b) {
+        ConfigurationSection temp = biomeRecipeConfig.getConfigurationSection("plants");
         // # Plant Material: Probability in %:Block Material on what they grow
         if (temp != null) {
             HashMap<String,Object> plants = (HashMap<String,Object>)temp.getValues(false);
@@ -154,8 +154,8 @@ public class RecipeManager {
 
     }
 
-    private void loadBlockConversions(ConfigurationSection biomeSection, BiomeRecipe b) {
-        ConfigurationSection conversionSec = biomeSection.getConfigurationSection("conversions");
+    private void loadBlockConversions(ConfigurationSection biomeRecipeConfig, BiomeRecipe b) {
+        ConfigurationSection conversionSec = biomeRecipeConfig.getConfigurationSection("conversions");
         if (conversionSec != null) {
             for (String oldMat : conversionSec.getKeys(false)) {
                 try {
@@ -176,8 +176,8 @@ public class RecipeManager {
         }
     }
 
-    private void loadMobs(ConfigurationSection biomeSection, BiomeRecipe b) {
-        ConfigurationSection temp = biomeSection.getConfigurationSection("mobs");
+    private void loadMobs(ConfigurationSection biomeRecipeConfig, BiomeRecipe b) {
+        ConfigurationSection temp = biomeRecipeConfig.getConfigurationSection("mobs");
         // Mob EntityType: Probability:Spawn on Material
         if (temp != null) {
             ((HashMap<String,Object>)temp.getValues(false)).entrySet().forEach(s -> parseMob(s,b));
