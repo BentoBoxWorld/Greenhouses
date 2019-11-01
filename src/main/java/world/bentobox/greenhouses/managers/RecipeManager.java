@@ -50,22 +50,21 @@ public class RecipeManager {
      */
     private void loadBiomeRecipes() throws IOException, InvalidConfigurationException {
         biomeRecipes.clear();
-        YamlConfiguration biomes = new YamlConfiguration();
+        YamlConfiguration biomeConfig = new YamlConfiguration();
         File biomeFile = new File(addon.getDataFolder(), "biomes.yml");
         if (!biomeFile.exists()) {
             addon.logError("No biomes.yml file!");
             addon.saveResource("biomes.yml", true);
         }
-        biomes.load(biomeFile);
-        ConfigurationSection biomeSection = biomes.getConfigurationSection("biomes");
-        if (biomeSection == null) {
+        biomeConfig.load(biomeFile);
+        if (!biomeConfig.isConfigurationSection("biomes")) {
             addon.logError("biomes.yml file is missing, empty or corrupted. Delete and reload plugin again!");
             return;
         }
-
+        ConfigurationSection biomeSection = biomeConfig.getConfigurationSection("biomes");
         // Loop through all the entries
         for (String type: biomeSection.getValues(false).keySet()) {
-            processEntries(type, biomeSection, biomes);
+            processEntries(type, biomeSection);
             // Check maximum number
             if (biomeRecipes.size() == MAXIMUM_INVENTORY_SIZE) {
                 addon.logWarning("Cannot load any more biome recipies - limit is " + MAXIMUM_INVENTORY_SIZE);
@@ -75,7 +74,7 @@ public class RecipeManager {
         addon.log("Loaded " + biomeRecipes.size() + " biome recipes.");
     }
 
-    private void processEntries(String type, ConfigurationSection biomeSection, YamlConfiguration biomes) {
+    private void processEntries(String type, ConfigurationSection biomeSection) {
         try {
             ConfigurationSection biomeRecipe = biomeSection.getConfigurationSection(type);
             Biome thisBiome;
@@ -98,15 +97,15 @@ public class RecipeManager {
                     parseReqBlock(b, rq, reqContents);
                 }
             }
-            ConfigurationSection temp = biomes.getConfigurationSection("biomes." + type + ".plants");
+
             // Load plants
-            loadPlants(temp, b);
+            loadPlants(biomeRecipe, b);
 
             // Load mobs!
-            loadMobs(type, temp, biomes, b);
+            loadMobs(biomeRecipe, b);
 
             // Load block conversions
-            loadBlockConversions(type, biomeSection, b);
+            loadBlockConversions(biomeRecipe, b);
 
             // Add the recipe to the list
             biomeRecipes.add(b);
@@ -139,7 +138,8 @@ public class RecipeManager {
         return b;
     }
 
-    private void loadPlants(ConfigurationSection temp, BiomeRecipe b) {
+    private void loadPlants(ConfigurationSection biomeSection, BiomeRecipe b) {
+        ConfigurationSection temp = biomeSection.getConfigurationSection("plants");
         // # Plant Material: Probability in %:Block Material on what they grow
         if (temp != null) {
             HashMap<String,Object> plants = (HashMap<String,Object>)temp.getValues(false);
@@ -154,8 +154,8 @@ public class RecipeManager {
 
     }
 
-    private void loadBlockConversions(String type, ConfigurationSection biomeSection, BiomeRecipe b) {
-        ConfigurationSection conversionSec = biomeSection.getConfigurationSection(type + ".conversions");
+    private void loadBlockConversions(ConfigurationSection biomeSection, BiomeRecipe b) {
+        ConfigurationSection conversionSec = biomeSection.getConfigurationSection("conversions");
         if (conversionSec != null) {
             for (String oldMat : conversionSec.getKeys(false)) {
                 try {
@@ -176,9 +176,9 @@ public class RecipeManager {
         }
     }
 
-    private void loadMobs(String type, ConfigurationSection temp, YamlConfiguration biomes, BiomeRecipe b) {
+    private void loadMobs(ConfigurationSection biomeSection, BiomeRecipe b) {
+        ConfigurationSection temp = biomeSection.getConfigurationSection("mobs");
         // Mob EntityType: Probability:Spawn on Material
-        temp = biomes.getConfigurationSection("biomes." + type + ".mobs");
         if (temp != null) {
             ((HashMap<String,Object>)temp.getValues(false)).entrySet().forEach(s -> parseMob(s,b));
         }
