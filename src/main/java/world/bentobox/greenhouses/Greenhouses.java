@@ -23,7 +23,7 @@ public class Greenhouses extends Addon {
     private Settings settings;
     private RecipeManager recipes;
     private final List<World> activeWorlds = new ArrayList<>();
-    public final static Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS).build();
+    public static final Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS).build();
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#onEnable()

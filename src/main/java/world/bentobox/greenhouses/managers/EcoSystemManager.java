@@ -26,6 +26,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
 public class EcoSystemManager {
 
     private static final int PLANTS_PER_BONEMEAL = 6;
+    private static final String MINUTES = " minutes";
     private final Greenhouses addon;
     private final GreenhouseManager g;
     private BukkitTask plantTask;
@@ -41,36 +42,36 @@ public class EcoSystemManager {
 
     private void setup() {
         // Kick off flower growing
-        long plantTick = addon.getSettings().getPlantTick() * 60 * 20; // In minutes
+        long plantTick = addon.getSettings().getPlantTick() * 60 * 20L; // In minutes
         if (plantTick > 0) {
-            addon.log("Kicking off flower growing scheduler every " + addon.getSettings().getPlantTick() + " minutes");
+            addon.log("Kicking off flower growing scheduler every " + addon.getSettings().getPlantTick() + MINUTES);
             plantTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::growPlants), 80L, plantTick);
         } else {
             addon.log("Flower growth disabled.");
         }
 
         // Kick block conversion growing
-        long blockTick = addon.getSettings().getBlockTick() * 60 * 20; // In minutes
+        long blockTick = addon.getSettings().getBlockTick() * 60 * 20l; // In minutes
 
         if (blockTick > 0) {
-            addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + " minutes");
+            addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + MINUTES);
             blockTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::convertBlocks), 60L, blockTick);
         } else {
             addon.log("Block conversion disabled.");
         }
         // Kick off g/h verification
-        long ecoTick = addon.getSettings().getEcoTick() * 60 * 20; // In minutes
+        long ecoTick = addon.getSettings().getEcoTick() * 60 * 20L; // In minutes
         if (ecoTick > 0) {
-            addon.log("Kicking off greenhouse verify scheduler every " + addon.getSettings().getEcoTick() + " minutes");
+            addon.log("Kicking off greenhouse verify scheduler every " + addon.getSettings().getEcoTick() + MINUTES);
             ecoTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::verify), ecoTick, ecoTick);
 
         } else {
             addon.log("Greenhouse verification disabled.");
         }
         // Kick off mob population
-        long mobTick = addon.getSettings().getMobTick() * 60 * 20; // In minutes
+        long mobTick = addon.getSettings().getMobTick() * 60 * 20L; // In minutes
         if (mobTick > 0) {
-            addon.log("Kicking off mob populator scheduler every " + addon.getSettings().getMobTick() + " minutes");
+            addon.log("Kicking off mob populator scheduler every " + addon.getSettings().getMobTick() + MINUTES);
             mobTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::addMobs), 120L, mobTick);
         } else {
             addon.log("Mob disabled.");

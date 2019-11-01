@@ -23,14 +23,21 @@ public class Roof {
     private int maxZ;
     private final int height;
     private boolean roofFound;
-    public final static List<Material> ROOFBLOCKS = Arrays.stream(Material.values())
-            .filter(Material::isBlock) // Blocks only, no items
-            .filter(m -> !m.name().contains("DOOR")) // No doors
-            .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
-                    || m.name().contains("GLASS") // All glass blocks
-                    || m.equals(Material.HOPPER) // Hoppers
-                    || m.equals(Material.GLOWSTONE)) // Glowstone
-            .collect(Collectors.toList());
+
+    /**
+     * @return a list of valid roof blocks
+     */
+    public static List<Material> getRoofBlocks() {
+        return Arrays.stream(Material.values())
+                .filter(Material::isBlock) // Blocks only, no items
+                .filter(m -> !m.name().contains("DOOR")) // No doors
+                .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
+                        || m.name().contains("GLASS") // All glass blocks
+                        || m.equals(Material.HOPPER) // Hoppers
+                        || m.equals(Material.GLOWSTONE)) // Glowstone
+                .collect(Collectors.toList());
+    }
+
     /**
      * Finds a roof from a starting location under the roof and characterizes it
      * @param loc - starting location
@@ -55,10 +62,9 @@ public class Roof {
                         if (!Walls.isWallBlock(b.getType())) {
                             // Look up
                             for (int y = roofY; y < world.getMaxHeight(); y++) {
-                                if (ROOFBLOCKS.contains(world.getBlockAt(x,y,z).getType())) {
+                                if (getRoofBlocks().contains(world.getBlockAt(x,y,z).getType())) {
                                     roofFound = true;
                                     loc = new Location(world,x,y,z);
-                                    //plugin.logger(3,"Roof block found at " + x + " " + y + " " + z + " of type " + loc.getBlock().getType().toString());
                                     break;
                                 }
                             }
@@ -76,7 +82,7 @@ public class Roof {
                 break;
             }
         }
-        //}
+
         // Record the height
         this.height = loc.getBlockY();
         // Now we have a roof block, find how far we can go NSWE
@@ -118,7 +124,7 @@ public class Roof {
         Location maxz = height.toLocation(world);
         Location minz = height.toLocation(world);
         int limit = 0;
-        while (ROOFBLOCKS
+        while (getRoofBlocks()
                 .contains(world.getBlockAt(maxx).getType()) && limit < 100) {
             limit++;
             maxx.add(new Vector(1,0,0));
@@ -127,7 +133,7 @@ public class Roof {
             maxX = maxx.getBlockX()-1;
         }
 
-        while (ROOFBLOCKS.contains(world.getBlockAt(minx).getType()) && limit < 200) {
+        while (getRoofBlocks().contains(world.getBlockAt(minx).getType()) && limit < 200) {
             limit++;
             minx.subtract(new Vector(1,0,0));
         }
@@ -135,7 +141,7 @@ public class Roof {
             minX = minx.getBlockX() + 1;
         }
 
-        while (ROOFBLOCKS.contains(world.getBlockAt(maxz).getType()) && limit < 300) {
+        while (getRoofBlocks().contains(world.getBlockAt(maxz).getType()) && limit < 300) {
             limit++;
             maxz.add(new Vector(0,0,1));
         }
@@ -143,7 +149,7 @@ public class Roof {
             maxZ = maxz.getBlockZ() - 1;
         }
 
-        while (ROOFBLOCKS.contains(world.getBlockAt(minz).getType()) && limit < 400) {
+        while (getRoofBlocks().contains(world.getBlockAt(minz).getType()) && limit < 400) {
             limit++;
             minz.subtract(new Vector(0,0,1));
         }
@@ -151,28 +157,28 @@ public class Roof {
             minZ = minz.getBlockZ() + 1;
         }
     }
-    
+
     /**
      * @return the minX
      */
     public int getMinX() {
         return minX;
     }
-    
+
     /**
      * @return the maxX
      */
     public int getMaxX() {
         return maxX;
     }
-    
+
     /**
      * @return the minZ
      */
     public int getMinZ() {
         return minZ;
     }
-    
+
     /**
      * @return the maxZ
      */

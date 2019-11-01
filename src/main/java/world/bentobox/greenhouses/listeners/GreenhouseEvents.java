@@ -27,6 +27,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
  * This class listens for changes to greenhouses and reacts to them
  */
 public class GreenhouseEvents implements Listener {
+    private static final String BIOME = "[biome]";
     private final Greenhouses plugin;
 
     public GreenhouseEvents(final Greenhouses plugin) {
@@ -83,26 +84,26 @@ public class GreenhouseEvents implements Listener {
         if (!to.isPresent() && !from.isPresent()) {
             return;
         }
-        if (to.isPresent() && from.isPresent() && to.equals(from)) {
-            // Same greenhouse
-            return;
-        }
-        // to is a greenhouse
-        if (to.isPresent() && from.isPresent() && !to.equals(from)) {
-            // Leaving greenhouse, entering another
-            user.sendMessage("greenhouses.event.leaving", "[biome]", to.get().getBiomeRecipe().getFriendlyName());
-            user.sendMessage("greenhouses.event.entering", "[biome]",  from.get().getBiomeRecipe().getFriendlyName());
-            return;
+        if (to.isPresent() && from.isPresent()) {
+            if (!to.get().equals(from.get())) {
+                // Leaving greenhouse, entering another
+                user.sendMessage("greenhouses.event.leaving", BIOME, to.get().getBiomeRecipe().getFriendlyName());
+                user.sendMessage("greenhouses.event.entering", BIOME,  from.get().getBiomeRecipe().getFriendlyName());
+                return;
+            } else {
+                // Same greenhouse
+                return;
+            }
         }
         // from is a greenhouse
         if (from.isPresent() && !to.isPresent()) {
             // Exiting
-            user.sendMessage("greenhouses.event.leaving", "[biome]", from.get().getBiomeRecipe().getFriendlyName());
+            user.sendMessage("greenhouses.event.leaving", "BIOME", from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
         if (!from.isPresent()) {
             // Entering
-            user.sendMessage("greenhouses.event.entering", "[biome]", to.get().getBiomeRecipe().getFriendlyName());
+            user.sendMessage("greenhouses.event.entering", "BIOME", to.get().getBiomeRecipe().getFriendlyName());
         }
 
     }
@@ -132,7 +133,7 @@ public class GreenhouseEvents implements Listener {
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMinZ()
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxZ() - 1
                     ) {
-                user.sendMessage("greenhouses.event.broke", "[biome]", Util.prettifyText(g.getOriginalBiome().name()));
+                user.sendMessage("greenhouses.event.broke", "BIOME", Util.prettifyText(g.getOriginalBiome().name()));
                 plugin.getManager().removeGreenhouse(g);
             }
         });

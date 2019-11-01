@@ -52,7 +52,7 @@ class MakeCommand extends CompositeCommand  {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         if (args.isEmpty()) {
-            new Panel((Greenhouses)this.getAddon()).ShowPanel(user);
+            new Panel((Greenhouses)this.getAddon()).showPanel(user);
             return true;
         }
         // Check recipe given matches

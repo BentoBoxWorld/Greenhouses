@@ -95,6 +95,7 @@ public class GreenhouseManager implements Listener {
             case FAIL_NO_ISLAND:
                 // Delete the failed greenhouse
                 toBeRemoved.add(g);
+                break;
             case FAIL_OVERLAPPING:
             case NULL:
                 addon.logError(result.name());

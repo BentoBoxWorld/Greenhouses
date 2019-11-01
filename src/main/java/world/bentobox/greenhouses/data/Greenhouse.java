@@ -38,7 +38,7 @@ public class Greenhouse implements DataObject {
     private String biomeRecipeName;
 
     private boolean broken;
-    
+
     private Map<Material, Integer> missingBlocks;
 
     /**
@@ -48,7 +48,7 @@ public class Greenhouse implements DataObject {
 
     public Greenhouse(World world, Walls walls, int ceilingHeight) {
         this.location = new Location(world, walls.getMinX(), walls.getFloor(), walls.getMinZ());
-        Location location2 = new Location(world, walls.getMaxX() + 1, ceilingHeight + 1, walls.getMaxZ() + 1);
+        Location location2 = new Location(world, walls.getMaxX() + 1D, ceilingHeight + 1D, walls.getMaxZ() + 1D);
         this.boundingBox = BoundingBox.of(location, location2);
     }
 

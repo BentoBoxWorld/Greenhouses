@@ -80,9 +80,8 @@ public class GreenhouseFinder {
                     } else {
                         // Check just the walls
                         if (y == roof.getHeight() || x == minX || x == maxX || z == minZ || z== maxZ) {
-                            //Greenhouses.addon.logDebug("DEBUG: Checking " + x + " " + y + " " + z);
-                            if ((y != roof.getHeight() && !Walls.WALL_BLOCKS.contains(blockType))
-                                    || (y == roof.getHeight() && !Roof.ROOFBLOCKS.contains(blockType))) {
+                            if ((y != roof.getHeight() && !Walls.getWallBlocks().contains(blockType))
+                                    || (y == roof.getHeight() && !Roof.getRoofBlocks().contains(blockType))) {
                                 //logger(2,"DEBUG: bad block found at  " + x + "," + y+ "," + z + " " + blockType);
                                 if (blockType == Material.AIR) {
                                     airHole = true;
@@ -136,18 +135,16 @@ public class GreenhouseFinder {
                 }
             }
         }
-        //addon.logDebug("Floor is at height y = " + y);
         // Check that the player is vertically in the greenhouse
         if (roof.getLocation().getBlockY() <= y) {
             result.add(GreenhouseResult.FAIL_BELOW);
         }
         // Show errors
-        if (airHoles & !inCeiling) {
+        if (airHoles && !inCeiling) {
             result.add(GreenhouseResult.FAIL_HOLE_IN_WALL);
-        } else if (airHoles & inCeiling) {
+        } else if (airHoles && inCeiling) {
             result.add(GreenhouseResult.FAIL_HOLE_IN_ROOF);
         }
-        //Greenhouses.addon.logDebug("DEBUG: otherBlockLayer = " + otherBlockLayer);
         if (otherBlocks && otherBlockLayer == y + 1) {
             // Walls must be even all the way around
             result.add(GreenhouseResult.FAIL_UNEVEN_WALLS);

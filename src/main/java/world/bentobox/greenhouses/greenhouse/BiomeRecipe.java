@@ -1,8 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,7 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
+    private static final String CHANCE_FOR = "% chance for ";
     private Greenhouses addon;
     private Biome type;
     private Material icon; // Biome icon for control panel
@@ -38,11 +38,11 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private String name;
     private String friendlyName;
 
-    private final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
+    private final List<BlockFace> adjBlocks = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
 
     // Content requirements
     // Material, Type, Qty. There can be more than one type of material required
-    private final Map<Material, Integer> requiredBlocks = new HashMap<>();
+    private final Map<Material, Integer> requiredBlocks = new EnumMap<>(Material.class);
     // Plants
     private final TreeMap<Double, GreenhousePlant> plantTree = new TreeMap<>();
 
@@ -52,7 +52,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     // Conversions
     // Original Material, Original Type, New Material, New Type, Probability
-    private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new HashMap<>();
+    private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new EnumMap<>(Material.class);
 
     private int mobLimit;
     private int waterCoverage;
@@ -85,7 +85,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public void addConvBlocks(Material oldMaterial, Material newMaterial, double convChance, Material localMaterial) {
         double probability = Math.min(convChance/100 , 1D);
         conversionBlocks.put(oldMaterial, new GreenhouseBlockConversions(oldMaterial, newMaterial, probability, localMaterial));
-        addon.log("   " + convChance + "% chance for " + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
+        addon.log("   " + convChance + CHANCE_FOR + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
     }
 
 
@@ -96,7 +96,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return true if add is successful
      */
     public boolean addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
-        addon.log("   " + mobProbability + "% chance for " + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
+        addon.log("   " + mobProbability + CHANCE_FOR + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = ((double)mobProbability/100);
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
@@ -129,7 +129,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
             return false;
         }
-        addon.log("   " + plantProbability + "% chance for " + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
+        addon.log("   " + plantProbability + CHANCE_FOR + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
         return true;
     }
 
@@ -150,16 +150,16 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public Set<GreenhouseResult> checkRecipe(Greenhouse gh) {
         Set<GreenhouseResult> result = new HashSet<>();
         long area = gh.getArea();
-        Map<Material, Integer> blockCount = new HashMap<>();
+        Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
         // Look through the greenhouse and count what is in there
         for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
             for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
                 for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
                     Block b = gh.getWorld().getBlockAt(x, y, z);
-                    Material type = b.getType();
-                    if (!type.equals(Material.AIR)) {
-                        blockCount.putIfAbsent(type, 0);
-                        blockCount.merge(type, 1, Integer::sum);
+                    Material t = b.getType();
+                    if (!t.equals(Material.AIR)) {
+                        blockCount.putIfAbsent(t, 0);
+                        blockCount.merge(t, 1, Integer::sum);
                     }
                 }
             }
@@ -213,7 +213,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             return;
         }
         // Check if the block is in the right area, up, down, n,s,e,w
-        if (ADJ_BLOCKS.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
+        if (adjBlocks.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
             // Convert!
             b.setType(bc.getNewMaterial());
         }
@@ -476,18 +476,20 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         return Integer.compare(o.getPriority(), this.getPriority());
     }
 
+
     /**
      * @return true if this recipe has no mobs that may spawn
      */
     public boolean noMobs() {
-        return mobTree == null ? false : mobTree.isEmpty();
+        return mobTree.isEmpty();
     }
 
     /**
      * @return the mob types that may spawn due to this recipe
      */
     public Set<EntityType> getMobTypes() {
-        return mobTree == null ? Collections.emptySet() : mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
+        return mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
     }
+
 
 }

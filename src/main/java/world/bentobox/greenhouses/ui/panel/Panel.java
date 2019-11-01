@@ -19,7 +19,7 @@ public class Panel {
         this.addon = addon;
     }
 
-    public void ShowPanel(User user) {
+    public void showPanel(User user) {
         PanelBuilder pb = new PanelBuilder().name(user.getTranslation("greenhouses.general.greenhouses"));
         for (BiomeRecipe br : addon.getRecipes().getBiomeRecipes()) {
             if (user.hasPermission(br.getPermission())) {

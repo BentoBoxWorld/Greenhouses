@@ -1,10 +1,10 @@
 package world.bentobox.greenhouses.managers;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.bukkit.ChatColor;
@@ -31,8 +31,6 @@ public class RecipeManager {
             loadBiomeRecipes();
         } catch (Exception e) {
             addon.logError(e.getMessage());
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
@@ -49,9 +47,8 @@ public class RecipeManager {
      * Loads all the biome recipes from the file biomes.yml.
      * @throws InvalidConfigurationException - bad YAML
      * @throws IOException - io exception
-     * @throws FileNotFoundException - no file found
      */
-    private void loadBiomeRecipes() throws FileNotFoundException, IOException, InvalidConfigurationException {
+    private void loadBiomeRecipes() throws IOException, InvalidConfigurationException {
         biomeRecipes.clear();
         YamlConfiguration biomes = new YamlConfiguration();
         File biomeFile = new File(addon.getDataFolder(), "biomes.yml");
@@ -97,11 +94,7 @@ public class RecipeManager {
                 ConfigurationSection reqContents = biomeRecipe.getConfigurationSection("contents");
                 if (reqContents != null) {
                     for (String rq : reqContents.getKeys(false)) {
-                        try {
-                            b.addReqBlocks(Material.valueOf(rq.toUpperCase()), reqContents.getInt(rq));
-                        } catch(Exception e) {
-                            addon.logError("Could not parse required block " + rq);
-                        }
+                        parseReqBlock(b, rq, reqContents);
                     }
                 }
                 // Load plants
@@ -110,10 +103,10 @@ public class RecipeManager {
                 if (temp != null) {
                     HashMap<String,Object> plants = (HashMap<String,Object>)temp.getValues(false);
                     if (plants != null) {
-                        for (String s: plants.keySet()) {
-                            Material plantMaterial = Material.valueOf(s);
-                            String[] split = ((String)plants.get(s)).split(":");
-                            int plantProbability = Integer.valueOf(split[0]);
+                        for (Entry<String, Object> s: plants.entrySet()) {
+                            Material plantMaterial = Material.valueOf(s.getKey());
+                            String[] split = ((String)s.getValue()).split(":");
+                            int plantProbability = Integer.parseInt(split[0]);
                             Material plantGrowOn = Material.valueOf(split[1]);
                             b.addPlants(plantMaterial, plantProbability, plantGrowOn);
                         }
@@ -125,16 +118,8 @@ public class RecipeManager {
                 if (temp != null) {
                     HashMap<String,Object> mobs = (HashMap<String,Object>)temp.getValues(false);
                     if (mobs != null) {
-                        for (String s: mobs.keySet()) {
-                            try {
-                                EntityType mobType = EntityType.valueOf(s.toUpperCase());
-                                String[] split = ((String)mobs.get(s)).split(":");
-                                int mobProbability = Integer.valueOf(split[0]);
-                                Material mobSpawnOn = Material.valueOf(split[1]);
-                                b.addMobs(mobType, mobProbability, mobSpawnOn);
-                            } catch (Exception e) {
-                                addon.logError("Could not parse " + s);
-                            }
+                        for (Entry<String, Object> s: mobs.entrySet()) {
+                            parseMob(s,b);
                         }
                     }
                 }
@@ -147,7 +132,7 @@ public class RecipeManager {
                             String conversions = conversionSec.getString(oldMat);
                             if (!conversions.isEmpty()) {
                                 String[] split = conversions.split(":");
-                                int convChance = Integer.valueOf(split[0]);
+                                int convChance = Integer.parseInt(split[0]);
                                 Material newMaterial = Material.valueOf(split[1]);
                                 Material localMaterial = Material.valueOf(split[2]);
                                 b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
@@ -177,6 +162,26 @@ public class RecipeManager {
 
         }
         addon.log("Loaded " + biomeRecipes.size() + " biome recipes.");
+    }
+
+    private void parseMob(Entry<String, Object> s, BiomeRecipe b) {
+        try {
+            EntityType mobType = EntityType.valueOf(s.getKey().toUpperCase());
+            String[] split = ((String)s.getValue()).split(":");
+            int mobProbability = Integer.parseInt(split[0]);
+            Material mobSpawnOn = Material.valueOf(split[1]);
+            b.addMobs(mobType, mobProbability, mobSpawnOn);
+        } catch (Exception e) {
+            addon.logError("Could not parse " + s.getKey());
+        }
+    }
+
+    private void parseReqBlock(BiomeRecipe b, String rq, ConfigurationSection reqContents) {
+        try {
+            b.addReqBlocks(Material.valueOf(rq.toUpperCase()), reqContents.getInt(rq));
+        } catch(Exception e) {
+            addon.logError("Could not parse required block " + rq);
+        }
     }
 
     /**
