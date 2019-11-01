@@ -100,7 +100,7 @@ public class RecipeManager {
             }
             ConfigurationSection temp = biomes.getConfigurationSection("biomes." + type + ".plants");
             // Load plants
-            loadPlants(type, temp, biomes, b);
+            loadPlants(temp, b);
 
             // Load mobs!
             loadMobs(type, temp, biomes, b);
@@ -139,18 +139,16 @@ public class RecipeManager {
         return b;
     }
 
-    private void loadPlants(String type, ConfigurationSection temp, YamlConfiguration biomes, BiomeRecipe b) {
+    private void loadPlants(ConfigurationSection temp, BiomeRecipe b) {
         // # Plant Material: Probability in %:Block Material on what they grow
         if (temp != null) {
             HashMap<String,Object> plants = (HashMap<String,Object>)temp.getValues(false);
-            if (plants != null) {
-                for (Entry<String, Object> s: plants.entrySet()) {
-                    Material plantMaterial = Material.valueOf(s.getKey());
-                    String[] split = ((String)s.getValue()).split(":");
-                    int plantProbability = Integer.parseInt(split[0]);
-                    Material plantGrowOn = Material.valueOf(split[1]);
-                    b.addPlants(plantMaterial, plantProbability, plantGrowOn);
-                }
+            for (Entry<String, Object> s: plants.entrySet()) {
+                Material plantMaterial = Material.valueOf(s.getKey());
+                String[] split = ((String)s.getValue()).split(":");
+                int plantProbability = Integer.parseInt(split[0]);
+                Material plantGrowOn = Material.valueOf(split[1]);
+                b.addPlants(plantMaterial, plantProbability, plantGrowOn);
             }
         }
 
@@ -182,12 +180,7 @@ public class RecipeManager {
         // Mob EntityType: Probability:Spawn on Material
         temp = biomes.getConfigurationSection("biomes." + type + ".mobs");
         if (temp != null) {
-            HashMap<String,Object> mobs = (HashMap<String,Object>)temp.getValues(false);
-            if (mobs != null) {
-                for (Entry<String, Object> s: mobs.entrySet()) {
-                    parseMob(s,b);
-                }
-            }
+            ((HashMap<String,Object>)temp.getValues(false)).entrySet().forEach(s -> parseMob(s,b));
         }
 
     }
