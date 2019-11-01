@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,7 +15,6 @@ import org.bukkit.block.Hopper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-import world.bentobox.bentobox.util.Pair;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 
@@ -110,7 +108,6 @@ public class EcoSystemManager {
         long sum = gh.getWorld().getEntities().stream()
                 .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
                 .filter(e -> gh.contains(e.getLocation())).count();
-        Bukkit.getLogger().info("DEBUG: found " + sum);
         // Get the blocks in the greenhouse where spawning could occur
         List<Block> list = new ArrayList<>(getAvailableBlocks(gh));
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
