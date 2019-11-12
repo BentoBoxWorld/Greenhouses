@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
  */
 public class Roof extends MinMaxXZ {
     private final Location location;
-    private final int height;
+    private int height;
     private boolean roofFound;
 
     /**
@@ -40,6 +40,11 @@ public class Roof extends MinMaxXZ {
      */
     public Roof(Location loc) {
         this.location = loc;
+        roofFound = findRoof(loc);
+    }
+
+
+    private boolean findRoof(Location loc) {
         World world = loc.getWorld();
         // This section tries to find a roof block
         // Try just going up - this covers every case except if the player is standing under a hole
@@ -49,7 +54,7 @@ public class Roof extends MinMaxXZ {
         int roofY = loc.getBlockY();
         // If the roof was not found start going around in circles until something is found
         // Expand in ever increasing squares around location until a wall block is found
-        for (int radius = 0; radius < 100; radius++) {
+        for (int radius = 0; radius < 3; radius++) {
             for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius; x++) {
                 for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius; z++) {
                     if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius)
@@ -78,7 +83,7 @@ public class Roof extends MinMaxXZ {
                 break;
             }
         }
-
+        if (!roofFound) return false;
         // Record the height
         this.height = loc.getBlockY();
         // Now we have a roof block, find how far we can go NSWE
@@ -106,8 +111,8 @@ public class Roof extends MinMaxXZ {
             // Repeat until nothing changes
         } while (minx != minX || maxx != maxX || minz != minZ || maxz != maxZ);
         // That's as much as we can do!
+        return true;
     }
-
 
     /**
      * This takes any location and tries to go as far as possible in NWSE directions finding contiguous roof blocks

@@ -76,6 +76,13 @@ public class RoofTest {
         // Test
         roof = new Roof(location);
     }
+    
+    @Test
+    public void testNoGlass() {
+        when(block.getType()).thenReturn(Material.AIR);
+        roof = new Roof(location);
+        
+    }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.Roof#getMinX()}.
