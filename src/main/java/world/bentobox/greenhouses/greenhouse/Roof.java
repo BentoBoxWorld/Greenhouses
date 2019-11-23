@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +17,9 @@ import org.bukkit.util.Vector;
  *
  */
 public class Roof extends MinMaxXZ {
-    private final Location location;
-    private int height;
-    private boolean roofFound;
-
-    /**
-     * @return a list of valid roof blocks
-     */
-    public static List<Material> getRoofBlocks() {
-        return Arrays.stream(Material.values())
+    public static final List<Material> ROOF_BLOCKS;
+    static {
+        List<Material> r = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> !m.name().contains("DOOR")) // No doors
                 .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
@@ -32,7 +27,11 @@ public class Roof extends MinMaxXZ {
                         || m.equals(Material.HOPPER) // Hoppers
                         || m.equals(Material.GLOWSTONE)) // Glowstone
                 .collect(Collectors.toList());
+        ROOF_BLOCKS = Collections.unmodifiableList(r);
     }
+    private final Location location;
+    private int height;
+    private boolean roofFound;
 
     /**
      * Finds a roof from a starting location under the roof and characterizes it
@@ -60,10 +59,10 @@ public class Roof extends MinMaxXZ {
                     if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius)
                             && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
                         Block b = world.getBlockAt(x, roofY, z);
-                        if (!Walls.isWallBlock(b.getType())) {
+                        if (!Walls.WALL_BLOCKS.contains(b.getType())) {
                             // Look up
                             for (int y = roofY; y < world.getMaxHeight(); y++) {
-                                if (getRoofBlocks().contains(world.getBlockAt(x,y,z).getType())) {
+                                if (ROOF_BLOCKS.contains(world.getBlockAt(x,y,z).getType())) {
                                     roofFound = true;
                                     loc = new Location(world,x,y,z);
                                     break;
@@ -125,7 +124,7 @@ public class Roof extends MinMaxXZ {
         Location maxz = height.toLocation(world);
         Location minz = height.toLocation(world);
         int limit = 0;
-        while (getRoofBlocks()
+        while (ROOF_BLOCKS
                 .contains(world.getBlockAt(maxx).getType()) && limit < 100) {
             limit++;
             maxx.add(new Vector(1,0,0));
@@ -134,7 +133,7 @@ public class Roof extends MinMaxXZ {
             maxX = maxx.getBlockX()-1;
         }
 
-        while (getRoofBlocks().contains(world.getBlockAt(minx).getType()) && limit < 200) {
+        while (ROOF_BLOCKS.contains(world.getBlockAt(minx).getType()) && limit < 200) {
             limit++;
             minx.subtract(new Vector(1,0,0));
         }
@@ -142,7 +141,7 @@ public class Roof extends MinMaxXZ {
             minX = minx.getBlockX() + 1;
         }
 
-        while (getRoofBlocks().contains(world.getBlockAt(maxz).getType()) && limit < 300) {
+        while (ROOF_BLOCKS.contains(world.getBlockAt(maxz).getType()) && limit < 300) {
             limit++;
             maxz.add(new Vector(0,0,1));
         }
@@ -150,7 +149,7 @@ public class Roof extends MinMaxXZ {
             maxZ = maxz.getBlockZ() - 1;
         }
 
-        while (getRoofBlocks().contains(world.getBlockAt(minz).getType()) && limit < 400) {
+        while (ROOF_BLOCKS.contains(world.getBlockAt(minz).getType()) && limit < 400) {
             limit++;
             minz.subtract(new Vector(0,0,1));
         }

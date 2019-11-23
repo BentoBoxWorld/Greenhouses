@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,15 +11,9 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
 public class Walls extends MinMaxXZ {
-    private int floor;
-
-    private static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
-
-    /**
-     * @return list of valid wall blocks
-     */
-    public static List<Material> getWallBlocks() {
-        return Arrays.stream(Material.values())
+    public static final List<Material> WALL_BLOCKS;
+    static {
+        List<Material> w = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
                 .filter(m -> m.name().contains("DOOR") // All doors
@@ -26,7 +21,12 @@ public class Walls extends MinMaxXZ {
                         || m.equals(Material.HOPPER) // Hoppers
                         || m.equals(Material.GLOWSTONE)) // Glowstone
                 .collect(Collectors.toList());
+        WALL_BLOCKS = Collections.unmodifiableList(w);
     }
+
+    private int floor;
+
+    private static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
 
     public Walls(Roof roof) {
         // The player is under the roof
@@ -64,25 +64,25 @@ public class Walls extends MinMaxXZ {
                                 switch (bf) {
                                 case EAST:
                                     // positive x
-                                    if (getWallBlocks().contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
                                         stopMaxX = true;
                                     }
                                     break;
                                 case WEST:
                                     // negative x
-                                    if (getWallBlocks().contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
                                         stopMinX = true;
                                     }
                                     break;
                                 case NORTH:
                                     // negative Z
-                                    if (getWallBlocks().contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
                                         stopMinZ = true;
                                     }
                                     break;
                                 case SOUTH:
                                     // positive Z
-                                    if (getWallBlocks().contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
                                         stopMaxZ = true;
                                     }
                                     break;
@@ -136,7 +136,7 @@ public class Walls extends MinMaxXZ {
             wallBlockCount = 0;
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getWallBlocks().contains(world.getBlockAt(x, y, z).getType())) {
+                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getType())) {
                         wallBlockCount++;
                     }
                 }
@@ -152,10 +152,6 @@ public class Walls extends MinMaxXZ {
      */
     public int getFloor() {
         return floor;
-    }
-
-    public static boolean isWallBlock(Material blockType) {
-        return getWallBlocks().contains(blockType);
     }
 
     /**

@@ -80,8 +80,8 @@ public class GreenhouseFinder {
                     } else {
                         // Check just the walls
                         if (y == roof.getHeight() || x == minX || x == maxX || z == minZ || z== maxZ) {
-                            if ((y != roof.getHeight() && !Walls.getWallBlocks().contains(blockType))
-                                    || (y == roof.getHeight() && !Roof.getRoofBlocks().contains(blockType))) {
+                            if ((y != roof.getHeight() && !Walls.WALL_BLOCKS.contains(blockType))
+                                    || (y == roof.getHeight() && !Roof.ROOF_BLOCKS.contains(blockType))) {
                                 //logger(2,"DEBUG: bad block found at  " + x + "," + y+ "," + z + " " + blockType);
                                 if (blockType == Material.AIR) {
                                     airHole = true;
