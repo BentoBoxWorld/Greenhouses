@@ -65,6 +65,7 @@ greenhouses:
           FAIL_NO_LAVA: "&cLava is required to make this recipe"
           FAIL_NO_WATER: "&cWater is required to make this recipe"
           FAIL_INSUFFICIENT_BLOCKS: "&cMore blocks are required to make this recipe!"
+          FAIL_OVERLAPPING: "&cGreenhouses cannot share walls, sorry."
         success: "&2You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
         missing-blocks: "&cMissing [material] x [number]"
         unknown-recipe: "&cUnknown recipe"

@@ -39,7 +39,7 @@ public class RoofTest {
     public void setUp() throws Exception {
         when(world.getMaxHeight()).thenReturn(255);
         // Block
-        when(block.getType()).thenReturn(Material.AIR, Material.AIR, Material.AIR, Material.AIR, Material.AIR, 
+        when(block.getType()).thenReturn(Material.AIR, Material.AIR, Material.AIR, Material.AIR,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
@@ -76,12 +76,12 @@ public class RoofTest {
         // Test
         roof = new Roof(location);
     }
-    
+
     @Test
     public void testNoGlass() {
         when(block.getType()).thenReturn(Material.AIR);
         roof = new Roof(location);
-        
+
     }
 
     /**

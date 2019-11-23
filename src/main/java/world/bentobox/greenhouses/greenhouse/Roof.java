@@ -48,38 +48,35 @@ public class Roof extends MinMaxXZ {
         // This section tries to find a roof block
         // Try just going up - this covers every case except if the player is standing under a hole
         roofFound = false;
-        // This does a ever-growing check around the player to find a roof block. It is possible for the player
+
+        // This does a ever-growing check around the player to find a wall block. It is possible for the player
         // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
         int roofY = loc.getBlockY();
+        for (int y = roofY; y < world.getMaxHeight(); y++) {
+            if (ROOF_BLOCKS.contains(world.getBlockAt(loc.getBlockX(),y,loc.getBlockZ()).getType())) {
+                roofFound = true;
+                loc = new Location(world,loc.getBlockX(),y,loc.getBlockZ());
+                break;
+            }
+        }
         // If the roof was not found start going around in circles until something is found
         // Expand in ever increasing squares around location until a wall block is found
-        for (int radius = 0; radius < 3; radius++) {
-            for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius; x++) {
-                for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius; z++) {
-                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius)
-                            && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
+        for (int radius = 0; radius < 3 && !roofFound; radius++) {
+            for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius && !roofFound; x++) {
+                for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius && !roofFound; z++) {
+                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius) && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
                         Block b = world.getBlockAt(x, roofY, z);
                         if (!Walls.WALL_BLOCKS.contains(b.getType())) {
                             // Look up
-                            for (int y = roofY; y < world.getMaxHeight(); y++) {
+                            for (int y = roofY; y < world.getMaxHeight() && !roofFound; y++) {
                                 if (ROOF_BLOCKS.contains(world.getBlockAt(x,y,z).getType())) {
                                     roofFound = true;
                                     loc = new Location(world,x,y,z);
-                                    break;
                                 }
                             }
                         }
                     }
-                    if (roofFound) {
-                        break;
-                    }
                 }
-                if (roofFound) {
-                    break;
-                }
-            }
-            if (roofFound) {
-                break;
             }
         }
         if (!roofFound) return false;
