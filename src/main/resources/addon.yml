@@ -1,6 +1,6 @@
 name: Greenhouses
 main: world.bentobox.greenhouses.Greenhouses
-version: ${version}
+version: ${version}${build.number}
 
 authors: tastybento
 
