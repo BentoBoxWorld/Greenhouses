@@ -165,7 +165,12 @@ public class RecipeManager {
                         String[] split = conversions.split(":");
                         int convChance = Integer.parseInt(split[0]);
                         Material newMaterial = Material.valueOf(split[1]);
-                        Material localMaterial = Material.valueOf(split[2]);
+                        Material localMaterial;
+                        if (split.length > 2) {
+                            localMaterial = Material.valueOf(split[2]);
+                        } else {
+                            localMaterial = null;
+                        }
                         b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
                     }
                 } catch (Exception e) {
