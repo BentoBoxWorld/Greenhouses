@@ -80,10 +80,18 @@ public class EcoSystemManager {
     }
 
     private void convertBlocks(Greenhouse gh) {
+        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            //addon.log("Skipping convertblock for unloaded greenhouse at " + gh.getLocation());
+            return;
+        }
         getAvailableBlocks(gh).stream().map(b -> b.getRelative(BlockFace.DOWN)).forEach(gh.getBiomeRecipe()::convertBlock);
     }
 
     private void verify(Greenhouse gh) {
+        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            //addon.log("Skipping verify for unloaded greenhouse at " + gh.getLocation());
+            return;
+        }
         if (!gh.getBiomeRecipe().checkRecipe(gh).isEmpty()) {
             addon.log("Greenhouse failed verification at " + gh.getLocation());
             g.removeGreenhouse(gh);
@@ -91,6 +99,10 @@ public class EcoSystemManager {
     }
 
     private void addMobs(Greenhouse gh) {
+        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            //addon.log("Skipping addmobs for unloaded greenhouse at " + gh.getLocation());
+            return;
+        }
         if (gh.getBiomeRecipe().noMobs()) {
             return;
         }
@@ -127,6 +139,10 @@ public class EcoSystemManager {
      * @param gh - greenhouse
      */
     private void growPlants(Greenhouse gh) {
+        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            //addon.log("Skipping growplants for unloaded greenhouse at " + gh.getLocation());
+            return;
+        }
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
