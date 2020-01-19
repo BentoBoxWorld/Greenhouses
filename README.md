@@ -1,5 +1,10 @@
 # Greenhouses - an add-on for BentoBox
 
+## Note for 1.15.x + servers
+
+Biomes have changed so that they take up a 4x4 area and so greenhouse biomes now can bleed outside of the greenhouse. Unfortunately, this cannot be mitigated (as far as I know). If you have a good imagination, you can say that the biome of the greenhouse influences the surroundings a bit and it is natural! So it's a feature, not a bug!
+
+## About
 
 Greenhouses is a BentoBox add-on to power-up your island world! It enables players to build their own biome greenhouses complete with weather, friendly mob spawning, unique plant growth, and even block erosion!
 
