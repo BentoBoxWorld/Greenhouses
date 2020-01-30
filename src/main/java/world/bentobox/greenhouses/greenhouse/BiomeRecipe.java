@@ -75,6 +75,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         this.priority = priority;
         mobLimit = 9; // Default
     }
+    
+    private void startupLog(String message) {
+        if (addon.getSettings().isStartupLog()) addon.log(message);
+    }
 
     /**
      * @param oldMaterial - material that will convert
@@ -85,7 +89,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public void addConvBlocks(Material oldMaterial, Material newMaterial, double convChance, Material localMaterial) {
         double probability = Math.min(convChance/100 , 1D);
         conversionBlocks.put(oldMaterial, new GreenhouseBlockConversions(oldMaterial, newMaterial, probability, localMaterial));
-        addon.log("   " + convChance + CHANCE_FOR + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
+        startupLog("   " + convChance + CHANCE_FOR + Util.prettifyText(oldMaterial.toString()) + " to convert to " + Util.prettifyText(newMaterial.toString()));
     }
 
 
@@ -96,7 +100,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return true if add is successful
      */
     public boolean addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
-        addon.log("   " + mobProbability + CHANCE_FOR + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
+        startupLog("   " + mobProbability + CHANCE_FOR + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = ((double)mobProbability/100);
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
@@ -129,7 +133,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
             return false;
         }
-        addon.log("   " + plantProbability + CHANCE_FOR + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
+        startupLog("   " + plantProbability + CHANCE_FOR + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
         return true;
     }
 
@@ -139,7 +143,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void addReqBlocks(Material blockMaterial, int blockQty) {
         requiredBlocks.put(blockMaterial, blockQty);
-        addon.log("   " + blockMaterial + " x " + blockQty);
+        startupLog("   " + blockMaterial + " x " + blockQty);
     }
 
     // Check required blocks
@@ -398,9 +402,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void setIcecoverage(int iceCoverage) {
         if (iceCoverage == 0) {
-            addon.log("   No Ice Allowed");
+            startupLog("   No Ice Allowed");
         } else if (iceCoverage > 0) {
-            addon.log("   Ice > " + iceCoverage + "%");
+            startupLog("   Ice > " + iceCoverage + "%");
         }
         this.iceCoverage = iceCoverage;
     }
@@ -417,9 +421,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void setLavacoverage(int lavaCoverage) {
         if (lavaCoverage == 0) {
-            addon.log("   No Lava Allowed");
+            startupLog("   No Lava Allowed");
         } else if (lavaCoverage > 0) {
-            addon.log("   Lava > " + lavaCoverage + "%");
+            startupLog("   Lava > " + lavaCoverage + "%");
         }
         this.lavaCoverage = lavaCoverage;
     }
@@ -464,9 +468,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void setWatercoverage(int waterCoverage) {
         if (waterCoverage == 0) {
-            addon.log("   No Water Allowed");
+            startupLog("   No Water Allowed");
         } else if (waterCoverage > 0) {
-            addon.log("   Water > " + waterCoverage + "%");
+            startupLog("   Water > " + waterCoverage + "%");
         }
         this.waterCoverage = waterCoverage;
     }

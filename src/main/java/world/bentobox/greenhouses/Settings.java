@@ -22,6 +22,10 @@ public class Settings implements ConfigObject {
     @ConfigComment("BentoBox GameModes that will use Greenhouses")
     @ConfigEntry(path = "greenhouses.game-modes")
     private List<String> gameModes = new ArrayList<>();
+    
+    @ConfigComment("Show loaded recipe details during startup of server")
+    @ConfigEntry(path = "greenhouses.startup-log")
+    private boolean startupLog = false;
 
     @ConfigComment("Weather and ecosystem settings")
     @ConfigComment("How often it should snow in the g/h when the weather is raining, in seconds")
@@ -107,6 +111,18 @@ public class Settings implements ConfigObject {
      */
     public int getMobTick() {
         return mobTick;
+    }
+    /**
+     * @return the startupLog
+     */
+    public boolean isStartupLog() {
+        return startupLog;
+    }
+    /**
+     * @param startupLog the startupLog to set
+     */
+    public void setStartupLog(boolean startupLog) {
+        this.startupLog = startupLog;
     }
     /**
      * @return the allowFlowOut

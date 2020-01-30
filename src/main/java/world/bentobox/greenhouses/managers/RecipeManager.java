@@ -124,7 +124,7 @@ public class RecipeManager {
         BiomeRecipe b = new BiomeRecipe(addon, thisBiome, priority);
         // Set the name
         b.setName(biomeType);
-        addon.log("Adding biome recipe for " + biomeType);
+        if (addon.getSettings().isStartupLog()) addon.log("Adding biome recipe for " + biomeType);
         // Set the permission
         b.setPermission(biomeRecipeConfig.getString("permission",""));
         // Set the icon

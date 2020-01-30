@@ -42,6 +42,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
@@ -80,6 +81,8 @@ public class BiomeRecipeTest {
     private GreenhouseMap map;
     @Mock
     private BukkitScheduler scheduler;
+    @Mock
+    private Settings settings;
 
     /**
      * @throws java.lang.Exception
@@ -108,16 +111,7 @@ public class BiomeRecipeTest {
         when(block.getLocation()).thenReturn(location);
         when(location.clone()).thenReturn(location);
         when(location.add(any(Vector.class))).thenReturn(location);
-        // Set up default recipe
-        br = new BiomeRecipe(addon, type, 0);
-        br.setIcecoverage(2); // 1%
-        br.setLavacoverage(1); // 1%
-        br.setWatercoverage(1); // 1%
-        br.addReqBlocks(Material.GRASS_BLOCK, 2);
-        br.setFriendlyName("name");
-        br.setName("name2");
-        br.setIcon(Material.ACACIA_BOAT);
-        br.setPermission("perm");
+        
         // Plugin
         when(addon.getPlugin()).thenReturn(plugin);
         // Manager
@@ -128,7 +122,20 @@ public class BiomeRecipeTest {
         when(map.getGreenhouse(any(Location.class))).thenReturn(optionalGh);
         // Bukkit Scheduler
         when(Bukkit.getScheduler()).thenReturn(scheduler);
-
+        // Settings
+        when(addon.getSettings()).thenReturn(settings);
+        when(settings.isStartupLog()).thenReturn(true);
+        
+        // Set up default recipe
+        br = new BiomeRecipe(addon, type, 0);
+        br.setIcecoverage(2); // 1%
+        br.setLavacoverage(1); // 1%
+        br.setWatercoverage(1); // 1%
+        br.addReqBlocks(Material.GRASS_BLOCK, 2);
+        br.setFriendlyName("name");
+        br.setName("name2");
+        br.setIcon(Material.ACACIA_BOAT);
+        br.setPermission("perm");
     }
 
     /**
