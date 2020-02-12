@@ -21,7 +21,6 @@ public class Roof extends MinMaxXZ {
     static {
         List<Material> r = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
-                .filter(m -> !m.name().contains("DOOR")) // No doors
                 .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
                         || m.name().contains("GLASS") // All glass blocks
                         || m.equals(Material.HOPPER) // Hoppers
