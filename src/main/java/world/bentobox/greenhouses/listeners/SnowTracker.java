@@ -19,6 +19,7 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 
@@ -56,8 +57,8 @@ public class SnowTracker implements Listener {
                             waterBlocks.add(b);
                         } else {
                             // Not water
-                            if (Math.random() < addon.getSettings().getSnowDensity() 
-                                    && !b.isLiquid() 
+                            if (Math.random() < addon.getSettings().getSnowDensity()
+                                    && !b.isLiquid()
                                     && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
                                 b.getRelative(BlockFace.UP).setType(Material.SNOW);
                                 createdSnow = true;
@@ -76,7 +77,7 @@ public class SnowTracker implements Listener {
         if (maxSize > 0) {
             waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
         }
-        */
+         */
         return createdSnow;
     }
 
@@ -86,11 +87,11 @@ public class SnowTracker implements Listener {
      */
     @EventHandler
     public void onBlockFormEvent(final BlockFormEvent e) {
-       if (e.getNewState().getType().equals(Material.SNOW) && addon.getManager().getMap().isAboveGreenhouse(e.getBlock().getLocation())) {
-           e.setCancelled(true);
-       }
+        if (e.getNewState().getType().equals(Material.SNOW) && addon.getManager().getMap().isAboveGreenhouse(e.getBlock().getLocation())) {
+            e.setCancelled(true);
+        }
     }
-    
+
     @EventHandler
     public void onWeatherChangeEvent(final WeatherChangeEvent e) {
         if (!addon.getActiveWorlds().contains(e.getWorld())) {
@@ -116,12 +117,18 @@ public class SnowTracker implements Listener {
 
     private void shakeGlobes(World world) {
         addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
+        .filter(g -> g.getLocation().getChunk().isLoaded())
         .filter(g -> g.getLocation().getWorld().equals(world))
         .filter(g -> !g.isBroken())
         .filter(g -> g.getRoofHopperLocation() != null)
-        .filter(g -> g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER))
-        .filter(g -> ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET))
-        .forEach(this::removeWaterBucketAndShake);
+        .forEach(g -> {
+            Util.getChunkAtAsync(g.getRoofHopperLocation()).thenRun(() -> {
+                if (g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER)
+                        && ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET)) {
+                    removeWaterBucketAndShake(g);
+                }
+            });
+        });
     }
 
     private void startSnow(World world) {
