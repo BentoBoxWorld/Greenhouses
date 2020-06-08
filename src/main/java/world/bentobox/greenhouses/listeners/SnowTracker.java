@@ -117,7 +117,7 @@ public class SnowTracker implements Listener {
 
     private void shakeGlobes(World world) {
         addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
-        .filter(g -> g.getLocation().getChunk().isLoaded())
+        .filter(g -> (g.getLocation().getWorld().isChunkLoaded(((int) g.getBoundingBox().getMaxX()) >> 4, ((int) g.getBoundingBox().getMaxZ()) >> 4) && g.getLocation().getWorld().isChunkLoaded(((int) g.getBoundingBox().getMinX()) >> 4, ((int) g.getBoundingBox().getMinZ()) >> 4)))
         .filter(g -> g.getLocation().getWorld().equals(world))
         .filter(g -> !g.isBroken())
         .filter(g -> g.getRoofHopperLocation() != null)
