@@ -12,6 +12,7 @@ import org.bukkit.util.BoundingBox;
 import com.google.gson.annotations.Expose;
 
 import world.bentobox.bentobox.database.objects.DataObject;
+import world.bentobox.bentobox.database.objects.Table;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.RecipeManager;
@@ -21,6 +22,7 @@ import world.bentobox.greenhouses.managers.RecipeManager;
  * @author tastybento
  *
  */
+@Table(name = "Greenhouses")
 public class Greenhouse implements DataObject {
 
     @Expose

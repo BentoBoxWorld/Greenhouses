@@ -1,27 +1,16 @@
 name: Greenhouses
 main: world.bentobox.greenhouses.Greenhouses
 version: ${version}${build.number}
+api-version: 1.14
 
 authors: tastybento
 
 softdepend: AcidIsland, BSkyBlock, SkyGrid
 
 permissions:    
-  bskyblock.greenhouses.player:
+  '[gamemode].greenhouses.player':
      description: Gives access to player commands
      default: true
-  bskyblock.greenhouses.admin:
-     description: Gives access to admin commands
-     default: op
-  acidisland.greenhouses.player:
-     description: Gives access to player commands
-     default: true
-  acidisland.greenhouses.admin:
-     description: Gives access to admin commands
-     default: op
-  skygrid.greenhouses.player:
-     description: Gives access to player commands
-     default: true
-  skygrid.greenhouses.admin:
+  '[gamemode].greenhouses.admin':
      description: Gives access to admin commands
      default: op

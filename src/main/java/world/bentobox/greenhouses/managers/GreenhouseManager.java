@@ -118,7 +118,7 @@ public class GreenhouseManager implements Listener {
      */
     public void saveGreenhouses() {
         addon.log("Saving greenhouses...");
-        map.getGreenhouses().forEach(handler::saveObject);
+        map.getGreenhouses().forEach(handler::saveObjectAsync);
     }
 
     /**
@@ -175,7 +175,7 @@ public class GreenhouseManager implements Listener {
                 finder.getGh().setBiomeRecipe(greenhouseRecipe);
                 resultSet.add(map.addGreenhouse(finder.getGh()));
                 activateGreenhouse(finder.getGh());
-                handler.saveObject(finder.getGh());
+                handler.saveObjectAsync(finder.getGh());
             }
             return new GhResult().setFinder(finder).setResults(resultSet);
         }
@@ -187,7 +187,7 @@ public class GreenhouseManager implements Listener {
                     // Success - set recipe and add to map
                     finder.getGh().setBiomeRecipe(r);
                     activateGreenhouse(finder.getGh());
-                    handler.saveObject(finder.getGh());
+                    handler.saveObjectAsync(finder.getGh());
                     return map.addGreenhouse(finder.getGh());
                 }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
         return new GhResult().setFinder(finder).setResults(resultSet);
