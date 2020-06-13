@@ -9,6 +9,8 @@ import org.bukkit.World;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
+import world.bentobox.bentobox.api.flags.Flag.Mode;
+import world.bentobox.bentobox.api.flags.Flag.Type;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.ui.user.UserCommand;
@@ -23,7 +25,9 @@ public class Greenhouses extends Addon {
     private Settings settings;
     private RecipeManager recipes;
     private final List<World> activeWorlds = new ArrayList<>();
-    public static final Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS).build();
+    public static final Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS)
+            .mode(Mode.BASIC)
+            .type(Type.PROTECTION).build();
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#onEnable()
@@ -55,7 +59,7 @@ public class Greenhouses extends Addon {
         // Register greenhouse manager
         this.registerListener(manager);
         // Register protection flag with BentoBox
-        getPlugin().getFlagsManager().registerFlag(GREENHOUSES);
+        getPlugin().getFlagsManager().registerFlag(this, GREENHOUSES);
 
     }
 
