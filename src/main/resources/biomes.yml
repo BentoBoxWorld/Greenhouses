@@ -116,7 +116,7 @@ biomes:
       TALL_GRASS: 20:GRASS_BLOCK
   NETHER:
     friendlyname: "&cNether"
-    biome: NETHER
+    biome: NETHER_WASTES
     icon: LAVA_BUCKET
     priority: 5
     contents:

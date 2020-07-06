@@ -2,10 +2,12 @@ package world.bentobox.greenhouses.managers;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,6 +16,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+
+import com.google.common.base.Enums;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -77,14 +81,8 @@ public class RecipeManager {
     private void processEntries(String biomeType, ConfigurationSection biomeSection) {
         try {
             ConfigurationSection biomeRecipeConfig = biomeSection.getConfigurationSection(biomeType);
-            Biome thisBiome;
-            if (biomeRecipeConfig.contains("biome")) {
-                // Try and get the biome via the biome setting
-                thisBiome = Biome.valueOf(biomeRecipeConfig.getString("biome").toUpperCase());
-            } else {
-                // Old style, where type was the biome name
-                thisBiome = Biome.valueOf(biomeType);
-            }
+            Biome thisBiome = loadBiome(biomeType, biomeRecipeConfig);
+            if (thisBiome == null) return;
             int priority = biomeRecipeConfig.getInt("priority", 0);
 
             // Create the biome recipe
@@ -118,6 +116,24 @@ public class RecipeManager {
             addon.logError("Valid biomes are " + validBiomes);
         }
 
+    }
+
+    private Biome loadBiome(String biomeType, ConfigurationSection biomeRecipeConfig) {
+        if (!biomeRecipeConfig.contains("biome")) {
+            addon.logError("No biome defined in the biome reciepe " + biomeType + ". Skipping...");
+            return null;
+        }
+        String name = biomeRecipeConfig.getString("biome").toUpperCase();
+        if (Enums.getIfPresent(Biome.class, name).isPresent()) {
+            return Biome.valueOf(name);
+        } 
+        // Special case for nether
+        if (name.equals("NETHER") || name.equals("NETHER_WASTES")) {
+            return Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.PLAINS));
+        } 
+        addon.logError("Biome " + name + " is invalid! Use one of these...");
+        addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
+        return null;
     }
 
     private BiomeRecipe getBiomeRecipe(ConfigurationSection biomeRecipeConfig, String biomeType, Biome thisBiome, int priority) {

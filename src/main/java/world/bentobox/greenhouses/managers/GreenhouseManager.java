@@ -5,10 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -129,24 +125,11 @@ public class GreenhouseManager implements Listener {
         handler.deleteObject(g);
         map.removeGreenhouse(g);
         addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
-        for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMaxZ(); z++) {
-                // Set back to the original biome
-                g.getLocation().getWorld().setBiome(x, z, g.getOriginalBiome());
-                if (g.getOriginalBiome().equals(Biome.NETHER) || g.getOriginalBiome().equals(Biome.DESERT)
-                        || g.getOriginalBiome().equals(Biome.DESERT_HILLS)) {
-                    for (int y = g.getFloorHeight(); y< g.getCeilingHeight(); y++) {
-                        Block b = g.getLocation().getWorld().getBlockAt(x, y, z);
-                        // Remove any water
-                        if (b.getType().equals(Material.WATER) || b.getType().equals(Material.BLUE_ICE)
-                                || b.getType().equals(Material.FROSTED_ICE)
-                                || b.getType().equals(Material.ICE) || b.getType().equals(Material.PACKED_ICE)
-                                || b.getType().equals(Material.SNOW) || b.getType().equals(Material.SNOW_BLOCK)) {
-                            // Evaporate it
-                            b.setType(Material.AIR);
-                            b.getWorld().spawnParticle(Particle.SMOKE_LARGE, b.getLocation(), 5);
-                        }
-                    }
+        for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x+=4) {
+            for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMaxZ(); z+=4) {
+                for (int y = (int)g.getBoundingBox().getMinY(); y<= (int)g.getBoundingBox().getMaxY(); y+=4) {
+                    // Set back to the original biome
+                    g.getLocation().getWorld().setBiome(x, y, z, g.getOriginalBiome());
                 }
             }
         }
@@ -194,12 +177,13 @@ public class GreenhouseManager implements Listener {
     }
 
     private void activateGreenhouse(Greenhouse gh) {
-        for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z++) {
-                gh.getWorld().setBiome(x, z, gh.getBiomeRecipe().getBiome());
+        for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x+=4) {
+            for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z+=4) {
+                for (int y = (int)gh.getBoundingBox().getMinY(); y < gh.getBoundingBox().getMaxY(); y+=4) {
+                    gh.getWorld().setBiome(x, y, z, gh.getBiomeRecipe().getBiome());
+                }
             }
         }
-
     }
 
     /**
