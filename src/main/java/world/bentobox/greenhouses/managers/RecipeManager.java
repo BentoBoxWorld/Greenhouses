@@ -126,11 +126,11 @@ public class RecipeManager {
         String name = biomeRecipeConfig.getString("biome").toUpperCase();
         if (Enums.getIfPresent(Biome.class, name).isPresent()) {
             return Biome.valueOf(name);
-        } 
+        }
         // Special case for nether
         if (name.equals("NETHER") || name.equals("NETHER_WASTES")) {
             return Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.PLAINS));
-        } 
+        }
         addon.logError("Biome " + name + " is invalid! Use one of these...");
         addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));
         return null;
@@ -189,6 +189,21 @@ public class RecipeManager {
                 }
 
             }
+        }
+        // Get the list of conversions
+        for (String oldMat : biomeRecipeConfig.getStringList("conversion-list")) {
+            try {
+                // Split the string
+                String[] split = oldMat.split(":");
+                Material oldMaterial = Material.valueOf(split[0].toUpperCase());
+                int convChance = Integer.parseInt(split[1]);
+                Material newMaterial = Material.valueOf(split[2]);
+                Material localMaterial = Material.valueOf(split[3]);
+                b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
+            } catch (Exception e) {
+                addon.logError("Could not parse " + oldMat);
+            }
+
         }
     }
 

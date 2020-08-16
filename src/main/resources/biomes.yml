@@ -94,12 +94,13 @@ biomes:
     plants:
       DEAD_BUSH: 10:SAND
       CACTUS: 10:SAND
-    # Conversions
+    # Conversion list
     # Format is:
-    # Original Block: % chance:New Block:Adjacent Block
+    # Original Block:% chance:New Block:Adjacent Block
     # So, for below, dirt has a 30% chance of changing into SAND if it is next to SAND!
-    conversions:
-      DIRT: 30:SAND:SAND
+    # Multiple conversions can be listed
+    conversion-list:
+    - DIRT:30:SAND:SAND
   FOREST:
     friendlyname: "Flowery forest"
     biome: FLOWER_FOREST
@@ -188,12 +189,12 @@ biomes:
       SAND: 1
     # 50% water required
     watercoverage: 50
-    # Conversions - in this case, an adjacent block is required to convert
+    # Conversion list - in this case, an adjacent block is required to convert
     # Format is:
-    # Original Block: % chance:New Block:Adjacent Block
+    # Original Block:% chance:New Block:Adjacent Block
     # So, for below, dirt has a 50% chance of changing into clay if it is next to water!
-    conversions:
-      DIRT: 50:CLAY:WATER
+    conversion-list:
+    - DIRT:50:CLAY:WATER
   SAVANNA:
     biome: SAVANNA
     icon: ACACIA_LEAVES
