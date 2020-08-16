@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -23,6 +24,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -52,7 +56,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     // Conversions
     // Original Material, Original Type, New Material, New Type, Probability
-    private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new EnumMap<>(Material.class);
+    //private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new EnumMap<>(Material.class);
+    private Multimap<Material, GreenhouseBlockConversions> conversionBlocks = ArrayListMultimap.create();
 
     private int mobLimit;
     private int waterCoverage;
@@ -75,7 +80,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         this.priority = priority;
         mobLimit = 9; // Default
     }
-    
+
     private void startupLog(String message) {
         if (addon.getSettings().isStartupLog()) addon.log(message);
     }
@@ -212,15 +217,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param b - block to check
      */
     public void convertBlock(Block b) {
-        GreenhouseBlockConversions bc = conversionBlocks.get(b.getType());
-        if (bc == null || random.nextDouble() > bc.getProbability()) {
-            return;
-        }
-        // Check if the block is in the right area, up, down, n,s,e,w
-        if (adjBlocks.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
-            // Convert!
-            b.setType(bc.getNewMaterial());
-        }
+        conversionBlocks.get(b.getType()).stream().filter(Objects::nonNull)
+        .filter(bc -> random.nextDouble() < bc.getProbability())
+        .forEach(bc -> {
+            // Check if the block is in the right area, up, down, n,s,e,w
+            if (adjBlocks.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
+                // Convert!
+                b.setType(bc.getNewMaterial());
+            }
+        });
     }
 
     /**
