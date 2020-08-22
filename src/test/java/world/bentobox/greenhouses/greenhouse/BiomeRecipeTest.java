@@ -111,7 +111,7 @@ public class BiomeRecipeTest {
         when(block.getLocation()).thenReturn(location);
         when(location.clone()).thenReturn(location);
         when(location.add(any(Vector.class))).thenReturn(location);
-        
+
         // Plugin
         when(addon.getPlugin()).thenReturn(plugin);
         // Manager
@@ -125,7 +125,7 @@ public class BiomeRecipeTest {
         // Settings
         when(addon.getSettings()).thenReturn(settings);
         when(settings.isStartupLog()).thenReturn(true);
-        
+
         // Set up default recipe
         br = new BiomeRecipe(addon, type, 0);
         br.setIcecoverage(2); // 1%
@@ -516,6 +516,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantNoPlants() {
         when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
         assertFalse(br.growPlant(block));
     }
 
@@ -526,6 +527,7 @@ public class BiomeRecipeTest {
     public void testGrowPlantPlantsYZero() {
         when(block.getY()).thenReturn(0);
         when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
         assertFalse(br.growPlant(block));
     }
@@ -537,8 +539,10 @@ public class BiomeRecipeTest {
     public void testGrowPlantPlants() {
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
         assertTrue(br.growPlant(block));
@@ -555,6 +559,7 @@ public class BiomeRecipeTest {
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
@@ -575,6 +580,7 @@ public class BiomeRecipeTest {
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);

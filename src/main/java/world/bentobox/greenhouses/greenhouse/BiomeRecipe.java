@@ -370,7 +370,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return true if successful
      */
     public boolean growPlant(Block bl) {
-        if (bl.getType() != Material.AIR) {
+        if (!bl.isEmpty()) {
             return false;
         }
         return getRandomPlant().map(p -> {

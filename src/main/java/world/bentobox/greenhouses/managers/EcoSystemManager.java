@@ -180,7 +180,7 @@ public class EcoSystemManager {
             for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
-                    if (!b.getType().equals(Material.AIR) && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
+                    if ((!b.isEmpty() && !b.isPassable()) && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable())) {
                         result.add(b.getRelative(BlockFace.UP));
                         break;
                     }
