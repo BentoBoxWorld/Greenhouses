@@ -22,7 +22,7 @@ public class Settings implements ConfigObject {
     @ConfigComment("BentoBox GameModes that will use Greenhouses")
     @ConfigEntry(path = "greenhouses.game-modes")
     private List<String> gameModes = new ArrayList<>();
-    
+
     @ConfigComment("Show loaded recipe details during startup of server")
     @ConfigEntry(path = "greenhouses.startup-log")
     private boolean startupLog = false;
@@ -63,6 +63,10 @@ public class Settings implements ConfigObject {
     @ConfigComment("Allow lava or water to flow into a greenhouse, e.g., through the door")
     @ConfigEntry(path = "greenhouses.allowflowin")
     private boolean allowFlowIn;
+
+    @ConfigComment("Allow glowstone to be used as well as glass in roof and walls")
+    @ConfigEntry(path = "greenhouses.allowglowstone")
+    private boolean allowGlowstone = true;
 
     /**
      * @return the gameModes
@@ -195,6 +199,18 @@ public class Settings implements ConfigObject {
      */
     public void setAllowFlowIn(boolean allowFlowIn) {
         this.allowFlowIn = allowFlowIn;
+    }
+    /**
+     * @return the allowGlowstone
+     */
+    public boolean isAllowGlowstone() {
+        return allowGlowstone;
+    }
+    /**
+     * @param allowGlowstone the allowGlowstone to set
+     */
+    public void setAllowGlowstone(boolean allowGlowstone) {
+        this.allowGlowstone = allowGlowstone;
     }
 
 }

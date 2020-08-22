@@ -28,6 +28,21 @@ public class Greenhouses extends Addon {
     public static final Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS)
             .mode(Mode.BASIC)
             .type(Type.PROTECTION).build();
+    private static Greenhouses instance;
+    private final Config<Settings> config;
+
+    public static Greenhouses getInstance() {
+        return instance;
+    }
+
+    /**
+     * Constructor
+     */
+    public Greenhouses() {
+        super();
+        instance = this;
+        config = new Config<>(this, Settings.class);
+    }
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.addons.Addon#onEnable()
@@ -36,13 +51,14 @@ public class Greenhouses extends Addon {
     public void onEnable() {
         saveDefaultConfig();
         this.saveResource("biomes.yml", false);
-        settings = new Config<>(this, Settings.class).loadConfigObject();
+        settings = config.loadConfigObject();
         if (settings == null) {
             // Settings did no load correctly. Disable.
             logError("Settings did not load correctly - disabling Greenhouses - please check config.yml");
             this.setState(State.DISABLED);
             return;
         }
+        config.saveConfigObject(settings);
         // Load recipes
         recipes = new RecipeManager(this);
         // Load manager

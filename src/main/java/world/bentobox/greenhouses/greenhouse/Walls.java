@@ -10,16 +10,17 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
+import world.bentobox.greenhouses.Greenhouses;
+
 public class Walls extends MinMaxXZ {
-    public static final List<Material> WALL_BLOCKS;
+    private static final List<Material> WALL_BLOCKS;
     static {
         List<Material> w = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
                 .filter(m -> m.name().contains("DOOR") // All doors
                         || m.name().contains("GLASS") // All glass blocks
-                        || m.equals(Material.HOPPER) // Hoppers
-                        || m.equals(Material.GLOWSTONE)) // Glowstone
+                        || m.equals(Material.HOPPER)) // Hoppers
                 .collect(Collectors.toList());
         WALL_BLOCKS = Collections.unmodifiableList(w);
     }
@@ -145,6 +146,15 @@ public class Walls extends MinMaxXZ {
         } while( y-- > 0 && wallBlockCount > 0);
         return y + 1;
 
+    }
+
+    /**
+     * Check if material is a wall material
+     * @param m - material
+     * @return true if wall material
+     */
+    public static boolean wallBlocks(Material m) {
+        return WALL_BLOCKS.contains(m) || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone());
     }
 
     /**

@@ -19,6 +19,11 @@ public class GreenhouseFinder {
     private final Set<Location> redGlass = new HashSet<>();
 
 
+    /**
+     * Find out if there is a greenhouse here
+     * @param location - start location
+     * @return GreenhouseResult class
+     */
     public Set<GreenhouseResult> find(Location location) {
         Set<GreenhouseResult> result = new HashSet<>();
         redGlass.clear();
@@ -80,8 +85,8 @@ public class GreenhouseFinder {
                     } else {
                         // Check just the walls
                         if (y == roof.getHeight() || x == minX || x == maxX || z == minZ || z== maxZ) {
-                            if ((y != roof.getHeight() && !Walls.WALL_BLOCKS.contains(blockType))
-                                    || (y == roof.getHeight() && !Roof.ROOF_BLOCKS.contains(blockType))) {
+                            if ((y != roof.getHeight() && !Walls.wallBlocks(blockType))
+                                    || (y == roof.getHeight() && !Roof.roofBlocks(blockType))) {
                                 //logger(2,"DEBUG: bad block found at  " + x + "," + y+ "," + z + " " + blockType);
                                 if (blockType == Material.AIR) {
                                     airHole = true;

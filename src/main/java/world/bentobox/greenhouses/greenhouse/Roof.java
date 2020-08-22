@@ -11,20 +11,21 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
+import world.bentobox.greenhouses.Greenhouses;
+
 /**
  * Contains the parameters of a greenhouse roof
  * @author tastybento
  *
  */
 public class Roof extends MinMaxXZ {
-    public static final List<Material> ROOF_BLOCKS;
+    private static final List<Material> ROOF_BLOCKS;
     static {
         List<Material> r = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
                         || m.name().contains("GLASS") // All glass blocks
-                        || m.equals(Material.HOPPER) // Hoppers
-                        || m.equals(Material.GLOWSTONE)) // Glowstone
+                        || m.equals(Material.HOPPER)) // Hoppers
                 .collect(Collectors.toList());
         ROOF_BLOCKS = Collections.unmodifiableList(r);
     }
@@ -52,7 +53,7 @@ public class Roof extends MinMaxXZ {
         // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
         int roofY = loc.getBlockY();
         for (int y = roofY; y < world.getMaxHeight(); y++) {
-            if (ROOF_BLOCKS.contains(world.getBlockAt(loc.getBlockX(),y,loc.getBlockZ()).getType())) {
+            if (roofBlocks(world.getBlockAt(loc.getBlockX(),y,loc.getBlockZ()).getType())) {
                 roofFound = true;
                 loc = new Location(world,loc.getBlockX(),y,loc.getBlockZ());
                 break;
@@ -65,10 +66,10 @@ public class Roof extends MinMaxXZ {
                 for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius && !roofFound; z++) {
                     if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius) && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
                         Block b = world.getBlockAt(x, roofY, z);
-                        if (!Walls.WALL_BLOCKS.contains(b.getType())) {
+                        if (!Walls.wallBlocks(b.getType())) {
                             // Look up
                             for (int y = roofY; y < world.getMaxHeight() && !roofFound; y++) {
-                                if (ROOF_BLOCKS.contains(world.getBlockAt(x,y,z).getType())) {
+                                if (roofBlocks(world.getBlockAt(x,y,z).getType())) {
                                     roofFound = true;
                                     loc = new Location(world,x,y,z);
                                 }
@@ -129,7 +130,7 @@ public class Roof extends MinMaxXZ {
             maxX = maxx.getBlockX()-1;
         }
 
-        while (ROOF_BLOCKS.contains(world.getBlockAt(minx).getType()) && limit < 200) {
+        while (roofBlocks(world.getBlockAt(minx).getType()) && limit < 200) {
             limit++;
             minx.subtract(new Vector(1,0,0));
         }
@@ -137,7 +138,7 @@ public class Roof extends MinMaxXZ {
             minX = minx.getBlockX() + 1;
         }
 
-        while (ROOF_BLOCKS.contains(world.getBlockAt(maxz).getType()) && limit < 300) {
+        while (roofBlocks(world.getBlockAt(maxz).getType()) && limit < 300) {
             limit++;
             maxz.add(new Vector(0,0,1));
         }
@@ -145,13 +146,22 @@ public class Roof extends MinMaxXZ {
             maxZ = maxz.getBlockZ() - 1;
         }
 
-        while (ROOF_BLOCKS.contains(world.getBlockAt(minz).getType()) && limit < 400) {
+        while (roofBlocks(world.getBlockAt(minz).getType()) && limit < 400) {
             limit++;
             minz.subtract(new Vector(0,0,1));
         }
         if (minz.getBlockZ() + 1 < minZ) {
             minZ = minz.getBlockZ() + 1;
         }
+    }
+
+    /**
+     * Check if material is a roof material
+     * @param m - material
+     * @return true if roof material
+     */
+    public static boolean roofBlocks(Material m) {
+        return ROOF_BLOCKS.contains(m) || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone());
     }
 
     /**

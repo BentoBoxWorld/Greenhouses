@@ -31,3 +31,5 @@ greenhouses:
   allowflowout: false
   # Allow lava or water to flow into a greenhouse, e.g., through the door
   allowflowin: false
+  # Allow glowstone to be used as well as glass in roof and walls
+  allowglowstone: true
