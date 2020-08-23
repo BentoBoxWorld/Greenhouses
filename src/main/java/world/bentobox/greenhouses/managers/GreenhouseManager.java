@@ -67,6 +67,7 @@ public class GreenhouseManager implements Listener {
         loadGreenhouses();
         // Start ecosystems
         ecoMgr = new EcoSystemManager(addon, this);
+        ecoMgr.setup();
         // Register listeners
         addon.registerListener(new SnowTracker(addon));
         addon.registerListener(new GreenhouseEvents(addon));

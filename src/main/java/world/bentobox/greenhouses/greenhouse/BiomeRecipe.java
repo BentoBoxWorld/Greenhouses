@@ -42,7 +42,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private String name;
     private String friendlyName;
 
-    private final List<BlockFace> adjBlocks = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
+    private static final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
 
     // Content requirements
     // Material, Type, Qty. There can be more than one type of material required
@@ -221,7 +221,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         .filter(bc -> random.nextDouble() < bc.getProbability())
         .forEach(bc -> {
             // Check if the block is in the right area, up, down, n,s,e,w
-            if (adjBlocks.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
+            if (ADJ_BLOCKS.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
                 // Convert!
                 b.setType(bc.getNewMaterial());
             }

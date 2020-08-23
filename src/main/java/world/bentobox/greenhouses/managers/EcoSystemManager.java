@@ -37,10 +37,12 @@ public class EcoSystemManager {
     public EcoSystemManager(Greenhouses addon, GreenhouseManager greenhouseManager) {
         this.addon = addon;
         this.g = greenhouseManager;
-        setup();
     }
 
-    private void setup() {
+    /**
+     * Kick off schedulers
+     */
+    void setup() {
         // Kick off flower growing
         long plantTick = addon.getSettings().getPlantTick() * 60 * 20L; // In minutes
         if (plantTick > 0) {
@@ -81,10 +83,16 @@ public class EcoSystemManager {
 
     private void convertBlocks(Greenhouse gh) {
         if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
-            //addon.log("Skipping convertblock for unloaded greenhouse at " + gh.getLocation());
             return;
         }
-        getAvailableBlocks(gh).stream().map(b -> b.getRelative(BlockFace.DOWN)).forEach(gh.getBiomeRecipe()::convertBlock);
+        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
+            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
+                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY() && y > 0; y--) {
+                    Block b = gh.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
+                    if (!b.isEmpty()) gh.getBiomeRecipe().convertBlock(b);
+                }
+            }
+        }
     }
 
     private void verify(Greenhouse gh) {
@@ -121,7 +129,7 @@ public class EcoSystemManager {
                 .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
                 .filter(e -> gh.contains(e.getLocation())).count();
         // Get the blocks in the greenhouse where spawning could occur
-        List<Block> list = new ArrayList<>(getAvailableBlocks(gh));
+        List<Block> list = new ArrayList<>(getAvailableBlocks(gh, false));
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
         Iterator<Block> it = list.iterator();
         // Check if the greenhouse is full
@@ -146,7 +154,7 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            int plantsGrown = getAvailableBlocks(gh).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
+            int plantsGrown = getAvailableBlocks(gh, false).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
             if (plantsGrown > 0) {
                 setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
             }
@@ -170,17 +178,21 @@ public class EcoSystemManager {
     }
 
     /**
-     * Get a list of the lowest level air blocks inside the greenhouse
+     * Get a list of the lowest level blocks inside the greenhouse. May be air, liquid or plants.
+     * These blocks sit just above solid blocks
      * @param gh - greenhouse
+     * @param ignoreliquid - true if liquid blocks should be treated like air blocks
      * @return List of blocks
      */
-    private List<Block> getAvailableBlocks(Greenhouse gh) {
+    List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
         List<Block> result = new ArrayList<>();
         for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
             for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
-                    Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
-                    if ((!b.isEmpty() && !b.isPassable()) && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable())) {
+                    Block b = gh.getWorld().getBlockAt(x, y, z);
+                    if ((!b.isEmpty() && !b.isPassable())
+                            && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable()
+                                    || (ignoreLiquid && b.getRelative(BlockFace.UP).isLiquid()))) {
                         result.add(b.getRelative(BlockFace.UP));
                         break;
                     }
@@ -212,6 +224,9 @@ public class EcoSystemManager {
         return (Hopper)gh.getRoofHopperLocation().getBlock().getState();
     }
 
+    /**
+     * Cancel all the scheduled tasks
+     */
     public void cancel() {
         plantTask.cancel();
         mobTask.cancel();
