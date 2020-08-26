@@ -3,17 +3,9 @@
  */
 package world.bentobox.greenhouses.managers;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -69,20 +61,28 @@ public class EcoSystemManagerTest {
         // World
         when(gh.getWorld()).thenReturn(world);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
-        // Block
+        // Blocks
         // Air
+        // Liquid false
         when(air.isEmpty()).thenReturn(true);
         when(air.isPassable()).thenReturn(true);
         when(air.getRelative(eq(BlockFace.UP))).thenReturn(air);
         // Plant
+        // Empty false
+        // Liquid false
         when(plant.isPassable()).thenReturn(true);
         when(plant.getRelative(eq(BlockFace.UP))).thenReturn(air);
         // Liquid
+        // Empty false
         when(liquid.isLiquid()).thenReturn(true);
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(liquid.isPassable()).thenReturn(true);
+        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);        
         // Default for block
+        // Empty false
+        // Passable false
+        // Liquid false
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(air);
-
+        
         eco = new EcoSystemManager(null, null);
     }
 
@@ -143,7 +143,8 @@ public class EcoSystemManagerTest {
         when(plant.getRelative(eq(BlockFace.UP))).thenReturn(plant);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(plant);
         List<Block> result = eco.getAvailableBlocks(gh, false);
-        assertEquals(0, result.size());
+        assertEquals(16, result.size());
+        assertEquals(plant, result.get(0));
     }
 
     /**
@@ -161,9 +162,35 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
      */
     @Test
-    public void testGetAvailableBlocksLiquidAboveBlock() {
+    public void testGetAvailableBlocksAirAboveLiquidNotIgnoreLiquids() {
+        when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
+        when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
+        when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
+        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+
         List<Block> result = eco.getAvailableBlocks(gh, false);
-        assertEquals(0, result.size());
+        assertEquals(16, result.size());
+        for (int i = 0; i< result.size(); i++) {
+            assertEquals(air, result.get(i));
+        }
+    }
+    
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     */
+    @Test
+    public void testGetAvailableBlocksAirAboveLiquidIgnoreLiquids() {
+        when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
+        when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
+        when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
+        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+
+        List<Block> result = eco.getAvailableBlocks(gh, true);
+        assertEquals(16, result.size());
+        for (int i = 0; i< result.size(); i++) {
+            assertEquals(liquid, result.get(i));
+        }
     }
 }

@@ -154,7 +154,7 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            int plantsGrown = getAvailableBlocks(gh, false).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
+            int plantsGrown = getAvailableBlocks(gh, true).stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
             if (plantsGrown > 0) {
                 setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
             }
@@ -190,9 +190,10 @@ public class EcoSystemManager {
             for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(x, y, z);
-                    if ((!b.isEmpty() && !b.isPassable())
-                            && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable()
-                                    || (ignoreLiquid && b.getRelative(BlockFace.UP).isLiquid()))) {
+                    if (!(b.isEmpty() || (ignoreLiquid && b.isLiquid()))
+                            && (b.getRelative(BlockFace.UP).isEmpty() 
+                            || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
+                            || (ignoreLiquid && b.isLiquid() && b.getRelative(BlockFace.UP).isPassable()))) {
                         result.add(b.getRelative(BlockFace.UP));
                         break;
                     }
