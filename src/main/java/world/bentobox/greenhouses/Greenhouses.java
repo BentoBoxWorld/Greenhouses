@@ -63,20 +63,28 @@ public class Greenhouses extends Addon {
         recipes = new RecipeManager(this);
         // Load manager
         manager = new GreenhouseManager(this);
+        // Clear
+        this.activeWorlds.clear();
         // Register commands for
         getPlugin().getAddonsManager().getGameModeAddons().stream()
-        .filter(gm -> settings.getGameModes().contains(gm.getDescription().getName()))
+        .filter(gm -> settings.getGameModes().stream().anyMatch(gm.getDescription().getName()::equalsIgnoreCase))
         .forEach(gm ->  {
             // Register command
             gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd));
+            // Log
+            this.log("Hooking into " + gm.getDescription().getName());
             // Store active world
             activeWorlds.add(gm.getOverWorld());
         });
-        // Register greenhouse manager
-        this.registerListener(manager);
-        // Register protection flag with BentoBox
-        getPlugin().getFlagsManager().registerFlag(this, GREENHOUSES);
-
+        if (this.activeWorlds.isEmpty()) {
+            this.logError("Greenhouses could not hook into any game modes! Check config.yml");
+            this.setState(State.DISABLED);
+        } else {
+            // Register greenhouse manager
+            this.registerListener(manager);
+            // Register protection flag with BentoBox
+            getPlugin().getFlagsManager().registerFlag(this, GREENHOUSES);
+        }
     }
 
     /* (non-Javadoc)
@@ -87,9 +95,6 @@ public class Greenhouses extends Addon {
         if (manager != null) {
             manager.saveGreenhouses();
             if (manager.getEcoMgr() != null) manager.getEcoMgr().cancel();
-        }
-        if (settings != null) {
-            new Config<>(this, Settings.class).saveConfigObject(settings);
         }
     }
 
