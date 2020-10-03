@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -28,11 +29,10 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class GreenhouseEvents implements Listener {
     private static final String BIOME = "[biome]";
-    private final Greenhouses plugin;
+    private final Greenhouses addon;
 
-    public GreenhouseEvents(final Greenhouses plugin) {
-        this.plugin = plugin;
-
+    public GreenhouseEvents(final Greenhouses addon) {
+        this.addon = addon;
     }
 
     /**
@@ -40,12 +40,12 @@ public class GreenhouseEvents implements Listener {
      * @param e - event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
-    public void onPlayerInteract(PlayerInteractEvent e) {
+    public void onPlayerInteractInNether(PlayerInteractEvent e) {
         if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)) {
             return;
         }
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.WATER_BUCKET)
-                && plugin.getManager().getMap().getGreenhouse(e.getClickedBlock().getLocation()).isPresent()) {
+                && addon.getManager().getMap().inGreenhouse(e.getClickedBlock().getLocation())) {
             e.setCancelled(true);
             e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.WATER);
             e.getItem().setType(Material.BUCKET);
@@ -59,10 +59,10 @@ public class GreenhouseEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
     public void onIceBreak(BlockBreakEvent e) {
         if (!e.getBlock().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                || (!e.getBlock().getType().equals(Material.ICE) && !e.getBlock().getType().equals(Material.BLUE_ICE))) {
+                || !Tag.ICE.isTagged(e.getBlock().getType())) {
             return;
         }
-        if (plugin.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).isPresent()) {
+        if (addon.getManager().getMap().inGreenhouse(e.getBlock().getLocation())) {
             e.setCancelled(true);
             e.getBlock().setType(Material.WATER);
         }
@@ -79,21 +79,19 @@ public class GreenhouseEvents implements Listener {
     }
 
     private void handleTransition(User user, Location toLoc, Location fromLoc) {
-        Optional<Greenhouse> to = plugin.getManager().getMap().getGreenhouse(toLoc);
-        Optional<Greenhouse> from = plugin.getManager().getMap().getGreenhouse(fromLoc);
+        Optional<Greenhouse> to = addon.getManager().getMap().getGreenhouse(toLoc);
+        Optional<Greenhouse> from = addon.getManager().getMap().getGreenhouse(fromLoc);
         if (!to.isPresent() && !from.isPresent()) {
             return;
         }
         if (to.isPresent() && from.isPresent()) {
             if (!to.get().equals(from.get())) {
                 // Leaving greenhouse, entering another
-                user.sendMessage("greenhouses.event.leaving", BIOME, to.get().getBiomeRecipe().getFriendlyName());
-                user.sendMessage("greenhouses.event.entering", BIOME,  from.get().getBiomeRecipe().getFriendlyName());
-                return;
-            } else {
-                // Same greenhouse
-                return;
+                user.sendMessage("greenhouses.event.leaving", BIOME, from.get().getBiomeRecipe().getFriendlyName());
+                user.sendMessage("greenhouses.event.entering", BIOME,  to.get().getBiomeRecipe().getFriendlyName());
             }
+            // Same greenhouse
+            return;
         }
         // from is a greenhouse
         if (from.isPresent() && !to.isPresent()) {
@@ -119,13 +117,13 @@ public class GreenhouseEvents implements Listener {
 
 
     /**
-     * Checks is broken blocks cause the greenhouse to fail
+     * Checks if broken blocks cause the greenhouse to fail
      * @param e - event
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onBlockBreak(final BlockBreakEvent e) {
         User user = User.getInstance(e.getPlayer());
-        plugin.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).ifPresent(g -> {
+        addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).ifPresent(g -> {
             // Check to see if wall or roof block broken
             if ((e.getBlock().getLocation().getBlockY() == g.getCeilingHeight() - 1)
                     || e.getBlock().getLocation().getBlockX() == (int)g.getBoundingBox().getMinX()
@@ -134,7 +132,7 @@ public class GreenhouseEvents implements Listener {
                     || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxZ() - 1
                     ) {
                 user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
-                plugin.getManager().removeGreenhouse(g);
+                addon.getManager().removeGreenhouse(g);
             }
         });
     }
@@ -153,7 +151,7 @@ public class GreenhouseEvents implements Listener {
     }
 
     private boolean checkBlockHeight(Block block) {
-        return plugin.getManager().getMap().getGreenhouse(block.getLocation())
+        return addon.getManager().getMap().getGreenhouse(block.getLocation())
                 .filter(g -> g.getCeilingHeight() < block.getY())
                 .filter(g -> !block.getWorld().getEnvironment().equals(World.Environment.NETHER))
                 .isPresent();
