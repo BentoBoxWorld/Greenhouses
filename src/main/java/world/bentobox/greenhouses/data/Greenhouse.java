@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 
@@ -55,8 +57,9 @@ public class Greenhouse implements DataObject {
     }
 
     /**
-     * @return the biomeRecipe
+     * @return the biomeRecipe or null if none has been set
      */
+    @Nullable
     public String getBiomeRecipeName() {
         return biomeRecipeName;
     }
@@ -78,6 +81,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the location
      */
+    @Nullable
     public Location getLocation() {
         return location;
     }
@@ -85,6 +89,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the originalBiome
      */
+    @Nullable
     public Biome getOriginalBiome() {
         return originalBiome;
     }
@@ -92,6 +97,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the roofHopperLocation
      */
+    @Nullable
     public Location getRoofHopperLocation() {
         return roofHopperLocation;
     }
@@ -100,6 +106,7 @@ public class Greenhouse implements DataObject {
      * @see world.bentobox.bentobox.database.objects.DataObject#getUniqueId()
      */
     @Override
+    @NonNull
     public String getUniqueId() {
         return uniqueId;
     }
@@ -149,6 +156,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the boundingBox
      */
+    @Nullable
     public BoundingBox getBoundingBox() {
         return boundingBox;
     }
@@ -180,6 +188,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the world
      */
+    @NonNull
     public World getWorld() {
         return this.getLocation().getWorld();
     }
@@ -206,6 +215,7 @@ public class Greenhouse implements DataObject {
      * Get the biome recipe for this greenhouse
      * @return biome recipe or null
      */
+    @Nullable
     public BiomeRecipe getBiomeRecipe() {
         return RecipeManager.getBiomeRecipies(biomeRecipeName).orElse(null);
     }
@@ -220,6 +230,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the missingBlocks
      */
+    @Nullable
     public Map<Material, Integer> getMissingBlocks() {
         return missingBlocks;
     }
