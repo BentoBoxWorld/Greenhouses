@@ -5,12 +5,7 @@ addons:
         organization: "bentobox-world"
  
 jdk:
-    - openjdk8
     - openjdk11
-    
-matrix:
-  allow_failures:
-    - jdk: openjdk11
     
 script:
     # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
