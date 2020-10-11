@@ -61,24 +61,7 @@ public class Roof extends MinMaxXZ {
         }
         // If the roof was not found start going around in circles until something is found
         // Expand in ever increasing squares around location until a wall block is found
-        for (int radius = 0; radius < 3 && !roofFound; radius++) {
-            for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius && !roofFound; x++) {
-                for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius && !roofFound; z++) {
-                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius) && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
-                        Block b = world.getBlockAt(x, roofY, z);
-                        if (!Walls.wallBlocks(b.getType())) {
-                            // Look up
-                            for (int y = roofY; y < world.getMaxHeight() && !roofFound; y++) {
-                                if (roofBlocks(world.getBlockAt(x,y,z).getType())) {
-                                    roofFound = true;
-                                    loc = new Location(world,x,y,z);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        spiralSearch(loc, roofY);
         if (!roofFound) return false;
         // Record the height
         this.height = loc.getBlockY();
@@ -108,6 +91,34 @@ public class Roof extends MinMaxXZ {
         } while (minx != minX || maxx != maxX || minz != minZ || maxz != maxZ);
         // That's as much as we can do!
         return true;
+    }
+
+    private void spiralSearch(Location loc, int roofY) {
+        for (int radius = 0; radius < 3 && !roofFound; radius++) {
+            for (int x = loc.getBlockX() - radius; x <= loc.getBlockX() + radius && !roofFound; x++) {
+                for (int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius && !roofFound; z++) {
+                    if (!((x > loc.getBlockX() - radius && x < loc.getBlockX() + radius) && (z > loc.getBlockZ() - radius && z < loc.getBlockZ() + radius))) {
+                        checkVertically(loc, x, roofY, z);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void checkVertically(Location loc, int x, int roofY, int z) {
+        World world = loc.getWorld();
+        Block b = world.getBlockAt(x, roofY, z);
+        if (!Walls.wallBlocks(b.getType())) {
+            // Look up
+            for (int y = roofY; y < world.getMaxHeight() && !roofFound; y++) {
+                if (roofBlocks(world.getBlockAt(x,y,z).getType())) {
+                    roofFound = true;
+                    loc = new Location(world,x,y,z);
+                }
+            }
+        }
+
     }
 
     /**
