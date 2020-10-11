@@ -29,98 +29,35 @@ public class Walls extends MinMaxXZ {
 
     private static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
 
-    public Walls(Roof roof) {
+    class WallFinder {
+        int radiusMinX;
+        int radiusMaxX;
+        int radiusMinZ;
+        int radiusMaxZ;
+        boolean stopMinX;
+        boolean stopMaxX;
+        boolean stopMinZ;
+        boolean stopMaxZ;
+        boolean isSearching() {
+            return !stopMinX || !stopMaxX || !stopMinZ || !stopMaxZ;
+        }
+    }
+
+    public Walls findWalls(Roof roof) {
         // The player is under the roof
         // Assume the player is inside the greenhouse they are trying to create
         Location loc = roof.getLocation();
-        World world = roof.getLocation().getWorld();
+        World world = loc.getWorld();
         floor = getFloorY(world, roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ());
         // Now start with the player's x and z location
-        int radiusMinX = 0;
-        int radiusMaxX = 0;
-        int radiusMinZ = 0;
-        int radiusMaxZ = 0;
-        boolean stopMinX = false;
-        boolean stopMaxX = false;
-        boolean stopMinZ = false;
-        boolean stopMaxZ = false;
+        WallFinder wf = new WallFinder();
         minX = loc.getBlockX();
         maxX = loc.getBlockX();
         minZ = loc.getBlockZ();
         maxZ = loc.getBlockZ();
         do {
-            // Look around player in an ever expanding cube
-            minX = loc.getBlockX() - radiusMinX;
-            maxX = loc.getBlockX() + radiusMaxX;
-            minZ = loc.getBlockZ() - radiusMinZ;
-            maxZ = loc.getBlockZ() + radiusMaxZ;
-            int y;
-            for (y = roof.getHeight() - 1; y > floor; y--) {
-                for (int x = minX; x <= maxX; x++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        // Only look around outside edge
-                        if (!((x > minX && x < maxX) && (z > minZ && z < maxZ))) {
-                            // Look at block faces
-                            for (BlockFace bf: ORDINALS) {
-                                switch (bf) {
-                                case EAST:
-                                    // positive x
-                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                                        stopMaxX = true;
-                                    }
-                                    break;
-                                case WEST:
-                                    // negative x
-                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                                        stopMinX = true;
-                                    }
-                                    break;
-                                case NORTH:
-                                    // negative Z
-                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                                        stopMinZ = true;
-                                    }
-                                    break;
-                                case SOUTH:
-                                    // positive Z
-                                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                                        stopMaxZ = true;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (minX < roof.getMinX()) {
-                stopMinX = true;
-            }
-            if (maxX > roof.getMaxX()) {
-                stopMaxX = true;
-            }
-            if (minZ < roof.getMinZ()) {
-                stopMinZ = true;
-            }
-            if (maxZ > roof.getMaxZ()) {
-                stopMaxZ = true;
-            }
-            // Expand the edges
-            if (!stopMinX) {
-                radiusMinX++;
-            }
-            if (!stopMaxX) {
-                radiusMaxX++;
-            }
-            if (!stopMinZ) {
-                radiusMinZ++;
-            }
-            if (!stopMaxZ) {
-                radiusMaxZ++;
-            }
-        } while (!stopMinX || !stopMaxX || !stopMinZ || !stopMaxZ);
+            lookAround(loc, wf, roof);
+        } while (wf.isSearching());
         // We should have the largest cube we can make now
         minX--;
         maxX++;
@@ -128,9 +65,93 @@ public class Walls extends MinMaxXZ {
         maxZ++;
         // Find the floor again, only looking within the walls
         floor = getFloorY(world, roof.getHeight(), minX, maxX, minZ,maxZ);
+        return this;
     }
 
-    private int getFloorY(World world, int y, int minX, int maxX, int minZ, int maxZ) {
+    void lookAround(Location loc, WallFinder wf, Roof roof) {
+        World world = loc.getWorld();
+        // Look around player in an ever expanding cube
+        minX = loc.getBlockX() - wf.radiusMinX;
+        maxX = loc.getBlockX() + wf.radiusMaxX;
+        minZ = loc.getBlockZ() - wf.radiusMinZ;
+        maxZ = loc.getBlockZ() + wf.radiusMaxZ;
+        for (int y = roof.getHeight() - 1; y > floor; y--) {
+            for (int x = minX; x <= maxX; x++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    // Only look around outside edge
+                    if (!((x > minX && x < maxX) && (z > minZ && z < maxZ))) {
+                        // Look at block faces
+                        lookAtBlockFaces(wf, world, x, y, z);
+                    }
+                }
+            }
+        }
+        analyzeFindings(wf, roof);
+    }
+
+    void analyzeFindings(WallFinder wf, Roof roof) {
+        if (minX < roof.getMinX()) {
+            wf.stopMinX = true;
+        }
+        if (maxX > roof.getMaxX()) {
+            wf.stopMaxX = true;
+        }
+        if (minZ < roof.getMinZ()) {
+            wf.stopMinZ = true;
+        }
+        if (maxZ > roof.getMaxZ()) {
+            wf.stopMaxZ = true;
+        }
+        // Expand the edges
+        if (!wf.stopMinX) {
+            wf.radiusMinX++;
+        }
+        if (!wf.stopMaxX) {
+            wf.radiusMaxX++;
+        }
+        if (!wf.stopMinZ) {
+            wf.radiusMinZ++;
+        }
+        if (!wf.stopMaxZ) {
+            wf.radiusMaxZ++;
+        }
+    }
+
+    void lookAtBlockFaces(WallFinder wf, World world, int x, int y, int z) {
+        for (BlockFace bf: ORDINALS) {
+            switch (bf) {
+            case EAST:
+                // positive x
+                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                    wf.stopMaxX = true;
+                }
+                break;
+            case WEST:
+                // negative x
+                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                    wf.stopMinX = true;
+                }
+                break;
+            case NORTH:
+                // negative Z
+                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                    wf.stopMinZ = true;
+                }
+                break;
+            case SOUTH:
+                // positive Z
+                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
+                    wf.stopMaxZ = true;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
+
+    int getFloorY(World world, int y, int minX, int maxX, int minZ, int maxZ) {
         // Find the floor - defined as the last y under the roof where there are no wall blocks
         int wallBlockCount;
         do {

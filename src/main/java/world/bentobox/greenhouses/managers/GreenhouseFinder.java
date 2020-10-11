@@ -58,7 +58,7 @@ public class GreenhouseFinder {
             return result;
         }
         // Find the walls
-        Walls walls = new Walls(roof);
+        Walls walls = new Walls().findWalls(roof);
         // Make the initial greenhouse
         gh = new Greenhouse(location.getWorld(), walls, roof.getHeight());
         // Set the original biome
