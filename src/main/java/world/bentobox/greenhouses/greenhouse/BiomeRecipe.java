@@ -214,14 +214,18 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     /**
      * Check if block should be converted
+     * @param gh  - greenhouse
      * @param b - block to check
      */
-    public void convertBlock(Block b) {
+    public void convertBlock(Greenhouse gh, Block b) {
         conversionBlocks.get(b.getType()).stream().filter(Objects::nonNull)
         .filter(bc -> random.nextDouble() < bc.getProbability())
         .forEach(bc -> {
             // Check if the block is in the right area, up, down, n,s,e,w
-            if (ADJ_BLOCKS.stream().map(b::getRelative).map(Block::getType).anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
+            if (ADJ_BLOCKS.stream().map(b::getRelative)
+                    .filter(r -> gh.contains(r.getLocation()))
+                    .map(Block::getType)
+                    .anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
                 // Convert!
                 b.setType(bc.getNewMaterial());
             }

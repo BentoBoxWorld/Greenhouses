@@ -99,6 +99,7 @@ public class BiomeRecipeTest {
         bb = new BoundingBox(10, 100, 10, 20, 120, 20);
         when(gh.getBoundingBox()).thenReturn(bb);
         when(gh.getWorld()).thenReturn(world);
+        when(gh.contains(any())).thenReturn(true);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
         // Block
         when(block.getType()).thenReturn(Material.AIR,
@@ -246,8 +247,27 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.WATER);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(b);
+        br.convertBlock(gh, b);
         verify(b).setType(Material.CLAY);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testConvertBlockNotInGreenhouse() {
+        // Setup
+        this.testAddConvBlocks();
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        Block ab = mock(Block.class);
+        when(ab.getType()).thenReturn(Material.WATER);
+        when(b.getRelative(any())).thenReturn(ab);
+        when(ab.getLocation()).thenReturn(location);
+        when(gh.contains(any())).thenReturn(false);
+        br.convertBlock(gh, b);
+        verify(b, never()).setType(any());
     }
 
     /**
@@ -263,7 +283,7 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.SAND);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(b);
+        br.convertBlock(gh, b);
         verify(b, never()).setType(Material.CLAY);
     }
 
@@ -275,7 +295,7 @@ public class BiomeRecipeTest {
         // Mock
         Block b = mock(Block.class);
         when(b.getType()).thenReturn(Material.SAND);
-        br.convertBlock(b);
+        br.convertBlock(gh, b);
         verify(b, never()).setType(Material.CLAY);
     }
 
@@ -297,7 +317,7 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.WATER);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(b);
+        br.convertBlock(gh, b);
         verify(b, never()).setType(Material.CLAY);
     }
 

@@ -89,7 +89,7 @@ public class EcoSystemManager {
             for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY() && y > 0; y--) {
                     Block b = gh.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
-                    if (!b.isEmpty()) gh.getBiomeRecipe().convertBlock(b);
+                    if (!b.isEmpty()) gh.getBiomeRecipe().convertBlock(gh, b);
                 }
             }
         }
@@ -191,9 +191,9 @@ public class EcoSystemManager {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(x, y, z);
                     if (!(b.isEmpty() || (ignoreLiquid && b.isLiquid()))
-                            && (b.getRelative(BlockFace.UP).isEmpty() 
-                            || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
-                            || (ignoreLiquid && b.isLiquid() && b.getRelative(BlockFace.UP).isPassable()))) {
+                            && (b.getRelative(BlockFace.UP).isEmpty()
+                                    || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
+                                    || (ignoreLiquid && b.isLiquid() && b.getRelative(BlockFace.UP).isPassable()))) {
                         result.add(b.getRelative(BlockFace.UP));
                         break;
                     }
