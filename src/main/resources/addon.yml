@@ -7,7 +7,10 @@ authors: tastybento
 
 softdepend: AcidIsland, BSkyBlock, SkyGrid
 
-permissions:    
+permissions: 
+  greenhouses.biome.nether:
+     description: Gives access to nether biomes
+     default: true
   '[gamemode].greenhouses.player':
      description: Gives access to player commands
      default: true
