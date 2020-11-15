@@ -127,7 +127,66 @@ biomes:
     icecoverage: 0
     watercoverage: 0
     mobs:
-      PIG_ZOMBIE: 10:NETHERRACK
+      ZOMBIFIED_PIGLIN: 10:NETHERRACK
+      PIGLIN: 10:NETHERRACK
+      STRIDER: 10:LAVA
+      ENDERMAN: 5:NETHERRACK
+    moblimit: 9
+    permission: greenhouses.biome.nether
+  SOUL_SAND_VALLEY:
+    friendlyname: "&cSoul Sand Valley"
+    biome: SOUL_SAND_VALLEY
+    icon: SOUL_SAND
+    priority: 8
+    contents:
+      SOUL_SAND: 10
+    # No Lava required, no ice or water allowed
+    lavacoverage: 0
+    icecoverage: 0
+    watercoverage: 0
+    mobs:
+      SKELETON: 10:SOUL_SAND
+    moblimit: 9
+    permission: greenhouses.biome.nether
+    # Conversion list - in this case, an adjacent block is required to convert
+    # Format is:
+    # Original Block:% chance:New Block:Adjacent Block
+    # So, for below, dirt has a 50% chance of changing into clay if it is next to water!
+    conversion-list:
+    - NETHERRACK:20:SOUL_SAND:SOUL_SAND
+  CRIMSON_FOREST:
+    friendlyname: "&cCrimson Forest"
+    biome: CRIMSON_FOREST
+    icon: CRIMSON_FUNGUS
+    priority: 6
+    contents:
+      NETHERRACK: 1
+      CRIMSON_NYLIUM: 1
+    # Lava required, no ice or water allowed
+    lavacoverage: 10
+    icecoverage: 0
+    watercoverage: 0
+    mobs:
+      ZOMBIFIED_PIGLIN: 5:NETHERRACK
+      PIGLIN: 10:CRIMSON_NYLIUM
+      HOGLIN: 10:CRIMSON_NYLIUM
+    moblimit: 9
+    permission: greenhouses.biome.nether
+  WARPED_FOREST:
+    friendlyname: "&cWarped Forest"
+    biome: WARPED_FOREST
+    icon: WARPED_FUNGUS
+    priority: 7
+    contents:
+      NETHERRACK: 1
+      WARPED_NYLIUM: 1
+    # Lava required, no ice or water allowed
+    lavacoverage: 10
+    icecoverage: 0
+    watercoverage: 0
+    mobs:
+      STRIDER: 10:LAVA
+      ENDERMAN: 20:WARPED_NYLIUM
     moblimit: 9
     permission: greenhouses.biome.nether
   JUNGLE:

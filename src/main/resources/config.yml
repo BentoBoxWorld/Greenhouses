@@ -6,6 +6,8 @@ greenhouses:
   - BSkyBlock
   - AcidIsland
   - SkyGrid
+  - AOneBlock
+  - CaveBlock
   # Show loaded recipe details during startup of server
   startup-log: false
   # Weather and ecosystem settings
