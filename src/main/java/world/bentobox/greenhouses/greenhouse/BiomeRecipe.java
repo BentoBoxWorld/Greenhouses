@@ -104,9 +104,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param mobSpawnOn - material to spawn on
      * @return true if add is successful
      */
-    public boolean addMobs(EntityType mobType, int mobProbability, Material mobSpawnOn) {
+    public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn) {
         startupLog("   " + mobProbability + CHANCE_FOR + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
-        double probability = ((double)mobProbability/100);
+        double probability = mobProbability/100;
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
         if ((1D - lastProb) >= probability) {
@@ -127,8 +127,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param plantGrowOn - material on which it must grow
      * @return true if add is successful
      */
-    public boolean addPlants(Material plantMaterial, int plantProbability, Material plantGrowOn) {
-        double probability = ((double)plantProbability/100);
+    public boolean addPlants(Material plantMaterial, double plantProbability, Material plantGrowOn) {
+        double probability = plantProbability/100;
         // Add up all the probabilities in the list so far
         double lastProb = plantTree.isEmpty() ? 0D : plantTree.lastKey();
         if ((1D - lastProb) >= probability) {

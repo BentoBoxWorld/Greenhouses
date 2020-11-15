@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -123,7 +124,7 @@ public class RecipeManager {
             addon.logError("No biome defined in the biome reciepe " + biomeType + ". Skipping...");
             return null;
         }
-        String name = biomeRecipeConfig.getString("biome").toUpperCase();
+        String name = biomeRecipeConfig.getString("biome").toUpperCase(Locale.ENGLISH);
         if (Enums.getIfPresent(Biome.class, name).isPresent()) {
             return Biome.valueOf(name);
         }
@@ -162,7 +163,7 @@ public class RecipeManager {
             for (Entry<String, Object> s: plants.entrySet()) {
                 Material plantMaterial = Material.valueOf(s.getKey());
                 String[] split = ((String)s.getValue()).split(":");
-                int plantProbability = Integer.parseInt(split[0]);
+                double plantProbability = Double.parseDouble(split[0]);
                 Material plantGrowOn = Material.valueOf(split[1]);
                 b.addPlants(plantMaterial, plantProbability, plantGrowOn);
             }
@@ -175,11 +176,11 @@ public class RecipeManager {
         if (conversionSec != null) {
             for (String oldMat : conversionSec.getKeys(false)) {
                 try {
-                    Material oldMaterial = Material.valueOf(oldMat.toUpperCase());
+                    Material oldMaterial = Material.valueOf(oldMat.toUpperCase(Locale.ENGLISH));
                     String conversions = conversionSec.getString(oldMat);
                     if (!conversions.isEmpty()) {
                         String[] split = conversions.split(":");
-                        int convChance = Integer.parseInt(split[0]);
+                        double convChance = Double.parseDouble(split[0]);
                         Material newMaterial = Material.valueOf(split[1]);
                         Material localMaterial = Material.valueOf(split[2]);
                         b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
@@ -196,7 +197,7 @@ public class RecipeManager {
                 // Split the string
                 String[] split = oldMat.split(":");
                 Material oldMaterial = Material.valueOf(split[0].toUpperCase());
-                int convChance = Integer.parseInt(split[1]);
+                double convChance = Double.parseDouble(split[1]);
                 Material newMaterial = Material.valueOf(split[2]);
                 Material localMaterial = Material.valueOf(split[3]);
                 b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
@@ -218,9 +219,9 @@ public class RecipeManager {
 
     private void parseMob(Entry<String, Object> s, BiomeRecipe b) {
         try {
-            EntityType mobType = EntityType.valueOf(s.getKey().toUpperCase());
+            EntityType mobType = EntityType.valueOf(s.getKey().toUpperCase(Locale.ENGLISH));
             String[] split = ((String)s.getValue()).split(":");
-            int mobProbability = Integer.parseInt(split[0]);
+            double mobProbability = Double.parseDouble(split[0]);
             Material mobSpawnOn = Material.valueOf(split[1]);
             b.addMobs(mobType, mobProbability, mobSpawnOn);
         } catch (Exception e) {
@@ -230,7 +231,7 @@ public class RecipeManager {
 
     private void parseReqBlock(BiomeRecipe b, String rq, ConfigurationSection reqContents) {
         try {
-            b.addReqBlocks(Material.valueOf(rq.toUpperCase()), reqContents.getInt(rq));
+            b.addReqBlocks(Material.valueOf(rq.toUpperCase(Locale.ENGLISH)), reqContents.getInt(rq));
         } catch(Exception e) {
             addon.logError("Could not parse required block " + rq);
         }

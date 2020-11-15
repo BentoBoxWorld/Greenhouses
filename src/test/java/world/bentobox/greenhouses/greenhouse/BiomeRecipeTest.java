@@ -161,7 +161,7 @@ public class BiomeRecipeTest {
         int mobProbability = 50;
         Material mobSpawnOn = Material.GRASS_PATH;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).log(eq("   50% chance for Cat to spawn on Grass Path."));
+        verify(addon).log(eq("   50.0% chance for Cat to spawn on Grass Path."));
     }
 
     /**
@@ -179,6 +179,19 @@ public class BiomeRecipeTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
+     */
+    @Test
+    public void testAddMobsOver100PercentDouble() {
+        EntityType mobType = EntityType.CAT;
+        double mobProbability = 50.5;
+        Material mobSpawnOn = Material.GRASS_PATH;
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        verify(addon).logError(eq("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT"));
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
      */
     @Test
@@ -187,7 +200,7 @@ public class BiomeRecipeTest {
         int plantProbability = 20;
         Material plantGrowOn = Material.DIRT;
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
-        verify(addon).log(eq("   20% chance for Jungle Sapling to grow on Dirt"));
+        verify(addon).log(eq("   20.0% chance for Jungle Sapling to grow on Dirt"));
     }
 
     /**
