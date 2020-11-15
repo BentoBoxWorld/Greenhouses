@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.block.Biome;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -47,7 +48,8 @@ public class GreenhouseManager implements Listener {
         NULL,
         SUCCESS,
         FAIL_NO_RECIPE_FOUND,
-        FAIL_INSUFFICIENT_BLOCKS
+        FAIL_INSUFFICIENT_BLOCKS,
+        FAIL_NO_WORLD, FAIL_UNKNOWN_RECIPE
     }
 
     private final Greenhouses addon;
@@ -94,11 +96,20 @@ public class GreenhouseManager implements Listener {
                 toBeRemoved.add(g);
                 break;
             case FAIL_OVERLAPPING:
+                addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
+                break;
             case NULL:
-                addon.logError(result.name());
+                addon.logError("Null location of greenhouse. Cannot load. Skipping...");
                 break;
             case SUCCESS:
                 activateGreenhouse(g);
+                break;
+            case FAIL_NO_WORLD:
+                addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
+                break;
+            case FAIL_UNKNOWN_RECIPE:
+                addon.logError("Greenhouse uses a recipe that does not exist in the biomes.yml. Skipping...");
+                addon.logError("Greenhouse Id " + g.getUniqueId());
                 break;
             default:
                 break;
@@ -178,10 +189,15 @@ public class GreenhouseManager implements Listener {
     }
 
     private void activateGreenhouse(Greenhouse gh) {
+        Biome ghBiome = gh.getBiomeRecipe().getBiome();
+        if (ghBiome == null) {
+            addon.logError("Biome recipe error - no such biome for " + gh.getBiomeRecipe().getName());
+            return;
+        }
         for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x+=4) {
             for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z+=4) {
                 for (int y = (int)gh.getBoundingBox().getMinY(); y < gh.getBoundingBox().getMaxY(); y+=4) {
-                    gh.getWorld().setBiome(x, y, z, gh.getBiomeRecipe().getBiome());
+                    gh.getWorld().setBiome(x, y, z, ghBiome);
                 }
             }
         }

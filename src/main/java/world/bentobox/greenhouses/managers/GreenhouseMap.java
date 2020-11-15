@@ -33,6 +33,13 @@ public class GreenhouseMap {
      * @return result {@link GreenhouseResult}
      */
     public GreenhouseResult addGreenhouse(Greenhouse greenhouse) {
+        // Validation checks
+        if (greenhouse.getBiomeRecipe() == null) {
+            return GreenhouseResult.FAIL_UNKNOWN_RECIPE;
+        }
+        if (greenhouse.getWorld() == null) {
+            return GreenhouseResult.FAIL_NO_WORLD;
+        }
         if (greenhouse.getLocation() == null) {
             return GreenhouseResult.NULL;
         }
