@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,6 +30,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hoglin;
+import org.bukkit.entity.Piglin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
@@ -126,6 +129,8 @@ public class BiomeRecipeTest {
         // Settings
         when(addon.getSettings()).thenReturn(settings);
         when(settings.isStartupLog()).thenReturn(true);
+        // World
+        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
 
         // Set up default recipe
         br = new BiomeRecipe(addon, type, 0);
@@ -443,6 +448,7 @@ public class BiomeRecipeTest {
         // Same box as greenhouse
         when(cat.getBoundingBox()).thenReturn(bb);
         when(world.spawnEntity(any(), any())).thenReturn(cat);
+        when(cat.getWorld()).thenReturn(world);
 
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
@@ -469,12 +475,98 @@ public class BiomeRecipeTest {
         BoundingBox small = new BoundingBox(11, 101, 11, 19, 119, 19);
         when(cat.getBoundingBox()).thenReturn(small);
         when(world.spawnEntity(any(), any())).thenReturn(cat);
-
+        when(cat.getWorld()).thenReturn(world);
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
         verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
         verify(location).add(any(Vector.class));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnMobHoglin() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.HOGLIN;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Hoglin hoglin = mock(Hoglin.class);
+        // Exactly 1 block smaller than the greenhouse blocks
+        BoundingBox small = new BoundingBox(11, 101, 11, 19, 119, 19);
+        when(hoglin.getBoundingBox()).thenReturn(small);
+        when(hoglin.getWorld()).thenReturn(world);
+        when(world.spawnEntity(any(), any())).thenReturn(hoglin);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertTrue(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.HOGLIN));
+        verify(location).add(any(Vector.class));
+        verify(hoglin).setImmuneToZombification(true);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnMobPiglin() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.PIGLIN;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Piglin piglin = mock(Piglin.class);
+        // Exactly 1 block smaller than the greenhouse blocks
+        BoundingBox small = new BoundingBox(11, 101, 11, 19, 119, 19);
+        when(piglin.getBoundingBox()).thenReturn(small);
+        when(piglin.getWorld()).thenReturn(world);
+        when(world.spawnEntity(any(), any())).thenReturn(piglin);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertTrue(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.PIGLIN));
+        verify(location).add(any(Vector.class));
+        verify(piglin).setImmuneToZombification(true);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testSpawnMobPiglinNether() {
+        when(world.getEnvironment()).thenReturn(Environment.NETHER);
+
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getRelative(any())).thenReturn(block);
+
+        EntityType mobType = EntityType.PIGLIN;
+        int mobProbability = 100;
+        Material mobSpawnOn = Material.GRASS_PATH;
+
+        Piglin piglin = mock(Piglin.class);
+        // Exactly 1 block smaller than the greenhouse blocks
+        BoundingBox small = new BoundingBox(11, 101, 11, 19, 119, 19);
+        when(piglin.getBoundingBox()).thenReturn(small);
+        when(piglin.getWorld()).thenReturn(world);
+        when(world.spawnEntity(any(), any())).thenReturn(piglin);
+
+
+        br.addMobs(mobType, mobProbability, mobSpawnOn);
+        assertTrue(br.spawnMob(block));
+        verify(world).spawnEntity(eq(location), eq(EntityType.PIGLIN));
+        verify(location).add(any(Vector.class));
+        verify(piglin, never()).setImmuneToZombification(true);
     }
 
     /**

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,9 +23,12 @@ import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hoglin;
+import org.bukkit.entity.Piglin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
+import com.google.common.base.Enums;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -320,6 +324,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.getMobType());
                     if (entity != null) {
+                        preventZombie(entity);
                         return addon
                                 .getManager()
                                 .getMap()
@@ -336,6 +341,31 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                     return false;
                 }).orElse(false);
 
+    }
+
+    /**
+     * Prevent hoglins and piglins from zombifying if they spawn in the overworld
+     * @param entity - spawned entity
+     */
+    private void preventZombie(Entity entity) {
+        if (!entity
+                .getWorld()
+                .getEnvironment()
+                .equals(Environment.NORMAL) ||
+                !Enums.getIfPresent(EntityType.class, "PIGLIN")
+                .isPresent()) {
+            return;
+        }
+
+        if (entity instanceof Piglin) {
+            Piglin p = (Piglin)entity;
+            p.setImmuneToZombification(true);
+            return;
+        }
+        if (entity instanceof Hoglin) {
+            Hoglin h = (Hoglin)entity;
+            h.setImmuneToZombification(true);
+        }
     }
 
     /**
