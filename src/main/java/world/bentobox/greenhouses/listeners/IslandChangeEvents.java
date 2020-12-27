@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import world.bentobox.bentobox.api.events.island.IslandEvent.IslandDeleteEvent;
+import world.bentobox.bentobox.api.events.island.IslandDeleteEvent;
 import world.bentobox.greenhouses.Greenhouses;
 
 /**
