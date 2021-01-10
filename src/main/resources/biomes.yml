@@ -101,6 +101,8 @@ biomes:
     # Multiple conversions can be listed
     conversion-list:
     - DIRT:30:SAND:SAND
+    - GRASS_BLOCK:30:SAND:SAND
+    - COARSE_DIRT:30:GRAVEL:SAND
   FOREST:
     friendlyname: "Flowery forest"
     biome: FLOWER_FOREST
