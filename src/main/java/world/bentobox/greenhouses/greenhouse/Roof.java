@@ -24,7 +24,7 @@ public class Roof extends MinMaxXZ {
         List<Material> r = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
-                        || m.name().contains("GLASS") // All glass blocks
+                        || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
                         || m.equals(Material.HOPPER)) // Hoppers
                 .collect(Collectors.toList());
         ROOF_BLOCKS = Collections.unmodifiableList(r);
@@ -172,7 +172,9 @@ public class Roof extends MinMaxXZ {
      * @return true if roof material
      */
     public static boolean roofBlocks(Material m) {
-        return ROOF_BLOCKS.contains(m) || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone());
+        return ROOF_BLOCKS.contains(m)
+                || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone())
+                || (m.name().endsWith("GLASS_PANE") && Greenhouses.getInstance().getSettings().isAllowPanes());
     }
 
     /**

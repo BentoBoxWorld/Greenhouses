@@ -19,7 +19,7 @@ public class Walls extends MinMaxXZ {
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
                 .filter(m -> m.name().contains("DOOR") // All doors
-                        || m.name().contains("GLASS") // All glass blocks
+                        || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
                         || m.equals(Material.HOPPER)) // Hoppers
                 .collect(Collectors.toList());
         WALL_BLOCKS = Collections.unmodifiableList(w);
@@ -175,7 +175,9 @@ public class Walls extends MinMaxXZ {
      * @return true if wall material
      */
     public static boolean wallBlocks(Material m) {
-        return WALL_BLOCKS.contains(m) || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone());
+        return WALL_BLOCKS.contains(m)
+                || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone())
+                || (m.name().endsWith("GLASS_PANE") && Greenhouses.getInstance().getSettings().isAllowPanes());
     }
 
     /**

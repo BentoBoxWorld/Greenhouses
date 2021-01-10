@@ -1,4 +1,4 @@
-# Greenhouses Configuration
+# Greenhouses Configuration {$version}
 # 
 greenhouses:
   # BentoBox GameModes that will use Greenhouses
@@ -7,9 +7,10 @@ greenhouses:
   - AcidIsland
   - SkyGrid
   - AOneBlock
-  - CaveBlock
+  # 
   # Show loaded recipe details during startup of server
   startup-log: false
+  # 
   # Weather and ecosystem settings
   # How often it should snow in the g/h when the weather is raining, in seconds
   snowspeed: 30.0
@@ -18,6 +19,7 @@ greenhouses:
   snowchance: 1.0
   # How many blocks should get snow 1 = all of them, 0 = none, 0.1 = 1 in 10
   snowdensity: 0.1
+  # 
   # Biome activity
   # How often should greenhouse biomes be checked to make sure they are still valid
   ecotick: 5
@@ -28,10 +30,15 @@ greenhouses:
   blocktick: 2
   # How often should mobs be potentially spawned in a greenhouse, in minutes
   mobtick: 5
+  # 
   # Default settings for greenhouse actions
   # Allow lava or water to flow out of a greenhouse, e.g. through the door, floor
   allowflowout: false
   # Allow lava or water to flow into a greenhouse, e.g., through the door
   allowflowin: false
+  # 
   # Allow glowstone to be used as well as glass in roof and walls
   allowglowstone: true
+  # 
+  # Allow glass panes to be used to build greenhouses
+  allowpanes: true

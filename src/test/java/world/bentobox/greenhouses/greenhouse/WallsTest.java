@@ -1,17 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import world.bentobox.greenhouses.greenhouse.Walls.WallFinder;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -21,12 +11,25 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.Settings;
+import world.bentobox.greenhouses.greenhouse.Walls.WallFinder;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(Greenhouses.class)
 public class WallsTest {
 
     @Mock
@@ -41,6 +44,9 @@ public class WallsTest {
      * Class under test
      */
     private Walls walls;
+    @Mock
+    private Greenhouses addon;
+    private Settings s;
 
 
     /**
@@ -48,6 +54,12 @@ public class WallsTest {
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
+        when(Greenhouses.getInstance()).thenReturn(addon);
+        s = new Settings();
+        when(addon.getSettings()).thenReturn(s);
+
+
         walls = new Walls();
         when(world.getMaxHeight()).thenReturn(255);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
@@ -63,13 +75,6 @@ public class WallsTest {
         when(roof.getHeight()).thenReturn(1);
         when(roof.getLocation()).thenReturn(location);
 
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -190,9 +195,26 @@ public class WallsTest {
     public void testWallBlocks() {
         assertFalse(Walls.wallBlocks(Material.ACACIA_BOAT));
         assertTrue(Walls.wallBlocks(Material.GLASS));
+        assertTrue(Walls.wallBlocks(Material.GLOWSTONE));
         assertTrue(Walls.wallBlocks(Material.ACACIA_DOOR));
         assertTrue(Walls.wallBlocks(Material.HOPPER));
         assertTrue(Walls.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertFalse(Walls.wallBlocks(Material.BIRCH_TRAPDOOR));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#wallBlocks(org.bukkit.Material)}.
+     */
+    @Test
+    public void testWallBlocksNoGlowStoneNoPanes() {
+        s.setAllowGlowstone(false);
+        s.setAllowPanes(false);
+        assertFalse(Walls.wallBlocks(Material.ACACIA_BOAT));
+        assertTrue(Walls.wallBlocks(Material.GLASS));
+        assertFalse(Walls.wallBlocks(Material.GLOWSTONE));
+        assertTrue(Walls.wallBlocks(Material.ACACIA_DOOR));
+        assertTrue(Walls.wallBlocks(Material.HOPPER));
+        assertFalse(Walls.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
         assertFalse(Walls.wallBlocks(Material.BIRCH_TRAPDOOR));
     }
 

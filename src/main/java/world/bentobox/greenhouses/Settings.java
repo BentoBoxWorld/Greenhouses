@@ -23,10 +23,13 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "greenhouses.game-modes")
     private List<String> gameModes = new ArrayList<>();
 
+
+    @ConfigComment("")
     @ConfigComment("Show loaded recipe details during startup of server")
     @ConfigEntry(path = "greenhouses.startup-log")
     private boolean startupLog = false;
 
+    @ConfigComment("")
     @ConfigComment("Weather and ecosystem settings")
     @ConfigComment("How often it should snow in the g/h when the weather is raining, in seconds")
     @ConfigEntry(path = "greenhouses.snowspeed")
@@ -40,6 +43,7 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "greenhouses.snowdensity")
     private double snowDensity = 0.1;
 
+    @ConfigComment("")
     @ConfigComment("Biome activity")
     @ConfigComment("How often should greenhouse biomes be checked to make sure they are still valid")
     @ConfigEntry(path = "greenhouses.ecotick")
@@ -56,6 +60,7 @@ public class Settings implements ConfigObject {
     private int mobTick = 5;
 
 
+    @ConfigComment("")
     @ConfigComment("Default settings for greenhouse actions")
     @ConfigComment("Allow lava or water to flow out of a greenhouse, e.g. through the door, floor")
     @ConfigEntry(path = "greenhouses.allowflowout")
@@ -64,10 +69,15 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "greenhouses.allowflowin")
     private boolean allowFlowIn;
 
+    @ConfigComment("")
     @ConfigComment("Allow glowstone to be used as well as glass in roof and walls")
     @ConfigEntry(path = "greenhouses.allowglowstone")
     private boolean allowGlowstone = true;
 
+    @ConfigComment("")
+    @ConfigComment("Allow glass panes to be used to build greenhouses")
+    @ConfigEntry(path = "greenhouses.allowpanes")
+    private boolean allowPanes = true;
     /**
      * @return the gameModes
      */
@@ -211,6 +221,18 @@ public class Settings implements ConfigObject {
      */
     public void setAllowGlowstone(boolean allowGlowstone) {
         this.allowGlowstone = allowGlowstone;
+    }
+    /**
+     * @return the allowPanes
+     */
+    public boolean isAllowPanes() {
+        return allowPanes;
+    }
+    /**
+     * @param allowPanes the allowPanes to set
+     */
+    public void setAllowPanes(boolean allowPanes) {
+        this.allowPanes = allowPanes;
     }
 
 }

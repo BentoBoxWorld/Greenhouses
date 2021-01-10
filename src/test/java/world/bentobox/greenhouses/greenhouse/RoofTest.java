@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -14,7 +15,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.Settings;
 
 
 /**
@@ -22,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  *
  */
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(Greenhouses.class)
 public class RoofTest {
 
     private Roof roof;
@@ -31,12 +39,20 @@ public class RoofTest {
     private Location location;
     @Mock
     private World world;
+    @Mock
+    private Greenhouses addon;
+    private Settings s;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
+        when(Greenhouses.getInstance()).thenReturn(addon);
+        s = new Settings();
+        when(addon.getSettings()).thenReturn(s);
+
         when(world.getMaxHeight()).thenReturn(255);
         // Block
         when(block.getType()).thenReturn(Material.AIR, Material.AIR, Material.AIR, Material.AIR,
@@ -156,4 +172,33 @@ public class RoofTest {
         assertTrue(roof.toString().endsWith("minX=-9, maxX=28, minZ=-9, maxZ=29, height=14, roofFound=true]"));
     }
 
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Roof#roofBlocks(org.bukkit.Material)}.
+     */
+    @Test
+    public void testWallBlocks() {
+        assertFalse(Roof.roofBlocks(Material.ACACIA_BOAT));
+        assertTrue(Roof.roofBlocks(Material.GLASS));
+        assertTrue(Roof.roofBlocks(Material.GLOWSTONE));
+        assertFalse(Roof.roofBlocks(Material.ACACIA_DOOR));
+        assertTrue(Roof.roofBlocks(Material.HOPPER));
+        assertTrue(Roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertTrue(Roof.roofBlocks(Material.BIRCH_TRAPDOOR));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Roof#roofBlocks(org.bukkit.Material)}.
+     */
+    @Test
+    public void testWallBlocksNoGlowStoneNoPanes() {
+        s.setAllowGlowstone(false);
+        s.setAllowPanes(false);
+        assertFalse(Roof.roofBlocks(Material.ACACIA_BOAT));
+        assertTrue(Roof.roofBlocks(Material.GLASS));
+        assertFalse(Roof.roofBlocks(Material.GLOWSTONE));
+        assertFalse(Roof.roofBlocks(Material.ACACIA_DOOR));
+        assertTrue(Roof.roofBlocks(Material.HOPPER));
+        assertFalse(Roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertTrue(Roof.roofBlocks(Material.BIRCH_TRAPDOOR));
+    }
 }
