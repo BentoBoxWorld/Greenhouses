@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,7 +36,6 @@ import world.bentobox.greenhouses.data.Greenhouse;
 @PrepareForTest({Bukkit.class, BentoBox.class})
 public class EcoSystemManagerTest {
 
-    @Mock
     private Greenhouse gh;
     @Mock
     private World world;
@@ -55,11 +55,13 @@ public class EcoSystemManagerTest {
      */
     @Before
     public void setUp() throws Exception {
+        gh = new Greenhouse();
         // 4x4x4 greenhouse
-        BoundingBox bb = BoundingBox.of(new Vector(0,0,0), new Vector(5,5,5));
-        when(gh.getBoundingBox()).thenReturn(bb);
+        BoundingBox bb = BoundingBox.of(new Vector(0,0,0), new Vector(6,5,6));
+        gh.setBoundingBox(bb);
         // World
-        when(gh.getWorld()).thenReturn(world);
+        Location l = new Location(world, 0,0,0);
+        gh.setLocation(l);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
         // Blocks
         // Air
@@ -76,13 +78,13 @@ public class EcoSystemManagerTest {
         // Empty false
         when(liquid.isLiquid()).thenReturn(true);
         when(liquid.isPassable()).thenReturn(true);
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);        
+        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
         // Default for block
         // Empty false
         // Passable false
         // Liquid false
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(air);
-        
+
         eco = new EcoSystemManager(null, null);
     }
 
@@ -175,7 +177,7 @@ public class EcoSystemManagerTest {
             assertEquals(air, result.get(i));
         }
     }
-    
+
     /**
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
      */

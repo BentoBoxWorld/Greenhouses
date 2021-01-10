@@ -10,10 +10,10 @@ import world.bentobox.greenhouses.Greenhouses;
  * This class handles commands for admins
  *
  */
-class AdminCmd extends CompositeCommand {
+public class AdminCmd extends CompositeCommand {
 
-    public AdminCmd(Greenhouses greenhouses) {
-        super(greenhouses, "gadmin");
+    public AdminCmd(Greenhouses greenhouses, CompositeCommand parent) {
+        super(greenhouses, parent, "gadmin");
     }
 
     @Override
@@ -23,7 +23,7 @@ class AdminCmd extends CompositeCommand {
         this.setParametersHelp("greenhouses.admin.parameters");
         this.setDescription("greenhouses.admin.description");
 
-        new GreenhousesAdminReloadCommand(this);
+        //new GreenhousesAdminReloadCommand(this);
         new GreenhousesAdminInfoCommand(this);
     }
 

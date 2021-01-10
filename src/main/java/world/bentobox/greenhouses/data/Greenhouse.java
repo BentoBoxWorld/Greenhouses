@@ -162,6 +162,14 @@ public class Greenhouse implements DataObject {
     }
 
     /**
+     * @return a bounding box of the greenhouse that does not include the walls or roof
+     */
+    @Nullable
+    public BoundingBox getInternalBoundingBox() {
+        return boundingBox == null ? null : boundingBox.clone().expand(-1D);
+    }
+
+    /**
      * @param boundingBox the boundingBox to set
      */
     public void setBoundingBox(BoundingBox boundingBox) {

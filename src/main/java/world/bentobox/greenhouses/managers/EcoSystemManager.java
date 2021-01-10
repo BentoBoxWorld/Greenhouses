@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.NumberConversions;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -85,10 +86,10 @@ public class EcoSystemManager {
         if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
             return;
         }
-        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
-                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY() && y > 0; y--) {
-                    Block b = gh.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
+        for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
+            for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
+                for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY() && y > 0; y--) {
+                    Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z)).getRelative(BlockFace.DOWN);
                     if (!b.isEmpty()) gh.getBiomeRecipe().convertBlock(gh, b);
                 }
             }
@@ -184,12 +185,12 @@ public class EcoSystemManager {
      * @param ignoreliquid - true if liquid blocks should be treated like air blocks
      * @return List of blocks
      */
-    List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
+    public List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
         List<Block> result = new ArrayList<>();
-        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX(); x++) {
-            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ(); z++) {
-                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
-                    Block b = gh.getWorld().getBlockAt(x, y, z);
+        for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
+            for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
+                for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY(); y--) {
+                    Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
                     if (!(b.isEmpty() || (ignoreLiquid && b.isLiquid()))
                             && (b.getRelative(BlockFace.UP).isEmpty()
                                     || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
