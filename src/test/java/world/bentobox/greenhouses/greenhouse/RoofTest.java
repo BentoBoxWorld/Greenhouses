@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 
 /**
@@ -42,6 +43,7 @@ public class RoofTest {
     @Mock
     private Greenhouses addon;
     private Settings s;
+    private AsyncWorldCache cache;
 
     /**
      * @throws java.lang.Exception
@@ -89,15 +91,17 @@ public class RoofTest {
         when(location.getBlock()).thenReturn(block);
         when(location.clone()).thenReturn(location);
 
+        cache = new AsyncWorldCache(world);
         // Test
-        roof = new Roof(location);
+        roof = new Roof(cache, location);
+        roof.findRoof();
     }
 
     @Test
     public void testNoGlass() {
         when(block.getType()).thenReturn(Material.AIR);
-        roof = new Roof(location);
-
+        roof = new Roof(cache, location);
+        roof.findRoof();
     }
 
     /**
@@ -138,14 +142,6 @@ public class RoofTest {
     @Test
     public void testGetArea() {
         assertEquals(1406, roof.getArea());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Roof#isRoofFound()}.
-     */
-    @Test
-    public void testIsRoofFound() {
-        assertTrue(roof.isRoofFound());
     }
 
     /**

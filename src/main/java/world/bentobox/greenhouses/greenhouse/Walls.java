@@ -3,6 +3,7 @@ package world.bentobox.greenhouses.greenhouse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.bukkit.Location;
@@ -43,7 +44,12 @@ public class Walls extends MinMaxXZ {
         }
     }
 
-    public Walls findWalls(Roof roof) {
+    /**
+     * Find walls given a roof
+     * @param roof - the roof
+     * @return Future walls
+     */
+    public CompletableFuture<Walls> findWalls(Roof roof) {
         // The player is under the roof
         // Assume the player is inside the greenhouse they are trying to create
         Location loc = roof.getLocation();
@@ -65,7 +71,7 @@ public class Walls extends MinMaxXZ {
         maxZ++;
         // Find the floor again, only looking within the walls
         floor = getFloorY(world, roof.getHeight(), minX, maxX, minZ,maxZ);
-        return this;
+        return CompletableFuture.completedFuture(this);
     }
 
     void lookAround(Location loc, WallFinder wf, Roof roof) {

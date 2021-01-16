@@ -46,4 +46,11 @@ public abstract class MinMaxXZ {
     public int getArea() {
         return (maxX - minX) * (maxZ - minZ);
     }
+
+    @Override
+    public String toString() {
+        return "MinMaxXZ [minX=" + minX + ", maxX=" + maxX + ", minZ=" + minZ + ", maxZ=" + maxZ + "]";
+    }
+
+
 }

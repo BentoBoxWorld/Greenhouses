@@ -3,6 +3,7 @@ package world.bentobox.greenhouses.managers;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,10 +12,12 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 public class GreenhouseFinder {
 
@@ -45,32 +48,50 @@ public class GreenhouseFinder {
     /**
      * Find out if there is a greenhouse here
      * @param location - start location
-     * @return GreenhouseResult class
+     * @return future GreenhouseResult class
      */
-    public Set<GreenhouseResult> find(Location location) {
+    public CompletableFuture<Set<GreenhouseResult>> find(Location location) {
+        CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
         Set<GreenhouseResult> result = new HashSet<>();
         redGlass.clear();
 
+        // Get a world cache
+        AsyncWorldCache cache = new AsyncWorldCache(location.getWorld());
         // Find the roof
-        Roof roof = new Roof(location);
-        if (!roof.isRoofFound()) {
-            result.add(GreenhouseResult.FAIL_NO_ROOF);
-            return result;
-        }
-        // Find the walls
-        Walls walls = new Walls().findWalls(roof);
-        // Make the initial greenhouse
-        gh = new Greenhouse(location.getWorld(), walls, roof.getHeight());
-        // Set the original biome
-        gh.setOriginalBiome(location.getBlock().getBiome());
+        Roof roof = new Roof(cache, location);
+        roof.findRoof().thenAccept(found -> {
+            if (!found) {
+                result.add(GreenhouseResult.FAIL_NO_ROOF);
+                r.complete(result);
+                return;
+            }
+            BentoBox.getInstance().logDebug(roof);
+            // Find the walls
+            new Walls().findWalls(roof).thenAccept(walls -> {
+                // Make the initial greenhouse
+                gh = new Greenhouse(location.getWorld(), walls, roof.getHeight());
+                // Set the original biome
+                gh.setOriginalBiome(location.getBlock().getBiome());
 
-        // Now check to see if the floor really is the floor and the walls follow the rules
-        result.addAll(checkGreenhouse(gh, roof, walls));
+                // Now check to see if the floor really is the floor and the walls follow the rules
+                checkGreenhouse(gh, roof, walls).thenAccept(c -> {
+                    result.addAll(c);
+                    r.complete(result);
+                });
+            });
 
-        return result;
+        });
+        return r;
     }
 
-    Set<GreenhouseResult> checkGreenhouse(Greenhouse gh2, Roof roof, Walls walls) {
+    /**
+     * Check the greenhouse has the right number of everything
+     * @param gh2 - greenhouse
+     * @param roof - roof object
+     * @param walls - walls object
+     * @return future set of Greenhouse Results
+     */
+    CompletableFuture<Set<GreenhouseResult>> checkGreenhouse(Greenhouse gh2, Roof roof, Walls walls) {
         Set<GreenhouseResult> result = new HashSet<>();
         World world = roof.getLocation().getWorld();
         int y;
@@ -101,7 +122,7 @@ public class GreenhouseFinder {
         }
 
         result.addAll(checkErrors(roof, y));
-        return result;
+        return CompletableFuture.completedFuture(result);
     }
 
     Collection<GreenhouseResult> checkErrors(Roof roof, int y) {

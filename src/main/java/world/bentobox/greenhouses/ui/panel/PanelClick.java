@@ -55,12 +55,15 @@ public class PanelClick implements ClickHandler {
             user.sendMessage("greenhouses.commands.user.make.error.already");
             return false;
         }
-        GhResult result = addon.getManager().tryToMakeGreenhouse(location, br);
+        addon.getManager().tryToMakeGreenhouse(location, br).thenAccept(r -> processResult(user, r));
+        return true;
+    }
 
+    void processResult(User user, GhResult result) {
         if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
             // Success
             user.sendMessage("greenhouses.commands.user.make.success", "[biome]", result.getFinder().getGh().getBiomeRecipe().getFriendlyName());
-            return true;
+            return;
         }
         result.getResults().forEach(r -> user.sendMessage("greenhouses.commands.user.make.error." + r.name()));
         if (!result.getFinder().getRedGlass().isEmpty()) {
@@ -69,8 +72,7 @@ public class PanelClick implements ClickHandler {
             Bukkit.getScheduler().runTaskLater(addon.getPlugin(), () -> result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
         }
         if (result.getResults().contains(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)) {
-           result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));         
+            result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));
         }
-        return true;
     }
 }

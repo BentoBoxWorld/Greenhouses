@@ -3,6 +3,7 @@ package world.bentobox.greenhouses.managers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
@@ -153,29 +154,36 @@ public class GreenhouseManager implements Listener {
      * If type is stated then only this specific type will be checked
      * @param location - location to start search from
      * @param greenhouseRecipe - recipe requested, or null for a best-effort search
-     * @return - greenhouse result {@link GhResult}
+     * @return - future greenhouse result {@link GhResult}
      */
-    public GhResult tryToMakeGreenhouse(Location location, BiomeRecipe greenhouseRecipe) {
+    public CompletableFuture<GhResult> tryToMakeGreenhouse(Location location, BiomeRecipe greenhouseRecipe) {
+        CompletableFuture<GhResult> r = new CompletableFuture<>();
         GreenhouseFinder finder = new GreenhouseFinder();
-        Set<GreenhouseResult> resultSet = finder.find(location);
-        if (!resultSet.isEmpty()) {
-            // Failure!
-            return new GhResult().setFinder(finder).setResults(resultSet);
-        }
-        // Check if the greenhouse meets the requested recipe
-        if (greenhouseRecipe != null) {
-            resultSet = greenhouseRecipe.checkRecipe(finder.getGh());
-            if (resultSet.isEmpty()) {
-                // Success - set recipe and add to map
-                finder.getGh().setBiomeRecipe(greenhouseRecipe);
-                resultSet.add(map.addGreenhouse(finder.getGh()));
-                activateGreenhouse(finder.getGh());
-                handler.saveObjectAsync(finder.getGh());
+        finder.find(location).thenAccept(resultSet -> {
+            if (!resultSet.isEmpty()) {
+                // Failure!
+                r.complete(new GhResult().setFinder(finder).setResults(resultSet));
+                return;
             }
-            return new GhResult().setFinder(finder).setResults(resultSet);
-        }
+            // Check if the greenhouse meets the requested recipe
+            if (greenhouseRecipe != null) {
+                checkRecipe(r, finder, greenhouseRecipe, resultSet);
+                return;
+            }
 
-        // Try ordered recipes
+            // Try ordered recipes
+            findRecipe(finder, resultSet);
+            r.complete(new GhResult().setFinder(finder).setResults(resultSet));
+        });
+        return r;
+    }
+
+    /**
+     * Tries to match the greenhouse to a recipe by going through all of them in order
+     * @param finder - finder object
+     * @param resultSet - result set from find
+     */
+    private void findRecipe(GreenhouseFinder finder, Set<GreenhouseResult> resultSet) {
         resultSet.add(addon.getRecipes().getBiomeRecipes().stream().sorted()
                 .filter(r -> r.checkRecipe(finder.getGh()).isEmpty()).findFirst()
                 .map(r -> {
@@ -185,7 +193,29 @@ public class GreenhouseManager implements Listener {
                     handler.saveObjectAsync(finder.getGh());
                     return map.addGreenhouse(finder.getGh());
                 }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
-        return new GhResult().setFinder(finder).setResults(resultSet);
+    }
+
+    /**
+     * Checks to see if the greenhouse meets the designated recipe and returns the result
+     * @param r - completable future
+     * @param finder - finder object
+     * @param greenhouseRecipe - recipe requested
+     * @param resultSet - result set from finder
+     * @return Greenhouse result
+     */
+    GhResult checkRecipe(CompletableFuture<GhResult> r, GreenhouseFinder finder, BiomeRecipe greenhouseRecipe, Set<GreenhouseResult> resultSet) {
+        resultSet = greenhouseRecipe.checkRecipe(finder.getGh());
+        if (resultSet.isEmpty()) {
+            // Success - set recipe and add to map
+            finder.getGh().setBiomeRecipe(greenhouseRecipe);
+            resultSet.add(map.addGreenhouse(finder.getGh()));
+            activateGreenhouse(finder.getGh());
+            handler.saveObjectAsync(finder.getGh());
+        }
+        GhResult recipe = new GhResult().setFinder(finder).setResults(resultSet);
+        r.complete(recipe);
+        return recipe;
+
     }
 
     private void activateGreenhouse(Greenhouse gh) {

@@ -107,11 +107,12 @@ public class GreenhouseFinderTest {
     @Test
     public void testCheckGreenhouse() {
         Greenhouse gh2 = new Greenhouse(world, walls, ROOF_HEIGHT);
-        Set<GreenhouseResult> result = gf.checkGreenhouse(gh2, roof, walls);
-        assertTrue(result.isEmpty()); // Success
-        assertEquals(441, gf.getWallBlockCount());
-        assertEquals(0, gf.getWallDoors());
-        assertEquals(0, gf.getGhHopper());
+        gf.checkGreenhouse(gh2, roof, walls).thenAccept(result -> {
+            assertTrue(result.isEmpty()); // Success
+            assertEquals(441, gf.getWallBlockCount());
+            assertEquals(0, gf.getWallDoors());
+            assertEquals(0, gf.getGhHopper());
+        });
     }
 
     /**

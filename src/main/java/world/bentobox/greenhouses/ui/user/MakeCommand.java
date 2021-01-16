@@ -76,7 +76,7 @@ class MakeCommand extends CompositeCommand  {
         return getRecipes(user).get(arg);
     }
     /**
-     * Get a string list of recipies the player has permission to use
+     * Get a string list of recipes the player has permission to use
      * @param user - user
      * @return list
      */
@@ -99,7 +99,12 @@ class MakeCommand extends CompositeCommand  {
             user.sendMessage("greenhouses.commands.user.make.error.already");
             return false;
         }
-        GhResult result = ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br);
+        // Try to make the greenhouse
+        ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br).thenAccept(result -> informUser(user, br, result));
+        return true;
+    }
+
+    private boolean informUser(User user, BiomeRecipe br, GhResult result) {
         if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
             // Success
             user.sendMessage("greenhouses.commands.user.make.success", "[biome]", result.getFinder().getGh().getBiomeRecipe().getFriendlyName());
@@ -114,7 +119,7 @@ class MakeCommand extends CompositeCommand  {
         if (br != null && result.getResults().contains(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)) {
             result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));
         }
-        return true;
+        return false;
     }
 
     @Override
