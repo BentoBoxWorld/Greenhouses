@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 public class Walls extends MinMaxXZ {
     private static final List<Material> WALL_BLOCKS;
@@ -28,7 +29,7 @@ public class Walls extends MinMaxXZ {
 
     private int floor;
 
-    private static final List<BlockFace> ORDINALS = Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST);
+    private final AsyncWorldCache cache;
 
     class WallFinder {
         int radiusMinX;
@@ -42,6 +43,16 @@ public class Walls extends MinMaxXZ {
         boolean isSearching() {
             return !stopMinX || !stopMaxX || !stopMinZ || !stopMaxZ;
         }
+        @Override
+        public String toString() {
+            return "WallFinder [radiusMinX=" + radiusMinX + ", radiusMaxX=" + radiusMaxX + ", radiusMinZ=" + radiusMinZ
+                    + ", radiusMaxZ=" + radiusMaxZ + ", stopMinX=" + stopMinX + ", stopMaxX=" + stopMaxX + ", stopMinZ="
+                    + stopMinZ + ", stopMaxZ=" + stopMaxZ + "]";
+        }
+    }
+
+    public Walls(AsyncWorldCache cache) {
+        this.cache = cache;
     }
 
     /**
@@ -49,12 +60,17 @@ public class Walls extends MinMaxXZ {
      * @param roof - the roof
      * @return Future walls
      */
-    public CompletableFuture<Walls> findWalls(Roof roof) {
+    public CompletableFuture<Walls> findWalls(final Roof roof) {
+        CompletableFuture<Walls> r = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> findWalls(r, roof));
+        return r;
+    }
+
+    Walls findWalls(CompletableFuture<Walls> r, Roof roof) {
         // The player is under the roof
         // Assume the player is inside the greenhouse they are trying to create
-        Location loc = roof.getLocation();
-        World world = loc.getWorld();
-        floor = getFloorY(world, roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ());
+        final Location loc = roof.getLocation();
+        floor = getFloorY(roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ());
         // Now start with the player's x and z location
         WallFinder wf = new WallFinder();
         minX = loc.getBlockX();
@@ -70,12 +86,14 @@ public class Walls extends MinMaxXZ {
         minZ--;
         maxZ++;
         // Find the floor again, only looking within the walls
-        floor = getFloorY(world, roof.getHeight(), minX, maxX, minZ,maxZ);
-        return CompletableFuture.completedFuture(this);
+        floor = getFloorY(roof.getHeight(), minX, maxX, minZ,maxZ);
+        // Complete on main thread
+        Bukkit.getScheduler().runTask(BentoBox.getInstance(), () -> r.complete(this));
+        return this;
+
     }
 
-    void lookAround(Location loc, WallFinder wf, Roof roof) {
-        World world = loc.getWorld();
+    void lookAround(final Location loc, WallFinder wf, final Roof roof) {
         // Look around player in an ever expanding cube
         minX = loc.getBlockX() - wf.radiusMinX;
         maxX = loc.getBlockX() + wf.radiusMaxX;
@@ -87,7 +105,7 @@ public class Walls extends MinMaxXZ {
                     // Only look around outside edge
                     if (!((x > minX && x < maxX) && (z > minZ && z < maxZ))) {
                         // Look at block faces
-                        lookAtBlockFaces(wf, world, x, y, z);
+                        lookAtBlockFaces(wf, x, y, z);
                     }
                 }
             }
@@ -123,48 +141,33 @@ public class Walls extends MinMaxXZ {
         }
     }
 
-    void lookAtBlockFaces(WallFinder wf, World world, int x, int y, int z) {
-        for (BlockFace bf: ORDINALS) {
-            switch (bf) {
-            case EAST:
-                // positive x
-                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                    wf.stopMaxX = true;
-                }
-                break;
-            case WEST:
-                // negative x
-                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                    wf.stopMinX = true;
-                }
-                break;
-            case NORTH:
-                // negative Z
-                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                    wf.stopMinZ = true;
-                }
-                break;
-            case SOUTH:
-                // positive Z
-                if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getRelative(bf).getType())) {
-                    wf.stopMaxZ = true;
-                }
-                break;
-            default:
-                break;
-            }
+    void lookAtBlockFaces(WallFinder wf, int x, int y, int z) {
+        // positive x
+        if (WALL_BLOCKS.contains(cache.getBlockType(x + 1, y, z))) {
+            wf.stopMaxX = true;
         }
-
+        // negative x
+        if (WALL_BLOCKS.contains(cache.getBlockType(x - 1, y, z))) {
+            wf.stopMinX = true;
+        }
+        // negative Z
+        if (WALL_BLOCKS.contains(cache.getBlockType(x, y, z - 1))) {
+            wf.stopMinZ = true;
+        }
+        // positive Z
+        if (WALL_BLOCKS.contains(cache.getBlockType(x, y, z + 1))) {
+            wf.stopMaxZ = true;
+        }
     }
 
-    int getFloorY(World world, int y, int minX, int maxX, int minZ, int maxZ) {
+    int getFloorY(int y, int minX, int maxX, int minZ, int maxZ) {
         // Find the floor - defined as the last y under the roof where there are no wall blocks
         int wallBlockCount;
         do {
             wallBlockCount = 0;
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (WALL_BLOCKS.contains(world.getBlockAt(x, y, z).getType())) {
+                    if (WALL_BLOCKS.contains(cache.getBlockType(x, y, z))) {
                         wallBlockCount++;
                     }
                 }

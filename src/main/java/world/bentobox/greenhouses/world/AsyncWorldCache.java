@@ -11,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.util.Pair;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -55,7 +54,7 @@ public class AsyncWorldCache {
      * @param z - block coord
      * @return chunk snapshot
      */
-    private ChunkSnapshot getSnap(int x, int z) {
+    private ChunkSnapshot getSnap(final int x, final int z) {
         // Convert from block to chunk coords
         Pair<Integer, Integer> key = new Pair<>((x >> 4), (z >> 4));
         // Get from cache if it is available
@@ -84,12 +83,13 @@ public class AsyncWorldCache {
      * @param z block coordinate
      * @return material type
      */
-    public Material getBlockType(int x, int y, int z) {
+    public Material getBlockType(final int x, final int y, final int z) {
         // Convert block coords to chunk coords
-        int xx = x >= 0 ? x % 16 : 15 + (x % 16);
-        int zz = z >= 0 ? z % 16 : 15 + (z % 16);
+        // TODO: simplify this - it must be easier than this!
+        int xx = x >= 0 ? x % 16 : (16 + (x % 16)) % 16;
+        int zz = z >= 0 ? z % 16 : (16 + (z % 16)) % 16;
         Material m = getSnap(x,z).getBlockType(xx, y, zz);
-        BentoBox.getInstance().logDebug(m);
+
         return m;
     }
 

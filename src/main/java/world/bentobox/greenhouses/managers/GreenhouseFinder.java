@@ -12,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
@@ -65,9 +64,8 @@ public class GreenhouseFinder {
                 r.complete(result);
                 return;
             }
-            BentoBox.getInstance().logDebug(roof);
             // Find the walls
-            new Walls().findWalls(roof).thenAccept(walls -> {
+            new Walls(cache).findWalls(roof).thenAccept(walls -> {
                 // Make the initial greenhouse
                 gh = new Greenhouse(location.getWorld(), walls, roof.getHeight());
                 // Set the original biome

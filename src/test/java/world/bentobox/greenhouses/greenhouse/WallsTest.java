@@ -7,10 +7,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.CompletableFuture;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,22 +22,22 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.greenhouse.Walls.WallFinder;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 /**
  * @author tastybento
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Greenhouses.class)
+@PrepareForTest({Bukkit.class, Greenhouses.class})
 public class WallsTest {
 
     @Mock
     private Roof roof;
-    @Mock
-    private Block block;
     @Mock
     private Location location;
     @Mock
@@ -47,6 +49,12 @@ public class WallsTest {
     @Mock
     private Greenhouses addon;
     private Settings s;
+    @Mock
+    private BentoBox plugin;
+    @Mock
+    private AsyncWorldCache cache;
+
+    private CompletableFuture<Walls> r;
 
 
     /**
@@ -54,27 +62,26 @@ public class WallsTest {
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
         when(Greenhouses.getInstance()).thenReturn(addon);
         s = new Settings();
         when(addon.getSettings()).thenReturn(s);
+        when(addon.getPlugin()).thenReturn(plugin);
 
-
-        walls = new Walls();
+        walls = new Walls(cache);
         when(world.getMaxHeight()).thenReturn(255);
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
-        when(world.getBlockAt(any(Location.class))).thenReturn(block);
         when(location.getWorld()).thenReturn(world);
         when(location.getBlockX()).thenReturn(10);
         when(location.getBlockY()).thenReturn(10);
         when(location.getBlockZ()).thenReturn(10);
-        when(location.getBlock()).thenReturn(block);
         when(location.clone()).thenReturn(location);
-        when(block.getRelative(any())).thenReturn(block);
-        when(block.getType()).thenReturn(Material.GLASS);
+        when(cache.getBlockType(any())).thenReturn(Material.GLASS);
+        when(cache.getBlockType(anyInt(),anyInt(),anyInt())).thenReturn(Material.GLASS);
         when(roof.getHeight()).thenReturn(1);
         when(roof.getLocation()).thenReturn(location);
 
+        r = new CompletableFuture<>();
     }
 
     /**
@@ -82,7 +89,7 @@ public class WallsTest {
      */
     @Test
     public void testFindWalls() {
-        walls.findWalls(roof);
+        walls.findWalls(r, roof);
         assertEquals("Walls [minX=-2, maxX=11, minZ=-2, maxZ=11, floor=0]", walls.toString());
     }
 
@@ -147,7 +154,7 @@ public class WallsTest {
     @Test
     public void testLookAtBlockFaces() {
         WallFinder wf = walls.new WallFinder();
-        walls.lookAtBlockFaces(wf, world, 0, 5, -1);
+        walls.lookAtBlockFaces(wf, 0, 5, -1);
         assertTrue(wf.stopMaxX);
         assertTrue(wf.stopMaxZ);
         assertTrue(wf.stopMinX);
@@ -159,9 +166,9 @@ public class WallsTest {
      */
     @Test
     public void testLookAtBlockFacesNoGlass() {
-        when(block.getType()).thenReturn(Material.AIR);
+        when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.AIR);
         WallFinder wf = walls.new WallFinder();
-        walls.lookAtBlockFaces(wf, world, 0, 5, -1);
+        walls.lookAtBlockFaces(wf, 0, 5, -1);
         assertFalse(wf.stopMaxX);
         assertFalse(wf.stopMaxZ);
         assertFalse(wf.stopMinX);
@@ -173,7 +180,7 @@ public class WallsTest {
      */
     @Test
     public void testGetFloorYZeroY() {
-        assertEquals(0, walls.getFloorY(world, 10, 0, 1, 0, 1));
+        assertEquals(0, walls.getFloorY(10, 0, 1, 0, 1));
     }
 
     /**
@@ -181,11 +188,11 @@ public class WallsTest {
      */
     @Test
     public void testGetFloorY() {
-        when(block.getType()).thenReturn(Material.GLASS, Material.GLASS,
+        when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS,
                 Material.AIR);
-        assertEquals(8, walls.getFloorY(world, 10, 0, 1, 0, 1));
+        assertEquals(8, walls.getFloorY(10, 0, 1, 0, 1));
     }
 
     /**

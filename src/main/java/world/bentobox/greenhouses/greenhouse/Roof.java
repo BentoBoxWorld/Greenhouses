@@ -3,6 +3,8 @@ package world.bentobox.greenhouses.greenhouse;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -11,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.NonNull;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
@@ -22,7 +25,6 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
  *
  */
 public class Roof extends MinMaxXZ {
-    private static final BentoBox PLUGIN = Greenhouses.getInstance().getPlugin();
     private static final List<Material> ROOF_BLOCKS;
     static {
         List<Material> r = Arrays.stream(Material.values())
@@ -38,8 +40,8 @@ public class Roof extends MinMaxXZ {
      * @param m - material
      * @return true if roof material
      */
-    public static boolean roofBlocks(Material m) {
-        return ROOF_BLOCKS.contains(m)
+    public static boolean roofBlocks(@NonNull Material m) {
+        return ROOF_BLOCKS.contains(Objects.requireNonNull(m))
                 || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone())
                 || (m.name().endsWith("GLASS_PANE") && Greenhouses.getInstance().getSettings().isAllowPanes());
     }
@@ -114,29 +116,32 @@ public class Roof extends MinMaxXZ {
         Vector loc = location.toVector();
         // This section tries to find a roof block
         // Try just going up - this covers every case except if the player is standing under a hole
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> {
             boolean found = findRoof(loc);
-            Bukkit.getScheduler().runTask(PLUGIN, () -> r.complete(found));
+            Bukkit.getScheduler().runTask(BentoBox.getInstance(), () -> r.complete(found));
         });
         return r;
     }
 
-    private boolean findRoof(Vector loc) {
+    boolean findRoof(Vector loc) {
         // This does a ever-growing check around the player to find a wall block. It is possible for the player
         // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
-        int roofY = loc.getBlockY();
-        for (int y = roofY; y < world.getMaxHeight(); y++) {
-            if (roofBlocks(cache.getBlockType(loc.getBlockX(),y,loc.getBlockZ()))) {
+        int startY = loc.getBlockY();
+        for (int y = startY; y < world.getMaxHeight(); y++) {
+            Vector v = new Vector(loc.getBlockX(),y,loc.getBlockZ());
+            if (roofBlocks(cache.getBlockType(v))) {
                 roofFound = true;
-                loc = new Vector(loc.getBlockX(),y,loc.getBlockZ());
+                loc = v;
                 break;
             }
         }
         // If the roof was not found start going around in circles until something is found
         // Expand in ever increasing squares around location until a wall block is found
-        spiralSearch(loc, roofY);
         if (!roofFound) {
-            return false;
+            loc = spiralSearch(loc, startY);
+            if (!roofFound) {
+                return false;
+            }
         }
         // Record the height
         this.height = loc.getBlockY();
@@ -183,47 +188,49 @@ public class Roof extends MinMaxXZ {
         return location;
     }
 
-    private void spiralSearch(Vector v, int roofY) {
-        for (int radius = 0; radius < 3 && !roofFound; radius++) {
-            for (int x = v.getBlockX() - radius; x <= v.getBlockX() + radius && !roofFound; x++) {
-                for (int z = v.getBlockZ() - radius; z <= v.getBlockZ() + radius && !roofFound; z++) {
+    private Vector spiralSearch(Vector v, int startY) {
+        for (int radius = 0; radius < 3; radius++) {
+            for (int x = v.getBlockX() - radius; x <= v.getBlockX() + radius; x++) {
+                for (int z = v.getBlockZ() - radius; z <= v.getBlockZ() + radius; z++) {
                     if (!((x > v.getBlockX() - radius && x < v.getBlockX() + radius) && (z > v.getBlockZ() - radius && z < v.getBlockZ() + radius))) {
-                        checkVertically(v, x, roofY, z);
+                        Optional<Vector> r = checkVertically(x, startY, z);
+                        if (r.isPresent()) {
+                            return r.get();
+                        }
                     }
                 }
             }
         }
-
+        return v;
     }
 
     /**
      * Get highest roof block
      * @param v - vector of search block
      * @param x - x coord of current search
-     * @param roofY - roof y coord
+     * @param startY - starting y coord
      * @param z - z coord of current search
      */
-    private void checkVertically(Vector v, final int x, final int roofY, final int z) {
-        if (!Walls.wallBlocks(cache.getBlockType(x, roofY, z))) {
+    private Optional<Vector> checkVertically(final int x, final int startY, final int z) {
+        if (!Walls.wallBlocks(cache.getBlockType(x, startY, z))) {
             // Look up
-            for (int y = roofY; y < world.getMaxHeight() && !roofFound; y++) {
+            for (int y = startY; y < world.getMaxHeight() && !roofFound; y++) {
                 if (roofBlocks(cache.getBlockType(x,y,z))) {
+
                     roofFound = true;
-                    // Move roof up because there is a higher block
-                    v = new Vector(x,y,z);
+                    // Roof block found
+                    return Optional.of(new Vector(x,y,z));
                 }
             }
         }
-
+        return Optional.empty();
     }
-
 
     @Override
     public String toString() {
-        return "Roof [" + (cache != null ? "cache=" + cache + ", " : "") + "height=" + height + ", "
-                + (location != null ? "location=" + location + ", " : "") + "roofFound=" + roofFound + ", "
-                + (world != null ? "world=" + world + ", " : "") + "minX=" + minX + ", maxX=" + maxX + ", minZ=" + minZ
-                + ", maxZ=" + maxZ + "]";
+        return "Roof [height=" + height + ", roofFound=" + roofFound + ", minX=" + minX + ", maxX=" + maxX + ", minZ="
+                + minZ + ", maxZ=" + maxZ + "]";
     }
+
 
 }
