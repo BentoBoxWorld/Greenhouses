@@ -3,14 +3,14 @@ package world.bentobox.greenhouses.greenhouse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,14 +35,13 @@ public class RoofTest {
 
     private Roof roof;
     @Mock
-    private Block block;
-    @Mock
     private Location location;
     @Mock
     private World world;
     @Mock
     private Greenhouses addon;
     private Settings s;
+    @Mock
     private AsyncWorldCache cache;
 
     /**
@@ -57,7 +56,7 @@ public class RoofTest {
 
         when(world.getMaxHeight()).thenReturn(255);
         // Block
-        when(block.getType()).thenReturn(Material.AIR, Material.AIR, Material.AIR, Material.AIR,
+        when(cache.getBlockType(any())).thenReturn(Material.AIR, Material.AIR, Material.AIR, Material.AIR,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
@@ -82,26 +81,22 @@ public class RoofTest {
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS, Material.GLASS, Material.GLASS,
                 Material.AIR);
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
-        when(world.getBlockAt(any(Location.class))).thenReturn(block);
         when(location.getWorld()).thenReturn(world);
         when(location.getBlockX()).thenReturn(10);
         when(location.getBlockY()).thenReturn(10);
         when(location.getBlockZ()).thenReturn(10);
-        when(location.getBlock()).thenReturn(block);
         when(location.clone()).thenReturn(location);
 
-        cache = new AsyncWorldCache(world);
         // Test
         roof = new Roof(cache, location);
-        roof.findRoof();
+        assertTrue(roof.findRoof(new Vector(10,10,10)));
     }
 
     @Test
     public void testNoGlass() {
-        when(block.getType()).thenReturn(Material.AIR);
+        when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.AIR);
         roof = new Roof(cache, location);
-        roof.findRoof();
+        assertFalse(roof.findRoof(new Vector(10,10,10)));
     }
 
     /**
@@ -165,7 +160,7 @@ public class RoofTest {
      */
     @Test
     public void testToString() {
-        assertTrue(roof.toString().endsWith("minX=-9, maxX=28, minZ=-9, maxZ=29, height=14, roofFound=true]"));
+        assertEquals("Roof [height=14, roofFound=true, minX=-9, maxX=28, minZ=-9, maxZ=29]", roof.toString());
     }
 
     /**
