@@ -203,7 +203,7 @@ public class Greenhouse implements DataObject {
     /**
      * @return the world
      */
-    @NonNull
+    @Nullable
     public World getWorld() {
         return this.getLocation().getWorld();
     }

@@ -1,15 +1,18 @@
 package world.bentobox.greenhouses.managers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
@@ -167,12 +170,17 @@ public class GreenhouseManager implements Listener {
             }
             // Check if the greenhouse meets the requested recipe
             if (greenhouseRecipe != null) {
-                checkRecipe(finder, greenhouseRecipe, resultSet).thenAccept(r::complete);
+                checkRecipe(finder, greenhouseRecipe, resultSet).thenAccept(rs -> {
+                    r.complete(rs);
+                });
                 return;
             }
             // Try ordered recipes
-            findRecipe(finder, resultSet);
-            r.complete(new GhResult().setFinder(finder).setResults(resultSet));
+            findRecipe(finder).thenAccept(rs -> {
+                resultSet.addAll(rs);
+                r.complete(new GhResult().setFinder(finder).setResults(resultSet));
+            });
+
         });
         return r;
     }
@@ -182,18 +190,29 @@ public class GreenhouseManager implements Listener {
      * @param finder - finder object
      * @param resultSet - result set from find
      */
-    private void findRecipe(GreenhouseFinder finder, Set<GreenhouseResult> resultSet) {
-        // TODO
-        /*
-        resultSet.add(addon.getRecipes().getBiomeRecipes().stream().sorted()
-                .filter(r -> r.checkRecipe(finder.getGh()).isEmpty()).findFirst()
-                .map(r -> {
-                    // Success - set recipe and add to map
-                    finder.getGh().setBiomeRecipe(r);
-                    activateGreenhouse(finder.getGh());
-                    handler.saveObjectAsync(finder.getGh());
-                    return map.addGreenhouse(finder.getGh());
-                }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));*/
+    private CompletableFuture<Set<GreenhouseResult>> findRecipe(GreenhouseFinder finder) {
+        CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
+        // Get sorted list of all recipes
+        List<BiomeRecipe> list = addon.getRecipes().getBiomeRecipes().stream().sorted().collect(Collectors.toList());
+        findRecipe(r, list, finder);
+        return r;
+    }
+
+    private void findRecipe(CompletableFuture<Set<GreenhouseResult>> r, List<BiomeRecipe> list,
+            GreenhouseFinder finder) {
+        if (list.isEmpty()) {
+            r.complete(Collections.singleton(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
+            return;
+        }
+        BiomeRecipe br = list.get(0);
+        list.remove(0);
+        br.checkRecipe(finder.getGh()).thenAccept(results -> {
+            if (results.isEmpty()) {
+                findRecipe(r, list, finder);
+            } else {
+                r.complete(results);
+            }
+        });
     }
 
     /**

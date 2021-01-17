@@ -75,13 +75,13 @@ public class AsyncWorldCache {
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
-        ChunkSnapshot cs;
+        ChunkSnapshot cs = null;
         try {
             // Block on getting the chunk because this is running async
             cs = getAChunk(key.x, key.z).get();
         } catch (InterruptedException | ExecutionException e) {
-            // Try again...
-            return getSnap(x,z);
+            Greenhouses.getInstance().logError("Could not get chunk! " + e);
+            Thread.currentThread().interrupt();
         }
         // Store in cache
         cache.put(key, cs);

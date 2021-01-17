@@ -86,6 +86,11 @@ class MakeCommand extends CompositeCommand  {
                 .collect(Collectors.toMap(br -> br.getName(), br -> br));
     }
 
+    /**
+     * @param user - user
+     * @param br  requested biome recipe, or null to try anything
+     * @return true if successful
+     */
     private boolean makeGreenhouse(User user, BiomeRecipe br) {
         // Check flag
         if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
