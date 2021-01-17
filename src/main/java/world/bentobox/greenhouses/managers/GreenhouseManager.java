@@ -12,7 +12,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
@@ -170,9 +169,7 @@ public class GreenhouseManager implements Listener {
             }
             // Check if the greenhouse meets the requested recipe
             if (greenhouseRecipe != null) {
-                checkRecipe(finder, greenhouseRecipe, resultSet).thenAccept(rs -> {
-                    r.complete(rs);
-                });
+                checkRecipe(finder, greenhouseRecipe, resultSet).thenAccept(r::complete);
                 return;
             }
             // Try ordered recipes
@@ -208,9 +205,9 @@ public class GreenhouseManager implements Listener {
         list.remove(0);
         br.checkRecipe(finder.getGh()).thenAccept(results -> {
             if (results.isEmpty()) {
-                findRecipe(r, list, finder);
+                r.complete(Collections.singleton(GreenhouseResult.SUCCESS));
             } else {
-                r.complete(results);
+                findRecipe(r, list, finder);
             }
         });
     }
@@ -232,6 +229,7 @@ public class GreenhouseManager implements Listener {
                 resultSet.add(map.addGreenhouse(finder.getGh()));
                 activateGreenhouse(finder.getGh());
                 handler.saveObjectAsync(finder.getGh());
+                rs.addAll(resultSet);
             }
             GhResult recipe = new GhResult().setFinder(finder).setResults(rs);
             r.complete(recipe);
