@@ -104,6 +104,8 @@ public class AsyncWorldCache {
             return getSnap(x,z).getBlockType(xx, y, zz);
         } catch (InterruptedException | ExecutionException e) {
             Greenhouses.getInstance().logError("Chunk could not be obtained async! " + e);
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
             return Material.AIR;
         }
     }
