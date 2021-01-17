@@ -55,7 +55,7 @@ public class GreenhouseFinder {
         // Find the roof
         Roof roof = new Roof(cache, location);
         roof.findRoof().thenAccept(found -> {
-            if (!found) {
+            if (Boolean.FALSE.equals(found)) {
                 result.add(GreenhouseResult.FAIL_NO_ROOF);
                 r.complete(result);
                 return;
@@ -68,7 +68,7 @@ public class GreenhouseFinder {
                 gh.setOriginalBiome(location.getBlock().getBiome());
 
                 // Now check to see if the floor really is the floor and the walls follow the rules
-                checkGreenhouse(cache, gh, roof, walls).thenAccept(c -> {
+                checkGreenhouse(cache, roof, walls).thenAccept(c -> {
                     result.addAll(c);
                     r.complete(result);
                 });
@@ -86,13 +86,13 @@ public class GreenhouseFinder {
      * @param walls - walls object
      * @return future set of Greenhouse Results
      */
-    CompletableFuture<Set<GreenhouseResult>> checkGreenhouse(AsyncWorldCache cache, Greenhouse gh2, Roof roof, Walls walls) {
+    CompletableFuture<Set<GreenhouseResult>> checkGreenhouse(AsyncWorldCache cache, Roof roof, Walls walls) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGHAsync(r, cache, gh2, roof, walls));
+        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGHAsync(r, cache, roof, walls));
         return r;
     }
 
-    private Set<GreenhouseResult> checkGHAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache, Greenhouse gh2,
+    private Set<GreenhouseResult> checkGHAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
             Roof roof, Walls walls) {
         Set<GreenhouseResult> result = new HashSet<>();
         cc = new CounterCheck();

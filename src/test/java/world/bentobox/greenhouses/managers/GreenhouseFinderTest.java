@@ -100,8 +100,7 @@ public class GreenhouseFinderTest {
      */
     @Test
     public void testCheckGreenhouse() {
-        Greenhouse gh2 = new Greenhouse(world, walls, ROOF_HEIGHT);
-        gf.checkGreenhouse(cache, gh2, roof, walls).thenAccept(result -> {
+        gf.checkGreenhouse(cache, roof, walls).thenAccept(result -> {
             assertTrue(result.isEmpty()); // Success
             assertEquals(441, gf.getWallBlockCount());
             assertEquals(0, gf.getWallDoors());
