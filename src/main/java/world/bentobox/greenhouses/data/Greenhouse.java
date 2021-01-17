@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -50,6 +51,12 @@ public class Greenhouse implements DataObject {
      */
     public Greenhouse() {}
 
+    /**
+     * Create a greenhouse
+     * @param world - world
+     * @param walls - wall object
+     * @param ceilingHeight - ceiling height
+     */
     public Greenhouse(World world, Walls walls, int ceilingHeight) {
         this.location = new Location(world, walls.getMinX(), walls.getFloor(), walls.getMinZ());
         Location location2 = new Location(world, walls.getMaxX() + 1D, ceilingHeight + 1D, walls.getMaxZ() + 1D);
@@ -147,10 +154,10 @@ public class Greenhouse implements DataObject {
     }
 
     /**
-     * @param roofHopperLocation the roofHopperLocation to set
+     * @param v the roofHopperLocation to set
      */
-    public void setRoofHopperLocation(Location roofHopperLocation) {
-        this.roofHopperLocation = roofHopperLocation;
+    public void setRoofHopperLocation(Vector v) {
+        this.roofHopperLocation = v.toLocation(getWorld());
     }
 
     /**

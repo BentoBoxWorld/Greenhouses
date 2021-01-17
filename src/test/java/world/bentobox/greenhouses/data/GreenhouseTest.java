@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -192,9 +193,11 @@ public class GreenhouseTest {
      */
     @Test
     public void testSetRoofHopperLocation() {
-        Location l = new Location(world, 1,2,3);
-        gh.setRoofHopperLocation(l);
-        assertEquals(l, gh.getRoofHopperLocation());
+        gh.setRoofHopperLocation(new Vector(1,2,3));
+        assertEquals(world, gh.getRoofHopperLocation().getWorld());
+        assertEquals(1, gh.getRoofHopperLocation().getBlockX());
+        assertEquals(2, gh.getRoofHopperLocation().getBlockY());
+        assertEquals(3, gh.getRoofHopperLocation().getBlockZ());
     }
 
     /**

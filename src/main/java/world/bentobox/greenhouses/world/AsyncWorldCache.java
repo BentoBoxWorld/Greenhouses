@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.util.Pair;
@@ -34,6 +35,19 @@ public class AsyncWorldCache {
         cache = new HashMap<>();
     }
 
+    /**
+     * @return the world's environment
+     */
+    public Environment getEnvironment() {
+        return world.getEnvironment();
+    }
+
+    /**
+     * @return maximum height of this world
+     */
+    public int getMaxHeight() {
+        return world.getMaxHeight();
+    }
 
     /**
      * Get chunk snapshot from world
@@ -89,7 +103,6 @@ public class AsyncWorldCache {
         int xx = x >= 0 ? x % 16 : (16 + (x % 16)) % 16;
         int zz = z >= 0 ? z % 16 : (16 + (z % 16)) % 16;
         Material m = getSnap(x,z).getBlockType(xx, y, zz);
-
         return m;
     }
 
@@ -100,6 +113,15 @@ public class AsyncWorldCache {
      */
     public Material getBlockType(Vector v) {
         return getBlockType(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+    }
+
+    /**
+     * Check if block is AIR
+     * @param vector - vector
+     * @return true if AIR
+     */
+    public boolean isEmpty(Vector vector) {
+        return getBlockType(vector).equals(Material.AIR);
     }
 
 }

@@ -113,8 +113,8 @@ class MakeCommand extends CompositeCommand  {
         result.getResults().forEach(r -> user.sendMessage("greenhouses.commands.user.make.error." + r.name()));
         if (!result.getFinder().getRedGlass().isEmpty()) {
             // Show red glass
-            result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, Material.RED_STAINED_GLASS.createBlockData()));
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
+            result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg.toLocation(user.getWorld()), Material.RED_STAINED_GLASS.createBlockData()));
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().stream().map(v -> v.toLocation(user.getWorld())).forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
         }
         if (br != null && result.getResults().contains(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)) {
             result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));

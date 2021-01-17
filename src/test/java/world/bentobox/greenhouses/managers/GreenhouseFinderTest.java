@@ -2,7 +2,6 @@ package world.bentobox.greenhouses.managers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,7 +9,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +33,7 @@ import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 /**
  * @author tastybento
@@ -54,13 +53,14 @@ public class GreenhouseFinderTest {
     private Location location;
     // Class under test
     private GreenhouseFinder gf;
-    @Mock
-    private Block block;
     private CounterCheck cc;
     @Mock
     private Roof roof;
     @Mock
     private Walls walls;
+
+    @Mock
+    private AsyncWorldCache cache;
 
     /**
      * @throws java.lang.Exception
@@ -75,13 +75,8 @@ public class GreenhouseFinderTest {
         when(location.getWorld()).thenReturn(world);
 
         // Block
-        when(block.getX()).thenReturn(5);
-        when(block.getY()).thenReturn(14);
-        when(block.getZ()).thenReturn(25);
-        when(block.getType()).thenReturn(Material.GLASS);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getWorld()).thenReturn(world);
-
+        when(cache.getBlockType(any())).thenReturn(Material.GLASS);
+        when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.GLASS);
         // Roof
         when(roof.getHeight()).thenReturn(ROOF_HEIGHT);
         when(walls.getMinX()).thenReturn(5);
@@ -92,9 +87,8 @@ public class GreenhouseFinderTest {
         when(roof.getLocation()).thenReturn(location);
 
         // World
-        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
-        when(world.getMaxHeight()).thenReturn(30);
+        when(cache.getEnvironment()).thenReturn(Environment.NORMAL);
+        when(cache.getMaxHeight()).thenReturn(30);
 
 
         gf = new GreenhouseFinder();
@@ -107,7 +101,7 @@ public class GreenhouseFinderTest {
     @Test
     public void testCheckGreenhouse() {
         Greenhouse gh2 = new Greenhouse(world, walls, ROOF_HEIGHT);
-        gf.checkGreenhouse(gh2, roof, walls).thenAccept(result -> {
+        gf.checkGreenhouse(cache, gh2, roof, walls).thenAccept(result -> {
             assertTrue(result.isEmpty()); // Success
             assertEquals(441, gf.getWallBlockCount());
             assertEquals(0, gf.getWallDoors());
@@ -181,151 +175,36 @@ public class GreenhouseFinderTest {
 
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, org.bukkit.block.Block)}.
-     */
-    @Test
-    public void testCheckBlock() {
-        // Block has to be > roof height
-        when(block.getY()).thenReturn(ROOF_HEIGHT + 1);
-        Set<GreenhouseResult> result = gf.checkBlock(cc, roof, walls, block);
-        result.forEach(gr -> assertEquals(GreenhouseResult.FAIL_BLOCKS_ABOVE, gr));
-        gf.getRedGlass().forEach(l -> assertEquals(location, l));
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, org.bukkit.block.Block)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(CounterCheck, Material, Roof, Walls, Vector)}
      */
     @Test
     public void testCheckBlockRoofHeight() {
-        // Block has to be > roof height
-        when(block.getY()).thenReturn(ROOF_HEIGHT);
-        Set<GreenhouseResult> result = gf.checkBlock(cc, roof, walls, block);
-        assertTrue(result.isEmpty());
+        // Glass block should be ok at roof height
+        assertTrue(gf.checkBlock(cc, Material.GLASS, roof, walls, new Vector(0, ROOF_HEIGHT, 0)));
     }
 
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, org.bukkit.block.Block)}.
-     */
-    @Test
-    public void testCheckBlockNether() {
-        when(world.getEnvironment()).thenReturn(Environment.NETHER);
-        // Block has to be > roof height
-        when(block.getY()).thenReturn(ROOF_HEIGHT + 1);
-        Set<GreenhouseResult> result = gf.checkBlock(cc, roof, walls, block);
-        assertTrue(result.isEmpty());
-    }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, org.bukkit.block.Block)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkBlock(CounterCheck, Material, Roof, Walls, Vector)}
      */
     @Test
     public void testCheckBlockAir() {
-        when(block.isEmpty()).thenReturn(true);
-        // Block has to be > roof height
-        when(block.getY()).thenReturn(ROOF_HEIGHT + 1);
-        Set<GreenhouseResult> result = gf.checkBlock(cc, roof, walls, block);
-        assertTrue(result.isEmpty());
+        // Glass air should be not allowed at roof height
+        assertFalse(gf.checkBlock(cc, Material.AIR, roof, walls, new Vector(0, ROOF_HEIGHT, 0)));
     }
 
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkWalls(org.bukkit.block.Block, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck)}.
-     */
-    @Test
-    public void testCheckWallsAirHole() {
-        // Make block AIR
-        when(block.isEmpty()).thenReturn(true);
-        when(block.getType()).thenReturn(Material.AIR);
-        assertTrue(gf.checkWalls(block, roof, walls, cc));
-        assertFalse(gf.getRedGlass().isEmpty());
-        gf.getRedGlass().forEach(l -> assertEquals(location, l));
-        assertTrue(cc.airHole);
-        assertFalse(gf.isInCeiling());
-    }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkWalls(org.bukkit.block.Block, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck)}.
-     */
-    @Test
-    public void testCheckWallsAirHoleInRoof() {
-        // Make block AIR
-        when(block.isEmpty()).thenReturn(true);
-        when(block.getType()).thenReturn(Material.AIR);
-        when(block.getY()).thenReturn(ROOF_HEIGHT);
-        assertTrue(gf.checkWalls(block, roof, walls, cc));
-        assertFalse(gf.getRedGlass().isEmpty());
-        gf.getRedGlass().stream().forEach(l -> assertEquals(location, l));
-        assertTrue(cc.airHole);
-        assertTrue(gf.isInCeiling());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkWalls(org.bukkit.block.Block, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck)}.
-     */
-    @Test
-    public void testCheckWalls() {
-        // Make block GLASS
-        when(block.isEmpty()).thenReturn(false);
-        when(block.getType()).thenReturn(Material.GLASS);
-        assertTrue(gf.checkWalls(block, roof, walls, cc));
-        assertTrue(gf.getRedGlass().isEmpty());
-        assertFalse(cc.airHole);
-        assertFalse(gf.isInCeiling());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkWalls(org.bukkit.block.Block, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck)}.
-     */
-    @Test
-    public void testCheckWallsInRoof() {
-        // Make block GLASS
-        when(block.isEmpty()).thenReturn(false);
-        when(block.getType()).thenReturn(Material.GLASS);
-        when(block.getY()).thenReturn(ROOF_HEIGHT);
-        assertTrue(gf.checkWalls(block, roof, walls, cc));
-        assertTrue(gf.getRedGlass().isEmpty());
-        assertFalse(cc.airHole);
-        assertFalse(gf.isInCeiling());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkWalls(org.bukkit.block.Block, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls, world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck)}.
-     */
-    @Test
-    public void testCheckWallsNotInWall() {
-        when(block.getX()).thenReturn(0);
-        when(block.getY()).thenReturn(0);
-        when(block.getZ()).thenReturn(0);
-        // Make block GLASS
-        when(block.isEmpty()).thenReturn(false);
-        when(block.getType()).thenReturn(Material.GLASS);
-        assertFalse(gf.checkWalls(block, roof, walls, cc));
-        assertTrue(gf.getRedGlass().isEmpty());
-        assertFalse(cc.airHole);
-        assertFalse(gf.isInCeiling());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, org.bukkit.block.Block)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(CounterCheck, Material, Vector)}
      */
     @Test
     public void testCheckDoorsHoppers() {
         when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(true);
-        when(block.getType()).thenReturn(Material.ACACIA_DOOR);
-        gf.checkDoorsHoppers(cc, block);
-        assertTrue(gf.getRedGlass().isEmpty());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, org.bukkit.block.Block)}.
-     */
-    @Test
-    public void testCheckDoorsHoppersTooManyDoors() {
-        gf.setWallDoors(8);
-        when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(true);
-        when(block.getType()).thenReturn(Material.ACACIA_DOOR);
-        CounterCheck cc = gf.new CounterCheck();
-        gf.checkDoorsHoppers(cc, block);
-        assertFalse(gf.getRedGlass().isEmpty());
+        for (int i = 0; i < 8; i++) {
+            assertTrue("Door number " + i, gf.checkDoorsHoppers(cc, Material.ACACIA_DOOR, new Vector(0,0,0)));
+        }
+        // 9th door will fail
+        assertFalse(gf.checkDoorsHoppers(cc, Material.ACACIA_DOOR, new Vector(0,0,0)));
     }
 
     /**
@@ -333,36 +212,26 @@ public class GreenhouseFinderTest {
      */
     @Test
     public void testCheckDoorsHoppersHopper() {
+        Greenhouse gh = new Greenhouse(world, walls, 10);
+        // Set the greenhouse so the world is known
+        gf.setGh(gh);
         when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(false);
-        when(block.getType()).thenReturn(Material.HOPPER);
-        when(block.getLocation()).thenReturn(location);
         CounterCheck cc = gf.new CounterCheck();
-        gf.checkDoorsHoppers(cc, block);
+        assertTrue(gf.checkDoorsHoppers(cc, Material.HOPPER, new Vector(5,14,25)));
         assertTrue(gf.getRedGlass().isEmpty());
-        assertEquals(location, gf.getGh().getRoofHopperLocation());
+        assertEquals(5, gf.getGh().getRoofHopperLocation().getBlockX());
+        assertEquals(14, gf.getGh().getRoofHopperLocation().getBlockY());
+        assertEquals(25, gf.getGh().getRoofHopperLocation().getBlockZ());
+        assertFalse(gf.checkDoorsHoppers(cc, Material.HOPPER, new Vector(5,14,25)));
     }
 
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, org.bukkit.block.Block)}.
-     */
-    @Test
-    public void testCheckDoorsHoppersTooManyHoppers() {
-        gf.setGhHopper(3);
-        when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(false);
-        when(block.getType()).thenReturn(Material.HOPPER);
-        when(block.getLocation()).thenReturn(location);
-        CounterCheck cc = gf.new CounterCheck();
-        gf.checkDoorsHoppers(cc, block);
-        assertFalse(gf.getRedGlass().isEmpty());
-        assertNull(gf.getGh().getRoofHopperLocation());
-    }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#getGh()}.
      */
     @Test
     public void testGetGh() {
-        assertNotNull(gf.getGh());
+        assertNull(gf.getGh());
     }
 
     /**
