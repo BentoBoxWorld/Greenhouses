@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Greenhouses
       description: |
-        &bToggle who can
-        &bcontrol greenhouses   
+        &b Toggle who can
+        &b control greenhouses   
 
 greenhouses:
   general:
@@ -17,9 +17,9 @@ greenhouses:
    
   errors:
     move: "Move to a greenhouse you own first."
-    no-rank: "&cYou do not have rank to do that."
+    no-rank: "&c You do not have rank to do that."
     notyours: "This is not your greenhouse!"
-    not-inside: "&cYou are not in a greenhouse!"
+    not-inside: "&c You are not in a greenhouse!"
     tooexpensive: "You cannot afford [price]" 
     alreadyexists: "Greenhouse already exists!"
     norecipe: "Cannot make a greenhouse!"
@@ -48,38 +48,39 @@ greenhouses:
         parameters: "<recipe>"
         error:
           already: "&cThere is already a greenhouse here!"
-          FAIL_BAD_ROOF_BLOCKS: "&cRoof contains disallowed blocks!"
-          FAIL_BAD_WALL_BLOCKS: "&cWall contains disallowed blocks!"
-          FAIL_BELOW: "&cYou must be inside the greenhouse to try to make it"
-          FAIL_BLOCKS_ABOVE: "&cThere can be no blocks above the greenhouse! Red glass blocks should show the problem blocks."
-          FAIL_HOLE_IN_ROOF: "&cThere is a hole in the roof or it is not flat! Red glass blocks should show the problem."
-          FAIL_HOLE_IN_WALL: "&cThere is a hole in the wall!"
-          FAIL_NO_ROOF: "&cThere seems to be no roof!"
-          FAIL_TOO_MANY_DOORS: "&cYou cannot have more than 4 doors in the greenhouse!"
-          FAIL_TOO_MANY_HOPPERS: "&cOnly one hopper is allowed in the walls or roof."
-          FAIL_UNEVEN_WALLS: "&cThe walls are uneven. Red glass blocks should show the problem blocks."
-          FAIL_INSUFFICIENT_ICE: "&cInsufficent ice to make this recipe"
-          FAIL_INSUFFICIENT_LAVA: "&cInsufficent lava to make this recipe"
-          FAIL_INSUFFICIENT_WATER: "&cInsufficent water to make this recipe"
-          FAIL_NO_ICE: "&cIce is required to make this recipe"
-          FAIL_NO_LAVA: "&cLava is required to make this recipe"
-          FAIL_NO_WATER: "&cWater is required to make this recipe"
-          FAIL_INSUFFICIENT_BLOCKS: "&cMore blocks are required to make this recipe!"
-          FAIL_OVERLAPPING: "&cGreenhouses cannot share walls, sorry."
-        success: "&2You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
-        missing-blocks: "&cMissing [material] x [number]"
-        unknown-recipe: "&cUnknown recipe"
-        try-these: "&cTry one of these:"
+          FAIL_BAD_ROOF_BLOCKS: "&c Roof contains disallowed blocks!"
+          FAIL_BAD_WALL_BLOCKS: "&c Wall contains disallowed blocks!"
+          FAIL_BELOW: "&c You must be inside the greenhouse to try to make it"
+          FAIL_BLOCKS_ABOVE: "&c There can be no blocks above the greenhouse! Red glass blocks should show the problem blocks."
+          FAIL_HOLE_IN_ROOF: "&c There is a hole in the roof or it is not flat! Red glass blocks should show the problem."
+          FAIL_HOLE_IN_WALL: "&c There is a hole in the wall!"
+          FAIL_NO_ROOF: "&c There seems to be no roof!"
+          FAIL_TOO_MANY_DOORS: "&c You cannot have more than 4 doors in the greenhouse!"
+          FAIL_TOO_MANY_HOPPERS: "&c Only one hopper is allowed in the walls or roof."
+          FAIL_UNEVEN_WALLS: "&c The walls are uneven. Red glass blocks should show the problem blocks."
+          FAIL_INSUFFICIENT_ICE: "&c Insufficent ice to make this recipe"
+          FAIL_INSUFFICIENT_LAVA: "&c Insufficent lava to make this recipe"
+          FAIL_INSUFFICIENT_WATER: "&c Insufficent water to make this recipe"
+          FAIL_NO_ICE: "&c Ice is required to make this recipe"
+          FAIL_NO_LAVA: "&c Lava is required to make this recipe"
+          FAIL_NO_WATER: "&c Water is required to make this recipe"
+          FAIL_NO_RECIPE_FOUND: "&c No recipe could be found that matches this greenhouse"
+          FAIL_INSUFFICIENT_BLOCKS: "&c More blocks are required to make this recipe!"
+          FAIL_OVERLAPPING: "&c Greenhouses cannot share walls, sorry."
+        success: "&2 You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
+        missing-blocks: "&c Missing [material] x [number]"
+        unknown-recipe: "&c Unknown recipe"
+        try-these: "&c Try one of these:"
         recipe-format: "&3[name]"
       info:
-        title: "&A[How To Build A Greenhouse]"
+        title: "&a [How To Build A Greenhouse]"
         instructions: |
-          &EMake a box out of out of glass with 4 walls and a flat glass
-          &Eroof and add up to &F4 doors &Ein the walls.
-          &EPlace &F1 hopper &Ein a wall or roof and add water buckets.
-          &Eto make snow and/or bonemeal to grow plants automatically.
-          &ECheck the biome recipes for what blocks must be inside a
-          &Egreenhouse to make one successfully. 
+          &e Make a box out of out of glass with 4 walls and a flat glass
+          &e roof and add up to &f 4 doors &Ein the walls.
+          &e Place &f 1 hopper &e in a wall or roof and add water buckets.
+          &e to make snow and/or bonemeal to grow plants automatically.
+          &e Check the biome recipes for what blocks must be inside a
+          &e greenhouse to make one successfully. 
 
 
 ######### Old locale for reference
@@ -122,19 +123,19 @@ messages:
 info:
    title: "&A[How To Build A Greenhouse]"
    instructions: |
-     &EMake a box out of out of glass with 4 walls and a flat glass
-     &Eroof and add up to &F4 doors &Ein the walls.
-     &EPlace &F1 hopper &Ein a wall or roof and add water buckets.
-     &Eto make snow and/or bonemeal to grow plants automatically.
-     &ECheck the biome recipes for what blocks must be inside a
-     &Egreenhouse to make one successfully. 
+     &E Make a box out of out of glass with 4 walls and a flat glass
+     &E roof and add up to &F 4 doors &Ein the walls.
+     &E Place &F 1 hopper &E in a wall or roof and add water buckets.
+     &E to make snow and/or bonemeal to grow plants automatically.
+     &E Check the biome recipes for what blocks must be inside a
+     &E greenhouse to make one successfully. 
    info: "[Greenhouse Info]"
    none: "None"
-   nomore: "&4You cannot build any more greenhouses!"
-   onemore: "&6You can build one more greenhouse."
-   youcanbuild: "&AYou can build up to [number] more greenhouses!"
-   unlimited: "&AYou can build an unlimited number of greenhouses!"
-   welcome: "&BWelcome! Click here for instructions"
+   nomore: "&4 You cannot build any more greenhouses!"
+   onemore: "&6 You can build one more greenhouse."
+   youcanbuild: "&A You can build up to [number] more greenhouses!"
+   unlimited: "&A You can build an unlimited number of greenhouses!"
+   welcome: "&B Welcome! Click here for instructions"
 
 recipe:
    blockscolor: "&f"
