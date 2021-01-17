@@ -167,10 +167,9 @@ public class GreenhouseManager implements Listener {
             }
             // Check if the greenhouse meets the requested recipe
             if (greenhouseRecipe != null) {
-                checkRecipe(r, finder, greenhouseRecipe, resultSet);
+                checkRecipe(finder, greenhouseRecipe, resultSet).thenAccept(r::complete);
                 return;
             }
-
             // Try ordered recipes
             findRecipe(finder, resultSet);
             r.complete(new GhResult().setFinder(finder).setResults(resultSet));
@@ -184,6 +183,8 @@ public class GreenhouseManager implements Listener {
      * @param resultSet - result set from find
      */
     private void findRecipe(GreenhouseFinder finder, Set<GreenhouseResult> resultSet) {
+        // TODO
+        /*
         resultSet.add(addon.getRecipes().getBiomeRecipes().stream().sorted()
                 .filter(r -> r.checkRecipe(finder.getGh()).isEmpty()).findFirst()
                 .map(r -> {
@@ -192,7 +193,7 @@ public class GreenhouseManager implements Listener {
                     activateGreenhouse(finder.getGh());
                     handler.saveObjectAsync(finder.getGh());
                     return map.addGreenhouse(finder.getGh());
-                }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));
+                }).orElse(GreenhouseResult.FAIL_NO_RECIPE_FOUND));*/
     }
 
     /**
@@ -203,19 +204,20 @@ public class GreenhouseManager implements Listener {
      * @param resultSet - result set from finder
      * @return Greenhouse result
      */
-    GhResult checkRecipe(CompletableFuture<GhResult> r, GreenhouseFinder finder, BiomeRecipe greenhouseRecipe, Set<GreenhouseResult> resultSet) {
-        resultSet = greenhouseRecipe.checkRecipe(finder.getGh());
-        if (resultSet.isEmpty()) {
-            // Success - set recipe and add to map
-            finder.getGh().setBiomeRecipe(greenhouseRecipe);
-            resultSet.add(map.addGreenhouse(finder.getGh()));
-            activateGreenhouse(finder.getGh());
-            handler.saveObjectAsync(finder.getGh());
-        }
-        GhResult recipe = new GhResult().setFinder(finder).setResults(resultSet);
-        r.complete(recipe);
-        return recipe;
-
+    CompletableFuture<GhResult> checkRecipe(GreenhouseFinder finder, BiomeRecipe greenhouseRecipe, Set<GreenhouseResult> resultSet) {
+        CompletableFuture<GhResult> r = new CompletableFuture<>();
+        greenhouseRecipe.checkRecipe(finder.getGh()).thenAccept(rs -> {
+            if (rs.isEmpty()) {
+                // Success - set recipe and add to map
+                finder.getGh().setBiomeRecipe(greenhouseRecipe);
+                resultSet.add(map.addGreenhouse(finder.getGh()));
+                activateGreenhouse(finder.getGh());
+                handler.saveObjectAsync(finder.getGh());
+            }
+            GhResult recipe = new GhResult().setFinder(finder).setResults(rs);
+            r.complete(recipe);
+        });
+        return r;
     }
 
     private void activateGreenhouse(Greenhouse gh) {

@@ -101,10 +101,13 @@ public class EcoSystemManager {
             //addon.log("Skipping verify for unloaded greenhouse at " + gh.getLocation());
             return;
         }
-        if (!gh.getBiomeRecipe().checkRecipe(gh).isEmpty()) {
-            addon.log("Greenhouse failed verification at " + gh.getLocation());
-            g.removeGreenhouse(gh);
-        }
+        gh.getBiomeRecipe().checkRecipe(gh).thenAccept(rs -> {
+            if (!rs.isEmpty()) {
+                addon.log("Greenhouse failed verification at " + gh.getLocation());
+                g.removeGreenhouse(gh);
+            }
+        });
+
     }
 
     private void addMobs(Greenhouse gh) {

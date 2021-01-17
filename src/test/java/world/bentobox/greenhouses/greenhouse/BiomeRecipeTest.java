@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -48,7 +47,6 @@ import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
-import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
 
 /**
@@ -237,8 +235,8 @@ public class BiomeRecipeTest {
      */
     @Test
     public void testCheckRecipe() {
-        Set<GreenhouseResult> result = br.checkRecipe(gh);
-        assertTrue(result.isEmpty());
+        br.checkRecipe(gh).thenAccept(result ->
+        assertTrue(result.isEmpty()));
     }
 
     /**
@@ -247,8 +245,8 @@ public class BiomeRecipeTest {
     @Test
     public void testCheckRecipeNotEnough() {
         br.addReqBlocks(Material.ACACIA_LEAVES, 3);
-        Set<GreenhouseResult> result = br.checkRecipe(gh);
-        assertFalse(result.isEmpty());
+        br.checkRecipe(gh).thenAccept(result ->
+        assertFalse(result.isEmpty()));
 
     }
 

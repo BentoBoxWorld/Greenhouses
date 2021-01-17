@@ -10,8 +10,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -36,6 +38,7 @@ import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final String CHANCE_FOR = "% chance for ";
@@ -155,21 +158,34 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         startupLog("   " + blockMaterial + " x " + blockQty);
     }
 
-    // Check required blocks
     /**
      * Checks greenhouse meets recipe requirements.
      * @return GreenhouseResult - result
      */
-    public Set<GreenhouseResult> checkRecipe(Greenhouse gh) {
+    public CompletableFuture<Set<GreenhouseResult>> checkRecipe(Greenhouse gh) {
+        CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () -> checkRecipeAsync(r, gh));
+        return r;
+
+    }
+
+    /**
+     * Check greenhouse meets recipe requirements. Expected to be run async.
+     * @param r - future to complete when done
+     * @param gh - greenhouse
+     * @return set of results from the check
+     */
+    private Set<GreenhouseResult> checkRecipeAsync(CompletableFuture<Set<GreenhouseResult>> r, Greenhouse gh) {
+        AsyncWorldCache cache = new AsyncWorldCache(gh.getWorld());
         Set<GreenhouseResult> result = new HashSet<>();
         long area = gh.getArea();
         Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
+
         // Look through the greenhouse and count what is in there
         for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
             for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
                 for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
-                    Block b = gh.getWorld().getBlockAt(x, y, z);
-                    Material t = b.getType();
+                    Material t = cache.getBlockType(x, y, z);
                     if (!t.equals(Material.AIR)) {
                         blockCount.putIfAbsent(t, 0);
                         blockCount.merge(t, 1, Integer::sum);
@@ -213,6 +229,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
             gh.setMissingBlocks(missingBlocks);
         }
+        // Return to main thread to complete
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> r.complete(result));
         return result;
     }
 
