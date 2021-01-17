@@ -53,6 +53,9 @@
         <!-- This allows to change between versions and snapshots. -->
         <build.version>1.5.0</build.version>
         <build.number>-LOCAL</build.number>
+        <sonar.projectKey>BentoBoxWorld_Greenhouses</sonar.projectKey>
+        <sonar.organization>bentobox-world</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <profiles>
@@ -92,30 +95,6 @@
                 <!-- Empties build.number value -->
                 <build.number></build.number>
             </properties>
-        </profile>
-        <profile>
-            <id>sonar</id>
-            <properties>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.organization>bentobox-world</sonar.organization>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonarsource.scanner.maven</groupId>
-                        <artifactId>sonar-maven-plugin</artifactId>
-                        <version>3.7.0.1746</version>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sonar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -268,8 +247,8 @@
                 <configuration>
                     <append>true</append>
                     <excludes>
-                        <!-- This is required to prevent Jacoco from adding synthetic fields
-                            to a JavaBean class (causes errors in testing) -->
+                        <!-- This is required to prevent Jacoco from adding 
+                            synthetic fields to a JavaBean class (causes errors in testing) -->
                         <exclude>**/*Names*</exclude>
                     </excludes>
                 </configuration>
