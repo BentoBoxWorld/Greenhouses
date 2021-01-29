@@ -1,6 +1,5 @@
 package world.bentobox.greenhouses.listeners;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,18 +21,13 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.junit.After;
@@ -145,11 +139,9 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, item, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
         ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DENY, e.useItemInHand());
         verify(nextBlock).setType(Material.WATER);
-        verify(item).setType(Material.BUCKET);
     }
 
     /**
@@ -164,11 +156,9 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, item, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
         ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DEFAULT, e.useItemInHand());
         verify(nextBlock, never()).setType(Material.WATER);
-        verify(item, never()).setType(Material.BUCKET);
     }
 
     /**
@@ -182,11 +172,9 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.ACACIA_BOAT);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, item, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER, item);
         ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DEFAULT, e.useItemInHand());
         verify(nextBlock, never()).setType(Material.WATER);
-        verify(item, never()).setType(Material.BUCKET);
     }
 
     /**
@@ -201,47 +189,9 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, item, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
         ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DEFAULT, e.useItemInHand());
         verify(nextBlock, never()).setType(Material.WATER);
-        verify(item, never()).setType(Material.BUCKET);
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
-     */
-    @Test
-    public void testOnPlayerInteractInNetherNullItem() {
-        Block clickedBlock = mock(Block.class);
-        when(clickedBlock.getLocation()).thenReturn(location);
-        Block nextBlock = mock(Block.class);
-        when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
-        ItemStack item = mock(ItemStack.class);
-        when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, null, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
-        ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DEFAULT, e.useItemInHand());
-        verify(nextBlock, never()).setType(Material.WATER);
-        verify(item, never()).setType(Material.BUCKET);
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
-     */
-    @Test
-    public void testOnPlayerInteractInNetherNotBlockClick() {
-        Block clickedBlock = mock(Block.class);
-        when(clickedBlock.getLocation()).thenReturn(location);
-        Block nextBlock = mock(Block.class);
-        when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
-        ItemStack item = mock(ItemStack.class);
-        when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerInteractEvent e = new PlayerInteractEvent(player, Action.RIGHT_CLICK_AIR, item, clickedBlock, BlockFace.EAST, EquipmentSlot.HAND);
-        ghe.onPlayerInteractInNether(e);
-        assertEquals(Result.DEFAULT, e.useItemInHand());
-        verify(nextBlock, never()).setType(Material.WATER);
-        verify(item, never()).setType(Material.BUCKET);
     }
 
     /**
@@ -398,63 +348,6 @@ public class GreenhouseEventsTest {
         ghe.onBlockBreak(e);
         verify(user).sendMessage(eq("greenhouses.event.broke"), eq("[biome]"), eq("Bamboo Jungle"));
         verify(gm).removeGreenhouse(any());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerBlockPlace(org.bukkit.event.block.BlockPlaceEvent)}.
-     */
-    @Test
-    public void testOnPlayerBlockPlace() {
-        Block block = mock(Block.class);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getY()).thenReturn(255);
-        when(block.getWorld()).thenReturn(world);
-        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
-        BlockState bs = mock(BlockState.class);
-        Block pa = mock(Block.class);
-        ItemStack item = mock(ItemStack.class);
-        BlockPlaceEvent e = new BlockPlaceEvent(block, bs, pa, item, player, true, EquipmentSlot.HAND);
-        ghe.onPlayerBlockPlace(e);
-        assertTrue(e.isCancelled());
-        verify(user).sendMessage(eq("greenhouses.error.cannot-place"));
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerBlockPlace(org.bukkit.event.block.BlockPlaceEvent)}.
-     */
-    @Test
-    public void testOnPlayerBlockPlaceNether() {
-        Block block = mock(Block.class);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getY()).thenReturn(255);
-        when(block.getWorld()).thenReturn(world);
-        when(world.getEnvironment()).thenReturn(Environment.NETHER);
-        BlockState bs = mock(BlockState.class);
-        Block pa = mock(Block.class);
-        ItemStack item = mock(ItemStack.class);
-        BlockPlaceEvent e = new BlockPlaceEvent(block, bs, pa, item, player, true, EquipmentSlot.HAND);
-        ghe.onPlayerBlockPlace(e);
-        assertFalse(e.isCancelled());
-        verify(user, never()).sendMessage(eq("greenhouses.error.cannot-place"));
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerBlockPlace(org.bukkit.event.block.BlockPlaceEvent)}.
-     */
-    @Test
-    public void testOnPlayerBlockPlaceBelowGH() {
-        Block block = mock(Block.class);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getY()).thenReturn(0);
-        when(block.getWorld()).thenReturn(world);
-        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
-        BlockState bs = mock(BlockState.class);
-        Block pa = mock(Block.class);
-        ItemStack item = mock(ItemStack.class);
-        BlockPlaceEvent e = new BlockPlaceEvent(block, bs, pa, item, player, true, EquipmentSlot.HAND);
-        ghe.onPlayerBlockPlace(e);
-        assertFalse(e.isCancelled());
-        verify(user, never()).sendMessage(eq("greenhouses.error.cannot-place"));
     }
 
     /**
