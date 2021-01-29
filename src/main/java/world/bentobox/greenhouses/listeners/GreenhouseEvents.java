@@ -10,11 +10,9 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -40,15 +38,11 @@ public class GreenhouseEvents implements Listener {
      * @param e - event
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
-    public void onPlayerInteractInNether(PlayerInteractEvent e) {
-        if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)) {
-            return;
-        }
-        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.WATER_BUCKET)
-                && addon.getManager().getMap().inGreenhouse(e.getClickedBlock().getLocation())) {
-            e.setCancelled(true);
-            e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.WATER);
-            e.getItem().setType(Material.BUCKET);
+    public void onPlayerInteractInNether(PlayerBucketEmptyEvent e) {
+        if (e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
+                && e.getBucket().equals(Material.WATER_BUCKET)
+                && addon.getManager().getMap().inGreenhouse(e.getBlockClicked().getLocation())) {
+            e.getBlockClicked().getRelative(e.getBlockFace()).setType(Material.WATER);
         }
     }
 
@@ -135,19 +129,6 @@ public class GreenhouseEvents implements Listener {
                 addon.getManager().removeGreenhouse(g);
             }
         });
-    }
-
-    /**
-     * Prevents placing of blocks above the greenhouses
-     * @param e - event
-     */
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
-    public void onPlayerBlockPlace(final BlockPlaceEvent e) {
-        if (checkBlockHeight(e.getBlock())) {
-            e.setCancelled(true);
-            User user = User.getInstance(e.getPlayer());
-            user.sendMessage("greenhouses.error.cannot-place");
-        }
     }
 
     private boolean checkBlockHeight(Block block) {
