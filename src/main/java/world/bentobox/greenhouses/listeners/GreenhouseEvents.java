@@ -1,11 +1,15 @@
 package world.bentobox.greenhouses.listeners;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +31,16 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class GreenhouseEvents implements Listener {
     private static final String BIOME = "[biome]";
+    private static final Set<Biome> NETHER_BIOMES;
+    static {
+        Set<Biome> nb = new HashSet<>();
+        nb.add(Biome.NETHER_WASTES);
+        nb.add(Biome.WARPED_FOREST);
+        nb.add(Biome.CRIMSON_FOREST);
+        nb.add(Biome.SOUL_SAND_VALLEY);
+        nb.add(Biome.BASALT_DELTAS);
+        NETHER_BIOMES = Collections.unmodifiableSet(nb);
+    }
     private final Greenhouses addon;
 
     public GreenhouseEvents(final Greenhouses addon) {
@@ -41,7 +55,8 @@ public class GreenhouseEvents implements Listener {
     public void onPlayerInteractInNether(PlayerBucketEmptyEvent e) {
         if (e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && e.getBucket().equals(Material.WATER_BUCKET)
-                && addon.getManager().getMap().inGreenhouse(e.getBlockClicked().getLocation())) {
+                && !addon.getManager().getMap().getGreenhouse(e.getBlockClicked().getLocation())
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
             e.getBlockClicked().getRelative(e.getBlockFace()).setType(Material.WATER);
         }
     }
@@ -56,7 +71,8 @@ public class GreenhouseEvents implements Listener {
                 || !Tag.ICE.isTagged(e.getBlock().getType())) {
             return;
         }
-        if (addon.getManager().getMap().inGreenhouse(e.getBlock().getLocation())) {
+        if (!addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation())
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
             e.setCancelled(true);
             e.getBlock().setType(Material.WATER);
         }
