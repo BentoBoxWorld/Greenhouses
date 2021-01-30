@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -29,6 +30,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.BoundingBox;
 import org.junit.After;
 import org.junit.Before;
@@ -77,6 +79,10 @@ public class GreenhouseEventsTest {
     private Greenhouse gh1;
     @Mock
     private Greenhouse gh2;
+    @Mock
+    private PlayerInventory inv;
+    @Mock
+    private ItemStack waterBucket;
 
     /**
      * @throws java.lang.Exception
@@ -106,6 +112,9 @@ public class GreenhouseEventsTest {
 
         when(player.getWorld()).thenReturn(world);
         when(world.getEnvironment()).thenReturn(Environment.NETHER);
+        when(player.getInventory()).thenReturn(inv);
+        when(inv.getItemInMainHand()).thenReturn(waterBucket);
+
         // Location
         when(location.getBlockX()).thenReturn(5);
         when(location.getBlockY()).thenReturn(15);
@@ -134,16 +143,34 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNether() {
+    public void testOnPlayerInteractInNetherInGreenhouse() {
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
+        when(nextBlock.getLocation()).thenReturn(location);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
         PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock).setType(Material.WATER);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     */
+    @Test
+    public void testOnPlayerInteractInNetherOutsideOfGreenhouse() {
+        Block clickedBlock = mock(Block.class);
+        when(clickedBlock.getLocation()).thenReturn(location);
+        Block nextBlock = mock(Block.class);
+        when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
+        when(nextBlock.getLocation()).thenReturn(mock(Location.class));
+        ItemStack item = mock(ItemStack.class);
+        when(item.getType()).thenReturn(Material.WATER_BUCKET);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        ghe.onPlayerInteractInNether(e);
+        verify(nextBlock, never()).setType(Material.WATER);
     }
 
     /**
@@ -172,6 +199,8 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
+        when(clickedBlock.getWorld()).thenReturn(world);
+        when(nextBlock.getWorld()).thenReturn(world);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
         PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
@@ -266,7 +295,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    public void testOnIceBreakNotNether() {
+    public void testOnIceBreakNotNetherNetherGreenhouse() {
         when(world.getEnvironment()).thenReturn(Environment.THE_END);
         when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
 
@@ -275,9 +304,30 @@ public class GreenhouseEventsTest {
         when(block.getWorld()).thenReturn(world);
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onIceBreak(e);
-        verify(block, never()).setType(Material.WATER);
-        assertFalse(e.isCancelled());
+        verify(block).setType(Material.AIR);
+        assertTrue(e.isCancelled());
+        verify(world).playSound(any(), eq(Sound.BLOCK_GLASS_BREAK), eq(1F), eq(1F));
+
     }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
+     */
+    @Test
+    public void testOnIceBreakNotNetherNotNetherGreenhouse() {
+        when(world.getEnvironment()).thenReturn(Environment.THE_END);
+        when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
+
+        Block block = mock(Block.class);
+        when(block.getType()).thenReturn(Material.ICE);
+        when(block.getWorld()).thenReturn(world);
+        when(block.getLocation()).thenReturn(location);
+        BlockBreakEvent e = new BlockBreakEvent(block, player);
+        ghe.onIceBreak(e);
+        assertFalse(e.isCancelled());
+        verify(block, never()).setType(any());
+    }
+
 
     /**
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
@@ -290,6 +340,7 @@ public class GreenhouseEventsTest {
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ICE);
         when(block.getWorld()).thenReturn(world);
+
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onIceBreak(e);
         verify(block, never()).setType(Material.WATER);

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -51,13 +53,25 @@ public class GreenhouseEvents implements Listener {
      * Permits water to be placed in the Nether if in a greenhouse and in an acceptable biome
      * @param e - event
      */
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onPlayerInteractInNether(PlayerBucketEmptyEvent e) {
+        if (!e.getBucket().equals(Material.WATER_BUCKET)) {
+            return;
+        }
+        Block b = e.getBlockClicked().getRelative(e.getBlockFace());
         if (e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                && e.getBucket().equals(Material.WATER_BUCKET)
-                && !addon.getManager().getMap().getGreenhouse(e.getBlockClicked().getLocation())
+                && !addon.getManager().getMap().getGreenhouse(b.getLocation())
                 .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
-            e.getBlockClicked().getRelative(e.getBlockFace()).setType(Material.WATER);
+            // In Nether not a nether greenhouse
+            b.setType(Material.WATER);
+        } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
+                && addon.getManager().getMap().getGreenhouse(b.getLocation())
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+            // Not in Nether, in a nether greenhouse
+            e.setCancelled(true);
+            e.getPlayer().getInventory().getItemInMainHand().setType(Material.BUCKET);
+            b.getWorld().spawnParticle(Particle.SMOKE_NORMAL, b.getLocation(), 10);
+            b.getWorld().playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1F, 5F);
         }
     }
 
@@ -65,16 +79,25 @@ public class GreenhouseEvents implements Listener {
      * Makes water in the Nether if ice is broken and in a greenhouse
      * @param e - event
      */
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onIceBreak(BlockBreakEvent e) {
-        if (!e.getBlock().getWorld().getEnvironment().equals(World.Environment.NETHER)
-                || !Tag.ICE.isTagged(e.getBlock().getType())) {
+        if (!Tag.ICE.isTagged(e.getBlock().getType())) {
             return;
         }
-        if (!addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation())
+        Block b = e.getBlock();
+        if (b.getWorld().getEnvironment().equals(World.Environment.NETHER)
+                && !addon.getManager().getMap().getGreenhouse(b.getLocation())
                 .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+            //
             e.setCancelled(true);
-            e.getBlock().setType(Material.WATER);
+            b.setType(Material.WATER);
+        } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
+                && addon.getManager().getMap().getGreenhouse(b.getLocation())
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+            // Not in Nether, in a nether greenhouse
+            e.setCancelled(true);
+            b.setType(Material.AIR);
+            b.getWorld().playSound(b.getLocation(), Sound.BLOCK_GLASS_BREAK, 1F, 1F);
         }
     }
 
