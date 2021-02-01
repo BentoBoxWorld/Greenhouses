@@ -66,7 +66,7 @@ public class GreenhouseEvents implements Listener {
             b.setType(Material.WATER);
         } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse
             e.setCancelled(true);
             e.getPlayer().getInventory().getItemInMainHand().setType(Material.BUCKET);
@@ -93,7 +93,7 @@ public class GreenhouseEvents implements Listener {
             b.setType(Material.WATER);
         } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse
             e.setCancelled(true);
             b.setType(Material.AIR);

@@ -285,6 +285,8 @@ public class GreenhouseEventsTest {
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ACACIA_BOAT);
         when(block.getWorld()).thenReturn(world);
+        // Nether gh
+        when(block.getLocation()).thenReturn(location2);
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onIceBreak(e);
         verify(block, never()).setType(Material.WATER);
@@ -302,6 +304,8 @@ public class GreenhouseEventsTest {
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ICE);
         when(block.getWorld()).thenReturn(world);
+        // Nether gh
+        when(block.getLocation()).thenReturn(location2);
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onIceBreak(e);
         verify(block).setType(Material.AIR);
