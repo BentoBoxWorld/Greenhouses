@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
@@ -54,7 +55,7 @@ public class GreenhouseFinderTest {
     // Class under test
     private GreenhouseFinder gf;
     private CounterCheck cc;
-    @Mock
+
     private Roof roof;
     @Mock
     private Walls walls;
@@ -68,6 +69,9 @@ public class GreenhouseFinderTest {
     @Before
     public void setUp() throws Exception {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
+        // Declare mock after mocking Bukkit
+        roof = mock(Roof.class);
         // Location
         when(location.getBlockX()).thenReturn(5);
         when(location.getBlockY()).thenReturn(14);
@@ -198,12 +202,26 @@ public class GreenhouseFinderTest {
      */
     @Test
     public void testCheckDoorsHoppers() {
+        // Doors are 2 blocks
         when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(true);
         for (int i = 0; i < 8; i++) {
             assertTrue("Door number " + i, gf.checkDoorsHoppers(cc, Material.ACACIA_DOOR, new Vector(0,0,0)));
         }
-        // 9th door will fail
+        // 5th door will fail
         assertFalse(gf.checkDoorsHoppers(cc, Material.ACACIA_DOOR, new Vector(0,0,0)));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(CounterCheck, Material, Vector)}
+     */
+    @Test
+    public void testCheckDoorsHoppersTrapdoors() {
+        // Trapdoors are one block
+        for (int i = 0; i < 4; i++) {
+            assertTrue("Door number " + i, gf.checkDoorsHoppers(cc, Material.BIRCH_TRAPDOOR, new Vector(0,0,0)));
+        }
+        // 5th door will fail
+        assertFalse(gf.checkDoorsHoppers(cc, Material.BIRCH_TRAPDOOR, new Vector(0,0,0)));
     }
 
     /**

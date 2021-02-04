@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
@@ -29,7 +30,7 @@ public class Roof extends MinMaxXZ {
     static {
         List<Material> r = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
-                .filter(m -> m.name().contains("TRAPDOOR") // All trapdoors
+                .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
                         || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
                         || m.equals(Material.HOPPER)) // Hoppers
                 .collect(Collectors.toList());

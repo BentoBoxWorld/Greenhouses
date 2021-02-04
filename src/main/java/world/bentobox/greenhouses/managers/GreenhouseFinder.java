@@ -201,8 +201,8 @@ public class GreenhouseFinder {
      */
     boolean checkDoorsHoppers(CounterCheck cc, Material m, Vector v) {
         // Count doors
-        if (Tag.DOORS.isTagged(m)) {
-            cc.doorCount++;
+        if (Tag.TRAPDOORS.isTagged(m) || Tag.DOORS.isTagged(m)) {
+            cc.doorCount = Tag.TRAPDOORS.isTagged(m) ? cc.doorCount + 2 : cc.doorCount + 1;
 
             // If we already have 8 doors add these blocks to the red list
             if (cc.doorCount > 8) {

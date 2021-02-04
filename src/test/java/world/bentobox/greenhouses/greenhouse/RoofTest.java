@@ -7,8 +7,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.junit.Before;
@@ -30,7 +32,7 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Greenhouses.class)
+@PrepareForTest({Greenhouses.class, Bukkit.class})
 public class RoofTest {
 
     private Roof roof;
@@ -49,6 +51,8 @@ public class RoofTest {
      */
     @Before
     public void setUp() throws Exception {
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
         when(Greenhouses.getInstance()).thenReturn(addon);
         s = new Settings();

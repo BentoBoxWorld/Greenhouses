@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.concurrent.CompletableFuture;
@@ -12,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +38,6 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
 @PrepareForTest({Bukkit.class, Greenhouses.class})
 public class WallsTest {
 
-    @Mock
     private Roof roof;
     @Mock
     private Location location;
@@ -63,6 +64,9 @@ public class WallsTest {
     @Before
     public void setUp() throws Exception {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
+        // Declare mock after mocking Bukkit
+        roof = mock(Roof.class);
         PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
         when(Greenhouses.getInstance()).thenReturn(addon);
         s = new Settings();
