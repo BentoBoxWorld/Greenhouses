@@ -223,7 +223,7 @@ public class EcoSystemManager {
         if (gh.getRoofHopperLocation() == null) {
             return null;
         }
-        // Check if there are any bonemeal in the hopper
+        // Check if the hopper block is still a hopper
         if (gh.getRoofHopperLocation().getBlock().getType() != Material.HOPPER) {
             gh.setRoofHopperLocation(null);
             return null;
