@@ -156,8 +156,8 @@ public class Greenhouse implements DataObject {
     /**
      * @param v the roofHopperLocation to set
      */
-    public void setRoofHopperLocation(Vector v) {
-        this.roofHopperLocation = v.toLocation(getWorld());
+    public void setRoofHopperLocation(@Nullable Vector v) {
+        this.roofHopperLocation = v == null ? null : v.toLocation(getWorld());
     }
 
     /**
