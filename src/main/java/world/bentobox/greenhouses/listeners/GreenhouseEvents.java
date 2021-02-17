@@ -69,7 +69,12 @@ public class GreenhouseEvents implements Listener {
                 .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse
             e.setCancelled(true);
-            e.getPlayer().getInventory().getItemInMainHand().setType(Material.BUCKET);
+            if (e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.WATER_BUCKET)) {
+                e.getPlayer().getInventory().getItemInMainHand().setType(Material.BUCKET);
+            } else if (e.getPlayer().getInventory().getItemInOffHand().getType().equals(Material.WATER_BUCKET)) {
+                e.getPlayer().getInventory().getItemInOffHand().setType(Material.BUCKET);
+            }
+
             b.getWorld().spawnParticle(Particle.SMOKE_NORMAL, b.getLocation(), 10);
             b.getWorld().playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1F, 5F);
         }
