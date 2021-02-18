@@ -31,7 +31,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.util.BoundingBox;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -430,8 +429,7 @@ public class GreenhouseEventsTest {
      */
     @Test
     public void testOnBlockBreak() {
-        BoundingBox bb = BoundingBox.of(location, location2);
-        when(gh1.getBoundingBox()).thenReturn(bb);
+        when(gh1.isRoofOrWallBlock(any())).thenReturn(true);
         // Location is a wall block
         Block block = mock(Block.class);
         when(block.getLocation()).thenReturn(location);

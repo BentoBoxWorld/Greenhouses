@@ -161,17 +161,11 @@ public class GreenhouseEvents implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onBlockBreak(final BlockBreakEvent e) {
         User user = User.getInstance(e.getPlayer());
-        addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation()).ifPresent(g -> {
-            // Check to see if wall or roof block broken
-            if ((e.getBlock().getLocation().getBlockY() == g.getCeilingHeight() - 1)
-                    || e.getBlock().getLocation().getBlockX() == (int)g.getBoundingBox().getMinX()
-                    || e.getBlock().getLocation().getBlockX() == (int)g.getBoundingBox().getMaxX() - 1
-                    || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMinZ()
-                    || e.getBlock().getLocation().getBlockZ() == (int)g.getBoundingBox().getMaxZ() - 1
-                    ) {
-                user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
-                addon.getManager().removeGreenhouse(g);
-            }
+        addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation())
+        .filter(g -> g.isRoofOrWallBlock(e.getBlock().getLocation()))
+        .ifPresent(g -> {
+            user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
+            addon.getManager().removeGreenhouse(g);
         });
     }
 

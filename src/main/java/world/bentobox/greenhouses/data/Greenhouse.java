@@ -249,4 +249,18 @@ public class Greenhouse implements DataObject {
     public Map<Material, Integer> getMissingBlocks() {
         return missingBlocks;
     }
+
+    /**
+     * Check if a location is a wall or roof block
+     * @param l - location
+     * @return true if wall or roof block
+     */
+    public boolean isRoofOrWallBlock(Location l) {
+        return ((l.getBlockY() == getCeilingHeight() - 1)
+                || l.getBlockX() == (int)getBoundingBox().getMinX()
+                || l.getBlockX() == (int)getBoundingBox().getMaxX() - 1
+                || l.getBlockZ() == (int)getBoundingBox().getMinZ()
+                || l.getBlockZ() == (int)getBoundingBox().getMaxZ() - 1
+                );
+    }
 }

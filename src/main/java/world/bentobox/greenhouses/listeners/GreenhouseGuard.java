@@ -2,10 +2,13 @@ package world.bentobox.greenhouses.listeners;
 
 import java.util.Optional;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -18,7 +21,7 @@ public class GreenhouseGuard implements Listener {
     }
 
     // Stop lava flow or water into or out of a greenhouse
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onFlow(final BlockFromToEvent e) {
         // Flow may be allowed anyway
         if (addon.getSettings().isAllowFlowIn() && addon.getSettings().isAllowFlowOut()) {
@@ -52,6 +55,21 @@ public class GreenhouseGuard implements Listener {
         e.setCancelled(true);
     }
 
+    /**
+     * Prevents pistons from pushing greenhouse wall or roof blocks
+     * @param e - event
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPistonPush(BlockPistonExtendEvent e) {
+        e.setCancelled(e.getBlocks().stream()
+                .map(Block::getLocation)
+                .filter(this::inGreenhouse)
+                .findFirst()
+                .isPresent());
+    }
 
+    private boolean inGreenhouse(Location l) {
+        return addon.getManager().getMap().getGreenhouse(l).map(g -> g.isRoofOrWallBlock(l)).orElse(false);
+    }
 }
 
