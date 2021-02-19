@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -61,6 +62,19 @@ public class GreenhouseGuard implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPistonPush(BlockPistonExtendEvent e) {
+        e.setCancelled(e.getBlocks().stream()
+                .map(Block::getLocation)
+                .filter(this::inGreenhouse)
+                .findFirst()
+                .isPresent());
+    }
+
+    /**
+     * Prevents sticky pistons from pulling greenhouse wall or roof blocks
+     * @param e - event
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPistonPull(BlockPistonRetractEvent e) {
         e.setCancelled(e.getBlocks().stream()
                 .map(Block::getLocation)
                 .filter(this::inGreenhouse)

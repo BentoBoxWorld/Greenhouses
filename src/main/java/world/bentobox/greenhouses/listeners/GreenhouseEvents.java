@@ -17,7 +17,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -169,21 +168,5 @@ public class GreenhouseEvents implements Listener {
         });
     }
 
-    private boolean checkBlockHeight(Block block) {
-        return addon.getManager().getMap().getGreenhouse(block.getLocation())
-                .filter(g -> g.getCeilingHeight() < block.getY())
-                .filter(g -> !block.getWorld().getEnvironment().equals(World.Environment.NETHER))
-                .isPresent();
-
-    }
-
-    /**
-     * Check to see if anyone is sneaking a block over a greenhouse by using a piston
-     * @param e - event
-     */
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled=true)
-    public void onPistonPush(final BlockPistonExtendEvent e) {
-        e.setCancelled(e.getBlocks().stream().anyMatch(this::checkBlockHeight));
-    }
 }
 

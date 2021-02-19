@@ -9,7 +9,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -24,7 +23,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -437,36 +435,6 @@ public class GreenhouseEventsTest {
         ghe.onBlockBreak(e);
         verify(user).sendMessage(eq("greenhouses.event.broke"), eq("[biome]"), eq("Bamboo Jungle"));
         verify(gm).removeGreenhouse(any());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPistonPush(org.bukkit.event.block.BlockPistonExtendEvent)}.
-     */
-    @Test
-    public void testOnPistonPush() {
-        Block block = mock(Block.class);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getY()).thenReturn(255);
-        when(block.getWorld()).thenReturn(world);
-        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
-        BlockPistonExtendEvent e = new BlockPistonExtendEvent(block, Collections.singletonList(block), BlockFace.EAST);
-        ghe.onPistonPush(e);
-        assertTrue(e.isCancelled());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPistonPush(org.bukkit.event.block.BlockPistonExtendEvent)}.
-     */
-    @Test
-    public void testOnPistonPushUnderGH() {
-        Block block = mock(Block.class);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getY()).thenReturn(0);
-        when(block.getWorld()).thenReturn(world);
-        when(world.getEnvironment()).thenReturn(Environment.NORMAL);
-        BlockPistonExtendEvent e = new BlockPistonExtendEvent(block, Collections.singletonList(block), BlockFace.EAST);
-        ghe.onPistonPush(e);
-        assertFalse(e.isCancelled());
     }
 
 }
