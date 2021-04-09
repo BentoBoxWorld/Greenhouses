@@ -256,11 +256,12 @@ public class Greenhouse implements DataObject {
      * @return true if wall or roof block
      */
     public boolean isRoofOrWallBlock(Location l) {
-        return ((l.getBlockY() == getCeilingHeight() - 1)
-                || l.getBlockX() == (int)getBoundingBox().getMinX()
-                || l.getBlockX() == (int)getBoundingBox().getMaxX() - 1
-                || l.getBlockZ() == (int)getBoundingBox().getMinZ()
-                || l.getBlockZ() == (int)getBoundingBox().getMaxZ() - 1
-                );
+        return (l.getBlockY() > this.getFloorHeight()
+                && ((l.getBlockY() == getCeilingHeight() - 1)
+                        || l.getBlockX() == (int)getBoundingBox().getMinX()
+                        || l.getBlockX() == (int)getBoundingBox().getMaxX() - 1
+                        || l.getBlockZ() == (int)getBoundingBox().getMinZ()
+                        || l.getBlockZ() == (int)getBoundingBox().getMaxZ() - 1
+                        ));
     }
 }
