@@ -245,7 +245,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
 
                 // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
-                if(ThreadLocalRandom.current().nextInt(10000) < conversion_option.getProbability()) {
+                if(ThreadLocalRandom.current().nextDouble() < conversion_option.getProbability()) {
                     // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
                     if(conversion_option.getLocalMaterial() != null) {
                         for(BlockFace adjacent_block : ADJ_BLOCKS) {
