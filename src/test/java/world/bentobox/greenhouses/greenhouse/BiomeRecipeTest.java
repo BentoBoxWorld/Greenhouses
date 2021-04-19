@@ -263,7 +263,7 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.WATER);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(gh, b);
+        br.convertBlock(b);
         verify(b).setType(Material.CLAY);
     }
 
@@ -282,7 +282,7 @@ public class BiomeRecipeTest {
         when(b.getRelative(any())).thenReturn(ab);
         when(ab.getLocation()).thenReturn(location);
         when(gh.contains(any())).thenReturn(false);
-        br.convertBlock(gh, b);
+        br.convertBlock(b);
         verify(b, never()).setType(any());
     }
 
@@ -299,7 +299,7 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.SAND);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(gh, b);
+        br.convertBlock(b);
         verify(b, never()).setType(Material.CLAY);
     }
 
@@ -311,7 +311,7 @@ public class BiomeRecipeTest {
         // Mock
         Block b = mock(Block.class);
         when(b.getType()).thenReturn(Material.SAND);
-        br.convertBlock(gh, b);
+        br.convertBlock(b);
         verify(b, never()).setType(Material.CLAY);
     }
 
@@ -333,7 +333,7 @@ public class BiomeRecipeTest {
         Block ab = mock(Block.class);
         when(ab.getType()).thenReturn(Material.WATER);
         when(b.getRelative(any())).thenReturn(ab);
-        br.convertBlock(gh, b);
+        br.convertBlock(b);
         verify(b, never()).setType(Material.CLAY);
     }
 

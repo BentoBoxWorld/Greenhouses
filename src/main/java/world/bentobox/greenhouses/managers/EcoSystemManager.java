@@ -1,14 +1,7 @@
 package world.bentobox.greenhouses.managers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
@@ -18,6 +11,15 @@ import org.bukkit.util.NumberConversions;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Runs the ecosystem for a greenhouse
@@ -54,7 +56,7 @@ public class EcoSystemManager {
         }
 
         // Kick block conversion growing
-        long blockTick = addon.getSettings().getBlockTick() * 60 * 20l; // In minutes
+        long blockTick = addon.getSettings().getBlockTick() * 60 * 20L; // In minutes
 
         if (blockTick > 0) {
             addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + MINUTES);
@@ -86,11 +88,24 @@ public class EcoSystemManager {
         if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
             return;
         }
-        for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
-            for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
-                for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY() && y > 0; y--) {
-                    Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z)).getRelative(BlockFace.DOWN);
-                    if (!b.isEmpty()) gh.getBiomeRecipe().convertBlock(gh, b);
+
+        int gh_min_x = NumberConversions.floor(gh.getInternalBoundingBox().getMinX());
+        int gh_max_x = NumberConversions.floor(gh.getInternalBoundingBox().getMaxX());
+        int gh_min_y = NumberConversions.floor(gh.getInternalBoundingBox().getMinY());
+        int gh_max_y = NumberConversions.floor(gh.getInternalBoundingBox().getMaxY());
+        int gh_min_z = NumberConversions.floor(gh.getInternalBoundingBox().getMinZ());
+        int gh_max_z = NumberConversions.floor(gh.getInternalBoundingBox().getMaxZ());
+        World world = gh.getWorld();
+        BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
+
+        for (int x = gh_min_x; x < gh_max_x; x++) {
+            for (int z = gh_min_z; z < gh_max_z; z++) {
+                for (int y = gh_min_y; y < gh_max_y; y++) {
+                    Block b = world.getBlockAt(x, y, z);
+
+                    if(!b.isEmpty()) {
+                        biomeRecipe.convertBlock(b);
+                    }
                 }
             }
         }
@@ -187,7 +202,7 @@ public class EcoSystemManager {
      * Get a list of the lowest level blocks inside the greenhouse. May be air, liquid or plants.
      * These blocks sit just above solid blocks
      * @param gh - greenhouse
-     * @param ignoreliquid - true if liquid blocks should be treated like air blocks
+     * @param ignoreLiquid - true if liquid blocks should be treated like air blocks
      * @return List of blocks
      */
     public List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {

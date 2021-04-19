@@ -5,12 +5,12 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -107,7 +107,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     /**
      * @param mobType - entity type
-     * @param mobProbability - reltive probability
+     * @param mobProbability - relative probability
      * @param mobSpawnOn - material to spawn on
      * @return true if add is successful
      */
@@ -236,22 +236,30 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     /**
      * Check if block should be converted
-     * @param gh  - greenhouse
      * @param b - block to check
      */
-    public void convertBlock(Greenhouse gh, Block b) {
-        conversionBlocks.get(b.getType()).stream().filter(Objects::nonNull)
-        .filter(bc -> random.nextDouble() < bc.getProbability())
-        .forEach(bc -> {
-            // Check if the block is in the right area, up, down, n,s,e,w
-            if (ADJ_BLOCKS.stream().map(b::getRelative)
-                    .filter(r -> gh.contains(r.getLocation()))
-                    .map(Block::getType)
-                    .anyMatch(m -> bc.getLocalMaterial() == null || m == bc.getLocalMaterial())) {
-                // Convert!
-                b.setType(bc.getNewMaterial());
+    public void convertBlock(Block b) {
+        Material bType  = b.getType();
+        // Check if there is a block conversion for this block, as while the rest of the method wont do anything if .get() returns nothing anyway it still seems to be quite expensive
+        if(conversionBlocks.keySet().contains(bType)) {
+            for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
+
+                // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
+                if(ThreadLocalRandom.current().nextDouble() < conversion_option.getProbability()) {
+                    // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
+                    if(conversion_option.getLocalMaterial() != null) {
+                        for(BlockFace adjacent_block : ADJ_BLOCKS) {
+                            if(b.getRelative(adjacent_block).getType() == conversion_option.getLocalMaterial()) {
+                                b.setType(conversion_option.getNewMaterial());
+                                break;
+                            }
+                        }
+                    } else {
+                        b.setType(conversion_option.getNewMaterial());
+                    }
+                }
             }
-        });
+        }
     }
 
     /**
