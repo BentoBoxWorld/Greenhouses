@@ -156,7 +156,7 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, double, org.bukkit.Material)}.
      */
     @Test
     public void testAddMobs() {
@@ -168,7 +168,7 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, double, org.bukkit.Material)}.
      */
     @Test
     public void testAddMobsOver100Percent() {
@@ -182,7 +182,7 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, int, org.bukkit.Material)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addMobs(org.bukkit.entity.EntityType, double, org.bukkit.Material)}.
      */
     @Test
     public void testAddMobsOver100PercentDouble() {
@@ -195,7 +195,7 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, double, org.bukkit.Material)}.
      */
     @Test
     public void testAddPlants() {
@@ -207,7 +207,7 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, int, org.bukkit.Material)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addPlants(org.bukkit.Material, double, org.bukkit.Material)}.
      */
     @Test
     public void testAddPlantsOver100Percent() {
@@ -271,25 +271,6 @@ public class BiomeRecipeTest {
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
      */
     @Test
-    public void testConvertBlockNotInGreenhouse() {
-        // Setup
-        this.testAddConvBlocks();
-        // Mock
-        Block b = mock(Block.class);
-        when(b.getType()).thenReturn(Material.SAND);
-        Block ab = mock(Block.class);
-        when(ab.getType()).thenReturn(Material.WATER);
-        when(b.getRelative(any())).thenReturn(ab);
-        when(ab.getLocation()).thenReturn(location);
-        when(gh.contains(any())).thenReturn(false);
-        br.convertBlock(b);
-        verify(b, never()).setType(any());
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
-     */
-    @Test
     public void testConvertBlockNoWater() {
         // Setup
         this.testAddConvBlocks();
@@ -313,6 +294,26 @@ public class BiomeRecipeTest {
         when(b.getType()).thenReturn(Material.SAND);
         br.convertBlock(b);
         verify(b, never()).setType(Material.CLAY);
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#convertBlock(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testConvertBlockNoLocalBlock() {
+        // Setup
+        Material oldMaterial = Material.SAND;
+        Material newMaterial = Material.CLAY;
+        double convChance = 100D;
+        br.addConvBlocks(oldMaterial, newMaterial, convChance, null);
+
+        // Mock
+        Block b = mock(Block.class);
+        when(b.getType()).thenReturn(Material.SAND);
+        br.convertBlock(b);
+
+        verify(b, never()).getRelative(any());
+        verify(b).setType(Material.CLAY);
     }
 
     /**
