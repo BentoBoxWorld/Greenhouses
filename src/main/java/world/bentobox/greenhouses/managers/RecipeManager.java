@@ -182,7 +182,10 @@ public class RecipeManager {
                         String[] split = conversions.split(":");
                         double convChance = Double.parseDouble(split[0]);
                         Material newMaterial = Material.valueOf(split[1]);
-                        Material localMaterial = Material.valueOf(split[2]);
+                        Material localMaterial = null;
+                        if(split.length > 2) {
+                            localMaterial = Material.valueOf(split[2]);
+                        }
                         b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
                     }
                 } catch (Exception e) {
@@ -199,7 +202,10 @@ public class RecipeManager {
                 Material oldMaterial = Material.valueOf(split[0].toUpperCase());
                 double convChance = Double.parseDouble(split[1]);
                 Material newMaterial = Material.valueOf(split[2]);
-                Material localMaterial = Material.valueOf(split[3]);
+                Material localMaterial = null;
+                if(split.length > 3) {
+                    localMaterial = Material.valueOf(split[3]);
+                }
                 b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
             } catch (Exception e) {
                 addon.logError("Could not parse " + oldMat);
