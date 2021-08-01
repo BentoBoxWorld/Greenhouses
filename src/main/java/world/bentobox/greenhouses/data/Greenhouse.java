@@ -229,11 +229,11 @@ public class Greenhouse implements DataObject {
 
     /**
      * Get the biome recipe for this greenhouse
-     * @return biome recipe or null
+     * @return biome recipe or a degenerate recipe
      */
-    @Nullable
+    @NonNull
     public BiomeRecipe getBiomeRecipe() {
-        return RecipeManager.getBiomeRecipies(biomeRecipeName).orElse(null);
+        return RecipeManager.getBiomeRecipies(biomeRecipeName).orElse(new BiomeRecipe());
     }
 
     /**

@@ -75,6 +75,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private final Random random = new Random();
 
 
+    /**
+     * Create a degenerate recipe with nothing in it
+     */
     public BiomeRecipe() {}
 
     /**
