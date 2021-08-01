@@ -293,7 +293,7 @@ public class GreenhouseTest {
      */
     @Test
     public void testGetMissingBlocks() {
-        assertNull(gh.getMissingBlocks());
+        assertNotNull(gh.getMissingBlocks());
     }
 
 }

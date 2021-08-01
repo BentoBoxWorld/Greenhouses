@@ -92,6 +92,10 @@ class MakeCommand extends CompositeCommand  {
      * @return true if successful
      */
     private boolean makeGreenhouse(User user, BiomeRecipe br) {
+        if (user.getLocation() == null) {
+            getAddon().logError("User had no location");
+            return false;
+        }
         // Check flag
         if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
             user.sendMessage("greenhouses.errors.no-rank");

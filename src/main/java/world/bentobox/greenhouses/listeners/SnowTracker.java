@@ -41,7 +41,15 @@ public class SnowTracker implements Listener {
 
     }
 
+    /**
+     * @param gh - greenhouse
+     * @return true if snow was create, false if not.
+     */
     private boolean getAirBlocks(Greenhouse gh) {
+        if (gh.getLocation() == null) {
+            // Greenhouse does not have a location for some reason.
+            return false;
+        }
         boolean createdSnow = false;
         List<Block> waterBlocks = new ArrayList<>();
         for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX() -1; x++) {
@@ -108,7 +116,7 @@ public class SnowTracker implements Listener {
 
     private void removeWaterBucketAndShake(Greenhouse g) {
         // Scatter snow
-        if (getAirBlocks(g)) {
+        if (getAirBlocks(g) && g.getRoofHopperLocation() != null) {
             Hopper h = ((Hopper)g.getRoofHopperLocation().getBlock().getState());
             h.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET));
             h.getInventory().addItem(new ItemStack(Material.BUCKET));

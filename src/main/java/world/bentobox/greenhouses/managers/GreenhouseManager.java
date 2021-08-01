@@ -139,6 +139,14 @@ public class GreenhouseManager implements Listener {
     public void removeGreenhouse(Greenhouse g) {
         handler.deleteObject(g);
         map.removeGreenhouse(g);
+        if (g.getOriginalBiome() == null) {
+            addon.logError("Greenhouse had no original biome: " + g.getLocation());
+            return;
+        }
+        if (g.getLocation() == null || g.getLocation().getWorld() == null) {
+            // Greenhouse is messed up. It's being deleted anyway.
+            return;
+        }
         addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
         for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x+=4) {
             for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMaxZ(); z+=4) {

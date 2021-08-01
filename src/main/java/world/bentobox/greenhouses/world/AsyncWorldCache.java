@@ -2,6 +2,7 @@ package world.bentobox.greenhouses.world;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -101,7 +102,7 @@ public class AsyncWorldCache {
         int xx = x >= 0 ? x % 16 : (16 + (x % 16)) % 16;
         int zz = z >= 0 ? z % 16 : (16 + (z % 16)) % 16;
         try {
-            return getSnap(x,z).getBlockType(xx, y, zz);
+            return Objects.requireNonNull(getSnap(x, z)).getBlockType(xx, y, zz);
         } catch (InterruptedException | ExecutionException e) {
             Greenhouses.getInstance().logError("Chunk could not be obtained async! " + e);
             // Restore interrupted state...

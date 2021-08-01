@@ -108,7 +108,15 @@ public class GreenhouseEvents implements Listener {
         handleTransition(User.getInstance(e.getPlayer()), e.getTo(), e.getFrom());
     }
 
+    /**
+     * @param user user
+     * @param toLoc to location
+     * @param fromLoc from location
+     */
     private void handleTransition(User user, Location toLoc, Location fromLoc) {
+        if (user == null) {
+            return;
+        }
         Optional<Greenhouse> to = addon.getManager().getMap().getGreenhouse(toLoc);
         Optional<Greenhouse> from = addon.getManager().getMap().getGreenhouse(fromLoc);
         if (to.isEmpty() && from.isEmpty()) {

@@ -85,7 +85,10 @@ public class EcoSystemManager {
     }
 
     private void convertBlocks(Greenhouse gh) {
-        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+        World world = gh.getWorld();
+        if(world == null || gh.getLocation() == null || gh.getLocation().getWorld() == null
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4)
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
             return;
         }
 
@@ -95,7 +98,6 @@ public class EcoSystemManager {
         int gh_max_y = NumberConversions.floor(gh.getInternalBoundingBox().getMaxY());
         int gh_min_z = NumberConversions.floor(gh.getInternalBoundingBox().getMinZ());
         int gh_max_z = NumberConversions.floor(gh.getInternalBoundingBox().getMaxZ());
-        World world = gh.getWorld();
         BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
 
         for (int x = gh_min_x; x < gh_max_x; x++) {
@@ -112,8 +114,10 @@ public class EcoSystemManager {
     }
 
     private void verify(Greenhouse gh) {
-        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
-            //addon.log("Skipping verify for unloaded greenhouse at " + gh.getLocation());
+        if(gh.getLocation() == null || gh.getLocation().getWorld() == null
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4)
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            // Skipping verify for unloaded greenhouse
             return;
         }
         gh.getBiomeRecipe().checkRecipe(gh).thenAccept(rs -> {
@@ -126,8 +130,9 @@ public class EcoSystemManager {
     }
 
     private void addMobs(Greenhouse gh) {
-        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
-            //addon.log("Skipping addmobs for unloaded greenhouse at " + gh.getLocation());
+        if(gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            // Skipping addmobs for unloaded greenhouse
             return;
         }
         if (gh.getBiomeRecipe().noMobs()) {
@@ -166,8 +171,9 @@ public class EcoSystemManager {
      * @param gh - greenhouse
      */
     private void growPlants(Greenhouse gh) {
-        if(!gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
-            //addon.log("Skipping growplants for unloaded greenhouse at " + gh.getLocation());
+        if (gh.getLocation() == null || gh.getLocation().getWorld() == null
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+            //Skipping growplants for unloaded greenhouse
             return;
         }
         int bonemeal = getBoneMeal(gh);
@@ -207,6 +213,7 @@ public class EcoSystemManager {
      */
     public List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
         List<Block> result = new ArrayList<>();
+        if (gh.getWorld() == null) return result;
         for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
             for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
                 for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY(); y--) {
@@ -234,12 +241,14 @@ public class EcoSystemManager {
                 .mapToInt(ItemStack::getAmount).sum();
     }
 
+    /**
+     * Get the hopper
+     * @param gh greenhouse
+     * @return hopper block or null if it does not exist
+     */
     private Hopper getHopper(Greenhouse gh) {
-        if (gh.getRoofHopperLocation() == null) {
-            return null;
-        }
         // Check if the hopper block is still a hopper
-        if (gh.getRoofHopperLocation().getBlock().getType() != Material.HOPPER) {
+        if (gh.getRoofHopperLocation() == null || !gh.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER)) {
             gh.setRoofHopperLocation(null);
             return null;
         }

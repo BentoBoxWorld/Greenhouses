@@ -1,5 +1,6 @@
 package world.bentobox.greenhouses.data;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -158,7 +159,11 @@ public class Greenhouse implements DataObject {
      * @param v the roofHopperLocation to set
      */
     public void setRoofHopperLocation(@Nullable Vector v) {
-        this.roofHopperLocation = v == null ? null : v.toLocation(getWorld());
+        if (v == null || getWorld() == null) {
+            this.roofHopperLocation = null;
+        } else {
+            this.roofHopperLocation = v.toLocation(getWorld());
+        }
     }
 
     /**
@@ -206,7 +211,7 @@ public class Greenhouse implements DataObject {
      */
     @Nullable
     public World getWorld() {
-        return this.getLocation().getWorld();
+        return this.getLocation() == null ? null : this.getLocation().getWorld();
     }
 
     /**
@@ -246,9 +251,9 @@ public class Greenhouse implements DataObject {
     /**
      * @return the missingBlocks
      */
-    @Nullable
+    @NonNull
     public Map<Material, Integer> getMissingBlocks() {
-        return missingBlocks;
+        return Objects.requireNonNullElseGet(missingBlocks, () -> new HashMap<>());
     }
 
     /**

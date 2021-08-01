@@ -34,7 +34,7 @@ public class GreenhouseMap {
      */
     public GreenhouseResult addGreenhouse(Greenhouse greenhouse) {
         // Validation checks
-        if (greenhouse.getBiomeRecipe() == null) {
+        if (greenhouse.getBiomeRecipe().getBiome() == null) {
             return GreenhouseResult.FAIL_UNKNOWN_RECIPE;
         }
         if (greenhouse.getWorld() == null) {
@@ -105,7 +105,7 @@ public class GreenhouseMap {
     }
 
     private boolean isOverlapping(Greenhouse greenhouse) {
-        return addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
+        return greenhouse.getLocation() != null && addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
             return greenhouses.get(i).stream().anyMatch(g -> g.getBoundingBox().overlaps(greenhouse.getBoundingBox()));
         }).orElse(false);
@@ -117,9 +117,11 @@ public class GreenhouseMap {
      * @param greenhouse - greenhouse
      */
     protected void removeGreenhouse(Greenhouse greenhouse) {
-        addon.getIslands().getIslandAt(greenhouse.getLocation()).ifPresent(i -> {
-            if (greenhouses.containsKey(i)) greenhouses.get(i).remove(greenhouse);
-        });
+        if (greenhouse.getLocation() != null) {
+            addon.getIslands().getIslandAt(greenhouse.getLocation()).ifPresent(i -> {
+                if (greenhouses.containsKey(i)) greenhouses.get(i).remove(greenhouse);
+            });
+        }
     }
 
     /**
