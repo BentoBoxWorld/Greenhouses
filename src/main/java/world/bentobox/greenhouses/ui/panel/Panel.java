@@ -13,7 +13,7 @@ import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 public class Panel {
 
     private static final String COVERAGE = "[coverage]";
-    private Greenhouses addon;
+    private final Greenhouses addon;
 
     public Panel(Greenhouses addon) {
         super();

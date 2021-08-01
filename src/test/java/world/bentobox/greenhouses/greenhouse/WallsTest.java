@@ -58,11 +58,8 @@ public class WallsTest {
     private CompletableFuture<Walls> r;
 
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
@@ -153,7 +150,7 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#lookAtBlockFaces(world.bentobox.greenhouses.greenhouse.Walls.WallFinder, org.bukkit.World, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#lookAtBlockFaces(WallFinder, int, int, int)}.
      */
     @Test
     public void testLookAtBlockFaces() {
@@ -166,7 +163,7 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#lookAtBlockFaces(world.bentobox.greenhouses.greenhouse.Walls.WallFinder, org.bukkit.World, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#lookAtBlockFaces(WallFinder, int, int, int)}.
      */
     @Test
     public void testLookAtBlockFacesNoGlass() {
@@ -180,7 +177,7 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(org.bukkit.World, int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorYZeroY() {
@@ -188,7 +185,7 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(org.bukkit.World, int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorY() {

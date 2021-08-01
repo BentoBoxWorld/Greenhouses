@@ -38,7 +38,7 @@ public class GreenhouseGuard implements Listener {
         // 1. inside district or outside - always ok
         // 2. inside to outside - allowFlowOut determines
         // 3. outside to inside - allowFlowIn determines
-        if (!to.isPresent() && !from.isPresent()) {
+        if (to.isEmpty() && from.isEmpty()) {
             return;
         }
         if (to.isPresent() && from.isPresent() && to.equals(from)) {
@@ -64,9 +64,7 @@ public class GreenhouseGuard implements Listener {
     public void onPistonPush(BlockPistonExtendEvent e) {
         e.setCancelled(e.getBlocks().stream()
                 .map(Block::getLocation)
-                .filter(this::inGreenhouse)
-                .findFirst()
-                .isPresent());
+                .anyMatch(this::inGreenhouse));
     }
 
     /**
@@ -77,9 +75,7 @@ public class GreenhouseGuard implements Listener {
     public void onPistonPull(BlockPistonRetractEvent e) {
         e.setCancelled(e.getBlocks().stream()
                 .map(Block::getLocation)
-                .filter(this::inGreenhouse)
-                .findFirst()
-                .isPresent());
+                .anyMatch(this::inGreenhouse));
     }
 
     private boolean inGreenhouse(Location l) {

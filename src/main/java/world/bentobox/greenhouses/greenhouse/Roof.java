@@ -1,12 +1,10 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,13 +26,12 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
 public class Roof extends MinMaxXZ {
     private static final List<Material> ROOF_BLOCKS;
     static {
-        List<Material> r = Arrays.stream(Material.values())
+        // Roof blocks
+        ROOF_BLOCKS = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
                         || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
-                        || m.equals(Material.HOPPER)) // Hoppers
-                .collect(Collectors.toList());
-        ROOF_BLOCKS = Collections.unmodifiableList(r);
+                        || m.equals(Material.HOPPER)).toList();
     }
     /**
      * Check if material is a roof material
@@ -56,7 +53,7 @@ public class Roof extends MinMaxXZ {
 
     /**
      * Finds a roof from a starting location under the roof and characterizes it
-     * @param cache
+     * @param cache async world cache
      * @param loc - starting location
      */
     public Roof(AsyncWorldCache cache, Location loc) {
@@ -207,7 +204,6 @@ public class Roof extends MinMaxXZ {
 
     /**
      * Get highest roof block
-     * @param v - vector of search block
      * @param x - x coord of current search
      * @param startY - starting y coord
      * @param z - z coord of current search

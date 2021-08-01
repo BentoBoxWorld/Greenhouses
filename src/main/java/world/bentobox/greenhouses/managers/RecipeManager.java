@@ -218,7 +218,7 @@ public class RecipeManager {
         ConfigurationSection temp = biomeRecipeConfig.getConfigurationSection("mobs");
         // Mob EntityType: Probability:Spawn on Material
         if (temp != null) {
-            ((HashMap<String,Object>)temp.getValues(false)).entrySet().forEach(s -> parseMob(s,b));
+            temp.getValues(false).entrySet().forEach(s -> parseMob(s,b));
         }
 
     }

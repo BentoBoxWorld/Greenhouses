@@ -29,7 +29,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,11 +80,8 @@ public class GreenhouseEventsTest {
     @Mock
     private ItemStack waterBucket;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(User.class);
         when(User.getInstance(any(Player.class))).thenReturn(user);
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
@@ -130,14 +126,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherInGreenhouse() {
@@ -154,7 +143,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherOutsideOfGreenhouse() {
@@ -171,7 +160,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherGreenhouse() {
@@ -187,7 +176,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherNotInNether() {
@@ -206,7 +195,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherNotWaterBucket() {
@@ -222,7 +211,7 @@ public class GreenhouseEventsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(org.bukkit.event.player.PlayerInteractEvent)}.
+     * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
     public void testOnPlayerInteractInNetherNotInGreenhouse() {

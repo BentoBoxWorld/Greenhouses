@@ -13,10 +13,10 @@ import world.bentobox.greenhouses.Greenhouses;
  */
 public class IslandChangeEvents implements Listener {
 
-    private Greenhouses addon;
+    private final Greenhouses addon;
 
     /**
-     * @param addon
+     * @param addon greenhouse addon
      */
     public IslandChangeEvents(Greenhouses addon) {
         this.addon = addon;

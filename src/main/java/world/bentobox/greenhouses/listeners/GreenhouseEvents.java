@@ -1,7 +1,5 @@
 package world.bentobox.greenhouses.listeners;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,13 +32,8 @@ public class GreenhouseEvents implements Listener {
     private static final String BIOME = "[biome]";
     private static final Set<Biome> NETHER_BIOMES;
     static {
-        Set<Biome> nb = new HashSet<>();
-        nb.add(Biome.NETHER_WASTES);
-        nb.add(Biome.WARPED_FOREST);
-        nb.add(Biome.CRIMSON_FOREST);
-        nb.add(Biome.SOUL_SAND_VALLEY);
-        nb.add(Biome.BASALT_DELTAS);
-        NETHER_BIOMES = Collections.unmodifiableSet(nb);
+        NETHER_BIOMES = Set.of(Biome.NETHER_WASTES, Biome.WARPED_FOREST, Biome.CRIMSON_FOREST,
+                Biome.SOUL_SAND_VALLEY, Biome.BASALT_DELTAS);
     }
     private final Greenhouses addon;
 
@@ -118,7 +111,7 @@ public class GreenhouseEvents implements Listener {
     private void handleTransition(User user, Location toLoc, Location fromLoc) {
         Optional<Greenhouse> to = addon.getManager().getMap().getGreenhouse(toLoc);
         Optional<Greenhouse> from = addon.getManager().getMap().getGreenhouse(fromLoc);
-        if (!to.isPresent() && !from.isPresent()) {
+        if (to.isEmpty() && from.isEmpty()) {
             return;
         }
         if (to.isPresent() && from.isPresent()) {
@@ -131,12 +124,12 @@ public class GreenhouseEvents implements Listener {
             return;
         }
         // from is a greenhouse
-        if (from.isPresent() && !to.isPresent()) {
+        if (from.isPresent() && to.isEmpty()) {
             // Exiting
             user.sendMessage("greenhouses.event.leaving", BIOME, from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
-        if (!from.isPresent()) {
+        if (from.isEmpty()) {
             // Entering
             user.sendMessage("greenhouses.event.entering", BIOME, to.get().getBiomeRecipe().getFriendlyName());
         }

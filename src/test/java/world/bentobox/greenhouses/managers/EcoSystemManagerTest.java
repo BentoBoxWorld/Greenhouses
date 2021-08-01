@@ -1,6 +1,3 @@
-/**
- *
- */
 package world.bentobox.greenhouses.managers;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,10 +47,9 @@ public class EcoSystemManagerTest {
     // CUT
     private EcoSystemManager eco;
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         gh = new Greenhouse();
         // 4x4x4 greenhouse
         BoundingBox bb = BoundingBox.of(new Vector(0,0,0), new Vector(6,5,6));
@@ -89,14 +84,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAirAboveBlock() {
@@ -106,7 +94,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksPlantAboveBlock() {
@@ -117,7 +105,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAllAir() {
@@ -127,7 +115,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAllLiquid() {
@@ -138,7 +126,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAllPlant() {
@@ -150,7 +138,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksLiquidAboveBlockIgnoreLiquids() {
@@ -161,7 +149,7 @@ public class EcoSystemManagerTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAirAboveLiquidNotIgnoreLiquids() {
@@ -173,13 +161,13 @@ public class EcoSystemManagerTest {
 
         List<Block> result = eco.getAvailableBlocks(gh, false);
         assertEquals(16, result.size());
-        for (int i = 0; i< result.size(); i++) {
-            assertEquals(air, result.get(i));
+        for (Block value : result) {
+            assertEquals(air, value);
         }
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(world.bentobox.greenhouses.data.Greenhouse)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
     public void testGetAvailableBlocksAirAboveLiquidIgnoreLiquids() {
@@ -191,8 +179,8 @@ public class EcoSystemManagerTest {
 
         List<Block> result = eco.getAvailableBlocks(gh, true);
         assertEquals(16, result.size());
-        for (int i = 0; i< result.size(); i++) {
-            assertEquals(liquid, result.get(i));
+        for (Block value : result) {
+            assertEquals(liquid, value);
         }
     }
 }

@@ -1,10 +1,8 @@
 package world.bentobox.greenhouses.greenhouse;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,14 +15,13 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
 public class Walls extends MinMaxXZ {
     private static final List<Material> WALL_BLOCKS;
     static {
-        List<Material> w = Arrays.stream(Material.values())
+        // Hoppers
+        WALL_BLOCKS = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
                 .filter(m -> m.name().contains("DOOR") // All doors
                         || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
-                        || m.equals(Material.HOPPER)) // Hoppers
-                .collect(Collectors.toList());
-        WALL_BLOCKS = Collections.unmodifiableList(w);
+                        || m.equals(Material.HOPPER)).toList();
     }
 
     private int floor;

@@ -80,8 +80,7 @@ public class GreenhouseFinder {
 
     /**
      * Check the greenhouse has the right number of everything
-     * @param cache
-     * @param gh2 - greenhouse
+     * @param cache async world cache
      * @param roof - roof object
      * @param walls - walls object
      * @return future set of Greenhouse Results
@@ -94,7 +93,6 @@ public class GreenhouseFinder {
 
     private Set<GreenhouseResult> checkGHAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
             Roof roof, Walls walls) {
-        Set<GreenhouseResult> result = new HashSet<>();
         cc = new CounterCheck();
         int y;
         for (y = roof.getHeight(); y > walls.getFloor(); y--) {
@@ -116,7 +114,7 @@ public class GreenhouseFinder {
             }
         }
 
-        result.addAll(checkErrors(roof, y));
+        Set<GreenhouseResult> result = new HashSet<>(checkErrors(roof, y));
         Bukkit.getScheduler().runTask(BentoBox.getInstance(), () -> r.complete(result));
         return result;
     }

@@ -185,7 +185,6 @@ public class GreenhouseManager implements Listener {
     /**
      * Tries to match the greenhouse to a recipe by going through all of them in order
      * @param finder - finder object
-     * @param resultSet - result set from find
      */
     private CompletableFuture<Set<GreenhouseResult>> findRecipe(GreenhouseFinder finder) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
@@ -214,7 +213,6 @@ public class GreenhouseManager implements Listener {
 
     /**
      * Checks to see if the greenhouse meets the designated recipe and returns the result
-     * @param r - completable future
      * @param finder - finder object
      * @param greenhouseRecipe - recipe requested
      * @param resultSet - result set from finder

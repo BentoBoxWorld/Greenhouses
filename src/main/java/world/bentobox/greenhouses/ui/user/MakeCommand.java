@@ -52,7 +52,7 @@ class MakeCommand extends CompositeCommand  {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         if (args.isEmpty()) {
-            new Panel((Greenhouses)this.getAddon()).showPanel(user);
+            new Panel(this.getAddon()).showPanel(user);
             return true;
         }
         // Check recipe given matches
@@ -83,7 +83,7 @@ class MakeCommand extends CompositeCommand  {
     private Map<String, BiomeRecipe> getRecipes(User user) {
         return ((Greenhouses)getAddon()).getRecipes().getBiomeRecipes().stream()
                 .filter(br -> user.hasPermission(br.getPermission()))
-                .collect(Collectors.toMap(br -> br.getName(), br -> br));
+                .collect(Collectors.toMap(BiomeRecipe::getName, br -> br));
     }
 
     /**
@@ -129,7 +129,7 @@ class MakeCommand extends CompositeCommand  {
 
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
-        return Optional.of(new ArrayList<String>(this.getRecipes(user).keySet()));
+        return Optional.of(new ArrayList<>(this.getRecipes(user).keySet()));
     }
 
 }

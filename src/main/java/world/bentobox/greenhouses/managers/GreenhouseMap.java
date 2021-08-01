@@ -123,7 +123,7 @@ public class GreenhouseMap {
     }
 
     /**
-     * @param island
+     * @param island island
      */
     public void removeGreenhouses(Island island) {
         greenhouses.remove(island);

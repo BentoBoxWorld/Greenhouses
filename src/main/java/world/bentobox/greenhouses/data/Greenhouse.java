@@ -1,6 +1,7 @@
 package world.bentobox.greenhouses.data;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -163,17 +164,17 @@ public class Greenhouse implements DataObject {
     /**
      * @return the boundingBox
      */
-    @Nullable
+    @NonNull
     public BoundingBox getBoundingBox() {
-        return boundingBox;
+        return Objects.requireNonNullElseGet(boundingBox, BoundingBox::new);
     }
 
     /**
      * @return a bounding box of the greenhouse that does not include the walls or roof
      */
-    @Nullable
+    @NonNull
     public BoundingBox getInternalBoundingBox() {
-        return boundingBox == null ? null : boundingBox.clone().expand(-1D);
+        return getBoundingBox().clone().expand(-1D);
     }
 
     /**

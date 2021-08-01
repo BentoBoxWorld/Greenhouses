@@ -22,8 +22,8 @@ import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
  */
 public class PanelClick implements ClickHandler {
 
-    private Greenhouses addon;
-    private BiomeRecipe br;
+    private final Greenhouses addon;
+    private final BiomeRecipe br;
 
     public PanelClick(Greenhouses addon, BiomeRecipe br) {
         this.addon = addon;

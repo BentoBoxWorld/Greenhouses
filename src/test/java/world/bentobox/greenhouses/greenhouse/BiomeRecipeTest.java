@@ -61,7 +61,6 @@ public class BiomeRecipeTest {
     @Mock
     private Greenhouses addon;
 
-    private Biome type;
     @Mock
     private Greenhouse gh;
 
@@ -85,14 +84,11 @@ public class BiomeRecipeTest {
     @Mock
     private Settings settings;
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
+   @Before
+    public void setUp() {
         PowerMockito.mockStatic(Bukkit.class);
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
-        type = Biome.BADLANDS;
+        Biome type = Biome.BADLANDS;
         // Greenhouse
         when(gh.getArea()).thenReturn(100);
         when(gh.getFloorHeight()).thenReturn(100);

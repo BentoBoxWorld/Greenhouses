@@ -40,7 +40,7 @@ class RemoveCommand extends CompositeCommand {
             user.sendMessage("greenhouses.errors.no-rank");
             return false;
         }
-        Greenhouses addon = ((Greenhouses)this.getAddon());
+        Greenhouses addon = this.getAddon();
         // Remove greenhouse if it exists
         if (!addon.getManager().getMap().getGreenhouse(user.getLocation()).map(gh -> {
             user.sendMessage("general.success");

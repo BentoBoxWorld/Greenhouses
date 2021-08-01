@@ -17,7 +17,7 @@ public class SettingsTest {
     private Settings s;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         s = new Settings();
     }
 

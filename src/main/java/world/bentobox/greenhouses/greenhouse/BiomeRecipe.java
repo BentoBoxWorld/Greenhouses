@@ -64,7 +64,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     // Conversions
     // Original Material, Original Type, New Material, New Type, Probability
     //private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new EnumMap<>(Material.class);
-    private Multimap<Material, GreenhouseBlockConversions> conversionBlocks = ArrayListMultimap.create();
+    private final Multimap<Material, GreenhouseBlockConversions> conversionBlocks = ArrayListMultimap.create();
 
     private int mobLimit;
     private int waterCoverage;
@@ -121,7 +121,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
             return true;
         } else {
-            addon.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType.toString());
+            addon.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType);
             return false;
         }
     }
@@ -245,17 +245,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
 
                 // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
-                if(ThreadLocalRandom.current().nextDouble() < conversion_option.getProbability()) {
+                if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
                     // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
-                    if(conversion_option.getLocalMaterial() != null) {
+                    if(conversion_option.localMaterial() != null) {
                         for(BlockFace adjacent_block : ADJ_BLOCKS) {
-                            if(b.getRelative(adjacent_block).getType() == conversion_option.getLocalMaterial()) {
-                                b.setType(conversion_option.getNewMaterial());
+                            if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
+                                b.setType(conversion_option.newMaterial());
                                 break;
                             }
                         }
                     } else {
-                        b.setType(conversion_option.getNewMaterial());
+                        b.setType(conversion_option.newMaterial());
                     }
                 }
             }
@@ -345,10 +345,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
         return getRandomMob()
                 // Check if the spawn on block matches, if it exists
-                .filter(m -> m.getMobSpawnOn().map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
+                .filter(m -> Optional.of(m.mobSpawnOn()).map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
-                    Entity entity = b.getWorld().spawnEntity(spawnLoc, m.getMobType());
+                    Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
                     if (entity != null) {
                         preventZombie(entity);
                         return addon
@@ -383,13 +383,11 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             return;
         }
 
-        if (entity instanceof Piglin) {
-            Piglin p = (Piglin)entity;
+        if (entity instanceof Piglin p) {
             p.setImmuneToZombification(true);
             return;
         }
-        if (entity instanceof Hoglin) {
-            Hoglin h = (Hoglin)entity;
+        if (entity instanceof Hoglin h) {
             h.setImmuneToZombification(true);
         }
     }
@@ -434,11 +432,11 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             return false;
         }
         return getRandomPlant().map(p -> {
-            if (bl.getY() != 0 && p.getPlantGrownOn().map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(false)) {
-                BlockData dataBottom = p.getPlantMaterial().createBlockData();
+            if (bl.getY() != 0 && Optional.of(p.plantGrownOn()).map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(false)) {
+                BlockData dataBottom = p.plantMaterial().createBlockData();
                 if (dataBottom instanceof Bisected) {
                     ((Bisected) dataBottom).setHalf(Bisected.Half.BOTTOM);
-                    BlockData dataTop = p.getPlantMaterial().createBlockData();
+                    BlockData dataTop = p.plantMaterial().createBlockData();
                     ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
                     if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
                         bl.setBlockData(dataBottom, false);
@@ -557,7 +555,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return the mob types that may spawn due to this recipe
      */
     public Set<EntityType> getMobTypes() {
-        return mobTree.values().stream().map(GreenhouseMob::getMobType).collect(Collectors.toSet());
+        return mobTree.values().stream().map(GreenhouseMob::mobType).collect(Collectors.toSet());
     }
 
 

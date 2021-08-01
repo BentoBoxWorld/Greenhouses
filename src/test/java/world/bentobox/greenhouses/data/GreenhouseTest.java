@@ -55,11 +55,8 @@ public class GreenhouseTest {
     @Mock
     private BiomeRecipe br;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // RecipeManager
         PowerMockito.mockStatic(RecipeManager.class);
         when(br.getName()).thenReturn("test");
@@ -74,10 +71,9 @@ public class GreenhouseTest {
     }
 
     /**
-     * @throws java.lang.Exception
      */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         Mockito.framework().clearInlineMocks();
     }
 
@@ -189,7 +185,7 @@ public class GreenhouseTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#setRoofHopperLocation(org.bukkit.Location)}.
+     * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#setRoofHopperLocation(Vector)}.
      */
     @Test
     public void testSetRoofHopperLocation() {
@@ -288,7 +284,7 @@ public class GreenhouseTest {
     @Test
     public void testSetMissingBlocks() {
         gh.setMissingBlocks(Collections.singletonMap(Material.ACACIA_BOAT, 20));
-        assertTrue(gh.getMissingBlocks().get(Material.ACACIA_BOAT) == 20);
+        assertEquals(20, (int) gh.getMissingBlocks().get(Material.ACACIA_BOAT));
     }
 
     /**

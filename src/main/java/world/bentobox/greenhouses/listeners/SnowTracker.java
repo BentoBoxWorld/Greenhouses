@@ -83,7 +83,7 @@ public class SnowTracker implements Listener {
 
     /**
      * TODO finish
-     * @param e
+     * @param e block form event
      */
     @EventHandler
     public void onBlockFormEvent(final BlockFormEvent e) {
@@ -121,14 +121,12 @@ public class SnowTracker implements Listener {
         .filter(g -> g.getLocation().getWorld().equals(world))
         .filter(g -> !g.isBroken())
         .filter(g -> g.getRoofHopperLocation() != null)
-        .forEach(g -> {
-            Util.getChunkAtAsync(g.getRoofHopperLocation()).thenRun(() -> {
-                if (g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER)
-                        && ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET)) {
-                    removeWaterBucketAndShake(g);
-                }
-            });
-        });
+        .forEach(g -> Util.getChunkAtAsync(g.getRoofHopperLocation()).thenRun(() -> {
+            if (g.getRoofHopperLocation().getBlock().getType().equals(Material.HOPPER)
+                    && ((Hopper)g.getRoofHopperLocation().getBlock().getState()).getInventory().contains(Material.WATER_BUCKET)) {
+                removeWaterBucketAndShake(g);
+            }
+        }));
     }
 
     private void startSnow(World world) {

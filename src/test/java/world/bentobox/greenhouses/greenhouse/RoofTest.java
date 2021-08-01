@@ -46,11 +46,8 @@ public class RoofTest {
     @Mock
     private AsyncWorldCache cache;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);

@@ -64,10 +64,9 @@ public class GreenhouseFinderTest {
     private AsyncWorldCache cache;
 
     /**
-     * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
@@ -100,7 +99,7 @@ public class GreenhouseFinderTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkGreenhouse(world.bentobox.greenhouses.data.Greenhouse, world.bentobox.greenhouses.greenhouse.Roof, world.bentobox.greenhouses.greenhouse.Walls)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkGreenhouse(AsyncWorldCache, Roof, Walls)}.
      */
     @Test
     public void testCheckGreenhouse() {
@@ -225,7 +224,7 @@ public class GreenhouseFinderTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck, org.bukkit.block.Block)}.
+     * Test method for {@link world.bentobox.greenhouses.managers.GreenhouseFinder#checkDoorsHoppers(CounterCheck, Material, Vector)}.
      */
     @Test
     public void testCheckDoorsHoppersHopper() {
