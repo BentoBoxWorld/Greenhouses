@@ -46,6 +46,7 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
 
@@ -84,7 +85,7 @@ public class BiomeRecipeTest {
     @Mock
     private Settings settings;
 
-   @Before
+    @Before
     public void setUp() {
         PowerMockito.mockStatic(Bukkit.class);
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
@@ -158,9 +159,9 @@ public class BiomeRecipeTest {
     public void testAddMobs() {
         EntityType mobType = EntityType.CAT;
         int mobProbability = 50;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).log(eq("   50.0% chance for Cat to spawn on Grass Path."));
+        verify(addon).log(eq("   50.0% chance for Cat to spawn on Grass Block."));
     }
 
     /**
@@ -170,7 +171,7 @@ public class BiomeRecipeTest {
     public void testAddMobsOver100Percent() {
         EntityType mobType = EntityType.CAT;
         int mobProbability = 50;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
@@ -184,7 +185,7 @@ public class BiomeRecipeTest {
     public void testAddMobsOver100PercentDouble() {
         EntityType mobType = EntityType.CAT;
         double mobProbability = 50.5;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         verify(addon).logError(eq("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT"));
@@ -432,12 +433,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMobOutsideWall() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.CAT;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Entity cat = mock(Cat.class);
         // Same box as greenhouse
@@ -458,12 +459,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMob() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.CAT;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Entity cat = mock(Cat.class);
         // Exactly 1 block smaller than the greenhouse blocks
@@ -484,12 +485,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMobHoglin() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.HOGLIN;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Hoglin hoglin = mock(Hoglin.class);
         // Exactly 1 block smaller than the greenhouse blocks
@@ -512,12 +513,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMobPiglin() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.PIGLIN;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Piglin piglin = mock(Piglin.class);
         // Exactly 1 block smaller than the greenhouse blocks
@@ -542,12 +543,12 @@ public class BiomeRecipeTest {
         when(world.getEnvironment()).thenReturn(Environment.NETHER);
 
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.PIGLIN;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Piglin piglin = mock(Piglin.class);
         // Exactly 1 block smaller than the greenhouse blocks
@@ -570,12 +571,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMobWrongSurface() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getType()).thenReturn(Material.STONE);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.CAT;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         Entity cat = mock(Cat.class);
         when(world.spawnEntity(any(), any())).thenReturn(cat);
@@ -592,12 +593,12 @@ public class BiomeRecipeTest {
     @Test
     public void testSpawnMobFailToSpawn() {
         when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_PATH);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(any())).thenReturn(block);
 
         EntityType mobType = EntityType.CAT;
         int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_PATH;
+        Material mobSpawnOn = Material.GRASS_BLOCK;
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertFalse(br.spawnMob(block));
@@ -627,7 +628,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantNotAir() {
         when(block.getType()).thenReturn(Material.SOUL_SAND);
-        assertFalse(br.growPlant(block));
+        assertFalse(br.growPlant(new GrowthBlock(block, true)));
     }
 
     /**
@@ -637,7 +638,7 @@ public class BiomeRecipeTest {
     public void testGrowPlantNoPlants() {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
-        assertFalse(br.growPlant(block));
+        assertFalse(br.growPlant(new GrowthBlock(block, true)));
     }
 
     /**
@@ -649,7 +650,7 @@ public class BiomeRecipeTest {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(block));
+        assertFalse(br.growPlant(new GrowthBlock(block, true)));
     }
 
     /**
@@ -665,9 +666,44 @@ public class BiomeRecipeTest {
 
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(block));
+        assertTrue(br.growPlant(new GrowthBlock(block, true)));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantCeilingPlants() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GLASS);
+
+        when(block.getRelative(any())).thenReturn(ob);
+        assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
+        assertTrue(br.growPlant(new GrowthBlock(block, false)));
+        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(block).setBlockData(eq(bd), eq(false));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
+     */
+    @Test
+    public void testGrowPlantCeilingPlantsFail() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GLASS);
+
+        when(block.getRelative(any())).thenReturn(ob);
+        assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
+        // Not a ceiling block
+        assertFalse(br.growPlant(new GrowthBlock(block, true)));
     }
 
     /**
@@ -682,10 +718,10 @@ public class BiomeRecipeTest {
         when(block.isEmpty()).thenReturn(true);
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
-        when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(block);
+        when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
+        when(block.getRelative(BlockFace.UP)).thenReturn(block);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(block));
+        assertTrue(br.growPlant(new GrowthBlock(block, true)));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
         verify(bisected).setHalf(eq(Half.BOTTOM));
         verify(bisected).setHalf(eq(Half.TOP));
@@ -706,7 +742,7 @@ public class BiomeRecipeTest {
         when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(ob);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(block));
+        assertFalse(br.growPlant(new GrowthBlock(block, true)));
     }
 
     /**

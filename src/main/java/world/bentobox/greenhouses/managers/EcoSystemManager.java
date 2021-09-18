@@ -153,13 +153,13 @@ public class EcoSystemManager {
                 .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
                 .filter(e -> gh.contains(e.getLocation())).count();
         // Get the blocks in the greenhouse where spawning could occur
-        List<Block> list = new ArrayList<>(getAvailableBlocks(gh, false));
+        List<GrowthBlock> list = new ArrayList<>(getAvailableBlocks(gh, false));
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
-        Iterator<Block> it = list.iterator();
+        Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
         while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
-            if (gh.getBiomeRecipe().spawnMob(it.next())) {
+            if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
                 // Add a mob to the sum in the greenhouse
                 sum++;
             }
@@ -179,7 +179,7 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            List<Block> list = getAvailableBlocks(gh, true);
+            List<GrowthBlock> list = getAvailableBlocks(gh, true);
             Collections.shuffle(list);
             int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
             if (plantsGrown > 0) {
@@ -204,6 +204,7 @@ public class EcoSystemManager {
 
     }
 
+
     /**
      * Get a list of the lowest level blocks inside the greenhouse. May be air, liquid or plants.
      * These blocks sit just above solid blocks
@@ -211,18 +212,24 @@ public class EcoSystemManager {
      * @param ignoreLiquid - true if liquid blocks should be treated like air blocks
      * @return List of blocks
      */
-    public List<Block> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
-        List<Block> result = new ArrayList<>();
+    protected List<GrowthBlock> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
+        List<GrowthBlock> result = new ArrayList<>();
         if (gh.getWorld() == null) return result;
         for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
             for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
                 for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
+                    // Check ceiling blocks
+                    if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
+                        result.add(new GrowthBlock(b, false));
+                    }
+
+                    // Check floor blocks
                     if (!(b.isEmpty() || (ignoreLiquid && b.isLiquid()))
                             && (b.getRelative(BlockFace.UP).isEmpty()
                                     || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
                                     || (ignoreLiquid && b.isLiquid() && b.getRelative(BlockFace.UP).isPassable()))) {
-                        result.add(b.getRelative(BlockFace.UP));
+                        result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
                         break;
                     }
                 }
@@ -230,6 +237,8 @@ public class EcoSystemManager {
         }
         return result;
     }
+
+    public record GrowthBlock(Block block, Boolean floor) {}
 
     private int getBoneMeal(Greenhouse gh) {
         Hopper hopper = getHopper(gh);

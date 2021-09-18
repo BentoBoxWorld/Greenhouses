@@ -1,5 +1,6 @@
 package world.bentobox.greenhouses.greenhouse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import com.google.common.collect.Multimap;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
@@ -48,6 +50,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private int priority;
     private String name;
     private String friendlyName;
+
+    private static final List<Material> CEILING_PLANTS = new ArrayList<>();
+    static {
+        CEILING_PLANTS.add(Material.VINE);
+        Enums.getIfPresent(Material.class, "SPORE_BLOSSOM").toJavaUtil().ifPresent(CEILING_PLANTS::add);
+        Enums.getIfPresent(Material.class, "CAVE_VINES_PLANT").toJavaUtil().ifPresent(CEILING_PLANTS::add);
+        Enums.getIfPresent(Material.class, "TWISTING_VINES_PLANT").toJavaUtil().ifPresent(CEILING_PLANTS::add);
+        Enums.getIfPresent(Material.class, "WEEPING_VINES_PLANT").toJavaUtil().ifPresent(CEILING_PLANTS::add);
+    }
 
     private static final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
 
@@ -63,7 +74,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     // Conversions
     // Original Material, Original Type, New Material, New Type, Probability
-    //private final Map<Material, GreenhouseBlockConversions> conversionBlocks = new EnumMap<>(Material.class);
     private final Multimap<Material, GreenhouseBlockConversions> conversionBlocks = ArrayListMultimap.create();
 
     private int mobLimit;
@@ -427,34 +437,50 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     /**
      * Plants a plant on block bl if it makes sense.
-     * @param bl - block
+     * @param bl - block that can have growth
      * @return true if successful
      */
-    public boolean growPlant(Block bl) {
+    public boolean growPlant(GrowthBlock block) {
+        Block bl = block.block();
         if (!bl.isEmpty()) {
             return false;
         }
         return getRandomPlant().map(p -> {
-            if (bl.getY() != 0 && Optional.of(p.plantGrownOn()).map(m -> m.equals(bl.getRelative(BlockFace.DOWN).getType())).orElse(false)) {
-                BlockData dataBottom = p.plantMaterial().createBlockData();
-                if (dataBottom instanceof Bisected) {
-                    ((Bisected) dataBottom).setHalf(Bisected.Half.BOTTOM);
-                    BlockData dataTop = p.plantMaterial().createBlockData();
-                    ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
-                    if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
-                        bl.setBlockData(dataBottom, false);
-                        bl.getRelative(BlockFace.UP).setBlockData(dataTop, false);
-                    } else {
-                        return false; // No room
-                    }
-                } else {
-                    bl.setBlockData(dataBottom, false);
+            if (bl.getY() != 0 && canGrowOn(block, p)) {
+                if (!isBisected(bl, p)) {
+                    return false;
                 }
                 bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
             return false;
         }).orElse(false);
+    }
+
+    private boolean isBisected(Block bl, GreenhousePlant p) {
+        BlockData dataBottom = p.plantMaterial().createBlockData();
+        if (dataBottom instanceof Bisected bi) {
+            bi.setHalf(Bisected.Half.BOTTOM);
+            BlockData dataTop = p.plantMaterial().createBlockData();
+            ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
+            if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
+                bl.setBlockData(dataBottom, false);
+                bl.getRelative(BlockFace.UP).setBlockData(dataTop, false);
+            } else {
+                return false; // No room
+            }
+        } else {
+            bl.setBlockData(dataBottom, false);
+        }
+        return true;
+    }
+
+    private boolean canGrowOn(GrowthBlock block, GreenhousePlant p) {
+        // Ceiling plants can only grow on ceiling blocks
+        if (CEILING_PLANTS.contains(p.plantMaterial()) && block.floor()) {
+            return false;
+        }
+        return p.plantGrownOn().equals(block.block().getRelative(block.floor() ? BlockFace.DOWN : BlockFace.UP).getType());
     }
 
     /**

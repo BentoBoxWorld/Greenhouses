@@ -23,6 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 
 /**
  * @author tastybento
@@ -88,9 +89,9 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksAirAboveBlock() {
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(16, result.size());
-        assertEquals(air, result.get(0));
+        assertEquals(air, result.get(0).block());
     }
 
     /**
@@ -99,9 +100,9 @@ public class EcoSystemManagerTest {
     @Test
     public void testGetAvailableBlocksPlantAboveBlock() {
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(plant);
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(16, result.size());
-        assertEquals(plant, result.get(0));
+        assertEquals(plant, result.get(0).block());
     }
 
     /**
@@ -110,7 +111,7 @@ public class EcoSystemManagerTest {
     @Test
     public void testGetAvailableBlocksAllAir() {
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(air);
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(0, result.size());
     }
 
@@ -121,7 +122,7 @@ public class EcoSystemManagerTest {
     public void testGetAvailableBlocksAllLiquid() {
         when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(0, result.size());
     }
 
@@ -132,9 +133,9 @@ public class EcoSystemManagerTest {
     public void testGetAvailableBlocksAllPlant() {
         when(plant.getRelative(eq(BlockFace.UP))).thenReturn(plant);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(plant);
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(16, result.size());
-        assertEquals(plant, result.get(0));
+        assertEquals(plant, result.get(0).block());
     }
 
     /**
@@ -143,9 +144,9 @@ public class EcoSystemManagerTest {
     @Test
     public void testGetAvailableBlocksLiquidAboveBlockIgnoreLiquids() {
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
-        List<Block> result = eco.getAvailableBlocks(gh, true);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(16, result.size());
-        assertEquals(liquid, result.get(0));
+        assertEquals(liquid, result.get(0).block());
     }
 
     /**
@@ -159,10 +160,10 @@ public class EcoSystemManagerTest {
         when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
 
-        List<Block> result = eco.getAvailableBlocks(gh, false);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(16, result.size());
-        for (Block value : result) {
-            assertEquals(air, value);
+        for (GrowthBlock value : result) {
+            assertEquals(air, value.block());
         }
     }
 
@@ -177,10 +178,10 @@ public class EcoSystemManagerTest {
         when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
 
-        List<Block> result = eco.getAvailableBlocks(gh, true);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(16, result.size());
-        for (Block value : result) {
-            assertEquals(liquid, value);
+        for (GrowthBlock value : result) {
+            assertEquals(liquid, value.block());
         }
     }
 }
