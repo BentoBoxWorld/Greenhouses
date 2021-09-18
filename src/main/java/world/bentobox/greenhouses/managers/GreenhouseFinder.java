@@ -33,7 +33,7 @@ public class GreenhouseFinder {
      */
     private CounterCheck cc = new CounterCheck();
 
-    class CounterCheck {
+    static class CounterCheck {
         int doorCount;
         int hopperCount;
         boolean airHole;

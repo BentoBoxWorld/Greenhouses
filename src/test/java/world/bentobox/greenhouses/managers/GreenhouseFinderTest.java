@@ -95,7 +95,7 @@ public class GreenhouseFinderTest {
 
 
         gf = new GreenhouseFinder();
-        cc = gf.new CounterCheck();
+        cc = new CounterCheck();
     }
 
     /**
@@ -232,7 +232,7 @@ public class GreenhouseFinderTest {
         // Set the greenhouse so the world is known
         gf.setGh(gh);
         when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(false);
-        CounterCheck cc = gf.new CounterCheck();
+        CounterCheck cc = new CounterCheck();
         assertTrue(gf.checkDoorsHoppers(cc, Material.HOPPER, new Vector(5,14,25)));
         assertTrue(gf.getRedGlass().isEmpty());
         assertEquals(5, gf.getGh().getRoofHopperLocation().getBlockX());

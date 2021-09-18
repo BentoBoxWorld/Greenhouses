@@ -1,9 +1,6 @@
 package world.bentobox.greenhouses.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,7 +52,7 @@ public class SnowTracker implements Listener {
         for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX() -1; x++) {
             for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ() - 1; z++) {
                 for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
-                    Block b = gh.getLocation().getWorld().getBlockAt(x, y, z);
+                    Block b = Objects.requireNonNull(gh.getLocation().getWorld()).getBlockAt(x, y, z);
                     Material type = b.getType();
                     if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {
                         b.getWorld().spawnParticle(Particle.SNOWBALL, b.getLocation(), 5);
@@ -125,7 +122,7 @@ public class SnowTracker implements Listener {
 
     private void shakeGlobes(World world) {
         addon.getManager().getMap().getGreenhouses().stream().filter(g -> g.getBiomeRecipe().getIceCoverage() > 0)
-        .filter(g -> (g.getLocation().getWorld().isChunkLoaded(((int) g.getBoundingBox().getMaxX()) >> 4, ((int) g.getBoundingBox().getMaxZ()) >> 4) && g.getLocation().getWorld().isChunkLoaded(((int) g.getBoundingBox().getMinX()) >> 4, ((int) g.getBoundingBox().getMinZ()) >> 4)))
+        .filter(g -> (Objects.requireNonNull(Objects.requireNonNull(g.getLocation()).getWorld()).isChunkLoaded(((int) g.getBoundingBox().getMaxX()) >> 4, ((int) g.getBoundingBox().getMaxZ()) >> 4) && g.getLocation().getWorld().isChunkLoaded(((int) g.getBoundingBox().getMinX()) >> 4, ((int) g.getBoundingBox().getMinZ()) >> 4)))
         .filter(g -> g.getLocation().getWorld().equals(world))
         .filter(g -> !g.isBroken())
         .filter(g -> g.getRoofHopperLocation() != null)

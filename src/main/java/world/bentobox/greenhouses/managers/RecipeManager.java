@@ -1,13 +1,8 @@
 package world.bentobox.greenhouses.managers;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -68,6 +63,7 @@ public class RecipeManager {
         }
         ConfigurationSection biomeSection = biomeConfig.getConfigurationSection("biomes");
         // Loop through all the entries
+        assert biomeSection != null;
         for (String type: biomeSection.getValues(false).keySet()) {
             processEntries(type, biomeSection);
             // Check maximum number
@@ -82,6 +78,7 @@ public class RecipeManager {
     private void processEntries(String biomeType, ConfigurationSection biomeSection) {
         try {
             ConfigurationSection biomeRecipeConfig = biomeSection.getConfigurationSection(biomeType);
+            assert biomeRecipeConfig != null;
             Biome thisBiome = loadBiome(biomeType, biomeRecipeConfig);
             if (thisBiome == null) return;
             int priority = biomeRecipeConfig.getInt("priority", 0);
@@ -124,7 +121,7 @@ public class RecipeManager {
             addon.logError("No biome defined in the biome reciepe " + biomeType + ". Skipping...");
             return null;
         }
-        String name = biomeRecipeConfig.getString("biome").toUpperCase(Locale.ENGLISH);
+        String name = Objects.requireNonNull(biomeRecipeConfig.getString("biome")).toUpperCase(Locale.ENGLISH);
         if (Enums.getIfPresent(Biome.class, name).isPresent()) {
             return Biome.valueOf(name);
         }
@@ -178,7 +175,7 @@ public class RecipeManager {
                 try {
                     Material oldMaterial = Material.valueOf(oldMat.toUpperCase(Locale.ENGLISH));
                     String conversions = conversionSec.getString(oldMat);
-                    if (!conversions.isEmpty()) {
+                    if (!Objects.requireNonNull(conversions).isEmpty()) {
                         String[] split = conversions.split(":");
                         double convChance = Double.parseDouble(split[0]);
                         Material newMaterial = Material.valueOf(split[1]);

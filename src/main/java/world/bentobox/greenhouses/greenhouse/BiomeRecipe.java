@@ -362,22 +362,19 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
-                    if (entity != null) {
-                        preventZombie(entity);
-                        return addon
-                                .getManager()
-                                .getMap()
-                                .getGreenhouse(b.getLocation()).map(gh -> {
-                                    BoundingBox interior = gh.getBoundingBox().clone();
-                                    interior.expand(-1, -1, -1);
-                                    if (!interior.contains(entity.getBoundingBox())) {
-                                        entity.remove();
-                                        return false;
-                                    }
-                                    return true;
-                                }).orElse(false);
-                    }
-                    return false;
+                    preventZombie(entity);
+                    return addon
+                            .getManager()
+                            .getMap()
+                            .getGreenhouse(b.getLocation()).map(gh -> {
+                                BoundingBox interior = gh.getBoundingBox().clone();
+                                interior.expand(-1, -1, -1);
+                                if (!interior.contains(entity.getBoundingBox())) {
+                                    entity.remove();
+                                    return false;
+                                }
+                                return true;
+                            }).orElse(false);
                 }).orElse(false);
 
     }
@@ -437,7 +434,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     /**
      * Plants a plant on block bl if it makes sense.
-     * @param bl - block that can have growth
+     * @param block - block that can have growth
      * @return true if successful
      */
     public boolean growPlant(GrowthBlock block) {

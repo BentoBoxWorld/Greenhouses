@@ -1,9 +1,6 @@
 package world.bentobox.greenhouses.managers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -252,7 +249,7 @@ public class GreenhouseManager implements Listener {
         for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x+=4) {
             for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z+=4) {
                 for (int y = (int)gh.getBoundingBox().getMinY(); y < gh.getBoundingBox().getMaxY(); y+=4) {
-                    gh.getWorld().setBiome(x, y, z, ghBiome);
+                    Objects.requireNonNull(gh.getWorld()).setBiome(x, y, z, ghBiome);
                 }
             }
         }
@@ -262,7 +259,7 @@ public class GreenhouseManager implements Listener {
      * Result of the greenhouse make effort
      *
      */
-    public class GhResult {
+    public static class GhResult {
         private Set<GreenhouseResult> results;
         private GreenhouseFinder finder;
 

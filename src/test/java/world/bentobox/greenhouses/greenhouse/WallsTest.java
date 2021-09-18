@@ -99,7 +99,7 @@ public class WallsTest {
      */
     @Test
     public void testLookAround() {
-        WallFinder wf = walls.new WallFinder();
+        WallFinder wf = new WallFinder();
         walls.lookAround(location, wf, roof);
         assertTrue(wf.stopMaxX);
         assertTrue(wf.stopMaxZ);
@@ -116,7 +116,7 @@ public class WallsTest {
      */
     @Test
     public void testAnalyzeFindings() {
-        WallFinder wf = walls.new WallFinder();
+        WallFinder wf = new WallFinder();
         walls.analyzeFindings(wf, roof);
         assertFalse(wf.stopMaxX);
         assertFalse(wf.stopMaxZ);
@@ -137,7 +137,7 @@ public class WallsTest {
         walls.maxX = 1;
         walls.minZ = -1;
         walls.maxZ = 1;
-        WallFinder wf = walls.new WallFinder();
+        WallFinder wf = new WallFinder();
         walls.analyzeFindings(wf, roof);
         assertTrue(wf.stopMaxX);
         assertTrue(wf.stopMaxZ);
@@ -154,7 +154,7 @@ public class WallsTest {
      */
     @Test
     public void testLookAtBlockFaces() {
-        WallFinder wf = walls.new WallFinder();
+        WallFinder wf = new WallFinder();
         walls.lookAtBlockFaces(wf, 0, 5, -1);
         assertTrue(wf.stopMaxX);
         assertTrue(wf.stopMaxZ);
@@ -168,7 +168,7 @@ public class WallsTest {
     @Test
     public void testLookAtBlockFacesNoGlass() {
         when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.AIR);
-        WallFinder wf = walls.new WallFinder();
+        WallFinder wf = new WallFinder();
         walls.lookAtBlockFaces(wf, 0, 5, -1);
         assertFalse(wf.stopMaxX);
         assertFalse(wf.stopMaxZ);

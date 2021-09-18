@@ -220,7 +220,7 @@ public class Greenhouse implements DataObject {
      * @return true if inside the greenhouse
      */
     public boolean contains(Location location2) {
-        return location.getWorld().equals(location2.getWorld()) && boundingBox.contains(location2.toVector());
+        return location.getWorld() != null && location.getWorld().equals(location2.getWorld()) && boundingBox.contains(location2.toVector());
     }
 
     /**
@@ -253,7 +253,7 @@ public class Greenhouse implements DataObject {
      */
     @NonNull
     public Map<Material, Integer> getMissingBlocks() {
-        return Objects.requireNonNullElseGet(missingBlocks, () -> new HashMap<>());
+        return Objects.requireNonNullElseGet(missingBlocks, HashMap::new);
     }
 
     /**

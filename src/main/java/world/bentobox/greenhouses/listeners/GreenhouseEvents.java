@@ -132,15 +132,13 @@ public class GreenhouseEvents implements Listener {
             return;
         }
         // from is a greenhouse
-        if (from.isPresent() && to.isEmpty()) {
+        if (from.isPresent()) {
             // Exiting
             user.sendMessage("greenhouses.event.leaving", BIOME, from.get().getBiomeRecipe().getFriendlyName());
             return;
         }
-        if (from.isEmpty()) {
-            // Entering
-            user.sendMessage("greenhouses.event.entering", BIOME, to.get().getBiomeRecipe().getFriendlyName());
-        }
+        // Entering
+        user.sendMessage("greenhouses.event.entering", BIOME, to.get().getBiomeRecipe().getFriendlyName());
 
     }
 
@@ -164,7 +162,9 @@ public class GreenhouseEvents implements Listener {
         addon.getManager().getMap().getGreenhouse(e.getBlock().getLocation())
         .filter(g -> g.isRoofOrWallBlock(e.getBlock().getLocation()))
         .ifPresent(g -> {
-            user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
+            if (g.getOriginalBiome() != null) {
+                user.sendMessage("greenhouses.event.broke", BIOME, Util.prettifyText(g.getOriginalBiome().name()));
+            }
             addon.getManager().removeGreenhouse(g);
         });
     }

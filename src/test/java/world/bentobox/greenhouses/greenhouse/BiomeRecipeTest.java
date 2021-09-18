@@ -588,25 +588,6 @@ public class BiomeRecipeTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
-     */
-    @Test
-    public void testSpawnMobFailToSpawn() {
-        when(block.getY()).thenReturn(10);
-        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
-        when(block.getRelative(any())).thenReturn(block);
-
-        EntityType mobType = EntityType.CAT;
-        int mobProbability = 100;
-        Material mobSpawnOn = Material.GRASS_BLOCK;
-
-        br.addMobs(mobType, mobProbability, mobSpawnOn);
-        assertFalse(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
-    }
-
-
-    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getRecipeBlocks()}.
      */
     @Test

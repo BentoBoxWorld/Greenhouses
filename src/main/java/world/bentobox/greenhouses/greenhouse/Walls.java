@@ -28,7 +28,7 @@ public class Walls extends MinMaxXZ {
 
     private final AsyncWorldCache cache;
 
-    class WallFinder {
+    static class WallFinder {
         int radiusMinX;
         int radiusMaxX;
         int radiusMinZ;
