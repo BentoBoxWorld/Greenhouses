@@ -16,6 +16,9 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.google.common.base.Enums;
+import com.google.common.base.Optional;
+
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -65,7 +68,8 @@ public class SnowTracker implements Listener {
                             if (Math.random() < addon.getSettings().getSnowDensity()
                                     && !b.isLiquid()
                                     && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
-                                b.getRelative(BlockFace.UP).setType(Material.SNOW);
+                                placeSnow(b);
+
                                 createdSnow = true;
                             }
                         }
@@ -84,6 +88,15 @@ public class SnowTracker implements Listener {
         }
          */
         return createdSnow;
+    }
+
+    private void placeSnow(Block b) {
+        Optional<Material> snowCauldron = Enums.getIfPresent(Material.class, "POWDER_SNOW_CAULDRON");
+        if (b.getType().equals(Material.CAULDRON) && snowCauldron.isPresent()) {
+            b.setType(snowCauldron.get());
+        } else {
+            b.getRelative(BlockFace.UP).setType(Material.SNOW);
+        }
     }
 
     /**
