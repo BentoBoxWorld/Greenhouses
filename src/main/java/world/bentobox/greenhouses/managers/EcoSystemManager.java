@@ -91,10 +91,9 @@ public class EcoSystemManager {
                 || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
             return;
         }
-
         int gh_min_x = NumberConversions.floor(gh.getInternalBoundingBox().getMinX());
         int gh_max_x = NumberConversions.floor(gh.getInternalBoundingBox().getMaxX());
-        int gh_min_y = NumberConversions.floor(gh.getInternalBoundingBox().getMinY());
+        int gh_min_y = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
         int gh_max_y = NumberConversions.floor(gh.getInternalBoundingBox().getMaxY());
         int gh_min_z = NumberConversions.floor(gh.getInternalBoundingBox().getMinZ());
         int gh_max_z = NumberConversions.floor(gh.getInternalBoundingBox().getMaxZ());
