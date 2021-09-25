@@ -12,12 +12,14 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
+@SuppressWarnings("deprecation")
 public class Walls extends MinMaxXZ {
     private static final List<Material> WALL_BLOCKS;
     static {
         // Hoppers
         WALL_BLOCKS = Arrays.stream(Material.values())
                 .filter(Material::isBlock) // Blocks only, no items
+                .filter(m -> !m.isLegacy())
                 .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
                 .filter(m -> m.name().contains("DOOR") // All doors
                         || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks

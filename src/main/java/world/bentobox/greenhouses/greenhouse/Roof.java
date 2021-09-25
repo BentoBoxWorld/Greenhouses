@@ -23,11 +23,13 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
  * @author tastybento
  *
  */
+@SuppressWarnings("deprecation")
 public class Roof extends MinMaxXZ {
     private static final List<Material> ROOF_BLOCKS;
     static {
         // Roof blocks
         ROOF_BLOCKS = Arrays.stream(Material.values())
+                .filter(m -> !m.isLegacy())
                 .filter(Material::isBlock) // Blocks only, no items
                 .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
                         || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
