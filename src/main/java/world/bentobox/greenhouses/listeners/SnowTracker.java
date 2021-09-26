@@ -1,6 +1,10 @@
 package world.bentobox.greenhouses.listeners;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,6 +13,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
+import org.bukkit.block.data.Levelled;
+import org.bukkit.block.data.type.Snow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFormEvent;
@@ -67,10 +73,11 @@ public class SnowTracker implements Listener {
                             // Not water
                             if (Math.random() < addon.getSettings().getSnowDensity()
                                     && !b.isLiquid()
-                                    && b.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
-                                placeSnow(b);
+                                    && (b.getRelative(BlockFace.UP).getType().equals(Material.AIR)
+                                            || b.getRelative(BlockFace.UP).getType().equals(Material.SNOW))) {
 
-                                createdSnow = true;
+
+                                createdSnow = placeSnow(b);
                             }
                         }
 
@@ -90,13 +97,44 @@ public class SnowTracker implements Listener {
         return createdSnow;
     }
 
-    private void placeSnow(Block b) {
+    private boolean placeSnow(Block b) {
         Optional<Material> snowCauldron = Enums.getIfPresent(Material.class, "POWDER_SNOW_CAULDRON");
-        if (b.getType().equals(Material.CAULDRON) && snowCauldron.isPresent()) {
-            b.setType(snowCauldron.get());
+        if (snowCauldron.isPresent()) {
+            if (b.getType().equals(Material.CAULDRON)) {
+                b.setType(snowCauldron.get());
+                return true;
+            } else if (b.getType().equals(snowCauldron.get())) {
+                // Fill up the snow cauldron some more
+                return incrementLevel(b);
+            }
+        }
+        // Pile up snow
+        if (b.getRelative(BlockFace.UP).getType().equals(Material.SNOW)) {
+            return incrementLevel(b.getRelative(BlockFace.UP));
         } else {
             b.getRelative(BlockFace.UP).setType(Material.SNOW);
         }
+        return true;
+    }
+
+    private boolean incrementLevel(Block b) {
+        if (b.getBlockData() instanceof Levelled data) {
+            int max = data.getMaximumLevel();
+            if (data.getLevel() < max) {
+                data.setLevel(data.getLevel() + 1);
+                b.setBlockData(data);
+                return true;
+            }
+        }
+        if (b.getBlockData() instanceof Snow data) {
+            int max = data.getMaximumLayers();
+            if (data.getLayers() < max) {
+                data.setLayers(data.getLayers() + 1);
+                b.setBlockData(data);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
