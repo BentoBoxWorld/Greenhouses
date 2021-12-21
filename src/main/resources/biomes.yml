@@ -280,6 +280,7 @@ biomes:
     plants:
       RED_MUSHROOM: 20:GRASS_BLOCK
       BROWN_MUSHROOM: 20:GRASS_BLOCK
+      BLUE_ORCHID: 10:GRASS_BLOCK
       LILY_PAD: 5:WATER
     mobs:
       SLIME: 5:WATER
