@@ -765,8 +765,8 @@ public class BiomeRecipeTest {
      */
     @Test
     public void testSetType() {
-        br.setType(Biome.BADLANDS_PLATEAU);
-        assertEquals(Biome.BADLANDS_PLATEAU, br.getBiome());
+        br.setType(Biome.BADLANDS);
+        assertEquals(Biome.BADLANDS, br.getBiome());
     }
 
     /**

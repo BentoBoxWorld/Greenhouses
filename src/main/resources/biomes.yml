@@ -67,7 +67,7 @@ biomes:
     moblimit: 9
   Cold_Rabbit:
     friendlyname: "Cold Taiga Forest"
-    biome: TAIGA_HILLS
+    biome: OLD_GROWTH_SPRUCE_TAIGA
     icon: SPRUCE_SAPLING
     priority: 20
     contents:
