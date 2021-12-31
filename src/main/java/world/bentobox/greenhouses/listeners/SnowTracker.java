@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.BoundingBox;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
@@ -58,9 +59,10 @@ public class SnowTracker implements Listener {
         }
         boolean createdSnow = false;
         List<Block> waterBlocks = new ArrayList<>();
-        for (int x = (int)gh.getBoundingBox().getMinX() + 1; x < (int)gh.getBoundingBox().getMaxX() -1; x++) {
-            for (int z = (int)gh.getBoundingBox().getMinZ() + 1; z < (int)gh.getBoundingBox().getMaxZ() - 1; z++) {
-                for (int y = (int)gh.getBoundingBox().getMaxY() - 2; y >= (int)gh.getBoundingBox().getMinY(); y--) {
+        final BoundingBox bb = gh.getBoundingBox();
+        for (int x = (int)bb.getMinX() + 1; x < (int)bb.getMaxX() -1; x++) {
+            for (int z = (int)bb.getMinZ() + 1; z < (int)bb.getMaxZ() - 1; z++) {
+                for (int y = (int)bb.getMaxY() - 2; y >= (int)bb.getMinY(); y--) {
                     Block b = Objects.requireNonNull(gh.getLocation().getWorld()).getBlockAt(x, y, z);
                     Material type = b.getType();
                     if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {

@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.util.BoundingBox;
 
 import world.bentobox.bentobox.api.events.BentoBoxReadyEvent;
 import world.bentobox.bentobox.database.Database;
@@ -135,25 +136,26 @@ public class GreenhouseManager implements Listener {
 
     /**
      * Removes the greenhouse from the world and resets biomes
-     * @param g - greenhouse
+     * @param gh - greenhouse
      */
-    public void removeGreenhouse(Greenhouse g) {
-        handler.deleteObject(g);
-        map.removeGreenhouse(g);
-        if (g.getOriginalBiome() == null) {
-            addon.logError("Greenhouse had no original biome: " + g.getLocation());
+    public void removeGreenhouse(Greenhouse gh) {
+        handler.deleteObject(gh);
+        map.removeGreenhouse(gh);
+        if (gh.getOriginalBiome() == null) {
+            addon.logError("Greenhouse had no original biome: " + gh.getLocation());
             return;
         }
-        if (g.getLocation() == null || g.getLocation().getWorld() == null) {
+        if (gh.getLocation() == null || gh.getLocation().getWorld() == null) {
             // Greenhouse is messed up. It's being deleted anyway.
             return;
         }
-        addon.log("Returning biome to original state: " + g.getOriginalBiome().toString());
-        for (int x = (int)g.getBoundingBox().getMinX(); x<= (int)g.getBoundingBox().getMaxX(); x+=4) {
-            for (int z = (int)g.getBoundingBox().getMinZ(); z<= (int)g.getBoundingBox().getMaxZ(); z+=4) {
-                for (int y = (int)g.getBoundingBox().getMinY(); y<= (int)g.getBoundingBox().getMaxY(); y+=4) {
+        addon.log("Returning biome to original state: " + gh.getOriginalBiome().toString());
+        final BoundingBox bb = gh.getBoundingBox();
+        for (int x = (int)bb.getMinX(); x<= (int)bb.getMaxX(); x+=4) {
+            for (int z = (int)bb.getMinZ(); z<= (int)bb.getMaxZ(); z+=4) {
+                for (int y = (int)bb.getMinY(); y<= (int)bb.getMaxY(); y+=4) {
                     // Set back to the original biome
-                    g.getLocation().getWorld().setBiome(x, y, z, g.getOriginalBiome());
+                    gh.getLocation().getWorld().setBiome(x, y, z, gh.getOriginalBiome());
                 }
             }
         }
@@ -250,9 +252,10 @@ public class GreenhouseManager implements Listener {
             addon.logError("Biome recipe error - no such biome for " + gh.getBiomeRecipe().getName());
             return;
         }
-        for (int x = (int)gh.getBoundingBox().getMinX(); x < gh.getBoundingBox().getMaxX(); x+=4) {
-            for (int z = (int)gh.getBoundingBox().getMinZ(); z < gh.getBoundingBox().getMaxZ(); z+=4) {
-                for (int y = (int)gh.getBoundingBox().getMinY(); y < gh.getBoundingBox().getMaxY(); y+=4) {
+        final BoundingBox bb = gh.getBoundingBox();
+        for (int x = (int)bb.getMinX(); x < bb.getMaxX(); x+=4) {
+            for (int z = (int)bb.getMinZ(); z < bb.getMaxZ(); z+=4) {
+                for (int y = (int)bb.getMinY(); y < bb.getMaxY(); y+=4) {
                     Objects.requireNonNull(gh.getWorld()).setBiome(x, y, z, ghBiome);
                 }
             }

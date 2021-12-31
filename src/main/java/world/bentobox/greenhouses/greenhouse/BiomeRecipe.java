@@ -28,7 +28,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Piglin;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import com.google.common.base.Enums;
@@ -367,9 +366,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                             .getManager()
                             .getMap()
                             .getGreenhouse(b.getLocation()).map(gh -> {
-                                BoundingBox interior = gh.getBoundingBox().clone();
-                                interior.expand(-1, -1, -1);
-                                if (!interior.contains(entity.getBoundingBox())) {
+                                if (!gh.getInternalBoundingBox().contains(entity.getBoundingBox())) {
                                     entity.remove();
                                     return false;
                                 }
