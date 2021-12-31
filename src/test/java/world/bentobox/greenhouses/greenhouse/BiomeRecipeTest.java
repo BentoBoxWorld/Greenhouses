@@ -96,6 +96,8 @@ public class BiomeRecipeTest {
         when(gh.getCeilingHeight()).thenReturn(120);
         bb = new BoundingBox(10, 100, 10, 20, 120, 20);
         when(gh.getBoundingBox()).thenReturn(bb);
+        BoundingBox ibb = bb.clone().expand(-1);
+        when(gh.getInternalBoundingBox()).thenReturn(ibb);
         when(gh.getWorld()).thenReturn(world);
         when(gh.contains(any())).thenReturn(true);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
