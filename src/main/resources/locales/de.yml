@@ -1,0 +1,163 @@
+---
+protection:
+  flags:
+    GREENHOUSE:
+      name: Gewächshäuser
+      description: |-
+        &bUmschalten, wer
+        &bdie Gewächshäuser kontrollieren kann
+greenhouses:
+  general:
+    greenhouses: Gewächshäuser
+  errors:
+    move: Gehe zuerst in ein Gewächshaus, das dir gehört.
+    no-rank: "& cDu hast keinen Rang, um das zu tun."
+    notyours: Das ist nicht dein Gewächshaus!
+    not-inside: "& cDu bist nicht in einem Gewächshaus!"
+    tooexpensive: Du kannst dir das nicht leisten [price]
+    alreadyexists: Gewächshaus existiert bereits!
+    norecipe: Kann kein Gewächshaus bauen!
+  event:
+    broke: Du hast das Gewächshaus kaputt gemacht! Biome auf [biome] umstellen!
+    entering: Betreten des Gewächshauses [biome]
+    leaving: Das Gewächshaus verlassen [biome]
+  recipe:
+    blockscolor: "&f"
+    title: "[[biome] recipe]"
+    watermustbe: Wasser > [coverage]%  der Bodenfläche.
+    icemustbe: Eisblöcke > [coverage]% der Bodenfläche.
+    lavamustbe: Lava > [coverage]% der Bodenfläche.
+    minimumblockstitle: "[Minimum blocks required]"
+    nootherblocks: Keine weiteren Blöcke erforderlich.
+    missing: Gewächshaus fehlt
+  commands:
+    user:
+      remove:
+        description: Entfernt ein Gewächshaus, in dem Sie stehen, wenn Sie der Eigentümer
+          sind
+      make:
+        description: Versuche ein Gewächshaus zu bauen
+        parameters: "<recipe>"
+        error:
+          already: "&cEs gibt hier schon ein Gewächshaus!"
+          FAIL_BAD_ROOF_BLOCKS: "&cDach enthält unzulässige Blöcke!"
+          FAIL_BAD_WALL_BLOCKS: "&cWand enthält unzulässige Blöcke!"
+          FAIL_BELOW: "&cDu musst im Gewächshaus sein, um es zu versuchen."
+          FAIL_BLOCKS_ABOVE: "&cEs dürfen keine Blöcke über dem Gewächshaus sein!
+            Rote Glasblöcke sollten die Problemblöcke anzeigen."
+          FAIL_HOLE_IN_ROOF: "&cIn dem Dach ist ein Loch oder es ist nicht flach!
+            Rote Glasblöcke sollten das Problem anzeigen."
+          FAIL_HOLE_IN_WALL: "&cIn der Wand ist ein Loch!"
+          FAIL_NO_ROOF: "&cEs scheint kein Dach zu geben!"
+          FAIL_TOO_MANY_DOORS: "&cEs dürfen nicht mehr als 4 Türen im Gewächshaus
+            sein!"
+          FAIL_TOO_MANY_HOPPERS: "&cIn den Wänden oder im Dach ist nur ein Trichter
+            zulässig."
+          FAIL_UNEVEN_WALLS: "&cDie Wände sind uneben. Rote Glasblöcke sollten die
+            Problemblöcke anzeigen."
+          FAIL_INSUFFICIENT_ICE: "&cZu wenig Eis für dieses Rezept"
+          FAIL_INSUFFICIENT_LAVA: "&cZu wenig Lava für dieses Rezept"
+          FAIL_INSUFFICIENT_WATER: "&cZu wenig Wasser für dieses Rezept"
+          FAIL_NO_ICE: "&cFür dieses Rezept wird Eis benötigt"
+          FAIL_NO_LAVA: "&cFür dieses Rezept wird Lava benötigt"
+          FAIL_NO_WATER: "&cFür dieses Rezept wird Wasser benötigt"
+          FAIL_NO_RECIPE_FOUND: "&c Zu diesem Gewächshaus konnte kein passendes Rezept
+            gefunden werden"
+          FAIL_INSUFFICIENT_BLOCKS: "&cWeitere Blöcke sind erforderlich, um dieses
+            Rezept zu erstellen!"
+          FAIL_OVERLAPPING: "&cGewächshäuser können sich keine Wände teilen, sorry."
+        success: "&2Du hast erfolgreich ein [biome] Biom Gewächshaus gebaut! Beim
+          nächsten Teleport oder Login wird Biom synchronisiert."
+        missing-blocks: "[material] x [number] &cFehlt"
+        unknown-recipe: "&Unbekanntes Rezept"
+        try-these: "&cVersuche einen von diesen:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&A[Wie man ein Gewächshaus baut]"
+        instructions: "&EStelle einen Kasten aus Glas mit 4 Wänden und einem flachen
+          &EGlasdach her und füge bis zu &F4 Türen &Ein den Wänden hinzu. &EPlatziere
+          &F1 Trichter &Ein eine Wand oder ein Dach und füge Wassereimer hinzu. &EUm
+          Schnee und/oder Knochenmehl herzustellen, um Pflanzen automatisch wachsen
+          zu lassen. &EPrüfe die  Biom-Rezepte, welche Blöcke in einem Gewächshaus
+          sein müssen, um ein &EGewächshaus erfolgreich zu machen."
+help:
+  help: Hilfe
+  make: Versucht ein Gewächshaus zu bauen
+  remove: Entfernt ein Gewächshaus, in dem du stehst, wenn du der Besitzer bist
+  info: Wie man ein Gewächshaus baut
+  list: Listet alle Gewächshausbiome auf, die hergestellt werden können
+  recipe: Erklärt dir, wie man das Gewächshaus biome macht
+  opengui: Öffnet die Gewächshaus-GUI
+list:
+  title: "[Gewächshaus-Biom-Rezepte]"
+  info: Benutze /greenhouse recipe <number> um Details über die Herstellung jedes
+    Gewächshauses zu sehen
+error:
+  greenhouseProtected: Gewächshaus geschützt
+  move: Gehe zuerst in ein Gewächshaus, das dir gehört.
+  notowner: Du musst der Besitzer dieses Gewächshauses sein, um das zu tun.
+  removing: Gewächshaus entfernen!
+  notyours: Das ist nicht dein Gewächshaus!
+  notinside: Du bist nicht in einem Gewächshaus!
+  tooexpensive: du kannst dir das nicht leisten [price]
+  alreadyexists: Gewächshaus existiert bereits!
+  norecipe: Kann kein Gewächshaus bauen!
+messages:
+  enter: Betreten des [biome]  Gewächshauses von [owner]!
+  leave: Verlässt jetzt das Gewächshaus von [owner].
+  youarein: Du bist jetzt in [owner]'s [biome] Gewächshaus!
+  removed: Dieses Gewächshaus ist nicht mehr ...
+  removedmessage: Ein [biome] Gewächshaus von dir ist nicht mehr!
+  ecolost: Dein Gewächshaus in [location] hat sein Ökosystem verloren und wurde entfernt.
+info:
+  title: "&A [Gewächshaus bauen]"
+  instructions: "&EStelle einen Kasten aus Glas mit 4 Wänden und einem flachen &EGlasdach
+    her und füge bis zu &F4 Türen &Ein den Wänden hinzu. &EPlatziere &F1 Trichter
+    &Ein eine Wand oder ein Dach und füge Wassereimer hinzu. &EUm Schnee und/oder
+    Knochenmehl herzustellen, um Pflanzen automatisch wachsen zu lassen. &EPrüfe die
+    \ Biom-Rezepte, welche Blöcke in einem Gewächshaus sein müssen, um ein &EGewächshaus
+    erfolgreich zu machen."
+  info: "[Gewächshaus Info]"
+  none: Keiner
+  nomore: "&4Du kannst keine Gewächshäuser mehr bauen!"
+  onemore: "&6Du kannst noch ein weiteres Gewächshaus bauen."
+  youcanbuild: "&ADu kannst bis zu [number] mehr Gewächshäuser bauen!"
+  unlimited: "&ADu kannst eine unbegrenzte Anzahl von Gewächshäusern bauen!"
+  welcome: "&BHerzlich willkommen! Klicken Sie hier für Anweisungen"
+recipe:
+  blockscolor: "&f"
+  hint: benutze /greenhouse list, um eine Liste von Rezeptnummern zu sehen!
+  wrongnumber: Die Rezeptnummer muss zwischen 1 und [size] liegen
+  title: "[[biome] recipe]"
+  nowater: Kein Wasser erlaubt.
+  noice: Kein Eis erlaubt.
+  nolava: Keine Lava erlaubt.
+  watermustbe: Wasser > [coverage]% der Bodenfläche.
+  icemustbe: Eisblöcke > [coverage]% der Bodenfläche.
+  lavamustbe: Lava > [coverage]% der Bodenfläche.
+  minimumblockstitle: "[Minimum blocks required]"
+  nootherblocks: Keine weiteren Blöcke erforderlich.
+  missing: Gewächshaus fehlt
+event:
+  broke: Du hast das Gewächshaus kaputt gemacht! Biome auf [biome] umstellen!
+  fix: repariere das Gewächshaus und baue es dann wieder auf
+  cannotplace: Blöcke können nicht über einem Gewächshaus platziert werden!
+  pistonerror: Kolben können keine Blöcke über ein Gewächshaus schieben!
+limits:
+  noneallowed: Die Berechtigungen erlauben dir keine Gewächshäuser, deshalb wurden
+    [nummer] entfernt.
+  limitedto: Die Berechtigungen beschränken dich auf [limit] Gewächshäuser, so dass
+    [number] entfernt wurden.
+adminHelp:
+  reload: Konfiguration aus Datei neu laden.
+  info: Liefert Informationen über das Gewächshaus, in dem du dich befindest
+reload:
+  configReloaded: Konfiguration aus Datei neu geladen.
+admininfo:
+  error: Gewächshaus-Info nur im Spiel verfügbar
+  error2: Versetzt dich in ein Gewächshaus, um Infos zu sehen.
+  flags: "[Greenhouse Flags]"
+news:
+  headline: "[Greenhouse News]"
+controlpanel:
+  title: "&AGewächshäuser"
