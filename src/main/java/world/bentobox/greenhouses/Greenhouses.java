@@ -93,7 +93,6 @@ public class Greenhouses extends Addon {
     @Override
     public void onDisable() {
         if (manager != null) {
-            manager.saveGreenhouses();
             if (manager.getEcoMgr() != null) manager.getEcoMgr().cancel();
         }
     }

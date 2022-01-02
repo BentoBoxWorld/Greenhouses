@@ -127,14 +127,6 @@ public class GreenhouseManager implements Listener {
     }
 
     /**
-     * Saves all the greenhouses to database
-     */
-    public void saveGreenhouses() {
-        addon.log("Saving greenhouses...");
-        map.getGreenhouses().forEach(handler::saveObjectAsync);
-    }
-
-    /**
      * Removes the greenhouse from the world and resets biomes
      * @param gh - greenhouse
      */
