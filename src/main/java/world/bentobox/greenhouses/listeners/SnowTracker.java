@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,7 +25,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 
 import com.google.common.base.Enums;
-import com.google.common.base.Optional;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -100,7 +100,7 @@ public class SnowTracker implements Listener {
     }
 
     private boolean placeSnow(Block b) {
-        Optional<Material> snowCauldron = Enums.getIfPresent(Material.class, "POWDER_SNOW_CAULDRON");
+        Optional<Material> snowCauldron = Enums.getIfPresent(Material.class, "POWDER_SNOW_CAULDRON").toJavaUtil();
         if (snowCauldron.isPresent()) {
             if (b.getType().equals(Material.CAULDRON)) {
                 b.setType(snowCauldron.get());

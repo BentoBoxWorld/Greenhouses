@@ -419,7 +419,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return a list of blocks that are required for this recipe
      */
     public List<String> getRecipeBlocks() {
-        return requiredBlocks.entrySet().stream().map(en -> Util.prettifyText(en.getKey().toString()) + " x " + en.getValue()).collect(Collectors.toList());
+        return requiredBlocks.entrySet().stream().map(en -> Util.prettifyText(en.getKey().toString()) + " x " + en.getValue()).toList();
     }
 
     /**
@@ -471,10 +471,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private boolean canGrowOn(GrowthBlock block, GreenhousePlant p) {
         // Ceiling plants can only grow on ceiling blocks
-        if (CEILING_PLANTS.contains(p.plantMaterial()) && block.floor()) {
+        if (CEILING_PLANTS.contains(p.plantMaterial()) && Boolean.TRUE.equals(block.floor())) {
             return false;
         }
-        return p.plantGrownOn().equals(block.block().getRelative(block.floor() ? BlockFace.DOWN : BlockFace.UP).getType());
+        return p.plantGrownOn().equals(block.block().getRelative(Boolean.TRUE.equals(block.floor()) ? BlockFace.DOWN : BlockFace.UP).getType());
     }
 
     /**
