@@ -296,7 +296,7 @@ public class GreenhouseEventsTest {
         ghe.onIceBreak(e);
         verify(block).setType(Material.AIR);
         assertTrue(e.isCancelled());
-        verify(world).playSound(any(), eq(Sound.BLOCK_GLASS_BREAK), eq(1F), eq(1F));
+        verify(world).playSound(any(Location.class), eq(Sound.BLOCK_GLASS_BREAK), eq(1F), eq(1F));
 
     }
 

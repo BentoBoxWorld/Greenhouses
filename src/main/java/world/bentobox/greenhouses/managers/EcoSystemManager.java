@@ -15,6 +15,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.NumberConversions;
 
 import world.bentobox.greenhouses.Greenhouses;
@@ -85,18 +86,20 @@ public class EcoSystemManager {
     }
 
     private void convertBlocks(Greenhouse gh) {
-        World world = gh.getWorld();
+        final World world = gh.getWorld();
+        final BoundingBox bb = gh.getBoundingBox();
         if(world == null || gh.getLocation() == null || gh.getLocation().getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4)
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
             return;
         }
-        int gh_min_x = NumberConversions.floor(gh.getInternalBoundingBox().getMinX());
-        int gh_max_x = NumberConversions.floor(gh.getInternalBoundingBox().getMaxX());
+        final BoundingBox ibb = gh.getInternalBoundingBox();
+        int gh_min_x = NumberConversions.floor(ibb.getMinX());
+        int gh_max_x = NumberConversions.floor(ibb.getMaxX());
         int gh_min_y = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
-        int gh_max_y = NumberConversions.floor(gh.getInternalBoundingBox().getMaxY());
-        int gh_min_z = NumberConversions.floor(gh.getInternalBoundingBox().getMinZ());
-        int gh_max_z = NumberConversions.floor(gh.getInternalBoundingBox().getMaxZ());
+        int gh_max_y = NumberConversions.floor(ibb.getMaxY());
+        int gh_min_z = NumberConversions.floor(ibb.getMinZ());
+        int gh_max_z = NumberConversions.floor(ibb.getMaxZ());
         BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
 
         for (int x = gh_min_x; x < gh_max_x; x++) {
@@ -129,8 +132,9 @@ public class EcoSystemManager {
     }
 
     private void addMobs(Greenhouse gh) {
+        final BoundingBox bb = gh.getBoundingBox();
         if(gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
             // Skipping addmobs for unloaded greenhouse
             return;
         }
@@ -138,8 +142,8 @@ public class EcoSystemManager {
             return;
         }
         // Check greenhouse chunks are loaded
-        for (double blockX = gh.getBoundingBox().getMinX(); blockX < gh.getBoundingBox().getMaxX(); blockX+=16) {
-            for (double blockZ = gh.getBoundingBox().getMinZ(); blockZ < gh.getBoundingBox().getMaxZ(); blockZ+=16) {
+        for (double blockX = bb.getMinX(); blockX < bb.getMaxX(); blockX+=16) {
+            for (double blockZ = bb.getMinZ(); blockZ < bb.getMaxZ(); blockZ+=16) {
                 int chunkX = (int)(blockX / 16);
                 int chunkZ = (int)(blockZ / 16);
                 if (!gh.getWorld().isChunkLoaded(chunkX, chunkZ)) {
@@ -170,8 +174,9 @@ public class EcoSystemManager {
      * @param gh - greenhouse
      */
     private void growPlants(Greenhouse gh) {
+        final BoundingBox bb = gh.getBoundingBox();
         if (gh.getLocation() == null || gh.getLocation().getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMaxX()) >> 4, ((int) gh.getBoundingBox().getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) gh.getBoundingBox().getMinX()) >> 4, ((int) gh.getBoundingBox().getMinZ()) >> 4)){
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
             //Skipping growplants for unloaded greenhouse
             return;
         }
@@ -212,11 +217,13 @@ public class EcoSystemManager {
      * @return List of blocks
      */
     protected List<GrowthBlock> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
+        final BoundingBox bb = gh.getBoundingBox();
+        final BoundingBox ibb = gh.getInternalBoundingBox();
         List<GrowthBlock> result = new ArrayList<>();
         if (gh.getWorld() == null) return result;
-        for (double x = gh.getInternalBoundingBox().getMinX(); x < gh.getInternalBoundingBox().getMaxX(); x++) {
-            for (double z = gh.getInternalBoundingBox().getMinZ(); z < gh.getInternalBoundingBox().getMaxZ(); z++) {
-                for (double y = gh.getInternalBoundingBox().getMaxY() - 1; y >= gh.getBoundingBox().getMinY(); y--) {
+        for (double x = ibb.getMinX(); x < ibb.getMaxX(); x++) {
+            for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
+                for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
                     // Check ceiling blocks
                     if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {

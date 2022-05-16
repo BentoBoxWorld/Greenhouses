@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -77,6 +78,23 @@ public class GreenhouseGuard implements Listener {
                 .map(Block::getLocation)
                 .anyMatch(this::inGreenhouse));
     }
+
+
+    /**
+     * Guard Greenhouse from natural entity spawning.
+     *
+     * @param spawnEvent the spawn event
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent spawnEvent)
+    {
+        if (CreatureSpawnEvent.SpawnReason.NATURAL == spawnEvent.getSpawnReason())
+        {
+            // Natural spawn events should be cancelled. Greenhouse spawns its own mobs.
+            spawnEvent.setCancelled(this.inGreenhouse(spawnEvent.getLocation()));
+        }
+    }
+
 
     private boolean inGreenhouse(Location l) {
         return addon.getManager().getMap().getGreenhouse(l).map(g -> g.isRoofOrWallBlock(l)).orElse(false);

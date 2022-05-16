@@ -171,7 +171,7 @@ public class Greenhouse implements DataObject {
      */
     @NonNull
     public BoundingBox getBoundingBox() {
-        return Objects.requireNonNullElseGet(boundingBox, BoundingBox::new);
+        return Objects.requireNonNull(boundingBox);
     }
 
     /**
@@ -220,7 +220,9 @@ public class Greenhouse implements DataObject {
      * @return true if inside the greenhouse
      */
     public boolean contains(Location location2) {
-        return location.getWorld() != null && location.getWorld().equals(location2.getWorld()) && boundingBox.contains(location2.toVector());
+        return getLocation().getWorld() != null
+                && getLocation().getWorld().equals(location2.getWorld())
+                && getBoundingBox().contains(location2.toVector());
     }
 
     /**
@@ -262,12 +264,13 @@ public class Greenhouse implements DataObject {
      * @return true if wall or roof block
      */
     public boolean isRoofOrWallBlock(Location l) {
+        final BoundingBox bb = getBoundingBox();
         return (l.getBlockY() > this.getFloorHeight()
                 && ((l.getBlockY() == getCeilingHeight() - 1)
-                        || l.getBlockX() == (int)getBoundingBox().getMinX()
-                        || l.getBlockX() == (int)getBoundingBox().getMaxX() - 1
-                        || l.getBlockZ() == (int)getBoundingBox().getMinZ()
-                        || l.getBlockZ() == (int)getBoundingBox().getMaxZ() - 1
+                        || l.getBlockX() == (int)bb.getMinX()
+                        || l.getBlockX() == (int)bb.getMaxX() - 1
+                        || l.getBlockZ() == (int)bb.getMinZ()
+                        || l.getBlockZ() == (int)bb.getMaxZ() - 1
                         ));
     }
 }

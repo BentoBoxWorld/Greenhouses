@@ -1,7 +1,4 @@
-# 
-# This is a YML file. Be careful when editing. Check your edits in a YAML checker like    #
-# the one at http://yaml-online-parser.appspot.com                                        #
-# If this file is deleted, then it will be recreate at the next reload.                   #
+---
 protection:
   flags:
     GREENHOUSE:
@@ -12,9 +9,9 @@ greenhouses:
     greenhouses: 温室
   errors:
     move: 移动到你拥有的第一个温室.
-    no-rank: '&c你没有足够的阶级去做这个.'
+    no-rank: "&c你没有足够的阶级去做这个."
     notyours: 这不是你的温室!
-    not-inside: '&c你并不处于一个温室之中!'
+    not-inside: "&c你并不处于一个温室之中!"
     tooexpensive: 你的钱不足以支付 [price]
     alreadyexists: 温室已经存在!
     norecipe: 无法创建一个温室!
@@ -23,12 +20,12 @@ greenhouses:
     entering: 你进入一个 [biome] 温室
     leaving: 你离开了 [biome] 温室
   recipe:
-    blockscolor: '&f'
-    title: '[[biome] 配方]'
+    blockscolor: "&f"
+    title: "[[biome] 配方]"
     watermustbe: 水在地面上的占比需要大于[coverage]%.
     icemustbe: 冰在地面上的占比需要大于[coverage]%.
     lavamustbe: 岩浆在地面上的占比需要大于[coverage]%.
-    minimumblockstitle: '[最少所需的方块数目]'
+    minimumblockstitle: "[最少所需的方块数目]"
     nootherblocks: 没有其它需要的方块了.
     missing: 温室缺失了
   commands:
@@ -37,39 +34,37 @@ greenhouses:
         description: 如果你是你现在所处的温室的主人则移除这个温室
       make:
         description: 尝试建造一个温室
-        parameters: <recipe>
+        parameters: "<recipe>"
         error:
-          already: '&c这已经有一个温室了!'
-          FAIL_BAD_ROOF_BLOCKS: '&c屋顶包含了不被允许的方块!'
-          FAIL_BAD_WALL_BLOCKS: '&c墙壁包含了不被允许的方块!'
-          FAIL_BELOW: '&c你必须处于温室结构内才能尝试建造它'
-          FAIL_BLOCKS_ABOVE: '&c温室的上方不能有方块，违规方块已被标红.'
-          FAIL_HOLE_IN_ROOF: '&c屋顶上有一个洞或者屋顶并不平整，违规方块已被标红.'
-          FAIL_HOLE_IN_WALL: '&c墙上有一个洞!'
-          FAIL_NO_ROOF: '&c这儿看起来没有屋顶!'
-          FAIL_TOO_MANY_DOORS: '&c你的温室最多只能有四个门!'
-          FAIL_TOO_MANY_HOPPERS: '&c墙或屋顶上至多有一个漏斗.'
-          FAIL_UNEVEN_WALLS: '&c墙壁不平坦，违规方块已被标红.'
-          FAIL_INSUFFICIENT_ICE: '&c冰的数目不足以建造这个温室'
-          FAIL_INSUFFICIENT_LAVA: '&c岩浆的数目不足以建造这个温室'
-          FAIL_INSUFFICIENT_WATER: '&c水的数目不足以建造这个温室'
-          FAIL_NO_ICE: '&c对于这个温室来说冰是必须的'
-          FAIL_NO_LAVA: '&c对于这个温室来说岩浆是必须的'
-          FAIL_NO_WATER: '&c对于这个温室来说水是必须的'
-          FAIL_INSUFFICIENT_BLOCKS: '&c你所用的方块数目不足!'
-          FAIL_OVERLAPPING: '&c温室间不能共享墙壁.'
-        success: '&2你成功的建造了一个 [biome] 群系温室! 在你下次登陆时生物群系将会刷新.'
-        missing-blocks: '&c缺少了 [material] x [number]'
-        unknown-recipe: '&c未知的温室配方'
-        try-these: '&c尝试以下操作:'
-        recipe-format: '&3[name]'
+          already: "&c这已经有一个温室了!"
+          FAIL_BAD_ROOF_BLOCKS: "&c屋顶包含了不被允许的方块!"
+          FAIL_BAD_WALL_BLOCKS: "&c墙壁包含了不被允许的方块!"
+          FAIL_BELOW: "&c你必须处于温室结构内才能尝试建造它"
+          FAIL_BLOCKS_ABOVE: "&c温室的上方不能有方块，违规方块已被标红."
+          FAIL_HOLE_IN_ROOF: "&c屋顶上有一个洞或者屋顶并不平整，违规方块已被标红."
+          FAIL_HOLE_IN_WALL: "&c墙上有一个洞!"
+          FAIL_NO_ROOF: "&c这儿看起来没有屋顶!"
+          FAIL_TOO_MANY_DOORS: "&c你的温室最多只能有四个门!"
+          FAIL_TOO_MANY_HOPPERS: "&c墙或屋顶上至多有一个漏斗."
+          FAIL_UNEVEN_WALLS: "&c墙壁不平坦，违规方块已被标红."
+          FAIL_INSUFFICIENT_ICE: "&c冰的数目不足以建造这个温室"
+          FAIL_INSUFFICIENT_LAVA: "&c岩浆的数目不足以建造这个温室"
+          FAIL_INSUFFICIENT_WATER: "&c水的数目不足以建造这个温室"
+          FAIL_NO_ICE: "&c对于这个温室来说冰是必须的"
+          FAIL_NO_LAVA: "&c对于这个温室来说岩浆是必须的"
+          FAIL_NO_WATER: "&c对于这个温室来说水是必须的"
+          FAIL_NO_RECIPE_FOUND: "&c 找不到与此温室相匹配的配方"
+          FAIL_INSUFFICIENT_BLOCKS: "&c你所用的方块数目不足!"
+          FAIL_OVERLAPPING: "&c温室间不能共享墙壁."
+        success: "&2你成功的建造了一个 [biome] 群系温室! 在你下次登陆时生物群系将会刷新."
+        missing-blocks: "&c缺少了 [material] x [number]"
+        unknown-recipe: "&c未知的温室配方"
+        try-these: "&c尝试以下操作:"
+        recipe-format: "&3[name]"
       info:
-        title: '&A[温室建造指南]'
-        instructions: "&E用玻璃建造一个有四面墙和屋顶的平整的立方体\n\
-          &E最多只能有 &F4 扇门. &E\n在墙壁或屋顶内&E放置 &F一个漏斗\
-          \ \n&E来放置骨粉或雪\
-          \ 来让作物自动生长.\n&E检查温室配方确保\
-          \ 你的温室包含足够的必要方块\n&E温室就顺利建造了. \n"
+        title: "&A[温室建造指南]"
+        instructions: "&E用玻璃建造一个有四面墙和屋顶的平整的立方体\n&E最多只能有 &F4 扇门. &E\n在墙壁或屋顶内&E放置 &F一个漏斗
+          \n&E来放置骨粉或雪 来让作物自动生长.\n&E检查温室配方确保 你的温室包含足够的必要方块\n&E温室就顺利建造了. \n"
 help:
   help: 帮助
   make: 尝试建造一个温室
@@ -79,7 +74,7 @@ help:
   recipe: 告知你如何制造一个温室
   opengui: 打开温室GUI
 list:
-  title: '[温室建造指南]'
+  title: "[温室建造指南]"
   info: 使用指令 /greenhouse recipe <number> 来查看建造每一个温室的细节
 error:
   greenhouseProtected: 温室已被保护
@@ -99,31 +94,28 @@ messages:
   removedmessage: 你的 [biome] 温室已经被移除!
   ecolost: 你位于 [location] 的温室生态环境遭到破坏，它已经不再是温室了.
 info:
-  title: '&A[如何建造一个温室]'
-  instructions: "&E用玻璃建造一个有四面墙和屋顶的平整的立方体\n\
-    &E最多只能有 &F4 扇门. &E\n在墙壁或屋顶内&E放置 &F一个漏斗\
-    \ \n&E来放置骨粉或雪\
-    \ 来让作物自动生长.\n&E检查温室配方确保\
-    \ 你的温室包含足够的必要方块\n&E温室就顺利建造了. \n"
-  info: '[温室信息]'
+  title: "&A[如何建造一个温室]"
+  instructions: "&E用玻璃建造一个有四面墙和屋顶的平整的立方体\n&E最多只能有 &F4 扇门. &E\n在墙壁或屋顶内&E放置 &F一个漏斗 \n&E来放置骨粉或雪
+    来让作物自动生长.\n&E检查温室配方确保 你的温室包含足够的必要方块\n&E温室就顺利建造了. \n"
+  info: "[温室信息]"
   none: 无
-  nomore: '&4你无法建造更多的温室了!'
-  onemore: '&6你可以再建造一个温室.'
-  youcanbuild: '&A你最多能建造 [number] 个温室!'
-  unlimited: '&A你能建造无限多个温室!'
-  welcome: '&B你好! 点击这里获得更多提示'
+  nomore: "&4你无法建造更多的温室了!"
+  onemore: "&6你可以再建造一个温室."
+  youcanbuild: "&A你最多能建造 [number] 个温室!"
+  unlimited: "&A你能建造无限多个温室!"
+  welcome: "&B你好! 点击这里获得更多提示"
 recipe:
-  blockscolor: '&f'
+  blockscolor: "&f"
   hint: 使用 /greenhouse list 来看见所有温室配方的编号!
   wrongnumber: 温室配方编号必须位于 1 与 [size] 之间
-  title: '[[biome] 配方]'
+  title: "[[biome] 配方]"
   nowater: 不允许有水.
   noice: 不允许有冰.
   nolava: 不允许有岩浆.
   watermustbe: 水在地面上的占比需要大于 [coverage]%.
   icemustbe: 冰在地面上的占比需要大于 [coverage]%.
   lavamustbe: 岩浆在地面上的占比需要大于 [coverage]%.
-  minimumblockstitle: '[最少所需的方块]'
+  minimumblockstitle: "[最少所需的方块]"
   nootherblocks: 没有其它必要的方块了.
   missing: 温室缺失了
 event:
@@ -142,8 +134,8 @@ reload:
 admininfo:
   error: 查看温室信息功能仅能在游戏中使用
   error2: 进入一个温室才能查看其信息.
-  flags: '[Greenhouse Flags]'
+  flags: "[Greenhouse Flags]"
 news:
-  headline: '[温室新闻]'
+  headline: "[温室新闻]"
 controlpanel:
-  title: '&A温室'
+  title: "&A温室"
