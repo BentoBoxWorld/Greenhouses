@@ -172,7 +172,7 @@ public class Walls extends MinMaxXZ {
                 }
             }
 
-        } while( y-- > 0 && wallBlockCount > 0);
+        } while( y-- > -64 && wallBlockCount > 0);
         return y + 1;
 
     }

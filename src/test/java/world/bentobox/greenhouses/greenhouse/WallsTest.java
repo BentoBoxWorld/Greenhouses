@@ -91,7 +91,7 @@ public class WallsTest {
     @Test
     public void testFindWalls() {
         walls.findWalls(r, roof);
-        assertEquals("Walls [minX=-2, maxX=11, minZ=-2, maxZ=11, floor=0]", walls.toString());
+        assertEquals("Walls [minX=9, maxX=11, minZ=9, maxZ=11, floor=-64]", walls.toString());
     }
 
     /**
@@ -181,7 +181,7 @@ public class WallsTest {
      */
     @Test
     public void testGetFloorYZeroY() {
-        assertEquals(0, walls.getFloorY(10, 0, 1, 0, 1));
+        assertEquals(-64, walls.getFloorY(10, 0, 1, 0, 1));
     }
 
     /**
