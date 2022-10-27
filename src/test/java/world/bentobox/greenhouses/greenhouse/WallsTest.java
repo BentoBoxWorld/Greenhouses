@@ -91,7 +91,7 @@ public class WallsTest {
     @Test
     public void testFindWalls() {
         walls.findWalls(r, roof);
-        assertEquals("Walls [minX=9, maxX=11, minZ=9, maxZ=11, floor=-64]", walls.toString());
+        assertEquals("Walls [minX=-2, maxX=11, minZ=-2, maxZ=11, floor=0]", walls.toString());
     }
 
     /**
@@ -177,15 +177,15 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorYZeroY() {
-        assertEquals(-64, walls.getFloorY(10, 0, 1, 0, 1));
+        assertEquals(-64, walls.getFloorY(10, 0, 1, 0, 1, -64));
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorY() {
@@ -193,7 +193,7 @@ public class WallsTest {
                 Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS,
                 Material.AIR);
-        assertEquals(8, walls.getFloorY(10, 0, 1, 0, 1));
+        assertEquals(8, walls.getFloorY(10, 0, 1, 0, 1, -64));
     }
 
     /**
