@@ -69,7 +69,7 @@ public class Walls extends MinMaxXZ {
         // The player is under the roof
         // Assume the player is inside the greenhouse they are trying to create
         final Location loc = roof.getLocation();
-        floor = getFloorY(roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ());
+        floor = getFloorY(roof.getHeight(), roof.getMinX(), roof.getMaxX(), roof.getMinZ(), roof.getMaxZ(), loc.getWorld().getMinHeight());
         // Now start with the player's x and z location
         WallFinder wf = new WallFinder();
         minX = loc.getBlockX();
@@ -85,7 +85,7 @@ public class Walls extends MinMaxXZ {
         minZ--;
         maxZ++;
         // Find the floor again, only looking within the walls
-        floor = getFloorY(roof.getHeight(), minX, maxX, minZ,maxZ);
+        floor = getFloorY(roof.getHeight(), minX, maxX, minZ,maxZ,loc.getWorld().getMinHeight());
         // Complete on main thread
         Bukkit.getScheduler().runTask(BentoBox.getInstance(), () -> r.complete(this));
         return this;
@@ -159,7 +159,7 @@ public class Walls extends MinMaxXZ {
         }
     }
 
-    int getFloorY(int y, int minX, int maxX, int minZ, int maxZ) {
+    int getFloorY(int y, int minX, int maxX, int minZ, int maxZ, int minY) {
         // Find the floor - defined as the last y under the roof where there are no wall blocks
         int wallBlockCount;
         do {
@@ -172,7 +172,7 @@ public class Walls extends MinMaxXZ {
                 }
             }
 
-        } while( y-- > 0 && wallBlockCount > 0);
+        } while( y-- > minY && wallBlockCount > 0);
         return y + 1;
 
     }
