@@ -24,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hoglin;
@@ -441,7 +442,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         return getRandomPlant().map(p -> {
             if (bl.getY() != 0 && canGrowOn(block, p)) {
-                if (!isBisected(bl, p)) {
+                if (!plantIt(bl, p)) {
                     return false;
                 }
                 bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
@@ -451,9 +452,17 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }).orElse(false);
     }
 
-    private boolean isBisected(Block bl, GreenhousePlant p) {
+    /**
+     * Plants the plant
+     * @param bl - block to turn into a plant
+     * @param p - the greenhouse plant to be grown
+     * @return true if successful, false if not
+     */
+    private boolean plantIt(Block bl, GreenhousePlant p) {
         BlockData dataBottom = p.plantMaterial().createBlockData();
+        // Check if this is a double-height plant
         if (dataBottom instanceof Bisected bi) {
+            // Double-height plant
             bi.setHalf(Bisected.Half.BOTTOM);
             BlockData dataTop = p.plantMaterial().createBlockData();
             ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
@@ -463,10 +472,60 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             } else {
                 return false; // No room
             }
+        } else if (p.plantMaterial().equals(Material.GLOW_LICHEN)) {
+            return placeLichen(bl);
         } else {
+            // Single height plant
             bl.setBlockData(dataBottom, false);
         }
         return true;
+    }
+
+    /**
+     * Handles the placing of Glow Lichen. This needs to stick to a block rather than grow on it.
+     * If the block is set to Glow Lichen then it appears as an air block with 6 sides of lichen so
+     * they need to be switched off and only the side next to the block should be set.
+     * @param bl - block where plants would usually be placed
+     * @return true if successful, false if not
+     */
+    private boolean placeLichen(Block bl) {
+        // Get the source block below this one
+        Block b = bl.getRelative(BlockFace.DOWN);
+
+        // Find a spot for licen
+        BlockFace d = null;
+        boolean waterLogged = false;
+        for (BlockFace adj : ADJ_BLOCKS) {
+            if (b.getRelative(adj).getType().equals(Material.AIR)) {
+                d = adj;
+                break;
+            }
+            // Lichen can grow under water too
+            if (b.getRelative(adj).getType().equals(Material.WATER)) {
+                d = adj;
+                waterLogged = true;
+                break;
+            }
+        }
+        if (d == null) {
+            return false;
+        }
+        Block bb = b.getRelative(d);
+        bb.setType(Material.GLOW_LICHEN);
+        BlockFace opp = d.getOppositeFace();
+
+        if(bb.getBlockData() instanceof GlowLichen v){
+            for (BlockFace f : v.getAllowedFaces()) {
+                v.setFace(f, false);
+            }
+            v.setFace(opp, true);
+            v.setWaterlogged(waterLogged);
+            bb.setBlockData(v);
+            bb.getState().setBlockData(v);
+            bb.getState().update(true);
+            return true;
+        }
+        return false;
     }
 
     private boolean canGrowOn(GrowthBlock block, GreenhousePlant p) {
