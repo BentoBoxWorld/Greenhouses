@@ -96,29 +96,19 @@ public class GreenhouseManager implements Listener {
         handler.loadObjects().forEach(g -> {
             GreenhouseResult result = map.addGreenhouse(g);
             switch (result) {
-            case FAIL_NO_ISLAND:
-                // Delete the failed greenhouse
-                toBeRemoved.add(g);
-                break;
-            case FAIL_OVERLAPPING:
-                addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
-                break;
-            case NULL:
-                addon.logError("Null location of greenhouse. Cannot load. Skipping...");
-                break;
-            case SUCCESS:
-                activateGreenhouse(g);
-                break;
-            case FAIL_NO_WORLD:
-                addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
-                break;
-            case FAIL_UNKNOWN_RECIPE:
-                addon.logError("Greenhouse uses a recipe that does not exist in the biomes.yml. Skipping...");
-                addon.logError("Greenhouse Id " + g.getUniqueId());
-                break;
-            default:
-                break;
-
+                case FAIL_NO_ISLAND ->
+                        // Delete the failed greenhouse
+                        toBeRemoved.add(g);
+                case FAIL_OVERLAPPING -> addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
+                case NULL -> addon.logError("Null location of greenhouse. Cannot load. Skipping...");
+                case SUCCESS -> activateGreenhouse(g);
+                case FAIL_NO_WORLD -> addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
+                case FAIL_UNKNOWN_RECIPE -> {
+                    addon.logError("Greenhouse uses a recipe that does not exist in the biomes.yml. Skipping...");
+                    addon.logError("Greenhouse Id " + g.getUniqueId());
+                }
+                default -> {
+                }
             }
         });
         addon.log("Loaded " + map.getSize() + " greenhouses.");
