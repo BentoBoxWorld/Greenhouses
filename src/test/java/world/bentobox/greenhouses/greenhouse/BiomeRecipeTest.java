@@ -611,7 +611,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantNotAir() {
         when(block.getType()).thenReturn(Material.SOUL_SAND);
-        assertFalse(br.growPlant(new GrowthBlock(block, true)));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }
 
     /**
@@ -621,7 +621,7 @@ public class BiomeRecipeTest {
     public void testGrowPlantNoPlants() {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
-        assertFalse(br.growPlant(new GrowthBlock(block, true)));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }
 
     /**
@@ -633,7 +633,7 @@ public class BiomeRecipeTest {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(new GrowthBlock(block, true)));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }
 
     /**
@@ -649,7 +649,7 @@ public class BiomeRecipeTest {
 
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(new GrowthBlock(block, true)));
+        assertTrue(br.growPlant(new GrowthBlock(block, true), false));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
     }
@@ -667,7 +667,7 @@ public class BiomeRecipeTest {
 
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
-        assertTrue(br.growPlant(new GrowthBlock(block, false)));
+        assertTrue(br.growPlant(new GrowthBlock(block, false), false));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
     }
@@ -686,7 +686,7 @@ public class BiomeRecipeTest {
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
         // Not a ceiling block
-        assertFalse(br.growPlant(new GrowthBlock(block, true)));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }
 
     /**
@@ -704,7 +704,7 @@ public class BiomeRecipeTest {
         when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
         when(block.getRelative(BlockFace.UP)).thenReturn(block);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(new GrowthBlock(block, true)));
+        assertTrue(br.growPlant(new GrowthBlock(block, true), false));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
         verify(bisected).setHalf(eq(Half.BOTTOM));
         verify(bisected).setHalf(eq(Half.TOP));
@@ -725,7 +725,7 @@ public class BiomeRecipeTest {
         when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(ob);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(new GrowthBlock(block, true)));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }
 
     /**
