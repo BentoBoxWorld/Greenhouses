@@ -2,6 +2,7 @@ package world.bentobox.greenhouses.greenhouse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hoglin;
@@ -34,6 +37,7 @@ import com.google.common.base.Enums;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -60,12 +64,26 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     private static final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
+    private static final List<Material> UNDERWATER_PLANTS;
+    static {
+        List<Material> m = new ArrayList<>();
+        Arrays.stream(Material.values()).filter(c -> c.name().contains("CORAL")).forEach(m::add);
+        m.add(Material.SEA_LANTERN);
+        m.add(Material.SEA_PICKLE);
+        m.add(Material.SEAGRASS);
+        m.add(Material.KELP);
+        m.add(Material.GLOW_LICHEN);
+        UNDERWATER_PLANTS = Collections.unmodifiableList(m);
+    }
 
     // Content requirements
     // Material, Type, Qty. There can be more than one type of material required
     private final Map<Material, Integer> requiredBlocks = new EnumMap<>(Material.class);
-    // Plants
+    /**
+     * Tree map of plants
+     */
     private final TreeMap<Double, GreenhousePlant> plantTree = new TreeMap<>();
+    private final TreeMap<Double, GreenhousePlant> underwaterPlants = new TreeMap<>();
 
     // Mobs
     // Entity Type, Material to Spawn on, Probability
@@ -148,11 +166,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public boolean addPlants(Material plantMaterial, double plantProbability, Material plantGrowOn) {
         double probability = plantProbability/100;
+        TreeMap<Double, GreenhousePlant> map = UNDERWATER_PLANTS.contains(plantMaterial) ? underwaterPlants : plantTree;
         // Add up all the probabilities in the list so far
-        double lastProb = plantTree.isEmpty() ? 0D : plantTree.lastKey();
+        double lastProb = map.isEmpty() ? 0D : map.lastKey();
         if ((1D - lastProb) >= probability) {
             // Add to probability tree
-            plantTree.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
+            map.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
             addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
             return false;
@@ -357,7 +376,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
         return getRandomMob()
                 // Check if the spawn on block matches, if it exists
-                .filter(m -> Optional.of(m.mobSpawnOn()).map(b.getRelative(BlockFace.DOWN).getType()::equals).orElse(true))
+                .filter(m -> Optional.of(m.mobSpawnOn())
+                        .map(b.getRelative(BlockFace.DOWN).getType()::equals)
+                        .orElse(true))
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
@@ -408,11 +429,11 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         return key == null ? Optional.empty() : Optional.ofNullable(mobTree.get(key));
     }
 
-    private Optional<GreenhousePlant> getRandomPlant() {
+    private Optional<GreenhousePlant> getRandomPlant(boolean underwater) {
         // Grow a random plant that can grow
         double r = random.nextDouble();
-        Double key = plantTree.ceilingKey(r);
-        return key == null ? Optional.empty() : Optional.ofNullable(plantTree.get(key));
+        Double key = underwater ? underwaterPlants.ceilingKey(r) : plantTree.ceilingKey(r);
+        return key == null ? Optional.empty() : Optional.ofNullable(underwater ? underwaterPlants.get(key) : plantTree.get(key));
     }
 
     /**
@@ -432,28 +453,34 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * Plants a plant on block bl if it makes sense.
      * @param block - block that can have growth
+     * @param underwater - if the block is underwater or not
      * @return true if successful
      */
-    public boolean growPlant(GrowthBlock block) {
+    public boolean growPlant(GrowthBlock block, boolean underwater) {
         Block bl = block.block();
-        if (!bl.isEmpty()) {
-            return false;
-        }
-        return getRandomPlant().map(p -> {
+        return getRandomPlant(underwater).map(p -> {
             if (bl.getY() != 0 && canGrowOn(block, p)) {
-                if (!isBisected(bl, p)) {
-                    return false;
+                if (plantIt(bl, p)) {
+                    bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
+                    return true;
                 }
-                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
-                return true;
             }
             return false;
         }).orElse(false);
     }
 
-    private boolean isBisected(Block bl, GreenhousePlant p) {
+    /**
+     * Plants the plant
+     * @param bl - block to turn into a plant
+     * @param p - the greenhouse plant to be grown
+     * @return true if successful, false if not
+     */
+    private boolean plantIt(Block bl, GreenhousePlant p) {
+        boolean underwater = bl.getType().equals(Material.WATER);
         BlockData dataBottom = p.plantMaterial().createBlockData();
+        // Check if this is a double-height plant
         if (dataBottom instanceof Bisected bi) {
+            // Double-height plant
             bi.setHalf(Bisected.Half.BOTTOM);
             BlockData dataTop = p.plantMaterial().createBlockData();
             ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
@@ -463,18 +490,92 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             } else {
                 return false; // No room
             }
+        } else if (p.plantMaterial().equals(Material.GLOW_LICHEN)) {
+            return placeLichen(bl);
         } else {
-            bl.setBlockData(dataBottom, false);
+            if (dataBottom instanceof Waterlogged wl) {
+                wl.setWaterlogged(underwater);
+                bl.setBlockData(wl, false);
+            } else {
+                // Single height plant
+                bl.setBlockData(dataBottom, false);
+            }
         }
         return true;
     }
 
+    /**
+     * Handles the placing of Glow Lichen. This needs to stick to a block rather than grow on it.
+     * If the block is set to Glow Lichen then it appears as an air block with 6 sides of lichen so
+     * they need to be switched off and only the side next to the block should be set.
+     * @param bl - block where plants would usually be placed
+     * @return true if successful, false if not
+     */
+    private boolean placeLichen(Block bl) {
+        // Get the source block below this one
+        Block b = bl.getRelative(BlockFace.DOWN);
+
+        // Find a spot for licen
+        BlockFace d = null;
+        boolean waterLogged = false;
+        for (BlockFace adj : ADJ_BLOCKS) {
+            if (b.getRelative(adj).getType().equals(Material.AIR)) {
+                d = adj;
+                break;
+            }
+            // Lichen can grow under water too
+            if (b.getRelative(adj).getType().equals(Material.WATER)) {
+                d = adj;
+                waterLogged = true;
+                break;
+            }
+        }
+        if (d == null) {
+            return false;
+        }
+        Block bb = b.getRelative(d);
+        bb.setType(Material.GLOW_LICHEN);
+        BlockFace opp = d.getOppositeFace();
+
+        if(bb.getBlockData() instanceof GlowLichen v){
+            for (BlockFace f : v.getAllowedFaces()) {
+                v.setFace(f, false);
+            }
+            v.setFace(opp, true);
+            v.setWaterlogged(waterLogged);
+            bb.setBlockData(v);
+            bb.getState().setBlockData(v);
+            bb.getState().update(true);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a particular plant can group at the location of a block
+     * @param block - block being checked
+     * @param p - greenhouse plant
+     * @return true if it can be grown otherwise false
+     */
     private boolean canGrowOn(GrowthBlock block, GreenhousePlant p) {
         // Ceiling plants can only grow on ceiling blocks
         if (CEILING_PLANTS.contains(p.plantMaterial()) && Boolean.TRUE.equals(block.floor())) {
             return false;
         }
-        return p.plantGrownOn().equals(block.block().getRelative(Boolean.TRUE.equals(block.floor()) ? BlockFace.DOWN : BlockFace.UP).getType());
+        // Underwater plants can only be placed in water and regular plants cannot be placed in water
+        if (block.block().getType().equals(Material.WATER)) {
+            BentoBox.getInstance().logDebug("Water block");
+            if (!UNDERWATER_PLANTS.contains(p.plantMaterial())) {
+                return false;
+            }
+            BentoBox.getInstance().logDebug("Water plant");
+        } else if (UNDERWATER_PLANTS.contains(p.plantMaterial())) {
+            return false;
+        }
+
+        return p.plantGrownOn().equals(block.block().getRelative(Boolean.TRUE.equals(block.floor()) ?
+                BlockFace.DOWN :
+                    BlockFace.UP).getType());
     }
 
     /**

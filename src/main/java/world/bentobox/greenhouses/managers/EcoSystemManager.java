@@ -183,9 +183,13 @@ public class EcoSystemManager {
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
             // Get a list of all available blocks
-            List<GrowthBlock> list = getAvailableBlocks(gh, true);
+            List<GrowthBlock> list = getAvailableBlocks(gh, false);
             Collections.shuffle(list);
-            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl) ? 1 : 0).sum();
+            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, false) ? 1 : 0).sum();
+            // Underwater plants
+            list = getAvailableBlocks(gh, true);
+            Collections.shuffle(list);
+            plantsGrown += list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, true) ? 1 : 0).sum();
             if (plantsGrown > 0) {
                 setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
             }
@@ -208,6 +212,7 @@ public class EcoSystemManager {
 
     }
 
+    public record GrowthBlock(Block block, Boolean floor) {}
 
     /**
      * Get a list of the lowest level blocks inside the greenhouse. May be air, liquid or plants.
@@ -225,26 +230,31 @@ public class EcoSystemManager {
             for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
                 for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
-                    // Check ceiling blocks
-                    if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
-                        result.add(new GrowthBlock(b, false));
-                    }
 
                     // Check floor blocks
-                    if (!(b.isEmpty() || (ignoreLiquid && b.isLiquid()))
-                            && (b.getRelative(BlockFace.UP).isEmpty()
-                                    || (b.getRelative(BlockFace.UP).isPassable() && !b.isLiquid())
-                                    || (ignoreLiquid && b.isLiquid() && b.getRelative(BlockFace.UP).isPassable()))) {
-                        result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                        break;
+                    if (!ignoreLiquid) {
+                        // Check ceiling blocks
+                        if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
+                            result.add(new GrowthBlock(b, false));
+                        }
+                        if (!b.isEmpty() && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable())) {
+                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                            break;
+                        }
+                    } else {
+                        if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
+                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                            break;
+                        }
                     }
+
                 }
             }
         }
         return result;
     }
 
-    public record GrowthBlock(Block block, Boolean floor) {}
+
 
     private int getBoneMeal(Greenhouse gh) {
         Hopper hopper = getHopper(gh);

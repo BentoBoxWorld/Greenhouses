@@ -285,3 +285,22 @@ biomes:
     mobs:
       SLIME: 5:WATER
     moblimit: 3
+ DRIPSTONE_CAVES:
+    friendlyname: "&6Drippy Drops"
+    biome: dripstone_caves
+    icon: DRIPSTONE_BLOCK
+    priority: 15
+    contents:
+      STONE: 8
+      CLAY: 8
+    # 50% water cove rage required
+    watercoverage: 25
+    conversions:
+      CLAY: 50:DRIPSTONE_BLOCK:WATER
+      STONE: 0.005:COPPER_ORE:STONE
+    plants:
+      GLOW_LICHEN: 20:STONE
+    mobs:
+      skeleton: 5:STONE
+      glow_squid: 5:WATER
+    moblimit: 5

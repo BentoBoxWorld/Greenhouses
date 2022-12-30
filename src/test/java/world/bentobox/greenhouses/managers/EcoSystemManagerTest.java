@@ -123,6 +123,17 @@ public class EcoSystemManagerTest {
         when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
+        assertEquals(16, result.size());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
+     */
+    @Test
+    public void testGetAvailableBlocksAllLiquid2() {
+        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
+        List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(0, result.size());
     }
 

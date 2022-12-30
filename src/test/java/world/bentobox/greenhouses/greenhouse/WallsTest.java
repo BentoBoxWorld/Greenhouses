@@ -177,15 +177,15 @@ public class WallsTest {
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorYZeroY() {
-        assertEquals(0, walls.getFloorY(10, 0, 1, 0, 1));
+        assertEquals(-64, walls.getFloorY(10, 0, 1, 0, 1, -64));
     }
 
     /**
-     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int)}.
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.Walls#getFloorY(int, int, int, int, int, int)}.
      */
     @Test
     public void testGetFloorY() {
@@ -193,7 +193,7 @@ public class WallsTest {
                 Material.GLASS, Material.GLASS,
                 Material.GLASS, Material.GLASS,
                 Material.AIR);
-        assertEquals(8, walls.getFloorY(10, 0, 1, 0, 1));
+        assertEquals(8, walls.getFloorY(10, 0, 1, 0, 1, -64));
     }
 
     /**
