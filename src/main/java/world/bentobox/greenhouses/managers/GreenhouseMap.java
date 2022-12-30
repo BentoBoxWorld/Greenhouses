@@ -107,7 +107,9 @@ public class GreenhouseMap {
     private boolean isOverlapping(Greenhouse greenhouse) {
         return greenhouse.getLocation() != null && addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
-            return greenhouses.get(i).stream().anyMatch(g -> g.getBoundingBox().overlaps(greenhouse.getBoundingBox()));
+            return greenhouses.get(i).stream().anyMatch(g ->
+            g.getLocation().getWorld().equals(greenhouse.getLocation().getWorld()) &&
+            g.getBoundingBox().overlaps(greenhouse.getBoundingBox()));
         }).orElse(false);
 
     }
