@@ -37,7 +37,6 @@ import com.google.common.base.Enums;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -564,11 +563,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         // Underwater plants can only be placed in water and regular plants cannot be placed in water
         if (block.block().getType().equals(Material.WATER)) {
-            BentoBox.getInstance().logDebug("Water block");
             if (!UNDERWATER_PLANTS.contains(p.plantMaterial())) {
                 return false;
             }
-            BentoBox.getInstance().logDebug("Water plant");
         } else if (UNDERWATER_PLANTS.contains(p.plantMaterial())) {
             return false;
         }
