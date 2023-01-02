@@ -205,6 +205,7 @@ biomes:
       ROSE_BUSH: 20:GRASS_BLOCK
       FERN: 20:GRASS_BLOCK
       TALL_GRASS: 20:GRASS_BLOCK
+      COCOA: 10:JUNGLE_LOG
   MUSHROOM_FIELDS:
     friendlyname: "Mushroom Fields"
     biome: MUSHROOM_FIELDS
@@ -285,7 +286,7 @@ biomes:
     mobs:
       SLIME: 5:WATER
     moblimit: 3
- DRIPSTONE_CAVES:
+  dripstone_caves:
     friendlyname: "&6Drippy Drops"
     biome: dripstone_caves
     icon: DRIPSTONE_BLOCK
@@ -293,7 +294,7 @@ biomes:
     contents:
       STONE: 8
       CLAY: 8
-    # 50% water cove rage required
+    # 50% water coverage required
     watercoverage: 25
     conversions:
       CLAY: 50:DRIPSTONE_BLOCK:WATER

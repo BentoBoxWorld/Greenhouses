@@ -1,14 +1,20 @@
 package world.bentobox.greenhouses.managers;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -18,6 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -30,7 +39,7 @@ import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class})
+@PrepareForTest({Bukkit.class, BentoBox.class, Tag.class})
 public class EcoSystemManagerTest {
 
     private Greenhouse gh;
@@ -51,6 +60,11 @@ public class EcoSystemManagerTest {
      */
     @Before
     public void setUp() {
+        PowerMockito.mockStatic(Tag.class, Mockito.RETURNS_MOCKS);
+        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        Tag<Keyed> tag = mock(Tag.class);
+        when(Bukkit.getTag(anyString(), any(), any())).thenReturn(tag);
+
         gh = new Greenhouse();
         // 4x4x4 greenhouse
         BoundingBox bb = BoundingBox.of(new Vector(0,0,0), new Vector(6,5,6));

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -216,7 +217,7 @@ public class EcoSystemManager {
 
     /**
      * Get a list of the lowest level blocks inside the greenhouse. May be air, liquid or plants.
-     * These blocks sit just above solid blocks
+     * These blocks sit just above solid blocks. Leaves are ignored too.
      * @param gh - greenhouse
      * @param ignoreLiquid - true if liquid blocks should be treated like air blocks
      * @return List of blocks
@@ -237,7 +238,12 @@ public class EcoSystemManager {
                         if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
                             result.add(new GrowthBlock(b, false));
                         }
-                        if (!b.isEmpty() && (b.getRelative(BlockFace.UP).isEmpty() || b.getRelative(BlockFace.UP).isPassable())) {
+                        if (!b.isEmpty() && !Tag.LEAVES.isTagged(b.getType())
+                                && (b.getRelative(BlockFace.UP).isEmpty()
+                                        || b.getRelative(BlockFace.UP).isPassable()
+                                        || Tag.LEAVES.isTagged(b.getRelative(BlockFace.UP).getType())
+                                        )
+                                ) {
                             result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
                             break;
                         }

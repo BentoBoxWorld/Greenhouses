@@ -26,11 +26,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Piglin;
+import org.bukkit.material.CocoaPlant;
 import org.bukkit.util.Vector;
 
 import com.google.common.base.Enums;
@@ -63,6 +65,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     }
 
     private static final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
+    private static final List<BlockFace> SIDE_BLOCKS = Arrays.asList( BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST);
     private static final List<Material> UNDERWATER_PLANTS;
     static {
         List<Material> m = new ArrayList<>();
@@ -491,6 +494,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             }
         } else if (p.plantMaterial().equals(Material.GLOW_LICHEN)) {
             return placeLichen(bl);
+        } else if (p.plantMaterial().equals(Material.COCOA)) {
+            return placeCocoa(bl);
         } else {
             if (dataBottom instanceof Waterlogged wl) {
                 wl.setWaterlogged(underwater);
@@ -501,6 +506,37 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             }
         }
         return true;
+    }
+
+    private boolean placeCocoa(Block bl) {
+        // Get the source block below this one
+        Block b = bl.getRelative(BlockFace.DOWN);
+        if (!b.getType().equals(Material.JUNGLE_LOG)) {
+            return false;
+        }
+        // Find a spot for cocoa
+        BlockFace d = null;
+        for (BlockFace adj : SIDE_BLOCKS) {
+            if (b.getRelative(adj).getType().equals(Material.AIR)) {
+                d = adj;
+                break;
+            }
+        }
+        if (d == null) {
+            return false;
+        }
+        Block bb = b.getRelative(d);
+        bb.setType(Material.COCOA);
+        BlockFace opp = d.getOppositeFace();
+
+        if(bb.getBlockData() instanceof Cocoa v){
+            v.setFacing(opp);
+            bb.setBlockData(v);
+            bb.getState().setBlockData(v);
+            bb.getState().update(true);
+            return true;
+        }
+        return false;
     }
 
     /**
