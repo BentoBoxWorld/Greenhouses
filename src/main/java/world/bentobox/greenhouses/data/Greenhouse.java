@@ -220,7 +220,7 @@ public class Greenhouse implements DataObject {
      * @return true if inside the greenhouse
      */
     public boolean contains(Location location2) {
-        return getLocation().getWorld() != null
+        return getLocation() != null && getLocation().getWorld() != null
                 && getLocation().getWorld().equals(location2.getWorld())
                 && getBoundingBox().contains(location2.toVector());
     }
