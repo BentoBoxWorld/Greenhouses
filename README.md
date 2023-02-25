@@ -1,8 +1,9 @@
 # Greenhouses - an add-on for BentoBox
 
-## Note for 1.15.x + servers
-
-Biomes have changed so that they take up a 4x4 area and so greenhouse biomes now can bleed outside of the greenhouse. Unfortunately, this cannot be mitigated (as far as I know). If you have a good imagination, you can say that the biome of the greenhouse influences the surroundings a bit and it is natural! So it's a feature, not a bug!
+[![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/Greenhouses)](https://ci.codemc.org/job/BentoBoxWorld/job/Greenhouses/)[
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Greenhouses&metric=bugs)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Greenhouses)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Greenhouses&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Greenhouses)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Greenhouses&metric=ncloc)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Greenhouses)
 
 ## About
 
