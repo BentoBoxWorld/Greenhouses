@@ -38,8 +38,12 @@ biomes:
     # The minimum number of blocks each mob requires.
     # Mobs will not spawn if there is more than 1 per this number of
     # blocks in the greenhouse. e.g., in this case only 2 mobs will spawn if the
-    # greenhouse area is 18 blocks
+    # greenhouse area is 18 blocks. This enables bigger greenhouses to spawn more.
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 5
   Snowy_beach:
     friendlyname: "Snowy beach"
     biome: SNOWY_BEACH
@@ -65,6 +69,10 @@ biomes:
     mobs:
       WOLF: 10:SNOW
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 5
   Cold_Rabbit:
     friendlyname: "Cold Taiga Forest"
     biome: OLD_GROWTH_SPRUCE_TAIGA
@@ -80,6 +88,10 @@ biomes:
     mobs:
       RABBIT: 10:SNOW
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 20
   DESERT:
     friendlyname: "Desert"
     biome: DESERT
@@ -134,6 +146,10 @@ biomes:
       STRIDER: 10:LAVA
       ENDERMAN: 5:NETHERRACK
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 50
     permission: greenhouses.biome.nether
   SOUL_SAND_VALLEY:
     friendlyname: "&cSoul Sand Valley"
@@ -149,6 +165,10 @@ biomes:
     mobs:
       SKELETON: 10:SOUL_SAND
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 50
     permission: greenhouses.biome.nether
     # Conversion list - in this case, an adjacent block is required to convert
     # Format is:
@@ -173,6 +193,10 @@ biomes:
       PIGLIN: 10:CRIMSON_NYLIUM
       HOGLIN: 10:CRIMSON_NYLIUM
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 50
     permission: greenhouses.biome.nether
   WARPED_FOREST:
     friendlyname: "&cWarped Forest"
@@ -190,6 +214,10 @@ biomes:
       STRIDER: 10:LAVA
       ENDERMAN: 20:WARPED_NYLIUM
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 50
     permission: greenhouses.biome.nether
   JUNGLE:
     biome: JUNGLE
@@ -221,6 +249,10 @@ biomes:
     mobs:
       MUSHROOM_COW: 10:MYCELIUM
     moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 20
   OCEAN:
     biome: OCEAN
     icon: WATER_BUCKET
@@ -242,6 +274,10 @@ biomes:
     mobs:
       HORSE: 10:GRASS_BLOCK
     moblimit: 1
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   RIVER:
     friendlyname: "Clay river"
     biome: RIVER
@@ -286,6 +322,10 @@ biomes:
     mobs:
       SLIME: 5:WATER
     moblimit: 3
+     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   dripstone_caves:
     friendlyname: "&6Drippy Drops"
     biome: dripstone_caves
@@ -305,3 +345,7 @@ biomes:
       skeleton: 5:STONE
       glow_squid: 5:WATER
     moblimit: 5
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 25

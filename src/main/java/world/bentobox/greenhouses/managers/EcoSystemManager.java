@@ -161,6 +161,9 @@ public class EcoSystemManager {
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
         Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
+        if (sum >= gh.getBiomeRecipe().getMaxMob()) {
+            return;
+        }
         while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
