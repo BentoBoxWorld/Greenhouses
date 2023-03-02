@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.junit.Before;
@@ -137,7 +138,7 @@ public class GreenhouseEventsTest {
         when(nextBlock.getLocation()).thenReturn(location);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock).setType(Material.WATER);
     }
@@ -154,7 +155,7 @@ public class GreenhouseEventsTest {
         when(nextBlock.getLocation()).thenReturn(mock(Location.class));
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock, never()).setType(Material.WATER);
     }
@@ -170,7 +171,7 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock, never()).setType(Material.WATER);
     }
@@ -189,7 +190,7 @@ public class GreenhouseEventsTest {
         when(nextBlock.getWorld()).thenReturn(world);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock, never()).setType(Material.WATER);
     }
@@ -205,7 +206,7 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.ACACIA_BOAT);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock, never()).setType(Material.WATER);
     }
@@ -222,7 +223,7 @@ public class GreenhouseEventsTest {
         when(clickedBlock.getRelative(any())).thenReturn(nextBlock);
         ItemStack item = mock(ItemStack.class);
         when(item.getType()).thenReturn(Material.WATER_BUCKET);
-        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item);
+        PlayerBucketEmptyEvent e = new PlayerBucketEmptyEvent(player, nextBlock, clickedBlock, BlockFace.UP, Material.WATER_BUCKET, item, EquipmentSlot.HAND);
         ghe.onPlayerInteractInNether(e);
         verify(nextBlock, never()).setType(Material.WATER);
     }
