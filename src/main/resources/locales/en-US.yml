@@ -38,9 +38,10 @@ greenhouses:
    minimumblockstitle: "[Minimum blocks required]"
    nootherblocks: "No other blocks required."
    missing: "Greenhouse is missing"
-
+   
   commands:
     user:
+      description: "Opens the Greenhouse selection GUI"
       remove:
         description: "Removes a greenhouse that you are standing in if you are the owner"        
       make:
