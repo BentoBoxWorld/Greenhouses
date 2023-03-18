@@ -38,6 +38,7 @@ import com.google.common.base.Enums;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
@@ -376,27 +377,37 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         // Center spawned mob
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
-        return getRandomMob()
+        BentoBox.getInstance().logDebug("Spawning at " + spawnLoc.getBlock().getType() + " " + spawnLoc);
+        getRandomMob().ifPresent(m -> {
+            BentoBox.getInstance().logDebug("Mob is " + m.mobType());
+            BentoBox.getInstance().logDebug("mobSpawnOn = " + m.mobSpawnOn());
+            BentoBox.getInstance().logDebug("Block below is " + b.getRelative(BlockFace.DOWN).getType());
+        });
+        boolean result = getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> Optional.of(m.mobSpawnOn())
                         .map(b.getRelative(BlockFace.DOWN).getType()::equals)
                         .orElse(true))
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
+                    BentoBox.getInstance().logDebug("Mob is " + m);
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
                     preventZombie(entity);
                     return addon
                             .getManager()
                             .getMap()
                             .getGreenhouse(b.getLocation()).map(gh -> {
+                                BentoBox.getInstance().logDebug("Checking boundary");
                                 if (!gh.getInternalBoundingBox().contains(entity.getBoundingBox())) {
                                     entity.remove();
+                                    BentoBox.getInstance().logDebug("Removed");
                                     return false;
                                 }
                                 return true;
                             }).orElse(false);
                 }).orElse(false);
-
+        BentoBox.getInstance().logDebug("Result = " + result);
+        return result;
     }
 
     /**
