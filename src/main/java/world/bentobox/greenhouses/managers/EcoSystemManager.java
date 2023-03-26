@@ -19,7 +19,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.NumberConversions;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
@@ -139,17 +138,14 @@ public class EcoSystemManager {
      * @return true if mobs were spawned, false if not
      */
     boolean addMobs(Greenhouse gh) {
-        BentoBox.getInstance().logDebug("Adding mobs");
         final BoundingBox bb = gh.getBoundingBox();
         if(gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
                 || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
                 || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
             // Skipping addmobs for unloaded greenhouse
-            BentoBox.getInstance().logDebug("unloaded gh");
             return false;
         }
         if (gh.getBiomeRecipe().noMobs()) {
-            BentoBox.getInstance().logDebug("No mobs in recipe");
             return false;
         }
         // Check greenhouse chunks are loaded
@@ -158,7 +154,6 @@ public class EcoSystemManager {
                 int chunkX = (int)(blockX / 16);
                 int chunkZ = (int)(blockZ / 16);
                 if (!gh.getWorld().isChunkLoaded(chunkX, chunkZ)) {
-                    BentoBox.getInstance().logDebug("Chunks not loaded");
                     return false;
                 }
             }
@@ -169,25 +164,18 @@ public class EcoSystemManager {
                 .filter(e -> gh.contains(e.getLocation())).count();
         // Get the blocks in the greenhouse where spawning could occur
         List<GrowthBlock> list = new ArrayList<>(getAvailableBlocks(gh, false));
-        BentoBox.getInstance().logDebug("Entities = " + sum + " available blocks are " + list.size());
-        list.forEach(gb -> BentoBox.getInstance().logDebug(gb.block.getType()));
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
         Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
         if (sum >= gh.getBiomeRecipe().getMaxMob()) {
-            BentoBox.getInstance().logDebug("GH is full");
             return false;
         }
         while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
                 // Add a mob to the sum in the greenhouse
-                BentoBox.getInstance().logDebug("Spawned a mob");
                 sum++;
             }
-        }
-        if (sum == 0 ) {
-            BentoBox.getInstance().logDebug("Nothing spawned");
         }
         return sum > 0;
     }
