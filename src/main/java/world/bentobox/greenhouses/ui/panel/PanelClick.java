@@ -43,10 +43,6 @@ public class PanelClick implements ClickHandler {
     }
 
     private boolean makeGreenhouse(User user, BiomeRecipe br) {
-        if (user.getLocation() == null) {
-            addon.logError("User has no location : " + user.getName());
-            return false;
-        }
         // Check flag
         if (!addon.getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
             user.sendMessage("greenhouses.errors.no-rank");

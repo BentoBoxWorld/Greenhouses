@@ -32,7 +32,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hoglin;
 import org.bukkit.entity.Piglin;
-import org.bukkit.material.CocoaPlant;
 import org.bukkit.util.Vector;
 
 import com.google.common.base.Enums;
@@ -102,6 +101,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private String permission = "";
     private final Random random = new Random();
+    private int maxMob;
 
 
     /**
@@ -376,7 +376,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         // Center spawned mob
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
-        return getRandomMob()
+        boolean result = getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> Optional.of(m.mobSpawnOn())
                         .map(b.getRelative(BlockFace.DOWN).getType()::equals)
@@ -396,7 +396,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                                 return true;
                             }).orElse(false);
                 }).orElse(false);
-
+        return result;
     }
 
     /**
@@ -713,6 +713,21 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public Set<EntityType> getMobTypes() {
         return mobTree.values().stream().map(GreenhouseMob::mobType).collect(Collectors.toSet());
+    }
+
+    /**
+     * Set the maximum number of mobs in a greenhouse
+     * @param maxMob maximum
+     */
+    public void setMaxMob(int maxMob) {
+        this.maxMob = maxMob;
+    }
+
+    /**
+     * @return the maxMob
+     */
+    public int getMaxMob() {
+        return maxMob;
     }
 
 

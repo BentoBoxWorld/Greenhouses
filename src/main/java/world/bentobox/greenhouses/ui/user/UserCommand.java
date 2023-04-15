@@ -30,8 +30,7 @@ public class UserCommand extends CompositeCommand {
     public void setup() {
         this.setPermission("greenhouses.player");
         this.setOnlyPlayer(true);
-        this.setParametersHelp("greenhouses.command.parameters");
-        this.setDescription("greenhouses.command.description");
+        this.setDescription("greenhouses.commands.user.description");
 
         //new InfoCommand(this);
         //new ListCommand(this);

@@ -1,6 +1,8 @@
 package world.bentobox.greenhouses.managers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,11 +11,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -25,13 +27,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
+import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 
 /**
@@ -39,7 +41,7 @@ import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, Tag.class})
+@PrepareForTest({Bukkit.class, BentoBox.class, Tag.class, RecipeManager.class})
 public class EcoSystemManagerTest {
 
     private Greenhouse gh;
@@ -53,6 +55,8 @@ public class EcoSystemManagerTest {
     private Block liquid;
     @Mock
     private Block plant;
+    @Mock
+    private BiomeRecipe recipe;
 
     // CUT
     private EcoSystemManager eco;
@@ -62,6 +66,7 @@ public class EcoSystemManagerTest {
     public void setUp() {
         PowerMockito.mockStatic(Tag.class, Mockito.RETURNS_MOCKS);
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
+        @SuppressWarnings("unchecked")
         Tag<Keyed> tag = mock(Tag.class);
         when(Bukkit.getTag(anyString(), any(), any())).thenReturn(tag);
 
@@ -94,6 +99,12 @@ public class EcoSystemManagerTest {
         // Passable false
         // Liquid false
         when(block.getRelative(eq(BlockFace.UP))).thenReturn(air);
+
+        // Recipe
+        when(recipe.noMobs()).thenReturn(true);
+        PowerMockito.mockStatic(RecipeManager.class, Mockito.RETURNS_MOCKS);
+        when(RecipeManager.getBiomeRecipies(any())).thenReturn(Optional.of(recipe));
+
 
         eco = new EcoSystemManager(null, null);
     }
@@ -209,4 +220,57 @@ public class EcoSystemManagerTest {
             assertEquals(liquid, value.block());
         }
     }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     */
+    @Test
+    public void testAddMobsChunkNotLoaded() {
+        assertFalse(eco.addMobs(gh));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     */
+    @Test
+    public void testAddMobsChunkLoadedNoMobs() {
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        assertFalse(eco.addMobs(gh));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     */
+    @Test
+    public void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsZero() {
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        when(recipe.noMobs()).thenReturn(false);
+        assertFalse(eco.addMobs(gh));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     */
+    @Test
+    public void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsNotZero() {
+        // Nothing spawned here
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        when(recipe.noMobs()).thenReturn(false);
+        when(recipe.getMaxMob()).thenReturn(10);
+        assertFalse(eco.addMobs(gh));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     */
+    @Test
+    public void testAddMobsSpawnMob() {
+        // Nothing spawned here
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        when(recipe.noMobs()).thenReturn(false);
+        when(recipe.getMaxMob()).thenReturn(10);
+        when(recipe.spawnMob(any())).thenReturn(true);
+        assertTrue(eco.addMobs(gh));
+    }
+
 }

@@ -132,15 +132,21 @@ public class EcoSystemManager {
 
     }
 
-    private void addMobs(Greenhouse gh) {
+    /**
+     * Try to spawn mobs in a greenhouse
+     * @param gh greenhouse
+     * @return true if mobs were spawned, false if not
+     */
+    boolean addMobs(Greenhouse gh) {
         final BoundingBox bb = gh.getBoundingBox();
         if(gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4) || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
             // Skipping addmobs for unloaded greenhouse
-            return;
+            return false;
         }
         if (gh.getBiomeRecipe().noMobs()) {
-            return;
+            return false;
         }
         // Check greenhouse chunks are loaded
         for (double blockX = bb.getMinX(); blockX < bb.getMaxX(); blockX+=16) {
@@ -148,7 +154,7 @@ public class EcoSystemManager {
                 int chunkX = (int)(blockX / 16);
                 int chunkZ = (int)(blockZ / 16);
                 if (!gh.getWorld().isChunkLoaded(chunkX, chunkZ)) {
-                    return;
+                    return false;
                 }
             }
         }
@@ -161,6 +167,9 @@ public class EcoSystemManager {
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
         Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
+        if (sum >= gh.getBiomeRecipe().getMaxMob()) {
+            return false;
+        }
         while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
@@ -168,6 +177,7 @@ public class EcoSystemManager {
                 sum++;
             }
         }
+        return sum > 0;
     }
 
     /**

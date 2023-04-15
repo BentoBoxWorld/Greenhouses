@@ -51,7 +51,7 @@
         <!-- Revision variable removes warning about dynamic version -->
         <revision>${build.version}-SNAPSHOT</revision>
         <!-- This allows to change between versions and snapshots. -->
-        <build.version>1.7.2</build.version>
+        <build.version>1.7.3</build.version>
         <build.number>-LOCAL</build.number>
         <sonar.projectKey>BentoBoxWorld_Greenhouses</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -114,12 +114,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>plugin-annotations</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -200,6 +194,7 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <argLine>
+                        ${argLine}
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.util=ALL-UNNAMED
                         --add-opens java.base/java.util.concurrent=ALL-UNNAMED
@@ -257,7 +252,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.3</version>
+                <version>0.8.7</version>
                 <configuration>
                     <append>true</append>
                     <excludes>
@@ -268,16 +263,21 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>pre-unit-test</id>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>post-unit-test</id>
+                        <id>report</id>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <formats>
+                                <format>XML</format>
+                            </formats>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

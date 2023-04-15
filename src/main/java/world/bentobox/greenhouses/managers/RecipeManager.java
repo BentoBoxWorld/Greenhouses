@@ -155,6 +155,7 @@ public class RecipeManager {
         b.setLavacoverage(biomeRecipeConfig.getInt("lavacoverage",-1));
         b.setIcecoverage(biomeRecipeConfig.getInt("icecoverage",-1));
         b.setMobLimit(biomeRecipeConfig.getInt("moblimit", 9));
+        b.setMaxMob(biomeRecipeConfig.getInt("maxmobs", -1));
         return b;
     }
 
