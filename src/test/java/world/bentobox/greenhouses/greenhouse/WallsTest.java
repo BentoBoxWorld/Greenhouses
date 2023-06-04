@@ -64,12 +64,10 @@ public class WallsTest {
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
         roof = mock(Roof.class);
-        PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
-        when(Greenhouses.getInstance()).thenReturn(addon);
         s = new Settings();
         when(addon.getSettings()).thenReturn(s);
         when(addon.getPlugin()).thenReturn(plugin);
-
+        when(addon.wallBlocks(any())).thenCallRealMethod();
         walls = new Walls(cache);
         when(world.getMaxHeight()).thenReturn(255);
         when(location.getWorld()).thenReturn(world);
@@ -201,13 +199,13 @@ public class WallsTest {
      */
     @Test
     public void testWallBlocks() {
-        assertFalse(Walls.wallBlocks(Material.ACACIA_BOAT));
-        assertTrue(Walls.wallBlocks(Material.GLASS));
-        assertTrue(Walls.wallBlocks(Material.GLOWSTONE));
-        assertTrue(Walls.wallBlocks(Material.ACACIA_DOOR));
-        assertTrue(Walls.wallBlocks(Material.HOPPER));
-        assertTrue(Walls.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
-        assertFalse(Walls.wallBlocks(Material.BIRCH_TRAPDOOR));
+        assertFalse(addon.wallBlocks(Material.ACACIA_BOAT));
+        assertTrue(addon.wallBlocks(Material.GLASS));
+        assertTrue(addon.wallBlocks(Material.GLOWSTONE));
+        assertTrue(addon.wallBlocks(Material.ACACIA_DOOR));
+        assertTrue(addon.wallBlocks(Material.HOPPER));
+        assertTrue(addon.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertFalse(addon.wallBlocks(Material.BIRCH_TRAPDOOR));
     }
 
     /**
@@ -217,13 +215,13 @@ public class WallsTest {
     public void testWallBlocksNoGlowStoneNoPanes() {
         s.setAllowGlowstone(false);
         s.setAllowPanes(false);
-        assertFalse(Walls.wallBlocks(Material.ACACIA_BOAT));
-        assertTrue(Walls.wallBlocks(Material.GLASS));
-        assertFalse(Walls.wallBlocks(Material.GLOWSTONE));
-        assertTrue(Walls.wallBlocks(Material.ACACIA_DOOR));
-        assertTrue(Walls.wallBlocks(Material.HOPPER));
-        assertFalse(Walls.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
-        assertFalse(Walls.wallBlocks(Material.BIRCH_TRAPDOOR));
+        assertFalse(addon.wallBlocks(Material.ACACIA_BOAT));
+        assertTrue(addon.wallBlocks(Material.GLASS));
+        assertFalse(addon.wallBlocks(Material.GLOWSTONE));
+        assertTrue(addon.wallBlocks(Material.ACACIA_DOOR));
+        assertTrue(addon.wallBlocks(Material.HOPPER));
+        assertFalse(addon.wallBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertFalse(addon.wallBlocks(Material.BIRCH_TRAPDOOR));
     }
 
     /**

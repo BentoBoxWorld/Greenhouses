@@ -209,7 +209,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return set of results from the check
      */
     private Set<GreenhouseResult> checkRecipeAsync(CompletableFuture<Set<GreenhouseResult>> r, Greenhouse gh) {
-        AsyncWorldCache cache = new AsyncWorldCache(gh.getWorld());
+        AsyncWorldCache cache = new AsyncWorldCache(addon, gh.getWorld());
         Set<GreenhouseResult> result = new HashSet<>();
         long area = gh.getArea();
         Map<Material, Integer> blockCount = new EnumMap<>(Material.class);

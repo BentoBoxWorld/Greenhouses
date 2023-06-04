@@ -11,6 +11,7 @@ import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.bentobox.api.flags.Flag.Mode;
 import world.bentobox.bentobox.api.flags.Flag.Type;
+import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.ui.user.UserCommand;
@@ -28,19 +29,13 @@ public class Greenhouses extends Addon {
     public static final Flag GREENHOUSES = new Flag.Builder("GREENHOUSE", Material.GREEN_STAINED_GLASS)
             .mode(Mode.BASIC)
             .type(Type.PROTECTION).build();
-    private static Greenhouses instance;
     private final Config<Settings> config;
-
-    public static Greenhouses getInstance() {
-        return instance;
-    }
 
     /**
      * Constructor
      */
     public Greenhouses() {
         super();
-        instance = this;
         config = new Config<>(this, Settings.class);
     }
 
@@ -120,6 +115,17 @@ public class Greenhouses extends Addon {
 
     public List<World> getActiveWorlds() {
         return activeWorlds;
+    }
+
+    /**
+     * Check if material is a wall material
+     * @param m - material
+     * @return true if wall material
+     */
+    public boolean wallBlocks(Material m) {
+        return Walls.WALL_BLOCKS.contains(m)
+                || (m.equals(Material.GLOWSTONE) && getSettings().isAllowGlowstone())
+                || (m.name().endsWith("GLASS_PANE") && getSettings().isAllowPanes());
     }
 
 }

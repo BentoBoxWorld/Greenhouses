@@ -71,12 +71,14 @@ public class GreenhouseFinderTest {
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
         roof = mock(Roof.class);
+        when(roof.roofBlocks(any())).thenCallRealMethod();
         // Location
         when(location.getBlockX()).thenReturn(5);
         when(location.getBlockY()).thenReturn(14);
         when(location.getBlockZ()).thenReturn(25);
         when(location.getWorld()).thenReturn(world);
-
+        // Addon
+        when(addon.wallBlocks(any())).thenCallRealMethod();
         // Block
         when(cache.getBlockType(any())).thenReturn(Material.GLASS);
         when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.GLASS);
@@ -94,7 +96,7 @@ public class GreenhouseFinderTest {
         when(cache.getMaxHeight()).thenReturn(30);
 
 
-        gf = new GreenhouseFinder();
+        gf = new GreenhouseFinder(addon);
         cc = new CounterCheck();
     }
 

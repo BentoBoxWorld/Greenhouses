@@ -12,6 +12,7 @@ import org.bukkit.Tag;
 import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
@@ -28,16 +29,25 @@ public class GreenhouseFinder {
     // If this is the bottom layer, the player has most likely uneven walls
     private int otherBlockLayer = -1;
     private int wallBlockCount;
+    private final Greenhouses addon;
     /**
      * This is the count of the various items
      */
     private CounterCheck cc = new CounterCheck();
+    private Roof roof;
 
     static class CounterCheck {
         int doorCount;
         int hopperCount;
         boolean airHole;
         boolean otherBlock;
+    }
+
+    /**
+     * @param addon
+     */
+    public GreenhouseFinder(Greenhouses addon) {
+        this.addon = addon;
     }
 
     /**
@@ -51,9 +61,9 @@ public class GreenhouseFinder {
         redGlass.clear();
 
         // Get a world cache
-        AsyncWorldCache cache = new AsyncWorldCache(location.getWorld());
+        AsyncWorldCache cache = new AsyncWorldCache(addon, location.getWorld());
         // Find the roof
-        Roof roof = new Roof(cache, location);
+        roof = new Roof(cache, location, addon);
         roof.findRoof().thenAccept(found -> {
             if (Boolean.FALSE.equals(found)) {
                 result.add(GreenhouseResult.FAIL_NO_ROOF);
@@ -166,7 +176,8 @@ public class GreenhouseFinder {
         // Check wall blocks only
         if (y == roof.getHeight() || x == walls.getMinX() || x == walls.getMaxX() || z == walls.getMinZ() || z== walls.getMaxZ()) {
             // Check for non-wall blocks or non-roof blocks at the top of walls
-            if ((y != roof.getHeight() && !Walls.wallBlocks(m)) || (y == roof.getHeight() && !Roof.roofBlocks(m))) {
+            if ((y != roof.getHeight() && !addon.wallBlocks(m))
+                    || (y == roof.getHeight() && !roof.roofBlocks(m))) {
                 if (m.equals(Material.AIR)) {
                     // Air hole found
                     cc.airHole = true;
