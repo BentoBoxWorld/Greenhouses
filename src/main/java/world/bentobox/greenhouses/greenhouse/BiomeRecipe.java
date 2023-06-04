@@ -210,23 +210,29 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     private Set<GreenhouseResult> checkRecipeAsync(CompletableFuture<Set<GreenhouseResult>> r, Greenhouse gh) {
         AsyncWorldCache cache = new AsyncWorldCache(addon, gh.getWorld());
-        Set<GreenhouseResult> result = new HashSet<>();
         long area = gh.getArea();
-        Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
 
         // Look through the greenhouse and count what is in there
-        for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
-            for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
-                for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
-                    Material t = cache.getBlockType(x, y, z);
-                    if (!t.equals(Material.AIR)) {
-                        blockCount.putIfAbsent(t, 0);
-                        blockCount.merge(t, 1, Integer::sum);
-                    }
-                }
-            }
+        Map<Material, Integer> blockCount = countBlocks(gh, cache);
+
+        // Calculate % water, ice and lava ratios and check them
+        Set<GreenhouseResult> result = checkRatios(blockCount, area);
+
+        // Compare to the required blocks
+        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
+        // Remove any entries that are 0 or less
+        missingBlocks.values().removeIf(v -> v <= 0);
+        if (!missingBlocks.isEmpty()) {
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
+            gh.setMissingBlocks(missingBlocks);
         }
-        // Calculate % water, ice and lava ratios
+        // Return to main thread to complete
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> r.complete(result));
+        return result;
+    }
+
+    private Set<GreenhouseResult> checkRatios(Map<Material, Integer> blockCount, long area) {
+        Set<GreenhouseResult> result = new HashSet<>();
         double waterRatio = (double)blockCount.getOrDefault(Material.WATER, 0)/area * 100;
         double lavaRatio = (double)blockCount.getOrDefault(Material.LAVA, 0)/area * 100;
         int ice = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.ICE)
@@ -254,17 +260,23 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         if (iceCoverage > 0 && iceRatio < iceCoverage) {
             result.add(GreenhouseResult.FAIL_INSUFFICIENT_ICE);
         }
-        // Compare to the required blocks
-        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
-        // Remove any entries that are 0 or less
-        missingBlocks.values().removeIf(v -> v <= 0);
-        if (!missingBlocks.isEmpty()) {
-            result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
-            gh.setMissingBlocks(missingBlocks);
-        }
-        // Return to main thread to complete
-        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> r.complete(result));
         return result;
+    }
+
+    private Map<Material, Integer> countBlocks(Greenhouse gh, AsyncWorldCache cache) {
+        Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
+        for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
+            for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
+                for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
+                    Material t = cache.getBlockType(x, y, z);
+                    if (!t.equals(Material.AIR)) {
+                        blockCount.putIfAbsent(t, 0);
+                        blockCount.merge(t, 1, Integer::sum);
+                    }
+                }
+            }
+        }
+        return blockCount;
     }
 
     /**
