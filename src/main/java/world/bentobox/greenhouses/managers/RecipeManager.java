@@ -30,6 +30,7 @@ public class RecipeManager {
     private static final int MAXIMUM_INVENTORY_SIZE = 49;
     private final Greenhouses addon;
     private static final List<BiomeRecipe> biomeRecipes = new ArrayList<>();
+    private static final String COULD_NOT_PARSE = "Could not parse ";
 
     public RecipeManager(Greenhouses addon) {
         this.addon = addon;
@@ -179,43 +180,52 @@ public class RecipeManager {
         ConfigurationSection conversionSec = biomeRecipeConfig.getConfigurationSection("conversions");
         if (conversionSec != null) {
             for (String oldMat : conversionSec.getKeys(false)) {
-                try {
-                    Material oldMaterial = Material.valueOf(oldMat.toUpperCase(Locale.ENGLISH));
-                    String conversions = conversionSec.getString(oldMat);
-                    if (!Objects.requireNonNull(conversions).isEmpty()) {
-                        String[] split = conversions.split(":");
-                        double convChance = Double.parseDouble(split[0]);
-                        Material newMaterial = Material.valueOf(split[1]);
-                        Material localMaterial = null;
-                        if(split.length > 2) {
-                            localMaterial = Material.valueOf(split[2]);
-                        }
-                        b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
-                    }
-                } catch (Exception e) {
-                    addon.logError("Could not parse " + oldMat);
-                }
-
+                parseConversions(oldMat, conversionSec, b);
             }
         }
         // Get the list of conversions
         for (String oldMat : biomeRecipeConfig.getStringList("conversion-list")) {
-            try {
-                // Split the string
-                String[] split = oldMat.split(":");
-                Material oldMaterial = Material.valueOf(split[0].toUpperCase());
-                double convChance = Double.parseDouble(split[1]);
-                Material newMaterial = Material.valueOf(split[2]);
-                Material localMaterial = null;
-                if(split.length > 3) {
-                    localMaterial = Material.valueOf(split[3]);
-                }
-                b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
-            } catch (Exception e) {
-                addon.logError("Could not parse " + oldMat);
-            }
+            parseConversionList(oldMat, conversionSec, b);
 
         }
+    }
+
+    private void parseConversionList(String oldMat, ConfigurationSection conversionSec, BiomeRecipe b) {
+        try {
+            // Split the string
+            String[] split = oldMat.split(":");
+            Material oldMaterial = Material.valueOf(split[0].toUpperCase());
+            double convChance = Double.parseDouble(split[1]);
+            Material newMaterial = Material.valueOf(split[2]);
+            Material localMaterial = null;
+            if(split.length > 3) {
+                localMaterial = Material.valueOf(split[3]);
+            }
+            b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
+        } catch (Exception e) {
+            addon.logError(COULD_NOT_PARSE + oldMat);
+        }
+
+    }
+
+    private void parseConversions(String oldMat, ConfigurationSection conversionSec, BiomeRecipe b) {
+        try {
+            Material oldMaterial = Material.valueOf(oldMat.toUpperCase(Locale.ENGLISH));
+            String conversions = conversionSec.getString(oldMat);
+            if (!Objects.requireNonNull(conversions).isEmpty()) {
+                String[] split = conversions.split(":");
+                double convChance = Double.parseDouble(split[0]);
+                Material newMaterial = Material.valueOf(split[1]);
+                Material localMaterial = null;
+                if(split.length > 2) {
+                    localMaterial = Material.valueOf(split[2]);
+                }
+                b.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
+            }
+        } catch (Exception e) {
+            addon.logError(COULD_NOT_PARSE + oldMat);
+        }
+
     }
 
     private void loadMobs(ConfigurationSection biomeRecipeConfig, BiomeRecipe b) {
@@ -235,7 +245,7 @@ public class RecipeManager {
             Material mobSpawnOn = Material.valueOf(split[1]);
             b.addMobs(mobType, mobProbability, mobSpawnOn);
         } catch (Exception e) {
-            addon.logError("Could not parse " + s.getKey());
+            addon.logError(COULD_NOT_PARSE + s.getKey());
         }
     }
 
