@@ -288,23 +288,27 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         // Check if there is a block conversion for this block, as while the rest of the method wont do anything if .get() returns nothing anyway it still seems to be quite expensive
         if(conversionBlocks.keySet().contains(bType)) {
             for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
-
-                // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
-                if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
-                    // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
-                    if(conversion_option.localMaterial() != null) {
-                        for(BlockFace adjacent_block : ADJ_BLOCKS) {
-                            if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
-                                b.setType(conversion_option.newMaterial());
-                                break;
-                            }
-                        }
-                    } else {
-                        b.setType(conversion_option.newMaterial());
-                    }
-                }
+                rollTheDice(b, conversion_option);
             }
         }
+    }
+
+    private void rollTheDice(Block b, GreenhouseBlockConversions conversion_option) {
+        // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
+        if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
+            // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
+            if(conversion_option.localMaterial() != null) {
+                for(BlockFace adjacent_block : ADJ_BLOCKS) {
+                    if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
+                        b.setType(conversion_option.newMaterial());
+                        break;
+                    }
+                }
+            } else {
+                b.setType(conversion_option.newMaterial());
+            }
+        }
+
     }
 
     /**
@@ -388,7 +392,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         // Center spawned mob
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
-        boolean result = getRandomMob()
+        return getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> Optional.of(m.mobSpawnOn())
                         .map(b.getRelative(BlockFace.DOWN).getType()::equals)
@@ -408,7 +412,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                                 return true;
                             }).orElse(false);
                 }).orElse(false);
-        return result;
     }
 
     /**
