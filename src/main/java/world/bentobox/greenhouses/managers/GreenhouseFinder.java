@@ -44,7 +44,7 @@ public class GreenhouseFinder {
     }
 
     /**
-     * @param addon
+     * @param addon Addon
      */
     public GreenhouseFinder(Greenhouses addon) {
         this.addon = addon;
@@ -148,7 +148,7 @@ public class GreenhouseFinder {
             // Roof blocks must be glass, glowstone, doors or a hopper.
             result.add(GreenhouseResult.FAIL_BAD_ROOF_BLOCKS);
         } else if (isOtherBlocks()) {
-            // "Wall blocks must be glass, glowstone, doors or a hopper.
+            // Wall blocks must be glass, glowstone, doors or a hopper.
             result.add(GreenhouseResult.FAIL_BAD_WALL_BLOCKS);
         }
         if (this.getWallDoors() > 8) {

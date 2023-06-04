@@ -15,7 +15,7 @@ Greenhouses are made out of glass and must contain the blocks found in the Biome
 
 * Craft your own self-contained biome greenhouse on an island (or elsewhere if you like)
 * Greenhouses can grow plants that cannot normally be grown, like sunflowers
-* Friendly mobs can spawn if your greenhouse is well designed - need slimes? Build a swamp greenhouse!
+* Friendly mobs can spawn if your greenhouse is well-designed - need slimes? Build a swamp greenhouse!
 * Blocks change in biomes over time - dirt becomes sand in a desert, dirt becomes clay in a river, for example.
 * Greenhouses can run in multiple worlds.
 * Easy to use GUI shows greenhouse recipes (e.g. **/is greenhouses**)
@@ -27,7 +27,7 @@ This example is for when you are in the BSkyBlock world. For AcidIsland, just us
 
 1. Make glass blocks and build a rectangular set of walls with a flat roof.
 2. Put a hopper in the wall or roof.
-3. Put a door in the wall so you can get in and out.
+3. Put a door in the wall, so you can get in and out.
 4. Type **/island greenhouses** and read the rules for the greenhouse you want.
 5. Exit the GUI and place blocks, water, lava, and ice so that you make your desired biome.
 6. Type **/island greenhouses** again and click on the biome to make it.
@@ -42,7 +42,7 @@ This example is for when you are in the BSkyBlock world. For AcidIsland, just us
 
 ## FAQ
 
-* Can I use stained glass? Yes, you can. It's pretty.
+* Can I use stained-glass? Yes, you can. It's pretty.
 * Can I fill my greenhouse full of water? Yes. That's an ocean.
 * Will a squid spawn there? Maybe... okay, yes it will if it's a big enough ocean.
 * How do I place a door high up in the wall if the wall is all glass? Place it on a hopper.

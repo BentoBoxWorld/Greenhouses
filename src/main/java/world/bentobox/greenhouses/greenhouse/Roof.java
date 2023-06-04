@@ -118,7 +118,7 @@ public class Roof extends MinMaxXZ {
     }
 
     boolean findRoof(Vector loc) {
-        // This does a ever-growing check around the player to find a wall block. It is possible for the player
+        // This does an ever-growing check around the player to find a wall block. It is possible for the player
         // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
         int startY = loc.getBlockY();
         for (int y = startY; y < world.getMaxHeight(); y++) {
@@ -130,7 +130,7 @@ public class Roof extends MinMaxXZ {
             }
         }
         // If the roof was not found start going around in circles until something is found
-        // Expand in ever increasing squares around location until a wall block is found
+        // Expand in ever-increasing squares around location until a wall block is found
         if (!roofFound) {
             loc = spiralSearch(loc, startY);
             if (!roofFound) {
@@ -199,7 +199,7 @@ public class Roof extends MinMaxXZ {
     }
 
     /**
-     * Get highest roof block
+     * Get the highest roof block
      * @param x - x coord of current search
      * @param startY - starting y coord
      * @param z - z coord of current search

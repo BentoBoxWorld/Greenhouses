@@ -285,7 +285,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void convertBlock(Block b) {
         Material bType  = b.getType();
-        // Check if there is a block conversion for this block, as while the rest of the method wont do anything if .get() returns nothing anyway it still seems to be quite expensive
+        // Check if there is a block conversion for this block, as while the rest of the method won't do anything if .get() returns nothing anyway it still seems to be quite expensive
         if(conversionBlocks.keySet().contains(bType)) {
             for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
                 rollTheDice(b, conversion_option);
