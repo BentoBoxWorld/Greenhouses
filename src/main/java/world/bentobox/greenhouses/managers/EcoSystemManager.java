@@ -241,36 +241,39 @@ public class EcoSystemManager {
             for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
                 for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
-
-                    // Check floor blocks
-                    if (!ignoreLiquid) {
-                        // Check ceiling blocks
-                        if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
-                            result.add(new GrowthBlock(b, false));
-                        }
-                        if (!b.isEmpty() && !Tag.LEAVES.isTagged(b.getType())
-                                && (b.getRelative(BlockFace.UP).isEmpty()
-                                        || b.getRelative(BlockFace.UP).isPassable()
-                                        || Tag.LEAVES.isTagged(b.getRelative(BlockFace.UP).getType())
-                                        )
-                                ) {
-                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                            break;
-                        }
-                    } else {
-                        if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
-                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                            break;
-                        }
+                    if (checkBlock(result, b, ignoreLiquid)) {
+                        break;
                     }
-
                 }
             }
         }
         return result;
     }
 
-
+    private boolean checkBlock(List<GrowthBlock> result, Block b, boolean ignoreLiquid) {
+        // Check floor blocks
+        if (!ignoreLiquid) {
+            // Check ceiling blocks
+            if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
+                result.add(new GrowthBlock(b, false));
+            }
+            if (!b.isEmpty() && !Tag.LEAVES.isTagged(b.getType())
+                    && (b.getRelative(BlockFace.UP).isEmpty()
+                            || b.getRelative(BlockFace.UP).isPassable()
+                            || Tag.LEAVES.isTagged(b.getRelative(BlockFace.UP).getType())
+                            )
+                    ) {
+                result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                return true;
+            }
+        } else {
+            if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
+                result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                return true;
+            }
+        }
+        return false;
+    }
 
     private int getBoneMeal(Greenhouse gh) {
         Hopper hopper = getHopper(gh);
