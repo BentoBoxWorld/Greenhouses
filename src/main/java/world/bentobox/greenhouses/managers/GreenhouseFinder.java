@@ -33,7 +33,7 @@ public class GreenhouseFinder {
     /**
      * This is the count of the various items
      */
-    private CounterCheck cc = new CounterCheck();
+    private CounterCheck counterCheck = new CounterCheck();
     private Roof roof;
 
     static class CounterCheck {
@@ -97,30 +97,26 @@ public class GreenhouseFinder {
      */
     CompletableFuture<Set<GreenhouseResult>> checkGreenhouse(AsyncWorldCache cache, Roof roof, Walls walls) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGHAsync(r, cache, roof, walls));
+        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGreenhouseAsync(r, cache, roof, walls));
         return r;
     }
 
-    private Set<GreenhouseResult> checkGHAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
+    private Set<GreenhouseResult> checkGreenhouseAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
             Roof roof, Walls walls) {
-        cc = new CounterCheck();
+        counterCheck = new CounterCheck();
         int y;
         for (y = roof.getHeight(); y > walls.getFloor(); y--) {
             wallBlockCount = 0;
             for (int x = walls.getMinX(); x <= walls.getMaxX(); x++) {
                 for (int z = walls.getMinZ(); z <= walls.getMaxZ(); z++) {
-                    checkBlock(cc, cache.getBlockType(x,y,z), roof, walls, new Vector(x, y, z));
+                    checkBlock(counterCheck, cache.getBlockType(x,y,z), roof, walls, new Vector(x, y, z));
                 }
             }
             if (wallBlockCount == 0 && y < roof.getHeight()) {
                 // This is the floor
                 break;
-            } else {
-                if (cc.otherBlock) {
-                    if (otherBlockLayer < 0) {
-                        otherBlockLayer = y;
-                    }
-                }
+            } else if (counterCheck.otherBlock && otherBlockLayer < 0) {
+                otherBlockLayer = y;
             }
         }
 
@@ -252,28 +248,28 @@ public class GreenhouseFinder {
      * @return the wallDoors
      */
     int getWallDoors() {
-        return cc.doorCount;
+        return counterCheck.doorCount;
     }
 
     /**
      * @return the ghHopper
      */
     int getGhHopper() {
-        return cc.hopperCount;
+        return counterCheck.hopperCount;
     }
 
     /**
      * @return the airHoles
      */
     boolean isAirHoles() {
-        return cc.airHole;
+        return counterCheck.airHole;
     }
 
     /**
      * @return the otherBlocks
      */
     boolean isOtherBlocks() {
-        return cc.otherBlock;
+        return counterCheck.otherBlock;
     }
 
     /**
@@ -326,21 +322,21 @@ public class GreenhouseFinder {
     }
 
     public void setGhHopper(int i) {
-        cc.hopperCount = i;
+        counterCheck.hopperCount = i;
     }
 
     public void setWallDoors(int i) {
-        cc.doorCount = i;
+        counterCheck.doorCount = i;
 
     }
 
     public void setAirHoles(boolean b) {
-        cc.airHole = b;
+        counterCheck.airHole = b;
 
     }
 
     public void setOtherBlocks(boolean b) {
-        cc.otherBlock = b;
+        counterCheck.otherBlock = b;
 
     }
 
