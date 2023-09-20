@@ -50,8 +50,6 @@ public class RoofTest {
     public void setUp() {
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
-        PowerMockito.mockStatic(Greenhouses.class, Mockito.RETURNS_MOCKS);
-        when(Greenhouses.getInstance()).thenReturn(addon);
         s = new Settings();
         when(addon.getSettings()).thenReturn(s);
 
@@ -89,14 +87,14 @@ public class RoofTest {
         when(location.clone()).thenReturn(location);
 
         // Test
-        roof = new Roof(cache, location);
+        roof = new Roof(cache, location, addon);
         assertTrue(roof.findRoof(new Vector(10,10,10)));
     }
 
     @Test
     public void testNoGlass() {
         when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.AIR);
-        roof = new Roof(cache, location);
+        roof = new Roof(cache, location, addon);
         assertFalse(roof.findRoof(new Vector(10,10,10)));
     }
 
@@ -169,13 +167,13 @@ public class RoofTest {
      */
     @Test
     public void testWallBlocks() {
-        assertFalse(Roof.roofBlocks(Material.ACACIA_BOAT));
-        assertTrue(Roof.roofBlocks(Material.GLASS));
-        assertTrue(Roof.roofBlocks(Material.GLOWSTONE));
-        assertFalse(Roof.roofBlocks(Material.ACACIA_DOOR));
-        assertTrue(Roof.roofBlocks(Material.HOPPER));
-        assertTrue(Roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
-        assertTrue(Roof.roofBlocks(Material.BIRCH_TRAPDOOR));
+        assertFalse(roof.roofBlocks(Material.ACACIA_BOAT));
+        assertTrue(roof.roofBlocks(Material.GLASS));
+        assertTrue(roof.roofBlocks(Material.GLOWSTONE));
+        assertFalse(roof.roofBlocks(Material.ACACIA_DOOR));
+        assertTrue(roof.roofBlocks(Material.HOPPER));
+        assertTrue(roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertTrue(roof.roofBlocks(Material.BIRCH_TRAPDOOR));
     }
 
     /**
@@ -185,12 +183,12 @@ public class RoofTest {
     public void testWallBlocksNoGlowStoneNoPanes() {
         s.setAllowGlowstone(false);
         s.setAllowPanes(false);
-        assertFalse(Roof.roofBlocks(Material.ACACIA_BOAT));
-        assertTrue(Roof.roofBlocks(Material.GLASS));
-        assertFalse(Roof.roofBlocks(Material.GLOWSTONE));
-        assertFalse(Roof.roofBlocks(Material.ACACIA_DOOR));
-        assertTrue(Roof.roofBlocks(Material.HOPPER));
-        assertFalse(Roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
-        assertTrue(Roof.roofBlocks(Material.BIRCH_TRAPDOOR));
+        assertFalse(roof.roofBlocks(Material.ACACIA_BOAT));
+        assertTrue(roof.roofBlocks(Material.GLASS));
+        assertFalse(roof.roofBlocks(Material.GLOWSTONE));
+        assertFalse(roof.roofBlocks(Material.ACACIA_DOOR));
+        assertTrue(roof.roofBlocks(Material.HOPPER));
+        assertFalse(roof.roofBlocks(Material.PURPLE_STAINED_GLASS_PANE));
+        assertTrue(roof.roofBlocks(Material.BIRCH_TRAPDOOR));
     }
 }

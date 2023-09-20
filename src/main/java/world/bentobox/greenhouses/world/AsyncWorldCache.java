@@ -27,14 +27,16 @@ public class AsyncWorldCache {
 
     private final World world;
     private final Map<Pair<Integer, Integer>, ChunkSnapshot> cache;
+    private final Greenhouses addon;
 
     /**
      * Chunk cache. This class is designed to be run async and blocks futures
      * @param world - world to cache
      */
-    public AsyncWorldCache(World world) {
+    public AsyncWorldCache(Greenhouses addon, World world) {
         this.world = world;
         cache = new HashMap<>();
+        this.addon = addon;
     }
 
     /**
@@ -59,7 +61,7 @@ public class AsyncWorldCache {
      */
     private CompletableFuture<ChunkSnapshot> getAChunk(int x, int z) {
         CompletableFuture<ChunkSnapshot> r = new CompletableFuture<>();
-        Bukkit.getScheduler().runTask(Greenhouses.getInstance().getPlugin(), () ->
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () ->
         Util.getChunkAtAsync(world, x, z).thenAccept(chunk -> r.complete(chunk.getChunkSnapshot())));
         return r;
     }
@@ -104,7 +106,7 @@ public class AsyncWorldCache {
         try {
             return Objects.requireNonNull(getSnap(x, z)).getBlockType(xx, y, zz);
         } catch (InterruptedException | ExecutionException e) {
-            Greenhouses.getInstance().logError("Chunk could not be obtained async! " + e);
+            addon.logError("Chunk could not be obtained async! " + e);
             // Restore interrupted state...
             Thread.currentThread().interrupt();
             return Material.AIR;

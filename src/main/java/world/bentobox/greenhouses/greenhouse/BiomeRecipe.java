@@ -209,24 +209,30 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @return set of results from the check
      */
     private Set<GreenhouseResult> checkRecipeAsync(CompletableFuture<Set<GreenhouseResult>> r, Greenhouse gh) {
-        AsyncWorldCache cache = new AsyncWorldCache(gh.getWorld());
-        Set<GreenhouseResult> result = new HashSet<>();
+        AsyncWorldCache cache = new AsyncWorldCache(addon, gh.getWorld());
         long area = gh.getArea();
-        Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
 
         // Look through the greenhouse and count what is in there
-        for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
-            for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
-                for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
-                    Material t = cache.getBlockType(x, y, z);
-                    if (!t.equals(Material.AIR)) {
-                        blockCount.putIfAbsent(t, 0);
-                        blockCount.merge(t, 1, Integer::sum);
-                    }
-                }
-            }
+        Map<Material, Integer> blockCount = countBlocks(gh, cache);
+
+        // Calculate % water, ice and lava ratios and check them
+        Set<GreenhouseResult> result = checkRatios(blockCount, area);
+
+        // Compare to the required blocks
+        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
+        // Remove any entries that are 0 or less
+        missingBlocks.values().removeIf(v -> v <= 0);
+        if (!missingBlocks.isEmpty()) {
+            result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
+            gh.setMissingBlocks(missingBlocks);
         }
-        // Calculate % water, ice and lava ratios
+        // Return to main thread to complete
+        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> r.complete(result));
+        return result;
+    }
+
+    private Set<GreenhouseResult> checkRatios(Map<Material, Integer> blockCount, long area) {
+        Set<GreenhouseResult> result = new HashSet<>();
         double waterRatio = (double)blockCount.getOrDefault(Material.WATER, 0)/area * 100;
         double lavaRatio = (double)blockCount.getOrDefault(Material.LAVA, 0)/area * 100;
         int ice = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.ICE)
@@ -254,17 +260,23 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         if (iceCoverage > 0 && iceRatio < iceCoverage) {
             result.add(GreenhouseResult.FAIL_INSUFFICIENT_ICE);
         }
-        // Compare to the required blocks
-        Map<Material, Integer> missingBlocks = requiredBlocks.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() - blockCount.getOrDefault(e.getKey(), 0)));
-        // Remove any entries that are 0 or less
-        missingBlocks.values().removeIf(v -> v <= 0);
-        if (!missingBlocks.isEmpty()) {
-            result.add(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS);
-            gh.setMissingBlocks(missingBlocks);
-        }
-        // Return to main thread to complete
-        Bukkit.getScheduler().runTask(addon.getPlugin(), () -> r.complete(result));
         return result;
+    }
+
+    private Map<Material, Integer> countBlocks(Greenhouse gh, AsyncWorldCache cache) {
+        Map<Material, Integer> blockCount = new EnumMap<>(Material.class);
+        for (int y = gh.getFloorHeight(); y< gh.getCeilingHeight();y++) {
+            for (int x = (int) (gh.getBoundingBox().getMinX()+1); x < gh.getBoundingBox().getMaxX(); x++) {
+                for (int z = (int) (gh.getBoundingBox().getMinZ()+1); z < gh.getBoundingBox().getMaxZ(); z++) {
+                    Material t = cache.getBlockType(x, y, z);
+                    if (!t.equals(Material.AIR)) {
+                        blockCount.putIfAbsent(t, 0);
+                        blockCount.merge(t, 1, Integer::sum);
+                    }
+                }
+            }
+        }
+        return blockCount;
     }
 
     /**
@@ -273,26 +285,30 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void convertBlock(Block b) {
         Material bType  = b.getType();
-        // Check if there is a block conversion for this block, as while the rest of the method wont do anything if .get() returns nothing anyway it still seems to be quite expensive
+        // Check if there is a block conversion for this block, as while the rest of the method won't do anything if .get() returns nothing anyway it still seems to be quite expensive
         if(conversionBlocks.keySet().contains(bType)) {
-            for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
-
-                // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
-                if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
-                    // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
-                    if(conversion_option.localMaterial() != null) {
-                        for(BlockFace adjacent_block : ADJ_BLOCKS) {
-                            if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
-                                b.setType(conversion_option.newMaterial());
-                                break;
-                            }
-                        }
-                    } else {
-                        b.setType(conversion_option.newMaterial());
-                    }
-                }
+            for(GreenhouseBlockConversions conversionOption : conversionBlocks.get(bType)) {
+                rollTheDice(b, conversionOption);
             }
         }
+    }
+
+    private void rollTheDice(Block b, GreenhouseBlockConversions conversion_option) {
+        // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
+        if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
+            // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
+            if(conversion_option.localMaterial() != null) {
+                for(BlockFace adjacent_block : ADJ_BLOCKS) {
+                    if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
+                        b.setType(conversion_option.newMaterial());
+                        break;
+                    }
+                }
+            } else {
+                b.setType(conversion_option.newMaterial());
+            }
+        }
+
     }
 
     /**
@@ -376,7 +392,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
         // Center spawned mob
         Location spawnLoc = b.getLocation().clone().add(new Vector(0.5, 0, 0.5));
-        boolean result = getRandomMob()
+        return getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> Optional.of(m.mobSpawnOn())
                         .map(b.getRelative(BlockFace.DOWN).getType()::equals)
@@ -396,7 +412,6 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                                 return true;
                             }).orElse(false);
                 }).orElse(false);
-        return result;
     }
 
     /**
@@ -435,7 +450,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         // Grow a random plant that can grow
         double r = random.nextDouble();
         Double key = underwater ? underwaterPlants.ceilingKey(r) : plantTree.ceilingKey(r);
-        return key == null ? Optional.empty() : Optional.ofNullable(underwater ? underwaterPlants.get(key) : plantTree.get(key));
+        if (key == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(underwater ? underwaterPlants.get(key) : plantTree.get(key));
     }
 
     /**
@@ -461,11 +479,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public boolean growPlant(GrowthBlock block, boolean underwater) {
         Block bl = block.block();
         return getRandomPlant(underwater).map(p -> {
-            if (bl.getY() != 0 && canGrowOn(block, p)) {
-                if (plantIt(bl, p)) {
-                    bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
-                    return true;
-                }
+            if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p)) {
+                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
+                return true;
             }
             return false;
         }).orElse(false);
@@ -554,14 +570,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         BlockFace d = null;
         boolean waterLogged = false;
         for (BlockFace adj : ADJ_BLOCKS) {
-            if (b.getRelative(adj).getType().equals(Material.AIR)) {
+            Material type = b.getRelative(adj).getType();
+            if (type.equals(Material.AIR) || type.equals(Material.WATER)) {
                 d = adj;
-                break;
-            }
-            // Lichen can grow under water too
-            if (b.getRelative(adj).getType().equals(Material.WATER)) {
-                d = adj;
-                waterLogged = true;
+                if (type.equals(Material.WATER)) {
+                    waterLogged = true;
+                }
                 break;
             }
         }

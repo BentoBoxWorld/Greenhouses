@@ -12,6 +12,7 @@ import org.bukkit.Tag;
 import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
@@ -28,16 +29,24 @@ public class GreenhouseFinder {
     // If this is the bottom layer, the player has most likely uneven walls
     private int otherBlockLayer = -1;
     private int wallBlockCount;
+    private final Greenhouses addon;
     /**
      * This is the count of the various items
      */
-    private CounterCheck cc = new CounterCheck();
+    private CounterCheck counterCheck = new CounterCheck();
 
     static class CounterCheck {
         int doorCount;
         int hopperCount;
         boolean airHole;
         boolean otherBlock;
+    }
+
+    /**
+     * @param addon Addon
+     */
+    public GreenhouseFinder(Greenhouses addon) {
+        this.addon = addon;
     }
 
     /**
@@ -51,9 +60,9 @@ public class GreenhouseFinder {
         redGlass.clear();
 
         // Get a world cache
-        AsyncWorldCache cache = new AsyncWorldCache(location.getWorld());
+        AsyncWorldCache cache = new AsyncWorldCache(addon, location.getWorld());
         // Find the roof
-        Roof roof = new Roof(cache, location);
+        Roof roof = new Roof(cache, location, addon);
         roof.findRoof().thenAccept(found -> {
             if (Boolean.FALSE.equals(found)) {
                 result.add(GreenhouseResult.FAIL_NO_ROOF);
@@ -87,30 +96,26 @@ public class GreenhouseFinder {
      */
     CompletableFuture<Set<GreenhouseResult>> checkGreenhouse(AsyncWorldCache cache, Roof roof, Walls walls) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGHAsync(r, cache, roof, walls));
+        Bukkit.getScheduler().runTaskAsynchronously(BentoBox.getInstance(), () -> checkGreenhouseAsync(r, cache, roof, walls));
         return r;
     }
 
-    private Set<GreenhouseResult> checkGHAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
+    private Set<GreenhouseResult> checkGreenhouseAsync(CompletableFuture<Set<GreenhouseResult>> r, AsyncWorldCache cache,
             Roof roof, Walls walls) {
-        cc = new CounterCheck();
+        counterCheck = new CounterCheck();
         int y;
         for (y = roof.getHeight(); y > walls.getFloor(); y--) {
             wallBlockCount = 0;
             for (int x = walls.getMinX(); x <= walls.getMaxX(); x++) {
                 for (int z = walls.getMinZ(); z <= walls.getMaxZ(); z++) {
-                    checkBlock(cc, cache.getBlockType(x,y,z), roof, walls, new Vector(x, y, z));
+                    checkBlock(counterCheck, cache.getBlockType(x,y,z), roof, walls, new Vector(x, y, z));
                 }
             }
             if (wallBlockCount == 0 && y < roof.getHeight()) {
                 // This is the floor
                 break;
-            } else {
-                if (cc.otherBlock) {
-                    if (otherBlockLayer < 0) {
-                        otherBlockLayer = y;
-                    }
-                }
+            } else if (counterCheck.otherBlock && otherBlockLayer < 0) {
+                otherBlockLayer = y;
             }
         }
 
@@ -138,7 +143,7 @@ public class GreenhouseFinder {
             // Roof blocks must be glass, glowstone, doors or a hopper.
             result.add(GreenhouseResult.FAIL_BAD_ROOF_BLOCKS);
         } else if (isOtherBlocks()) {
-            // "Wall blocks must be glass, glowstone, doors or a hopper.
+            // Wall blocks must be glass, glowstone, doors or a hopper.
             result.add(GreenhouseResult.FAIL_BAD_WALL_BLOCKS);
         }
         if (this.getWallDoors() > 8) {
@@ -166,7 +171,8 @@ public class GreenhouseFinder {
         // Check wall blocks only
         if (y == roof.getHeight() || x == walls.getMinX() || x == walls.getMaxX() || z == walls.getMinZ() || z== walls.getMaxZ()) {
             // Check for non-wall blocks or non-roof blocks at the top of walls
-            if ((y != roof.getHeight() && !Walls.wallBlocks(m)) || (y == roof.getHeight() && !Roof.roofBlocks(m))) {
+            if ((y != roof.getHeight() && !addon.wallBlocks(m))
+                    || (y == roof.getHeight() && !roof.roofBlocks(m))) {
                 if (m.equals(Material.AIR)) {
                     // Air hole found
                     cc.airHole = true;
@@ -241,28 +247,28 @@ public class GreenhouseFinder {
      * @return the wallDoors
      */
     int getWallDoors() {
-        return cc.doorCount;
+        return counterCheck.doorCount;
     }
 
     /**
      * @return the ghHopper
      */
     int getGhHopper() {
-        return cc.hopperCount;
+        return counterCheck.hopperCount;
     }
 
     /**
      * @return the airHoles
      */
     boolean isAirHoles() {
-        return cc.airHole;
+        return counterCheck.airHole;
     }
 
     /**
      * @return the otherBlocks
      */
     boolean isOtherBlocks() {
-        return cc.otherBlock;
+        return counterCheck.otherBlock;
     }
 
     /**
@@ -315,21 +321,21 @@ public class GreenhouseFinder {
     }
 
     public void setGhHopper(int i) {
-        cc.hopperCount = i;
+        counterCheck.hopperCount = i;
     }
 
     public void setWallDoors(int i) {
-        cc.doorCount = i;
+        counterCheck.doorCount = i;
 
     }
 
     public void setAirHoles(boolean b) {
-        cc.airHole = b;
+        counterCheck.airHole = b;
 
     }
 
     public void setOtherBlocks(boolean b) {
-        cc.otherBlock = b;
+        counterCheck.otherBlock = b;
 
     }
 

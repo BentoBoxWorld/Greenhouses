@@ -151,7 +151,7 @@ public class BiomeRecipeTest {
         double convChance = 100D;
         Material localMaterial = Material.WATER;
         br.addConvBlocks(oldMaterial, newMaterial, convChance, localMaterial);
-        verify(addon).log(eq("   100.0% chance for Sand to convert to Clay"));
+        verify(addon).log("   100.0% chance for Sand to convert to Clay");
     }
 
     /**
@@ -163,7 +163,7 @@ public class BiomeRecipeTest {
         int mobProbability = 50;
         Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).log(eq("   50.0% chance for Cat to spawn on Grass Block."));
+        verify(addon).log("   50.0% chance for Cat to spawn on Grass Block.");
     }
 
     /**
@@ -177,7 +177,7 @@ public class BiomeRecipeTest {
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError(eq("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT"));
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
     }
 
     /**
@@ -190,7 +190,7 @@ public class BiomeRecipeTest {
         Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError(eq("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT"));
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
     }
 
     /**
@@ -202,7 +202,7 @@ public class BiomeRecipeTest {
         int plantProbability = 20;
         Material plantGrowOn = Material.DIRT;
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
-        verify(addon).log(eq("   20.0% chance for Jungle Sapling to grow on Dirt"));
+        verify(addon).log("   20.0% chance for Jungle Sapling to grow on Dirt");
     }
 
     /**
@@ -215,7 +215,7 @@ public class BiomeRecipeTest {
         Material plantGrowOn = Material.DIRT;
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
-        verify(addon).logError(eq("Plant chances add up to > 100% in BADLANDS biome recipe! Skipping JUNGLE_SAPLING"));
+        verify(addon).logError("Plant chances add up to > 100% in BADLANDS biome recipe! Skipping JUNGLE_SAPLING");
     }
 
     /**
@@ -226,7 +226,7 @@ public class BiomeRecipeTest {
         Material blockMaterial = Material.BLACK_CONCRETE;
         int blockQty = 30;
         br.addReqBlocks(blockMaterial, blockQty);
-        verify(addon).log(eq("   BLACK_CONCRETE x 30"));
+        verify(addon).log("   BLACK_CONCRETE x 30");
     }
 
     /**
@@ -451,7 +451,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertFalse(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
+        verify(world).spawnEntity(location, EntityType.CAT);
         verify(location).add(any(Vector.class));
     }
 
@@ -477,7 +477,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.CAT));
+        verify(world).spawnEntity(location, EntityType.CAT);
         verify(location).add(any(Vector.class));
     }
 
@@ -504,7 +504,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.HOGLIN));
+        verify(world).spawnEntity(location, EntityType.HOGLIN);
         verify(location).add(any(Vector.class));
         verify(hoglin).setImmuneToZombification(true);
     }
@@ -532,7 +532,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.PIGLIN));
+        verify(world).spawnEntity(location, EntityType.PIGLIN);
         verify(location).add(any(Vector.class));
         verify(piglin).setImmuneToZombification(true);
     }
@@ -562,7 +562,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertTrue(br.spawnMob(block));
-        verify(world).spawnEntity(eq(location), eq(EntityType.PIGLIN));
+        verify(world).spawnEntity(location, EntityType.PIGLIN);
         verify(location).add(any(Vector.class));
         verify(piglin, never()).setImmuneToZombification(true);
     }
@@ -586,7 +586,7 @@ public class BiomeRecipeTest {
 
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         assertFalse(br.spawnMob(block));
-        verify(world, never()).spawnEntity(eq(location), eq(EntityType.CAT));
+        verify(world, never()).spawnEntity(location, EntityType.CAT);
     }
 
     /**
@@ -706,8 +706,8 @@ public class BiomeRecipeTest {
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
         assertTrue(br.growPlant(new GrowthBlock(block, true), false));
         verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
-        verify(bisected).setHalf(eq(Half.BOTTOM));
-        verify(bisected).setHalf(eq(Half.TOP));
+        verify(bisected).setHalf(Half.BOTTOM);
+        verify(bisected).setHalf(Half.TOP);
     }
 
     /**
@@ -722,8 +722,8 @@ public class BiomeRecipeTest {
         when(block.isEmpty()).thenReturn(true);
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
-        when(block.getRelative(eq(BlockFace.DOWN))).thenReturn(ob);
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(ob);
+        when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
+        when(block.getRelative(BlockFace.UP)).thenReturn(ob);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
         assertFalse(br.growPlant(new GrowthBlock(block, true), false));
     }

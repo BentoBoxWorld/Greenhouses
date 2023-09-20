@@ -51,7 +51,7 @@
         <!-- Revision variable removes warning about dynamic version -->
         <revision>${build.version}-SNAPSHOT</revision>
         <!-- This allows to change between versions and snapshots. -->
-        <build.version>1.7.3</build.version>
+        <build.version>1.7.4</build.version>
         <build.number>-LOCAL</build.number>
         <sonar.projectKey>BentoBoxWorld_Greenhouses</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
@@ -191,7 +191,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.1.0</version>
                 <configuration>
                     <argLine>
                         ${argLine}
@@ -252,7 +252,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.7</version>
+                <version>0.8.10</version>
                 <configuration>
                     <append>true</append>
                     <excludes>

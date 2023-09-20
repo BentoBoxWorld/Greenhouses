@@ -23,33 +23,17 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
  * @author tastybento
  *
  */
-@SuppressWarnings("deprecation")
 public class Roof extends MinMaxXZ {
-    private static final List<Material> ROOF_BLOCKS;
-    static {
-        // Roof blocks
-        ROOF_BLOCKS = Arrays.stream(Material.values())
-                .filter(m -> !m.isLegacy())
-                .filter(Material::isBlock) // Blocks only, no items
-                .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
-                        || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
-                        || m.equals(Material.HOPPER)).toList();
-    }
-    /**
-     * Check if material is a roof material
-     * @param m - material
-     * @return true if roof material
-     */
-    public static boolean roofBlocks(@NonNull Material m) {
-        return ROOF_BLOCKS.contains(Objects.requireNonNull(m))
-                || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone())
-                || (m.name().endsWith("GLASS_PANE") && Greenhouses.getInstance().getSettings().isAllowPanes());
-    }
+    private static final List<Material> ROOF_BLOCKS = Arrays.stream(Material.values())
+            .filter(Material::isBlock) // Blocks only, no items
+            .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
+                    || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
+                    || m.equals(Material.HOPPER)).toList();
     private final AsyncWorldCache cache;
     private int height;
     private final Location location;
     private boolean roofFound;
-
+    private final Greenhouses addon;
     private final World world;
 
 
@@ -58,13 +42,23 @@ public class Roof extends MinMaxXZ {
      * @param cache async world cache
      * @param loc - starting location
      */
-    public Roof(AsyncWorldCache cache, Location loc) {
+    public Roof(AsyncWorldCache cache, Location loc, Greenhouses addon) {
         this.cache = cache;
         this.location = loc;
+        this.addon = addon;
         this.world = loc.getWorld();
     }
 
-
+    /**
+     * Check if material is a roof material
+     * @param m - material
+     * @return true if roof material
+     */
+    public boolean roofBlocks(@NonNull Material m) {
+        return ROOF_BLOCKS.contains(Objects.requireNonNull(m))
+                || (m.equals(Material.GLOWSTONE) && addon.getSettings().isAllowGlowstone())
+                || (m.name().endsWith("GLASS_PANE") && addon.getSettings().isAllowPanes());
+    }
 
     /**
      * This takes any location and tries to go as far as possible in NWSE directions finding contiguous roof blocks
@@ -124,7 +118,7 @@ public class Roof extends MinMaxXZ {
     }
 
     boolean findRoof(Vector loc) {
-        // This does a ever-growing check around the player to find a wall block. It is possible for the player
+        // This does an ever-growing check around the player to find a wall block. It is possible for the player
         // to be outside the greenhouse in this situation, so a check is done later to make sure the player is inside
         int startY = loc.getBlockY();
         for (int y = startY; y < world.getMaxHeight(); y++) {
@@ -136,7 +130,7 @@ public class Roof extends MinMaxXZ {
             }
         }
         // If the roof was not found start going around in circles until something is found
-        // Expand in ever increasing squares around location until a wall block is found
+        // Expand in ever-increasing squares around location until a wall block is found
         if (!roofFound) {
             loc = spiralSearch(loc, startY);
             if (!roofFound) {
@@ -205,13 +199,13 @@ public class Roof extends MinMaxXZ {
     }
 
     /**
-     * Get highest roof block
+     * Get the highest roof block
      * @param x - x coord of current search
      * @param startY - starting y coord
      * @param z - z coord of current search
      */
     private Optional<Vector> checkVertically(final int x, final int startY, final int z) {
-        if (!Walls.wallBlocks(cache.getBlockType(x, startY, z))) {
+        if (!addon.wallBlocks(cache.getBlockType(x, startY, z))) {
             // Look up
             for (int y = startY; y < world.getMaxHeight() && !roofFound; y++) {
                 if (roofBlocks(cache.getBlockType(x,y,z))) {

@@ -95,17 +95,17 @@ public class EcoSystemManager {
             return;
         }
         final BoundingBox ibb = gh.getInternalBoundingBox();
-        int gh_min_x = NumberConversions.floor(ibb.getMinX());
-        int gh_max_x = NumberConversions.floor(ibb.getMaxX());
-        int gh_min_y = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
-        int gh_max_y = NumberConversions.floor(ibb.getMaxY());
-        int gh_min_z = NumberConversions.floor(ibb.getMinZ());
-        int gh_max_z = NumberConversions.floor(ibb.getMaxZ());
+        int ghMinX = NumberConversions.floor(ibb.getMinX());
+        int ghMaxX = NumberConversions.floor(ibb.getMaxX());
+        int ghMinY = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
+        int ghMaxY = NumberConversions.floor(ibb.getMaxY());
+        int ghMinZ = NumberConversions.floor(ibb.getMinZ());
+        int ghMaxZ = NumberConversions.floor(ibb.getMaxZ());
         BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
 
-        for (int x = gh_min_x; x < gh_max_x; x++) {
-            for (int z = gh_min_z; z < gh_max_z; z++) {
-                for (int y = gh_min_y; y < gh_max_y; y++) {
+        for (int x = ghMinX; x < ghMaxX; x++) {
+            for (int z = ghMinZ; z < ghMaxZ; z++) {
+                for (int y = ghMinY; y < ghMaxY; y++) {
                     Block b = world.getBlockAt(x, y, z);
 
                     if(!b.isEmpty()) {
@@ -167,7 +167,7 @@ public class EcoSystemManager {
         Collections.shuffle(list, new Random(System.currentTimeMillis()));
         Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
-        if (sum >= gh.getBiomeRecipe().getMaxMob()) {
+        if (gh.getBiomeRecipe().getMaxMob() > -1 && sum >= gh.getBiomeRecipe().getMaxMob()) {
             return false;
         }
         while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
@@ -241,36 +241,39 @@ public class EcoSystemManager {
             for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
                 for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
-
-                    // Check floor blocks
-                    if (!ignoreLiquid) {
-                        // Check ceiling blocks
-                        if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
-                            result.add(new GrowthBlock(b, false));
-                        }
-                        if (!b.isEmpty() && !Tag.LEAVES.isTagged(b.getType())
-                                && (b.getRelative(BlockFace.UP).isEmpty()
-                                        || b.getRelative(BlockFace.UP).isPassable()
-                                        || Tag.LEAVES.isTagged(b.getRelative(BlockFace.UP).getType())
-                                        )
-                                ) {
-                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                            break;
-                        }
-                    } else {
-                        if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
-                            result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                            break;
-                        }
+                    if (checkBlock(result, b, ignoreLiquid)) {
+                        break;
                     }
-
                 }
             }
         }
         return result;
     }
 
-
+    private boolean checkBlock(List<GrowthBlock> result, Block b, boolean ignoreLiquid) {
+        // Check floor blocks
+        if (!ignoreLiquid) {
+            // Check ceiling blocks
+            if (b.isEmpty() && !b.getRelative(BlockFace.UP).isEmpty()) {
+                result.add(new GrowthBlock(b, false));
+            }
+            if (!b.isEmpty() && !Tag.LEAVES.isTagged(b.getType())
+                    && (b.getRelative(BlockFace.UP).isEmpty()
+                            || b.getRelative(BlockFace.UP).isPassable()
+                            || Tag.LEAVES.isTagged(b.getRelative(BlockFace.UP).getType())
+                            )
+                    ) {
+                result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                return true;
+            }
+        } else {
+            if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
+                result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
+                return true;
+            }
+        }
+        return false;
+    }
 
     private int getBoneMeal(Greenhouse gh) {
         Hopper hopper = getHopper(gh);

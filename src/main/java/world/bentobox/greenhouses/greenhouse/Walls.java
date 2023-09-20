@@ -9,25 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import world.bentobox.bentobox.BentoBox;
-import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
-@SuppressWarnings("deprecation")
 public class Walls extends MinMaxXZ {
-    private static final List<Material> WALL_BLOCKS;
-    static {
-        // Hoppers
-        WALL_BLOCKS = Arrays.stream(Material.values())
-                .filter(Material::isBlock) // Blocks only, no items
-                .filter(m -> !m.isLegacy())
-                .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
-                .filter(m -> m.name().contains("DOOR") // All doors
-                        || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
-                        || m.equals(Material.HOPPER)).toList();
-    }
+    public static final List<Material> WALL_BLOCKS = Arrays.stream(Material.values())
+            .filter(Material::isBlock) // Blocks only, no items
+            .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
+            .filter(m -> m.name().contains("DOOR") // All doors
+                    || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
+                    || m.equals(Material.HOPPER)).toList();
 
     private int floor;
-
     private final AsyncWorldCache cache;
 
     static class WallFinder {
@@ -175,17 +167,6 @@ public class Walls extends MinMaxXZ {
         } while( y-- > minY && wallBlockCount > 0);
         return y + 1;
 
-    }
-
-    /**
-     * Check if material is a wall material
-     * @param m - material
-     * @return true if wall material
-     */
-    public static boolean wallBlocks(Material m) {
-        return WALL_BLOCKS.contains(m)
-                || (m.equals(Material.GLOWSTONE) && Greenhouses.getInstance().getSettings().isAllowGlowstone())
-                || (m.name().endsWith("GLASS_PANE") && Greenhouses.getInstance().getSettings().isAllowPanes());
     }
 
     /**

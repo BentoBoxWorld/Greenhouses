@@ -53,7 +53,7 @@ public class GreenhouseGuard implements Listener {
         if (from.isPresent() && addon.getSettings().isAllowFlowOut()) {
             return;
         }
-        // Otherwise cancel - the flow is not allowed
+        // Otherwise, cancel - the flow is not allowed
         e.setCancelled(true);
     }
 
