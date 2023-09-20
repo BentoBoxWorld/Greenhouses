@@ -83,22 +83,22 @@ public class EcoSystemManagerTest {
         // Liquid false
         when(air.isEmpty()).thenReturn(true);
         when(air.isPassable()).thenReturn(true);
-        when(air.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(air.getRelative(BlockFace.UP)).thenReturn(air);
         // Plant
         // Empty false
         // Liquid false
         when(plant.isPassable()).thenReturn(true);
-        when(plant.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(plant.getRelative(BlockFace.UP)).thenReturn(air);
         // Liquid
         // Empty false
         when(liquid.isLiquid()).thenReturn(true);
         when(liquid.isPassable()).thenReturn(true);
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(liquid.getRelative(BlockFace.UP)).thenReturn(air);
         // Default for block
         // Empty false
         // Passable false
         // Liquid false
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(air);
+        when(block.getRelative(BlockFace.UP)).thenReturn(air);
 
         // Recipe
         when(recipe.noMobs()).thenReturn(true);

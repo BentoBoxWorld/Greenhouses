@@ -34,7 +34,6 @@ public class GreenhouseFinder {
      * This is the count of the various items
      */
     private CounterCheck counterCheck = new CounterCheck();
-    private Roof roof;
 
     static class CounterCheck {
         int doorCount;
@@ -63,7 +62,7 @@ public class GreenhouseFinder {
         // Get a world cache
         AsyncWorldCache cache = new AsyncWorldCache(addon, location.getWorld());
         // Find the roof
-        roof = new Roof(cache, location, addon);
+        Roof roof = new Roof(cache, location, addon);
         roof.findRoof().thenAccept(found -> {
             if (Boolean.FALSE.equals(found)) {
                 result.add(GreenhouseResult.FAIL_NO_ROOF);

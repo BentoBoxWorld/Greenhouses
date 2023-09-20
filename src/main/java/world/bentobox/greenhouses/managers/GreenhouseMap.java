@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 
@@ -138,7 +137,7 @@ public class GreenhouseMap {
      * @return a list of all the Greenhouses
      */
     public List<Greenhouse> getGreenhouses() {
-        return greenhouses.values().stream().flatMap(List::stream).collect(Collectors.toList());
+        return greenhouses.values().stream().flatMap(List::stream).toList();
     }
 
     /**

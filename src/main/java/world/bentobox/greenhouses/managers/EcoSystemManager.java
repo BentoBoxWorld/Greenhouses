@@ -95,17 +95,17 @@ public class EcoSystemManager {
             return;
         }
         final BoundingBox ibb = gh.getInternalBoundingBox();
-        int gh_min_x = NumberConversions.floor(ibb.getMinX());
-        int gh_max_x = NumberConversions.floor(ibb.getMaxX());
-        int gh_min_y = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
-        int gh_max_y = NumberConversions.floor(ibb.getMaxY());
-        int gh_min_z = NumberConversions.floor(ibb.getMinZ());
-        int gh_max_z = NumberConversions.floor(ibb.getMaxZ());
+        int ghMinX = NumberConversions.floor(ibb.getMinX());
+        int ghMaxX = NumberConversions.floor(ibb.getMaxX());
+        int ghMinY = NumberConversions.floor(gh.getBoundingBox().getMinY()); // Note: this gets the floor
+        int ghMaxY = NumberConversions.floor(ibb.getMaxY());
+        int ghMinZ = NumberConversions.floor(ibb.getMinZ());
+        int ghMaxZ = NumberConversions.floor(ibb.getMaxZ());
         BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
 
-        for (int x = gh_min_x; x < gh_max_x; x++) {
-            for (int z = gh_min_z; z < gh_max_z; z++) {
-                for (int y = gh_min_y; y < gh_max_y; y++) {
+        for (int x = ghMinX; x < ghMaxX; x++) {
+            for (int z = ghMinZ; z < ghMaxZ; z++) {
+                for (int y = ghMinY; y < ghMaxY; y++) {
                     Block b = world.getBlockAt(x, y, z);
 
                     if(!b.isEmpty()) {

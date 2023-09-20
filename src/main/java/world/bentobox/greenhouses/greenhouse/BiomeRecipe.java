@@ -287,8 +287,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Material bType  = b.getType();
         // Check if there is a block conversion for this block, as while the rest of the method won't do anything if .get() returns nothing anyway it still seems to be quite expensive
         if(conversionBlocks.keySet().contains(bType)) {
-            for(GreenhouseBlockConversions conversion_option : conversionBlocks.get(bType)) {
-                rollTheDice(b, conversion_option);
+            for(GreenhouseBlockConversions conversionOption : conversionBlocks.get(bType)) {
+                rollTheDice(b, conversionOption);
             }
         }
     }
@@ -450,7 +450,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         // Grow a random plant that can grow
         double r = random.nextDouble();
         Double key = underwater ? underwaterPlants.ceilingKey(r) : plantTree.ceilingKey(r);
-        return key == null ? Optional.empty() : Optional.ofNullable(underwater ? underwaterPlants.get(key) : plantTree.get(key));
+        if (key == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(underwater ? underwaterPlants.get(key) : plantTree.get(key));
     }
 
     /**
@@ -476,11 +479,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     public boolean growPlant(GrowthBlock block, boolean underwater) {
         Block bl = block.block();
         return getRandomPlant(underwater).map(p -> {
-            if (bl.getY() != 0 && canGrowOn(block, p)) {
-                if (plantIt(bl, p)) {
-                    bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
-                    return true;
-                }
+            if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p)) {
+                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
+                return true;
             }
             return false;
         }).orElse(false);
@@ -569,14 +570,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         BlockFace d = null;
         boolean waterLogged = false;
         for (BlockFace adj : ADJ_BLOCKS) {
-            if (b.getRelative(adj).getType().equals(Material.AIR)) {
+            Material type = b.getRelative(adj).getType();
+            if (type.equals(Material.AIR) || type.equals(Material.WATER)) {
                 d = adj;
-                break;
-            }
-            // Lichen can grow under water too
-            if (b.getRelative(adj).getType().equals(Material.WATER)) {
-                d = adj;
-                waterLogged = true;
+                if (type.equals(Material.WATER)) {
+                    waterLogged = true;
+                }
                 break;
             }
         }

@@ -185,12 +185,12 @@ public class RecipeManager {
         }
         // Get the list of conversions
         for (String oldMat : biomeRecipeConfig.getStringList("conversion-list")) {
-            parseConversionList(oldMat, conversionSec, b);
+            parseConversionList(oldMat, b);
 
         }
     }
 
-    private void parseConversionList(String oldMat, ConfigurationSection conversionSec, BiomeRecipe b) {
+    private void parseConversionList(String oldMat, BiomeRecipe b) {
         try {
             // Split the string
             String[] split = oldMat.split(":");

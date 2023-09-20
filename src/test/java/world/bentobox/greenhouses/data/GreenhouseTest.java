@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +60,7 @@ public class GreenhouseTest {
         // RecipeManager
         PowerMockito.mockStatic(RecipeManager.class);
         when(br.getName()).thenReturn("test");
-        when(RecipeManager.getBiomeRecipies(eq("test"))).thenReturn(Optional.of(br));
+        when(RecipeManager.getBiomeRecipies("test")).thenReturn(Optional.of(br));
         // Walls
         when(walls.getMinX()).thenReturn(MINX);
         when(walls.getMinZ()).thenReturn(MINZ);
