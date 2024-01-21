@@ -53,9 +53,12 @@ greenhouses:
           FAIL_BAD_WALL_BLOCKS: "&c Wall contains disallowed blocks!"
           FAIL_BELOW: "&c You must be inside the greenhouse to try to make it"
           FAIL_BLOCKS_ABOVE: "&c There can be no blocks above the greenhouse! Red glass blocks should show the problem blocks."
-          FAIL_HOLE_IN_ROOF: "&c There is a hole in the roof or it is not flat! Red glass blocks should show the problem."
+          FAIL_HOLE_IN_ROOF: |
+            &c There is a hole in the roof or it is not flat!
+            &c Red glass blocks should show the problem.
+            &c Make sure you are inside your greenhouse to make it.
           FAIL_HOLE_IN_WALL: "&c There is a hole in the wall!"
-          FAIL_NO_ROOF: "&c There seems to be no roof!"
+          FAIL_NO_ROOF: "&c There seems to be no roof! Make sure you are inside the greenhouse to make it."
           FAIL_TOO_MANY_DOORS: "&c You cannot have more than 4 doors in the greenhouse!"
           FAIL_TOO_MANY_HOPPERS: "&c Only one hopper is allowed in the walls or roof."
           FAIL_UNEVEN_WALLS: "&c The walls are uneven. Red glass blocks should show the problem blocks."
