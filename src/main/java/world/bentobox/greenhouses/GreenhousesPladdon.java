@@ -10,9 +10,13 @@ import world.bentobox.bentobox.api.addons.Pladdon;
  */
 public class GreenhousesPladdon extends Pladdon
 {
+    private Addon addon;
     @Override
     public Addon getAddon()
     {
-        return new Greenhouses();
+        if (addon == null) {
+            addon = new Greenhouses();
+        }
+        return addon;
     }
 }
