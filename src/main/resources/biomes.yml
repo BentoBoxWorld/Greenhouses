@@ -46,6 +46,30 @@ biomes:
     # the greenhouse at once. Spawning will stop when this limit is reached. 
     # If this value is not given, there is no maximum.
     maxmobs: 5
+  MANGROVE_SWAMP:
+    # Credit: angelknight89
+    friendlyname: "Mangrove Swamp"
+    biome: MANGROVE_SWAMP
+    icon: LILY_PAD
+    priority: 19
+    contents:
+      GRASS_BLOCK: 4
+      MANGROVE_ROOTS: 3
+      MANGROVE_LEAVES: 4
+    # 50% water coverage required
+    watercoverage: 50
+    conversions:
+      GRASS_BLOCK: 50:MUD:GRASS_BLOCK
+    plants:
+      MOSS_CARPET: 5:GRASS_BLOCK
+      LILY_PAD: 5:WATER
+    mobs:
+      FROG: 5:MUD
+    moblimit: 5
+     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   Snowy_beach:
     friendlyname: "Snowy beach"
     biome: SNOWY_BEACH
