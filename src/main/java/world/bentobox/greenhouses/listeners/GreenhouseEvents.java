@@ -67,7 +67,7 @@ public class GreenhouseEvents implements Listener {
                 e.getPlayer().getInventory().getItemInOffHand().setType(Material.BUCKET);
             }
 
-            b.getWorld().spawnParticle(Particle.SMOKE_NORMAL, b.getLocation(), 10);
+            b.getWorld().spawnParticle(Particle.SMOKE, b.getLocation(), 10);
             b.getWorld().playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1F, 5F);
         }
     }

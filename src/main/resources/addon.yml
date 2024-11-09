@@ -1,7 +1,7 @@
 name: Greenhouses
 main: world.bentobox.greenhouses.Greenhouses
 version: ${version}${build.number}
-api-version: 1.15.4
+api-version: 2.7.1
 
 authors: tastybento
 

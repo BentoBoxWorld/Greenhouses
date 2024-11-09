@@ -480,7 +480,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Block bl = block.block();
         return getRandomPlant(underwater).map(p -> {
             if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p)) {
-                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
+                bl.getWorld().spawnParticle(Particle.ASH, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
             return false;
