@@ -7,12 +7,13 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 public class Walls extends MinMaxXZ {
-    public static final List<Material> WALL_BLOCKS = Arrays.stream(Material.values())
+    public static final List<Material> WALL_BLOCKS = Registry.MATERIAL.stream()
             .filter(Material::isBlock) // Blocks only, no items
             .filter(m -> !m.name().contains("TRAPDOOR")) // No trap doors
             .filter(m -> m.name().contains("DOOR") // All doors

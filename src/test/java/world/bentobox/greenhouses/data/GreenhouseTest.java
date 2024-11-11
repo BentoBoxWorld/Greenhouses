@@ -30,6 +30,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.RecipeManager;
+import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
@@ -50,18 +51,21 @@ public class GreenhouseTest {
     private Greenhouse gh;
     @Mock
     private World world;
-    @Mock
+
     private Walls walls;
-    @Mock
+
     private BiomeRecipe br;
 
     @Before
     public void setUp() {
+        ServerMocks.newServer();
+        br = mock(BiomeRecipe.class);
         // RecipeManager
         PowerMockito.mockStatic(RecipeManager.class);
         when(br.getName()).thenReturn("test");
         when(RecipeManager.getBiomeRecipies("test")).thenReturn(Optional.of(br));
         // Walls
+        walls = mock(Walls.class);
         when(walls.getMinX()).thenReturn(MINX);
         when(walls.getMinZ()).thenReturn(MINZ);
         when(walls.getMaxX()).thenReturn(MAXX);
@@ -70,10 +74,9 @@ public class GreenhouseTest {
         gh = new Greenhouse(world, walls, CEILING);
     }
 
-    /**
-     */
     @After
     public void tearDown() {
+        ServerMocks.unsetBukkitServer();
         Mockito.framework().clearInlineMocks();
     }
 

@@ -1,7 +1,8 @@
 package world.bentobox.greenhouses.listeners;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,15 +31,14 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class GreenhouseEvents implements Listener {
     private static final String BIOME = "[biome]";
-    private static final Set<Biome> NETHER_BIOMES;
-    static {
-        NETHER_BIOMES = Set.of(Biome.NETHER_WASTES, Biome.WARPED_FOREST, Biome.CRIMSON_FOREST,
-                Biome.SOUL_SAND_VALLEY, Biome.BASALT_DELTAS);
-    }
+    private static List<Biome> NETHER_BIOMES;
     private final Greenhouses addon;
 
     public GreenhouseEvents(final Greenhouses addon) {
         this.addon = addon;
+        NETHER_BIOMES = Arrays.asList(Biome.NETHER_WASTES, Biome.WARPED_FOREST, Biome.CRIMSON_FOREST,
+                Biome.SOUL_SAND_VALLEY,
+                Biome.BASALT_DELTAS);
     }
 
     /**
@@ -81,14 +81,14 @@ public class GreenhouseEvents implements Listener {
         if (!Tag.ICE.isTagged(e.getBlock().getType())) {
             return;
         }
+
         Block b = e.getBlock();
-        if (b.getWorld().getEnvironment().equals(World.Environment.NETHER)
+        if (b.getWorld().getEnvironment() == World.Environment.NETHER
                 && !addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
-            //
+                        .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
             e.setCancelled(true);
             b.setType(Material.WATER);
-        } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
+        } else if (e.getPlayer().getWorld().getEnvironment() != World.Environment.NETHER
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())
                 .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse

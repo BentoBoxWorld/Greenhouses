@@ -1,6 +1,5 @@
 package world.bentobox.greenhouses.greenhouse;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -24,7 +24,7 @@ import world.bentobox.greenhouses.world.AsyncWorldCache;
  *
  */
 public class Roof extends MinMaxXZ {
-    private static final List<Material> ROOF_BLOCKS = Arrays.stream(Material.values())
+    private static final List<Material> ROOF_BLOCKS = Registry.MATERIAL.stream()
             .filter(Material::isBlock) // Blocks only, no items
             .filter(m -> Tag.TRAPDOORS.isTagged(m) // All trapdoors
                     || (m.name().contains("GLASS") && !m.name().contains("GLASS_PANE")) // All glass blocks
