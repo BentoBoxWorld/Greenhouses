@@ -13,13 +13,12 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
-
-import com.google.common.base.Enums;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -115,26 +114,26 @@ public class RecipeManager {
         } catch (Exception e) {
             addon.logError("Problem loading biome recipe - skipping! " + e.getMessage());
             StringBuilder validBiomes = new StringBuilder();
-            for (Biome biome : Biome.values()) {
-                validBiomes.append(" ").append(biome.name());
-            }
+            Registry.BIOME.forEach(biome -> validBiomes.append(" ").append(biome.getKey().getKey()));
             addon.logError("Valid biomes are " + validBiomes);
         }
 
     }
 
+    @SuppressWarnings("deprecation")
     private Biome loadBiome(String biomeType, ConfigurationSection biomeRecipeConfig) {
         if (!biomeRecipeConfig.contains("biome")) {
             addon.logError("No biome defined in the biome reciepe " + biomeType + ". Skipping...");
             return null;
         }
         String name = Objects.requireNonNull(biomeRecipeConfig.getString("biome")).toUpperCase(Locale.ENGLISH);
-        if (Enums.getIfPresent(Biome.class, name).isPresent()) {
-            return Biome.valueOf(name);
+        Biome b = Biome.valueOf(name);
+        if (b != null) {
+            return b;
         }
         // Special case for nether
         if (name.equals("NETHER") || name.equals("NETHER_WASTES")) {
-            return Enums.getIfPresent(Biome.class, "NETHER").or(Enums.getIfPresent(Biome.class, "NETHER_WASTES").or(Biome.PLAINS));
+            return Biome.NETHER_WASTES;
         }
         addon.logError("Biome " + name + " is invalid! Use one of these...");
         addon.logError(Arrays.stream(Biome.values()).map(Biome::name).collect(Collectors.joining(",")));

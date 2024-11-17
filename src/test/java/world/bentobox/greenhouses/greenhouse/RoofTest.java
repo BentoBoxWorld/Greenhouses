@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
+import world.bentobox.greenhouses.mocks.ServerMocks;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 
@@ -48,6 +50,7 @@ public class RoofTest {
 
     @Before
     public void setUp() {
+        ServerMocks.newServer();
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         s = new Settings();
@@ -89,6 +92,11 @@ public class RoofTest {
         // Test
         roof = new Roof(cache, location, addon);
         assertTrue(roof.findRoof(new Vector(10,10,10)));
+    }
+
+    @After
+    public void tearDown() {
+        ServerMocks.unsetBukkitServer();
     }
 
     @Test

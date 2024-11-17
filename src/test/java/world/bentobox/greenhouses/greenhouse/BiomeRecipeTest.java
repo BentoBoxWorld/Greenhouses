@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.UnsafeValues;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
@@ -34,21 +35,25 @@ import org.bukkit.entity.Piglin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.user.User;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
+import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
@@ -87,7 +92,13 @@ public class BiomeRecipeTest {
 
     @Before
     public void setUp() {
+        ServerMocks.newServer();
+
         PowerMockito.mockStatic(Bukkit.class);
+        @SuppressWarnings("deprecation")
+        UnsafeValues unsafe = mock(UnsafeValues.class);
+        when(Bukkit.getUnsafe()).thenReturn(unsafe);
+
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
         Biome type = Biome.BADLANDS;
         // Greenhouse
@@ -141,6 +152,13 @@ public class BiomeRecipeTest {
         br.setPermission("perm");
     }
 
+    @After
+    public void tearDown() {
+        ServerMocks.unsetBukkitServer();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
+    }
+
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addConvBlocks(org.bukkit.Material, org.bukkit.Material, double, org.bukkit.Material)}.
      */
@@ -177,7 +195,7 @@ public class BiomeRecipeTest {
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
+        verify(addon).logError("Mob chances add up to > 100% in null biome recipe! Skipping CAT");
     }
 
     /**
@@ -190,7 +208,7 @@ public class BiomeRecipeTest {
         Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
+        verify(addon).logError("Mob chances add up to > 100% in null biome recipe! Skipping CAT");
     }
 
     /**
@@ -215,7 +233,7 @@ public class BiomeRecipeTest {
         Material plantGrowOn = Material.DIRT;
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
-        verify(addon).logError("Plant chances add up to > 100% in BADLANDS biome recipe! Skipping JUNGLE_SAPLING");
+        verify(addon).logError("Plant chances add up to > 100% in null biome recipe! Skipping JUNGLE_SAPLING");
     }
 
     /**
@@ -650,7 +668,8 @@ public class BiomeRecipeTest {
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
         assertTrue(br.growPlant(new GrowthBlock(block, true), false));
-        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
+                anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
     }
 
@@ -668,7 +687,8 @@ public class BiomeRecipeTest {
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
         assertTrue(br.growPlant(new GrowthBlock(block, false), false));
-        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
+                anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
     }
 
@@ -705,7 +725,8 @@ public class BiomeRecipeTest {
         when(block.getRelative(BlockFace.UP)).thenReturn(block);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
         assertTrue(br.growPlant(new GrowthBlock(block, true), false));
-        verify(world).spawnParticle(eq(Particle.SNOWBALL), any(Location.class), anyInt(), anyDouble(), anyDouble(), anyDouble());
+        verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
+                anyDouble());
         verify(bisected).setHalf(Half.BOTTOM);
         verify(bisected).setHalf(Half.TOP);
     }

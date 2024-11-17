@@ -153,7 +153,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
             return true;
         } else {
-            addon.logError("Mob chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + mobType);
+            addon.logError("Mob chances add up to > 100% in " + type + " biome recipe! Skipping " + mobType);
             return false;
         }
     }
@@ -175,7 +175,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             // Add to probability tree
             map.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
-            addon.logError("Plant chances add up to > 100% in " + type.toString() + " biome recipe! Skipping " + plantMaterial.toString());
+            addon.logError("Plant chances add up to > 100% in " + type + " biome recipe! Skipping "
+                    + plantMaterial.toString());
             return false;
         }
         startupLog("   " + plantProbability + CHANCE_FOR + Util.prettifyText(plantMaterial.toString()) + " to grow on " + Util.prettifyText(plantGrowOn.toString()));
@@ -480,7 +481,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         Block bl = block.block();
         return getRandomPlant(underwater).map(p -> {
             if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p)) {
-                bl.getWorld().spawnParticle(Particle.SNOWBALL, bl.getLocation(), 10, 2, 2, 2);
+                bl.getWorld().spawnParticle(Particle.ASH, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
             return false;

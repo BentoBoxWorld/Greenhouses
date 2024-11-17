@@ -35,6 +35,8 @@ biomes:
     # Entity name: % chance:Block on which the mob will spawn
     mobs:
       SQUID: 10:WATER
+      GLOW_SQUID: 5:WATER
+      TURTLE: 10:SAND
     # The minimum number of blocks each mob requires.
     # Mobs will not spawn if there is more than 1 per this number of
     # blocks in the greenhouse. e.g., in this case only 2 mobs will spawn if the
@@ -44,6 +46,30 @@ biomes:
     # the greenhouse at once. Spawning will stop when this limit is reached. 
     # If this value is not given, there is no maximum.
     maxmobs: 5
+  MANGROVE_SWAMP:
+    # Credit: angelknight89
+    friendlyname: "Mangrove Swamp"
+    biome: MANGROVE_SWAMP
+    icon: LILY_PAD
+    priority: 19
+    contents:
+      GRASS_BLOCK: 4
+      MANGROVE_ROOTS: 3
+      MANGROVE_LEAVES: 4
+    # 50% water coverage required
+    watercoverage: 50
+    conversions:
+      GRASS_BLOCK: 50:MUD:GRASS_BLOCK
+    plants:
+      MOSS_CARPET: 5:GRASS_BLOCK
+      LILY_PAD: 5:WATER
+    mobs:
+      FROG: 5:MUD
+    moblimit: 5
+     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   Snowy_beach:
     friendlyname: "Snowy beach"
     biome: SNOWY_BEACH
@@ -53,6 +79,9 @@ biomes:
       SAND: 1
     watercoverage: 50
     icecoverage: 10
+    mobs:
+      SQUID: 10:WATER
+      GLOW_SQUID: 10:WATER
   ThreeWolfMoon:
     friendlyname: "Three Wolf Moon Forest"
     # Could do with more wolves, but the magic works with 3.
@@ -67,7 +96,9 @@ biomes:
     plants:
       TALL_GRASS: 10:GRASS_BLOCK
     mobs:
-      WOLF: 10:SNOW
+      WOLF: 15:SNOW
+      FOX: 15:GRASS_BLOCK
+      RABBIT: 7:GRASS_BLOCK
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -87,6 +118,7 @@ biomes:
       TALL_GRASS: 10:GRASS_BLOCK
     mobs:
       RABBIT: 10:SNOW
+      FOX: 7:GRASS_BLOCK
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -115,6 +147,14 @@ biomes:
     - DIRT:30:SAND:SAND
     - GRASS_BLOCK:30:SAND:SAND
     - COARSE_DIRT:30:GRAVEL:SAND
+    mobs:
+      RABBIT: 10:SAND
+      HUSK: 10:SAND
+    moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 20
   FOREST:
     friendlyname: "Flowery forest"
     biome: FLOWER_FOREST
@@ -129,6 +169,17 @@ biomes:
       ORANGE_TULIP: 2:GRASS_BLOCK
       SUNFLOWER: 4:GRASS_BLOCK
       TALL_GRASS: 20:GRASS_BLOCK
+    mobs:
+      SHEEP: 10:GRASS_BLOCK
+      CHICKEN: 7:GRASS_BLOCK
+      PIG: 10:GRASS_BLOCK
+      COW: 10:GRASS_BLOCK
+      WOLF: 5:GRASS_BLOCK
+    moblimit: 9
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 20
   NETHER:
     friendlyname: "&cNether"
     biome: NETHER_WASTES
@@ -164,6 +215,9 @@ biomes:
     watercoverage: 0
     mobs:
       SKELETON: 10:SOUL_SAND
+      GHAST: 10:SOUL_SAND
+      ENDERMAN: 1:SOUL_SAND
+      STRIDER: 20:LAVA
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -234,6 +288,10 @@ biomes:
       FERN: 20:GRASS_BLOCK
       TALL_GRASS: 20:GRASS_BLOCK
       COCOA: 10:JUNGLE_LOG
+    mobs:
+      PARROT: 30:GRASS_BLOCK
+      CHICKEN: 20:GRASS_BLOCK
+      PANDA: 1:GRASS_BLOCK
   MUSHROOM_FIELDS:
     friendlyname: "Mushroom Fields"
     biome: MUSHROOM_FIELDS
@@ -261,7 +319,13 @@ biomes:
     watercoverage: 95
     mobs:
       SQUID: 10:WATER
+      DROWNED: 1:WATER
+      COD: 40:WATER
+      DOLPHIN: 20:WATER
+      SQUID: 20:WATER
+      GLOW_SQUID: 10:WATER
     moblimit: 9
+    maxmobs: 20
   PLAINS:
     friendlyname: "Horse Plains"
     biome: PLAINS
@@ -272,7 +336,12 @@ biomes:
     plants:
       TALL_GRASS: 10:GRASS_BLOCK
     mobs:
-      HORSE: 10:GRASS_BLOCK
+      HORSE: 18:GRASS_BLOCK
+      DONKEY: 2:GRASS_BLOCK
+      COW: 20:GRASS_BLOCK
+      CHICKEN: 25:GRASS_BLOCK
+      PIG: 25:GRASS_BLOCK
+      SHEEP: 25:GRASS_BLOCK
     moblimit: 1
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -293,6 +362,15 @@ biomes:
     # So, for below, dirt has a 50% chance of changing into clay if it is next to water!
     conversion-list:
     - DIRT:50:CLAY:WATER
+    mobs:
+      SALMON: 10:WATER
+      SQUID: 10:WATER
+      GLOW_SQUID: 5:WATER
+    moblimit: 1
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   SAVANNA:
     biome: SAVANNA
     icon: ACACIA_LEAVES
@@ -303,6 +381,18 @@ biomes:
       GRASS_BLOCK: 4
     plants:
       TALL_GRASS: 10:GRASS_BLOCK
+    mobs:
+      HORSE: 2:GRASS_BLOCK
+      DONKEY: 2:GRASS_BLOCK
+      COW: 20:GRASS_BLOCK
+      CHICKEN: 25:GRASS_BLOCK
+      PIG: 25:GRASS_BLOCK
+      SHEEP: 25:GRASS_BLOCK
+    moblimit: 1
+    # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
+    # the greenhouse at once. Spawning will stop when this limit is reached. 
+    # If this value is not given, there is no maximum.
+    maxmobs: 10
   SWAMP:
     friendlyname: "&2Slimy Swamp"
     biome: SWAMP
@@ -321,6 +411,7 @@ biomes:
       LILY_PAD: 5:WATER
     mobs:
       SLIME: 5:WATER
+      FROG: 20:WATER
     moblimit: 3
      # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -344,6 +435,7 @@ biomes:
     mobs:
       skeleton: 5:STONE
       glow_squid: 5:WATER
+      BAT: 10:STONE
     moblimit: 5
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 

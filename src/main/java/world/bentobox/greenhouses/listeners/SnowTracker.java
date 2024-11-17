@@ -66,7 +66,7 @@ public class SnowTracker implements Listener {
                     Block b = Objects.requireNonNull(gh.getLocation().getWorld()).getBlockAt(x, y, z);
                     Material type = b.getType();
                     if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {
-                        b.getWorld().spawnParticle(Particle.SNOWBALL, b.getLocation(), 5);
+                        b.getWorld().spawnParticle(Particle.SNOWFLAKE, b.getLocation(), 5);
                     } else {
                         // Add snow
                         if (type.equals(Material.WATER)) {
