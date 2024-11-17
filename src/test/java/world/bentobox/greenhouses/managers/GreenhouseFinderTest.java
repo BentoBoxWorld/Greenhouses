@@ -18,6 +18,7 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.util.Vector;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,7 @@ import world.bentobox.greenhouses.greenhouse.Roof;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.GreenhouseFinder.CounterCheck;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.mocks.ServerMocks;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 /**
@@ -57,16 +59,16 @@ public class GreenhouseFinderTest {
     private CounterCheck cc;
 
     private Roof roof;
-    @Mock
+
     private Walls walls;
 
     @Mock
     private AsyncWorldCache cache;
 
-    /**
-     */
     @Before
     public void setUp() {
+        ServerMocks.newServer();
+
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
@@ -84,6 +86,7 @@ public class GreenhouseFinderTest {
         when(cache.getBlockType(anyInt(), anyInt(), anyInt())).thenReturn(Material.GLASS);
         // Roof
         when(roof.getHeight()).thenReturn(ROOF_HEIGHT);
+        walls = mock(Walls.class); // Mock after the server is setup
         when(walls.getMinX()).thenReturn(5);
         when(walls.getMaxX()).thenReturn(25);
         when(walls.getMinZ()).thenReturn(6);
@@ -98,6 +101,11 @@ public class GreenhouseFinderTest {
 
         gf = new GreenhouseFinder(addon);
         cc = new CounterCheck();
+    }
+
+    @After
+    public void tearDown() {
+        ServerMocks.unsetBukkitServer();
     }
 
     /**

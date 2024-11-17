@@ -1,7 +1,7 @@
 name: BentoBox-Greenhouses
 main: world.bentobox.greenhouses.GreenhousesPladdon
 version: ${project.version}${build.number}
-api-version: "1.19"
+api-version: "1.21"
 
 authors: [tastybento]
 contributors: ["The BentoBoxWorld Community"]

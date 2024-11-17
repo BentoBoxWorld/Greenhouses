@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.greenhouse.Walls.WallFinder;
+import world.bentobox.greenhouses.mocks.ServerMocks;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
 /**
@@ -60,6 +62,7 @@ public class WallsTest {
 
     @Before
     public void setUp() {
+        ServerMocks.newServer();
         PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
         when(Tag.TRAPDOORS.isTagged(Material.BIRCH_TRAPDOOR)).thenReturn(true);
         // Declare mock after mocking Bukkit
@@ -81,6 +84,11 @@ public class WallsTest {
         when(roof.getLocation()).thenReturn(location);
 
         r = new CompletableFuture<>();
+    }
+
+    @After
+    public void tearDown() {
+        ServerMocks.unsetBukkitServer();
     }
 
     /**
