@@ -39,11 +39,16 @@ public class UserCommand extends CompositeCommand {
         new RemoveCommand(this);
     }
 
+
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        if (!user.getWorld().equals(getWorld())) {
+            user.sendMessage("general.errors.wrong-world");
+            return false;
+        }
         if (args.isEmpty() && getPlugin().getIslands().getIsland(getWorld(), user.getUniqueId()) != null) {
             return getSubCommand("make").map(c -> c.execute(user, c.getLabel(), new ArrayList<>())).orElse(false);
         }

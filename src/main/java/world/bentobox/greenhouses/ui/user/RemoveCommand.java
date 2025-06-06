@@ -35,6 +35,10 @@ class RemoveCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        if (!user.getWorld().equals(getWorld())) {
+            user.sendMessage("general.errors.wrong-world");
+            return false;
+        }
         // Check flag
         if (!getIslands().getIslandAt(user.getLocation()).map(i -> i.isAllowed(user, Greenhouses.GREENHOUSES)).orElse(false)) {
             user.sendMessage("greenhouses.errors.no-rank");
