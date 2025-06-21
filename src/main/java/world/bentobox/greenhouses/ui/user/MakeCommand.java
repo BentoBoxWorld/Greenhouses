@@ -51,7 +51,7 @@ class MakeCommand extends CompositeCommand  {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        if (!user.getWorld().equals(getWorld())) {
+        if (!Util.getWorld(user.getWorld()).equals(getWorld())) {
             user.sendMessage("general.errors.wrong-world");
             return false;
         }
