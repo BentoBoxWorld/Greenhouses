@@ -234,7 +234,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private Set<GreenhouseResult> checkRatios(Map<Material, Integer> blockCount, long area) {
         Set<GreenhouseResult> result = new HashSet<>();
-        double waterRatio = (double)blockCount.getOrDefault(Material.WATER, 0)/area * 100;
+        int water = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.WATER)
+                || en.getKey().equals(Material.BUBBLE_COLUMN))
+                .mapToInt(Map.Entry::getValue).sum();
+        double waterRatio = (double)water/(double)area * 100;
         double lavaRatio = (double)blockCount.getOrDefault(Material.LAVA, 0)/area * 100;
         int ice = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.ICE)
                 || en.getKey().equals(Material.BLUE_ICE)
