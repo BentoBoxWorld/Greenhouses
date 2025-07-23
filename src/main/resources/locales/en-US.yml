@@ -71,7 +71,7 @@ greenhouses:
           FAIL_NO_RECIPE_FOUND: "&c No recipe could be found that matches this greenhouse"
           FAIL_INSUFFICIENT_BLOCKS: "&c More blocks are required to make this recipe!"
           FAIL_OVERLAPPING: "&c Greenhouses cannot share walls, sorry."
-        success: "&2 You successfully made a [biome]&2 biome greenhouse! Biome will sync at next teleport or login."
+        success: "&2 You successfully made a [biome]&2  biome greenhouse! Biome will sync at next teleport or login."
         missing-blocks: "&c Missing [material] x [number]"
         unknown-recipe: "&c Unknown recipe"
         try-these: "&c Try one of these:"
