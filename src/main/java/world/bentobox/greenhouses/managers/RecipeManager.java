@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -18,7 +19,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
@@ -238,13 +239,95 @@ public class RecipeManager {
 
     private void parseMob(Entry<String, Object> s, BiomeRecipe b) {
         try {
-            EntityType mobType = EntityType.valueOf(s.getKey().toUpperCase(Locale.ENGLISH));
+            String mobName = s.getKey().toUpperCase(Locale.ENGLISH);
+            String[] mobData = (mobName.split("#"));
+            EntityType mobType;
+            Consumer<Entity> customizer = null;
+            if (mobData.length == 1) {
+                mobType = EntityType.valueOf(mobName);
+            } else {
+                mobType = EntityType.valueOf(mobData[0].toUpperCase(Locale.ENGLISH));
+                customizer = parseCustomMobData(mobType, mobData[1]);
+            }
             String[] split = ((String)s.getValue()).split(":");
             double mobProbability = Double.parseDouble(split[0]);
             Material mobSpawnOn = Material.valueOf(split[1]);
-            b.addMobs(mobType, mobProbability, mobSpawnOn);
+            b.addMobs(mobType, mobProbability, mobSpawnOn, customizer);
         } catch (Exception e) {
             addon.logError(COULD_NOT_PARSE + s.getKey());
+        }
+    }
+
+    private Consumer<Entity> parseCustomMobData(EntityType mobType, String customData) {
+        String UNKNOWN_MOB_DATA = "Unknown mob data: %s.";
+        switch (mobType) {
+            case CREEPER -> {
+                if (customData.equals("CHARGED")) {
+                    return entity -> ((Creeper) entity).setPowered(true);
+                } else {
+                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+                    return null;
+                }
+            }
+            case CHICKEN -> {
+                if (customData.equals("JOCKEY")) {
+                    return entity -> {
+                        Zombie zombie = (Zombie) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIE);
+                        zombie.setBaby();
+                        entity.addPassenger(zombie);
+                    };
+                } else {
+                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+                    return null;
+                }
+            }
+            case SHEEP -> {
+                if (customData.equals("RAINBOW")) {
+                    return entity -> entity.setCustomName("jeb_");
+                } else {
+                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+                    return null;
+                }
+            }
+            case WOLF -> {
+                switch (customData) {
+                    case "ASHEN" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.ASHEN);
+                    }
+                    case "BLACK" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.BLACK);
+                    }
+                    case "CHESTNUT" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.CHESTNUT);
+                    }
+                    case "PALE" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.PALE);
+                    }
+                    case "RUSTY" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.RUSTY);
+                    }
+                    case "SNOWY" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.SNOWY);
+                    }
+                    case "SPOTTED" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.SPOTTED);
+                    }
+                    case "STRIPED" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.STRIPED);
+                    }
+                    case "WOODS" -> {
+                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.WOODS);
+                    }
+                    default -> {
+                        addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+                        return null;
+                    }
+                }
+            }
+            default -> {
+                addon.logError("Custom mob data for " + mobType + " is not supported.");
+                return null;
+            }
         }
     }
 
