@@ -150,7 +150,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         // Add up all the probabilities in the list so far
         if ((1D - lastProb) >= probability) {
             // Add to probability tree
-            mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
+            mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn, customizer));
             return true;
         } else {
             addon.logError("Mob chances add up to > 100% in " + type + " biome recipe! Skipping " + mobType);
