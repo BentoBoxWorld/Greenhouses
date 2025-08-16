@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -28,10 +29,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.block.data.type.GlowLichen;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Hoglin;
-import org.bukkit.entity.Piglin;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
 import com.google.common.base.Enums;
@@ -44,6 +42,8 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
+
+import javax.annotation.Nullable;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final String CHANCE_FOR = "% chance for ";
@@ -143,19 +143,23 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * @param mobSpawnOn - material to spawn on
      * @return true if add is successful
      */
-    public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn) {
+    public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn, @Nullable Consumer<Entity> customizer) {
         startupLog("   " + mobProbability + CHANCE_FOR + Util.prettifyText(mobType.toString()) + " to spawn on " + Util.prettifyText(mobSpawnOn.toString())+ ".");
         double probability = mobProbability/100;
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
         if ((1D - lastProb) >= probability) {
             // Add to probability tree
-            mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn));
+            mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn, customizer));
             return true;
         } else {
             addon.logError("Mob chances add up to > 100% in " + type + " biome recipe! Skipping " + mobType);
             return false;
         }
+    }
+
+    public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn) {
+        return addMobs(mobType, mobProbability, mobSpawnOn, null);
     }
 
     /**
@@ -234,7 +238,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     private Set<GreenhouseResult> checkRatios(Map<Material, Integer> blockCount, long area) {
         Set<GreenhouseResult> result = new HashSet<>();
-        double waterRatio = (double)blockCount.getOrDefault(Material.WATER, 0)/area * 100;
+        int water = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.WATER)
+                || en.getKey().equals(Material.BUBBLE_COLUMN))
+                .mapToInt(Map.Entry::getValue).sum();
+        double waterRatio = (double)water/(double)area * 100;
         double lavaRatio = (double)blockCount.getOrDefault(Material.LAVA, 0)/area * 100;
         int ice = blockCount.entrySet().stream().filter(en -> en.getKey().equals(Material.ICE)
                 || en.getKey().equals(Material.BLUE_ICE)
@@ -401,6 +408,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
+                    if (m.customizer() != null) {
+                        m.customizer().accept(entity);
+                    }
                     preventZombie(entity);
                     return addon
                             .getManager()

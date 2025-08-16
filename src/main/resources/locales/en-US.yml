@@ -26,8 +26,8 @@ greenhouses:
     
   event:
    broke: "You broke this greenhouse! Reverting biome to [biome]!"
-   entering: "Entering [biome] greenhouse"
-   leaving: "Leaving [biome] greenhouse"
+   entering: "Entering [biome]&f  greenhouse"
+   leaving: "Leaving [biome]&f  greenhouse"
    
   recipe:
    blockscolor: "&f"
@@ -71,7 +71,7 @@ greenhouses:
           FAIL_NO_RECIPE_FOUND: "&c No recipe could be found that matches this greenhouse"
           FAIL_INSUFFICIENT_BLOCKS: "&c More blocks are required to make this recipe!"
           FAIL_OVERLAPPING: "&c Greenhouses cannot share walls, sorry."
-        success: "&2 You successfully made a [biome] biome greenhouse! Biome will sync at next teleport or login."
+        success: "&2 You successfully made a [biome]&2  biome greenhouse! Biome will sync at next teleport or login."
         missing-blocks: "&c Missing [material] x [number]"
         unknown-recipe: "&c Unknown recipe"
         try-these: "&c Try one of these:"
@@ -117,11 +117,11 @@ error:
    norecipe: "Cannot make a greenhouse!"
    
 messages:
-   enter: "Entering [owner]'s [biome] greenhouse!"
+   enter: "Entering [owner]'s [biome]&f  greenhouse!"
    leave: "Now leaving [owner]'s greenhouse."
-   youarein: "You are now in [owner]'s [biome] greenhouse!"
+   youarein: "You are now in [owner]'s [biome]&f  greenhouse!"
    removed: "This greenhouse is no more..."
-   removedmessage: "A [biome] greenhouse of yours is no more!"
+   removedmessage: "A [biome]&f  greenhouse of yours is no more!"
    ecolost: "Your greenhouse at [location] lost its eco system and was removed."
 
 info:
