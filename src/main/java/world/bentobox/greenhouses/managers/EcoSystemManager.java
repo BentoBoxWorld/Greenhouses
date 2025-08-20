@@ -241,16 +241,14 @@ public class EcoSystemManager {
             for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
                 for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
                     Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
-                    if (checkBlock(result, b, ignoreLiquid)) {
-                        break;
-                    }
+                    checkBlock(result, b, ignoreLiquid);
                 }
             }
         }
         return result;
     }
 
-    private boolean checkBlock(List<GrowthBlock> result, Block b, boolean ignoreLiquid) {
+    private void checkBlock(List<GrowthBlock> result, Block b, boolean ignoreLiquid) {
         // Check floor blocks
         if (!ignoreLiquid) {
             // Check ceiling blocks
@@ -264,15 +262,12 @@ public class EcoSystemManager {
                             )
                     ) {
                 result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                return true;
             }
         } else {
             if (!b.isEmpty() && !b.isLiquid() && b.getRelative(BlockFace.UP).isLiquid()) {
                 result.add(new GrowthBlock(b.getRelative(BlockFace.UP), true));
-                return true;
             }
         }
-        return false;
     }
 
     private int getBoneMeal(Greenhouse gh) {
