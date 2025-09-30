@@ -403,8 +403,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         return getRandomMob()
                 // Check if the spawn on block matches, if it exists
                 .filter(m -> Optional.of(m.mobSpawnOn())
-                        .map(b.getRelative(BlockFace.DOWN).getType()::equals)
+                        .map(getEffectiveBlock(b.getRelative(BlockFace.DOWN))::equals)
                         .orElse(true))
+
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
@@ -423,6 +424,19 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                                 return true;
                             }).orElse(false);
                 }).orElse(false);
+    }
+
+    /**
+     * Get the effective block material, allowing bubble columns to act as water.
+     * @param b - block to check
+     * @return the block
+     */
+    private Material getEffectiveBlock(Block b) {
+        // Treat Bubble Column as water
+        if (b.getType() == Material.BUBBLE_COLUMN) {
+            return Material.WATER;
+        }
+        return b.getType();
     }
 
     /**
