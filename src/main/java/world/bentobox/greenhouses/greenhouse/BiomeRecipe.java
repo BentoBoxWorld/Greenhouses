@@ -153,7 +153,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn, customizer));
             return true;
         } else {
-            addon.logError("Mob chances add up to > 100% in " + type + " biome recipe! Skipping " + mobType);
+            addon.logError("Mob chances add up to > 100% in " + type.name() + " biome recipe! Skipping " + mobType);
             return false;
         }
     }
@@ -179,7 +179,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             // Add to probability tree
             map.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
-            addon.logError("Plant chances add up to > 100% in " + type + " biome recipe! Skipping "
+            addon.logError("Plant chances add up to > 100% in " + type.name() + " biome recipe! Skipping "
                     + plantMaterial.toString());
             return false;
         }

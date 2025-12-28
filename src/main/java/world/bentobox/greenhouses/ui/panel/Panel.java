@@ -36,7 +36,7 @@ public class Panel {
     private List<String> getDescription(User user, BiomeRecipe br) {
         List<String> d = new ArrayList<>();
         // Make description
-        d.add(user.getTranslation("greenhouses.recipe.title", "[biome]", Util.prettifyText(br.getBiome().toString())));
+        d.add(user.getTranslation("greenhouses.recipe.title", "[biome]", Util.prettifyText(br.getBiome().getKey().getKey())));
         if (!br.getRecipeBlocks().isEmpty()) {
             d.add(user.getTranslation("greenhouses.recipe.minimumblockstitle"));
             br.getRecipeBlocks().forEach(b -> d.add(user.getTranslation("greenhouses.recipe.blockscolor") + b));
