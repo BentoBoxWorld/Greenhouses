@@ -1,0 +1,179 @@
+###########################################################################################
+# Ini adalah berkas YML. Berhati-hatilah saat mengedit. Periksa suntingan Anda di         #
+# YAML checker seperti http://yaml-online-parser.appspot.com                              #
+# Jika berkas ini dihapus, maka akan dibuat ulang pada saat reload berikutnya.            #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Rumah Kaca
+      description: |
+        &b Atur siapa yang bisa
+        &b mengontrol rumah kaca   
+
+greenhouses:
+  general:
+   greenhouses: "Rumah Kaca"
+   
+  errors:
+    move: "Pindahlah ke rumah kaca milikmu terlebih dahulu."
+    no-rank: "&c Kamu tidak memiliki peringkat untuk melakukan itu."
+    notyours: "Ini bukan rumah kacammu!"
+    not-inside: "&c Kamu tidak berada di dalam rumah kaca!"
+    tooexpensive: "Kamu tidak mampu membeli [price]" 
+    alreadyexists: "Rumah kaca sudah ada!"
+    norecipe: "Tidak dapat membuat rumah kaca!"
+    
+  event:
+   broke: "Kamu menghancurkan rumah kaca ini! Mengembalikan bioma ke [biome]!"
+   entering: "Memasuki rumah kaca [biome]&f"
+   leaving: "Meninggalkan rumah kaca [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Resep [biome]]"
+   watermustbe: "Air > [coverage]% dari luas lantai."
+   icemustbe: "Blok es > [coverage]% dari luas lantai."
+   lavamustbe: "Lava > [coverage]% dari luas lantai."
+   minimumblockstitle: "[Minimal blok yang dibutuhkan]"
+   nootherblocks: "Tidak ada blok lain yang dibutuhkan."
+   missing: "Rumah kaca hilang"
+   
+  commands:
+    user:
+      description: "Membuka GUI pemilihan rumah kaca"
+      remove:
+        description: "Menghapus rumah kaca tempat kamu berdiri jika kamu adalah pemiliknya"        
+      make:
+        description: "Mencoba membuat rumah kaca"
+        parameters: "<resep>"
+        error:
+          already: "&cSudah ada rumah kaca di sini!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Atap mengandung blok yang tidak diperbolehkan!"
+          FAIL_BAD_WALL_BLOCKS: "&c Dinding mengandung blok yang tidak diperbolehkan!"
+          FAIL_BELOW: "&c Kamu harus berada di dalam rumah kaca untuk mencoba membuatnya"
+          FAIL_BLOCKS_ABOVE: "&c Tidak boleh ada blok di atas rumah kaca! Blok kaca merah akan menunjukkan blok yang bermasalah."
+          FAIL_HOLE_IN_ROOF: |
+            &c Ada lubang di atap atau atap tidak rata!
+            &c Blok kaca merah akan menunjukkan masalahnya.
+            &c Pastikan kamu berada di dalam rumah kaca untuk membuatnya.
+          FAIL_HOLE_IN_WALL: "&c Ada lubang di dinding!"
+          FAIL_NO_ROOF: "&c Sepertinya tidak ada atap! Pastikan kamu berada di dalam rumah kaca."
+          FAIL_TOO_MANY_DOORS: "&c Kamu tidak boleh memiliki lebih dari 4 pintu di rumah kaca!"
+          FAIL_TOO_MANY_HOPPERS: "&c Hanya diperbolehkan satu hopper di dinding atau atap."
+          FAIL_UNEVEN_WALLS: "&c Dinding tidak rata. Blok kaca merah akan menunjukkan blok yang bermasalah."
+          FAIL_INSUFFICIENT_ICE: "&c Es tidak cukup untuk membuat resep ini"
+          FAIL_INSUFFICIENT_LAVA: "&c Lava tidak cukup untuk membuat resep ini"
+          FAIL_INSUFFICIENT_WATER: "&c Air tidak cukup untuk membuat resep ini"
+          FAIL_NO_ICE: "&c Es diperlukan untuk membuat resep ini"
+          FAIL_NO_LAVA: "&c Lava diperlukan untuk membuat resep ini"
+          FAIL_NO_WATER: "&c Air diperlukan untuk membuat resep ini"
+          FAIL_NO_RECIPE_FOUND: "&c Tidak ada resep yang cocok untuk rumah kaca ini"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Diperlukan lebih banyak blok untuk membuat resep ini!"
+          FAIL_OVERLAPPING: "&c Maaf, rumah kaca tidak boleh berbagi dinding."
+        success: "&2 Kamu berhasil membuat rumah kaca bioma [biome]! Bioma akan sinkron pada teleportasi atau login berikutnya."
+        missing-blocks: "&c Kurang [material] x [number]"
+        unknown-recipe: "&c Resep tidak dikenal"
+        try-these: "&c Coba salah satu dari ini:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Cara Membangun Rumah Kaca]"
+        instructions: |
+          &e Buatlah kotak dari kaca dengan 4 dinding dan atap kaca
+          &e yang datar, lalu tambahkan hingga &f 4 pintu &e pada dinding.
+          &e Letakkan &f 1 hopper &e di dinding atau atap dan tambahkan ember air
+          &e untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.
+          &e Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam
+          &e rumah kaca agar berhasil dibuat.
+
+help:
+   help: "bantuan"
+   make: "Mencoba membuat rumah kaca"
+   remove: "Menghapus rumah kaca tempat kamu berdiri jika kamu pemiliknya"
+   info: "Cara membuat rumah kaca"
+   list: "Daftar semua bioma rumah kaca yang bisa dibuat"
+   recipe: "Memberitahumu cara membuat bioma rumah kaca tertentu"
+   opengui: "Membuka GUI rumah kaca"
+
+list:
+   title: "[Resep Bioma Rumah Kaca]"
+   info: "Gunakan /greenhouse recipe <nomor> untuk melihat detail pembuatan setiap rumah kaca"
+
+error:
+   greenhouseProtected: "Rumah kaca dilindungi"
+   move: "Pindahlah ke rumah kaca milikmu terlebih dahulu."
+   notowner: "Kamu harus menjadi pemilik rumah kaca ini untuk melakukan itu."
+   removing: "Menghapus rumah kaca!"
+   notyours: "Ini bukan rumah kacammu!"
+   notinside: "Kamu tidak berada di dalam rumah kaca!"
+   tooexpensive: "Kamu tidak mampu membeli [price]" 
+   alreadyexists: "Rumah kaca sudah ada!"
+   norecipe: "Tidak dapat membuat rumah kaca!"
+   
+messages:
+   enter: "Memasuki rumah kaca milik [owner], bioma: [biome]&f!"
+   leave: "Meninggalkan rumah kaca milik [owner]."
+   youarein: "Kamu sekarang berada di rumah kaca milik [owner], bioma: [biome]&f!"
+   removed: "Rumah kaca ini sudah tidak ada..."
+   removedmessage: "Rumah kaca [biome]&f milikmu sudah tidak ada!"
+   ecolost: "Rumah kaca milikmu di [location] kehilangan ekosistemnya dan telah dihapus."
+
+info:
+   title: "&a [Cara Membangun Rumah Kaca]"
+   instructions: |
+     &e Buatlah kotak dari kaca dengan 4 dinding dan atap kaca
+     &e yang datar, lalu tambahkan hingga &f 4 pintu &e pada dinding.
+     &e Letakkan &f 1 hopper &e di dinding atau atap dan tambahkan ember air
+     &e untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.
+     &e Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam
+     &e rumah kaca agar berhasil dibuat.
+   info: "[Info Rumah Kaca]"
+   none: "Tidak ada"
+   nomore: "&4 Kamu tidak bisa membangun rumah kaca lagi!"
+   onemore: "&6 Kamu bisa membangun satu rumah kaca lagi."
+   youcanbuild: "&a Kamu bisa membangun hingga [number] rumah kaca lagi!"
+   unlimited: "&a Kamu bisa membangun rumah kaca tanpa batas!"
+   welcome: "&b Selamat datang! Klik di sini untuk instruksi"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Gunakan /greenhouse list untuk melihat daftar nomor resep!"
+   wrongnumber: "Nomor resep harus antara 1 dan [size]"
+   title: "[Resep [biome]]"
+   nowater: "Air tidak diperbolehkan."
+   noice: "Es tidak diperbolehkan."
+   nolava: "Lava tidak diperbolehkan."
+   watermustbe: "Air > [coverage]% dari luas lantai."
+   icemustbe: "Blok es > [coverage]% dari luas lantai."
+   lavamustbe: "Lava > [coverage]% dari luas lantai."
+   minimumblockstitle: "[Minimal blok yang dibutuhkan]"
+   nootherblocks: "Tidak ada blok lain yang dibutuhkan."
+   missing: "Rumah kaca hilang"
+
+event:
+   broke: "Kamu menghancurkan rumah kaca ini! Mengembalikan bioma ke [biome]!"
+   fix: "Perbaiki rumah kaca lalu buat kembali."
+   cannotplace: "Blok tidak bisa diletakkan di atas rumah kaca!"
+   pistonerror: "Piston tidak bisa mendorong blok di atas rumah kaca!"
+
+limits:
+   noneallowed: "Izin tidak memperbolehkanmu memiliki rumah kaca sehingga [number] telah dihapus."
+   limitedto: "Izin membatasi kamu hanya [limit] rumah kaca sehingga [number] telah dihapus."
+
+adminHelp:
+   reload: "memuat ulang konfigurasi dari berkas."
+   info: "memberikan info tentang rumah kaca tempat kamu berada"
+
+reload:
+   configReloaded: "Konfigurasi dimuat ulang dari berkas."
+
+admininfo:
+   error: "Info rumah kaca hanya tersedia di dalam game"
+   error2: "Masuklah ke dalam rumah kaca untuk melihat info."
+   flags: "[Flag Rumah Kaca]"
+
+news:
+   headline: "[Berita Rumah Kaca]"
+
+controlpanel:
+   title: "&aRumah Kaca"

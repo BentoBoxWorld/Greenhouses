@@ -1,0 +1,179 @@
+###########################################################################################
+# To jest plik YML. Zachowaj ostrożność podczas edycji. Sprawdź swoje zmiany w            #
+# testerze YAML, takim jak http://yaml-online-parser.appspot.com                          #
+# Jeśli ten plik zostanie usunięty, zostanie odtworzony przy następnym przeładowaniu.     #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Szklarnie
+      description: |
+        &b Przełącz, kto może
+        &b zarządzać szklarniami   
+
+greenhouses:
+  general:
+   greenhouses: "Szklarnie"
+   
+  errors:
+    move: "Najpierw udaj się do szklarni, której jesteś właścicielem."
+    no-rank: "&c Nie masz uprawnień, aby to zrobić."
+    notyours: "To nie jest Twoja szklarnia!"
+    not-inside: "&c Nie jesteś wewnątrz szklarni!"
+    tooexpensive: "Nie stać Cię na to [price]" 
+    alreadyexists: "Szklarnia już istnieje!"
+    norecipe: "Nie można utworzyć szklarni!"
+    
+  event:
+   broke: "Zniszczyłeś tę szklarnię! Przywracanie biomu do [biome]!"
+   entering: "Wejście do szklarni [biome]&f"
+   leaving: "Opuszczenie szklarni [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Receptura [biome]]"
+   watermustbe: "Woda > [coverage]% powierzchni podłogi."
+   icemustbe: "Bloki lodu > [coverage]% powierzchni podłogi."
+   lavamustbe: "Lawa > [coverage]% powierzchni podłogi."
+   minimumblockstitle: "[Wymagane minimum bloków]"
+   nootherblocks: "Inne bloki nie są wymagane."
+   missing: "Brakuje szklarni"
+   
+  commands:
+    user:
+      description: "Otwiera menu wyboru szklarni"
+      remove:
+        description: "Usuwa szklarnię, w której stoisz, jeśli jesteś właścicielem"        
+      make:
+        description: "Spróbuj utworzyć szklarnię"
+        parameters: "<receptura>"
+        error:
+          already: "&cTu już jest szklarnia!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Dach zawiera niedozwolone bloki!"
+          FAIL_BAD_WALL_BLOCKS: "&c Ściany zawierają niedozwolone bloki!"
+          FAIL_BELOW: "&c Musisz być wewnątrz szklarni, aby spróbować ją utworzyć"
+          FAIL_BLOCKS_ABOVE: "&c Nad szklarnią nie może być żadnych bloków! Czerwone szkło wskaże problematyczne bloki."
+          FAIL_HOLE_IN_ROOF: |
+            &c W dachu jest dziura lub nie jest on płaski!
+            &c Czerwone szkło wskaże problem.
+            &c Upewnij się, że jesteś wewnątrz swojej szklarni, aby ją utworzyć.
+          FAIL_HOLE_IN_WALL: "&c W ścianie jest dziura!"
+          FAIL_NO_ROOF: "&c Wygląda na to, że brakuje dachu! Upewnij się, że jesteś wewnątrz szklarni, aby ją utworzyć."
+          FAIL_TOO_MANY_DOORS: "&c Nie możesz mieć więcej niż 4 drzwi w szklarni!"
+          FAIL_TOO_MANY_HOPPERS: "&c Dozwolony jest tylko jeden lej w ścianach lub dachu."
+          FAIL_UNEVEN_WALLS: "&c Ściany są nierówne. Czerwone szkło wskaże problematyczne bloki."
+          FAIL_INSUFFICIENT_ICE: "&c Niewystarczająca ilość lodu dla tej receptury"
+          FAIL_INSUFFICIENT_LAVA: "&c Niewystarczająca ilość lawy dla tej receptury"
+          FAIL_INSUFFICIENT_WATER: "&c Niewystarczająca ilość wody dla tej receptury"
+          FAIL_NO_ICE: "&c Lód jest wymagany dla tej receptury"
+          FAIL_NO_LAVA: "&c Lawa jest wymagana dla tej receptury"
+          FAIL_NO_WATER: "&c Woda jest wymagana dla tej receptury"
+          FAIL_NO_RECIPE_FOUND: "&c Nie znaleziono receptury pasującej do tej szklarni"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Wymagane jest więcej bloków dla tej receptury!"
+          FAIL_OVERLAPPING: "&c Niestety szklarnie nie mogą dzielić wspólnych ścian."
+        success: "&2 Pomyślnie utworzono szklarnię biomu [biome]! Biom zsynchronizuje się przy następnej teleportacji lub logowaniu."
+        missing-blocks: "&c Brakuje [material] x [number]"
+        unknown-recipe: "&c Nieznana receptura"
+        try-these: "&c Spróbuj jednej z tych:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Jak zbudować szklarnię]"
+        instructions: |
+          &e Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
+          &e dachem oraz dodaj do &f 4 drzwi &e w ścianach.
+          &e Umieść &f 1 lej &e w ścianie lub dachu i dodaj wiadra z wodą,
+          &e aby automatycznie generować śnieg i/lub mączkę kostną
+          &e do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
+          &e jakie bloki muszą być wewnątrz dla sukcesu.
+
+help:
+   help: "pomoc"
+   make: "Próbuje utworzyć szklarnię"
+   remove: "Usuwa szklarnię, w której stoisz, jeśli jesteś właścicielem"
+   info: "Jak zrobić szklarnię"
+   list: "Lista wszystkich biomów szklarni, które można utworzyć"
+   recipe: "Mówi, jak zrobić konkretny biom szklarni"
+   opengui: "Otwiera menu szklarni"
+
+list:
+   title: "[Receptury biomów szklarni]"
+   info: "Użyj /greenhouse recipe <numer>, aby zobaczyć szczegóły tworzenia każdej szklarni"
+
+error:
+   greenhouseProtected: "Szklarnia chroniona"
+   move: "Najpierw udaj się do szklarni, której jesteś właścicielem."
+   notowner: "Musisz być właścicielem tej szklarni, aby to zrobić."
+   removing: "Usuwanie szklarni!"
+   notyours: "To nie jest Twoja szklarnia!"
+   notinside: "Nie jesteś w szklarni!"
+   tooexpensive: "Nie stać Cię na to [price]" 
+   alreadyexists: "Szklarnia już istnieje!"
+   norecipe: "Nie można utworzyć szklarni!"
+   
+messages:
+   enter: "Wchodzisz do szklarni gracza [owner] ([biome]&f)!"
+   leave: "Opuszczasz szklarnię gracza [owner]."
+   youarein: "Jesteś teraz w szklarni gracza [owner] ([biome]&f)!"
+   removed: "Tej szklarni już nie ma..."
+   removedmessage: "Twoja szklarnia ([biome]&f) przestała istnieć!"
+   ecolost: "Twoja szklarnia w lokalizacji [location] utraciła ekosystem i została usunięta."
+
+info:
+   title: "&A[Jak zbudować szklarnię]"
+   instructions: |
+     &E Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
+     &E dachem oraz dodaj do &F 4 drzwi &E w ścianach.
+     &E Umieść &F 1 lej &E w ścianie lub dachu i dodaj wiadra z wodą,
+     &E aby automatycznie generować śnieg i/lub mączkę kostną
+     &E do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
+     &E jakie bloki muszą być wewnątrz dla sukcesu. 
+   info: "[Informacje o szklarni]"
+   none: "Brak"
+   nomore: "&4 Nie możesz już budować więcej szklarni!"
+   onemore: "&6 Możesz zbudować jeszcze jedną szklarnię."
+   youcanbuild: "&A Możesz zbudować jeszcze do [number] szklarni!"
+   unlimited: "&A Możesz budować nieograniczoną liczbę szklarni!"
+   welcome: "&B Witaj! Kliknij tutaj po instrukcje"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Użyj /greenhouse list, aby zobaczyć listę numerów receptur!"
+   wrongnumber: "Numer receptury musi mieścić się w przedziale od 1 do [size]"
+   title: "[Receptura [biome]]"
+   nowater: "Woda niedozwolona."
+   noice: "Lód niedozwolony."
+   nolava: "Lawa niedozwolona."
+   watermustbe: "Woda > [coverage]% powierzchni podłogi."
+   icemustbe: "Bloki lodu > [coverage]% powierzchni podłogi."
+   lavamustbe: "Lawa > [coverage]% powierzchni podłogi."
+   minimumblockstitle: "[Wymagane minimum bloków]"
+   nootherblocks: "Inne bloki nie są wymagane."
+   missing: "Brakuje szklarni"
+
+event:
+   broke: "Zniszczyłeś tę szklarnię! Przywracanie biomu do [biome]!"
+   fix: "Napraw szklarnię, a następnie utwórz ją ponownie."
+   cannotplace: "Nie można stawiać bloków nad szklarnią!"
+   pistonerror: "Tłoki nie mogą przesuwać bloków nad szklarnią!"
+
+limits:
+   noneallowed: "Uprawnienia nie pozwalają Ci na posiadanie szklarni, więc [number] zostało usuniętych."
+   limitedto: "Uprawnienia ograniczają Cię do [limit] szklarni, więc [number] zostało usuniętych."
+
+adminHelp:
+   reload: "przeładuj konfigurację z pliku."
+   info: "podaje informacje o szklarni, w której się znajdujesz"
+
+reload:
+   configReloaded: "Konfiguracja została przeładowana z pliku."
+
+admininfo:
+   error: "Informacje o szklarni są dostępne tylko w grze"
+   error2: "Wejdź do szklarni, aby zobaczyć informacje."
+   flags: "[Flagi szklarni]"
+
+news:
+   headline: "[Wiadomości ze szklarni]"
+
+controlpanel:
+   title: "&ASzklarnie"

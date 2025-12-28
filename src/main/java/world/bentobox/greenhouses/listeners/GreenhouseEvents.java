@@ -12,6 +12,8 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -50,11 +52,17 @@ public class GreenhouseEvents implements Listener {
         if (!e.getBucket().equals(Material.WATER_BUCKET)) {
             return;
         }
+        BlockData blockData = e.getBlockClicked().getBlockData();
         Block b = e.getBlockClicked().getRelative(e.getBlockFace());
         if (e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && !addon.getManager().getMap().getGreenhouse(b.getLocation())
                 .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
             // In Nether not a nether greenhouse
+            if (blockData instanceof Waterlogged w) {
+                w.setWaterlogged(true);
+                e.getBlockClicked().setBlockData(w);
+                return;
+            }
             b.setType(Material.WATER);
         } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())

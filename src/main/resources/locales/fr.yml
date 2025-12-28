@@ -1,0 +1,179 @@
+###########################################################################################
+# Ceci est un fichier YML. Attention lors de l'édition. Vérifiez vos modifications avec   #
+# un testeur YAML comme http://yaml-online-parser.appspot.com                              #
+# Si ce fichier est supprimé, il sera recréé au prochain rechargement.                    #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Serres
+      description: |
+        &b Choisir qui peut
+        &b contrôler les serres   
+
+greenhouses:
+  general:
+   greenhouses: "Serres"
+   
+  errors:
+    move: "Déplacez-vous d'abord vers une serre qui vous appartient."
+    no-rank: "&c Vous n'avez pas le rang requis pour faire cela."
+    notyours: "Ce n'est pas votre serre !"
+    not-inside: "&c Vous n'êtes pas à l'intérieur d'une serre !"
+    tooexpensive: "Vous n'avez pas les moyens [price]" 
+    alreadyexists: "La serre existe déjà !"
+    norecipe: "Impossible de créer une serre !"
+    
+  event:
+   broke: "Vous avez cassé cette serre ! Retour du biome en [biome] !"
+   entering: "Entrée dans la serre [biome]&f"
+   leaving: "Sortie de la serre [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Recette [biome]]"
+   watermustbe: "Eau > [coverage]% de la surface au sol."
+   icemustbe: "Blocs de glace > [coverage]% de la surface au sol."
+   lavamustbe: "Lave > [coverage]% de la surface au sol."
+   minimumblockstitle: "[Blocs minimum requis]"
+   nootherblocks: "Aucun autre bloc requis."
+   missing: "La serre est manquante"
+   
+  commands:
+    user:
+      description: "Ouvre l'interface de sélection des serres"
+      remove:
+        description: "Supprime la serre dans laquelle vous vous trouvez si vous en êtes le propriétaire"        
+      make:
+        description: "Tenter de créer une serre"
+        parameters: "<recette>"
+        error:
+          already: "&cIl y a déjà une serre ici !"
+          FAIL_BAD_ROOF_BLOCKS: "&c Le toit contient des blocs non autorisés !"
+          FAIL_BAD_WALL_BLOCKS: "&c Le mur contient des blocs non autorisés !"
+          FAIL_BELOW: "&c Vous devez être à l'intérieur de la serre pour essayer de la créer"
+          FAIL_BLOCKS_ABOVE: "&c Il ne peut y avoir aucun bloc au-dessus de la serre ! Des blocs de verre rouge devraient indiquer les blocs problématiques."
+          FAIL_HOLE_IN_ROOF: |
+            &c Il y a un trou dans le toit ou il n'est pas plat !
+            &c Des blocs de verre rouge devraient indiquer le problème.
+            &c Assurez-vous d'être à l'intérieur de votre serre pour la créer.
+          FAIL_HOLE_IN_WALL: "&c Il y a un trou dans le mur !"
+          FAIL_NO_ROOF: "&c Il semble ne pas y avoir de toit ! Assurez-vous d'être à l'intérieur de la serre pour la créer."
+          FAIL_TOO_MANY_DOORS: "&c Vous ne pouvez pas avoir plus de 4 portes dans la serre !"
+          FAIL_TOO_MANY_HOPPERS: "&c Un seul entonnoir est autorisé dans les murs ou le toit."
+          FAIL_UNEVEN_WALLS: "&c Les murs sont inégaux. Des blocs de verre rouge devraient indiquer les blocs problématiques."
+          FAIL_INSUFFICIENT_ICE: "&c Glace insuffisante pour réaliser cette recette"
+          FAIL_INSUFFICIENT_LAVA: "&c Lave insuffisante pour réaliser cette recette"
+          FAIL_INSUFFICIENT_WATER: "&c Eau insuffisante pour réaliser cette recette"
+          FAIL_NO_ICE: "&c De la glace est requise pour cette recette"
+          FAIL_NO_LAVA: "&c De la lave est requise pour cette recette"
+          FAIL_NO_WATER: "&c De l'eau est requise pour cette recette"
+          FAIL_NO_RECIPE_FOUND: "&c Aucune recette correspondante à cette serre n'a été trouvée"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Plus de blocs sont requis pour réaliser cette recette !"
+          FAIL_OVERLAPPING: "&c Désolé, les serres ne peuvent pas partager de murs."
+        success: "&2 Vous avez créé avec succès une serre de biome [biome] ! Le biome se synchronisera lors de votre prochaine téléportation ou connexion."
+        missing-blocks: "&c Manquant : [material] x [number]"
+        unknown-recipe: "&c Recette inconnue"
+        try-these: "&c Essayez l'une de celles-ci :"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Comment construire une serre]"
+        instructions: |
+          &e Fabriquez une boîte en verre avec 4 murs et un toit en verre
+          &e plat, puis ajoutez jusqu'à &f 4 portes &e dans les murs.
+          &e Placez &f 1 entonnoir &e dans un mur ou le toit et ajoutez des seaux d'eau
+          &e pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.
+          &e Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une
+          &e serre pour la créer avec succès.
+
+help:
+   help: "aide"
+   make: "tente de créer une serre"
+   remove: "supprime la serre où vous vous trouvez si vous en êtes le propriétaire"
+   info: "comment fabriquer une serre"
+   list: "liste les recettes de serres"
+   recipe: "explique comment créer un biome de serre spécifique"
+   opengui: "ouvre l'interface des serres"
+
+list:
+   title: "[Recettes de biomes de serre]"
+   info: "Utilisez /greenhouse recipe <numéro> pour voir les détails de fabrication de chaque serre"
+
+error:
+   greenhouseProtected: "Serre protégée"
+   move: "Déplacez-vous d'abord vers une serre qui vous appartient."
+   notowner: "Vous devez être le propriétaire de cette serre pour faire cela."
+   removing: "Suppression de la serre !"
+   notyours: "Ce n'est pas votre serre !"
+   notinside: "Vous n'êtes pas dans une serre !"
+   tooexpensive: "Vous n'avez pas les moyens [price]" 
+   alreadyexists: "La serre existe déjà !"
+   norecipe: "Impossible de créer une serre !"
+   
+messages:
+   enter: "Vous êtes entré dans la serre [biome] de [owner] !"
+   leave: "Vous avez quitté la serre de [owner]."
+   youarein: "Vous êtes dans la serre [biome] de [owner] !"
+   removed: "Cette serre n'existe plus..."
+   removedmessage: "Votre serre [biome] n'existe plus !"
+   ecolost: "Une serre à [location] a perdu son écosystème et a été supprimée."
+
+info:
+   title: "&a [Comment construire une serre]"
+   instructions: |
+     &e Fabriquez une boîte en verre avec 4 murs et un toit en verre
+     &e plat, puis ajoutez jusqu'à &f 4 portes &e dans les murs.
+     &e Placez &f 1 entonnoir &e dans un mur ou le toit et ajoutez des seaux d'eau
+     &e pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.
+     &e Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une
+     &e serre pour la créer avec succès.
+   info: "[Infos Serre]"
+   none: "aucun"
+   nomore: "&4 Vous ne pouvez plus construire de serres !"
+   onemore: "&6 Vous pouvez construire une serre supplémentaire."
+   youcanbuild: "&a Vous pouvez construire jusqu'à [number] serres de plus !"
+   unlimited: "&a Vous pouvez construire un nombre illimité de serres !"
+   welcome: "&b Bienvenue ! Cliquez ici pour les instructions"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Utilisez /greenhouse list pour voir la liste des numéros de recettes !"
+   wrongnumber: "Le numéro de recette doit être compris entre 1 et [size]"
+   title: "[Recette [biome]]"
+   nowater: "Eau non autorisée."
+   noice: "Glace non autorisée."
+   nolava: "Lave non autorisée."
+   watermustbe: "Eau > [coverage]% de la surface au sol."
+   icemustbe: "Blocs de glace > [coverage]% de la surface au sol."
+   lavamustbe: "Lave > [coverage]% de la surface au sol."
+   minimumblockstitle: "[Blocs minimum requis]"
+   nootherblocks: "Aucun autre bloc requis."
+   missing: "La serre est manquante"
+
+event:
+   broke: "Vous avez cassé cette serre ! Retour du biome en [biome] !"
+   fix: "Réparez la serre puis recréez-la."
+   cannotplace: "Les blocs ne peuvent pas être placés au-dessus d'une serre !"
+   pistonerror: "Les pistons ne peuvent pas pousser de blocs au-dessus d'une serre !"
+
+limits:
+   noneallowed: "Les permissions ne vous autorisent aucune serre, donc [number] ont été supprimées."
+   limitedto: "Les permissions vous limitent à [limit] serres, donc [number] ont été supprimées."
+
+adminHelp:
+   reload: "recharger la configuration depuis le fichier."
+   info: "fournit des infos sur la serre dans laquelle vous êtes"
+
+reload:
+   configReloaded: "Configuration rechargée depuis le fichier."
+
+admininfo:
+   error: "Infos serre uniquement disponibles en jeu"
+   error2: "Placez-vous dans une serre pour voir les infos."
+   flags: "[Drapeaux de Serre]"
+
+news:
+   headline: "[Nouvelles des Serres]"
+
+controlpanel:
+   title: "&aSerres"

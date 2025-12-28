@@ -1,0 +1,180 @@
+###########################################################################################
+# Dit is een YML-bestand. Wees voorzichtig bij het bewerken. Controleer je wijzigingen    #
+# in een YAML-checker zoals http://yaml-online-parser.appspot.com                         #
+# Als dit bestand wordt verwijderd, wordt het bij de volgende herlaadbeurt opnieuw        #
+# aangemaakt.                                                                             #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Kassen
+      description: |
+        &b Bepaal wie de kassen
+        &b mag beheren   
+
+greenhouses:
+  general:
+   greenhouses: "Kassen"
+   
+  errors:
+    move: "Ga eerst naar een kas waarvan je de eigenaar bent."
+    no-rank: "&c Je hebt niet de juiste rang om dit te doen."
+    notyours: "Dit is niet jouw kas!"
+    not-inside: "&c Je bevindt je niet in een kas!"
+    tooexpensive: "Je kunt dit niet betalen [price]" 
+    alreadyexists: "Kas bestaat al!"
+    norecipe: "Kan geen kas maken!"
+    
+  event:
+   broke: "Je hebt deze kas kapot gemaakt! Biome wordt teruggezet naar [biome]!"
+   entering: "Binnengaan van [biome]&f kas"
+   leaving: "Verlaten van [biome]&f kas"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] recept]"
+   watermustbe: "Water > [coverage]% van het vloeroppervlak."
+   icemustbe: "Ijsblokken > [coverage]% van het vloeroppervlak."
+   lavamustbe: "Lava > [coverage]% van het vloeroppervlak."
+   minimumblockstitle: "[Minimaal aantal blokken vereist]"
+   nootherblocks: "Geen andere blokken vereist."
+   missing: "Kas ontbreekt"
+   
+  commands:
+    user:
+      description: "Opent de kas selectie GUI"
+      remove:
+        description: "Verwijdert de kas waar je in staat als je de eigenaar bent"        
+      make:
+        description: "Probeer een kas te maken"
+        parameters: "<recept>"
+        error:
+          already: "&cEr is hier al een kas!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Het dak bevat niet-toegestane blokken!"
+          FAIL_BAD_WALL_BLOCKS: "&c De muur bevat niet-toegestane blokken!"
+          FAIL_BELOW: "&c Je moet je in de kas bevinden om deze te kunnen maken"
+          FAIL_BLOCKS_ABOVE: "&c Er mogen geen blokken boven de kas staan! Rode glasblokken tonen de problematische blokken."
+          FAIL_HOLE_IN_ROOF: |
+            &c Er zit een gat in het dak of het dak is niet plat!
+            &c Rode glasblokken tonen het probleem.
+            &c Zorg dat je in de kas staat tijdens het maken.
+          FAIL_HOLE_IN_WALL: "&c Er zit een gat in de muur!"
+          FAIL_NO_ROOF: "&c Er lijkt geen dak te zijn! Zorg dat je in de kas staat."
+          FAIL_TOO_MANY_DOORS: "&c Je mag niet meer dan 4 deuren in de kas hebben!"
+          FAIL_TOO_MANY_HOPPERS: "&c Slechts één hopper is toegestaan in de muren of het dak."
+          FAIL_UNEVEN_WALLS: "&c De muren zijn ongelijk. Rode glasblokken tonen de problematische blokken."
+          FAIL_INSUFFICIENT_ICE: "&c Onvoldoende ijs om dit recept te maken"
+          FAIL_INSUFFICIENT_LAVA: "&c Onvoldoende lava om dit recept te maken"
+          FAIL_INSUFFICIENT_WATER: "&c Onvoldoende water om dit recept te maken"
+          FAIL_NO_ICE: "&c Ijs is vereist om dit recept te maken"
+          FAIL_NO_LAVA: "&c Lava is vereist om dit recept te maken"
+          FAIL_NO_WATER: "&c Water is vereist om dit recept te maken"
+          FAIL_NO_RECIPE_FOUND: "&c Geen passend recept gevonden voor deze kas"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Meer blokken zijn vereist om dit recept te maken!"
+          FAIL_OVERLAPPING: "&c Sorry, kassen mogen geen muren delen."
+        success: "&2 Je hebt met succes een [biome] biome kas gemaakt! De biome wordt gesynchroniseerd bij de volgende teleport of login."
+        missing-blocks: "&c Ontbrekend: [material] x [number]"
+        unknown-recipe: "&c Onbekend recept"
+        try-these: "&c Probeer een van deze:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Hoe bouw je een kas]"
+        instructions: |
+          &e Maak een doos van glas met 4 muren en een plat glazen
+          &e dak, en voeg tot &f 4 deuren &e toe in de muren.
+          &e Plaats &f 1 hopper &e in een muur of het dak en voeg emmers
+          &e water toe om automatisch sneeuw en/of bone meal te maken
+          &e om planten te laten groeien. Bekijk de biome recepten om
+          &e te zien welke blokken er in een kas moeten staan.
+
+help:
+   help: "help"
+   make: "Probeert een kas te maken"
+   remove: "Verwijdert de kas waar je in staat als je eigenaar bent"
+   info: "Hoe maak je een kas"
+   list: "Lijst van alle maakbare kas biomes"
+   recipe: "Vertelt je hoe je een specifieke kas biome maakt"
+   opengui: "Opent de kas GUI"
+
+list:
+   title: "[Kas Biome Recepten]"
+   info: "Gebruik /greenhouse recipe <nummer> om details over het maken te zien"
+
+error:
+   greenhouseProtected: "Kas is beschermd"
+   move: "Ga eerst naar een kas waarvan je eigenaar bent."
+   notowner: "Je moet de eigenaar van deze kas zijn om dit te doen."
+   removing: "Kas verwijderen!"
+   notyours: "Dit is niet jouw kas!"
+   notinside: "Je bent niet in een kas!"
+   tooexpensive: "Je kunt dit niet betalen [price]" 
+   alreadyexists: "Kas bestaat al!"
+   norecipe: "Kan geen kas maken!"
+   
+messages:
+   enter: "Binnengaan van de kas van [owner], biome: [biome]&f!"
+   leave: "Verlaten van de kas van [owner]."
+   youarein: "Je bent nu in de kas van [owner], biome: [biome]&f!"
+   removed: "Deze kas bestaat niet meer..."
+   removedmessage: "Jouw [biome]&f kas is verwijderd!"
+   ecolost: "Je kas op [location] is het ecosysteem verloren en is verwijderd."
+
+info:
+   title: "&a [Hoe bouw je een kas]"
+   instructions: |
+     &e Maak een doos van glas met 4 muren en een plat glazen
+     &e dak, en voeg tot &f 4 deuren &e toe in de muren.
+     &e Plaats &f 1 hopper &e in een muur of het dak en voeg emmers
+     &e water toe om automatisch sneeuw en/of bone meal te maken
+     &e om planten te laten groeien. Bekijk de biome recepten om
+     &e te zien welke blokken er in een kas moeten staan.
+   info: "[Kas Info]"
+   none: "Geen"
+   nomore: "&4 Je kunt niet meer kassen bouwen!"
+   onemore: "&6 Je kunt nog één kas bouwen."
+   youcanbuild: "&a Je kunt nog maximaal [number] kassen bouwen!"
+   unlimited: "&a Je kunt een onbeperkt aantal kassen bouwen!"
+   welcome: "&b Welkom! Klik hier voor instructies"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Gebruik /greenhouse list om een lijst met receptnummers te zien!"
+   wrongnumber: "Receptnummer moet tussen 1 en [size] liggen"
+   title: "[[biome] recept]"
+   nowater: "Geen water toegestaan."
+   noice: "Geen ijs toegestaan."
+   nolava: "Geen lava toegestaan."
+   watermustbe: "Water > [coverage]% van het vloeroppervlak."
+   icemustbe: "Ijsblokken > [coverage]% van het vloeroppervlak."
+   lavamustbe: "Lava > [coverage]% van het vloeroppervlak."
+   minimumblockstitle: "[Minimaal aantal blokken vereist]"
+   nootherblocks: "Geen andere blokken vereist."
+   missing: "Kas ontbreekt"
+
+event:
+   broke: "Je hebt deze kas kapot gemaakt! Biome wordt teruggezet naar [biome]!"
+   fix: "Repareer de kas en maak deze dan opnieuw."
+   cannotplace: "Blokken kunnen niet boven een kas worden geplaatst!"
+   pistonerror: "Pistons kunnen geen blokken over een kas duwen!"
+
+limits:
+   noneallowed: "Permissies staan geen kassen toe, daarom zijn er [number] verwijderd."
+   limitedto: "Permissies beperken je tot [limit] kassen, daarom zijn er [number] verwijderd."
+
+adminHelp:
+   reload: "herlaad configuratie uit bestand."
+   info: "geeft info over de kas waar je in staat"
+
+reload:
+   configReloaded: "Configuratie herladen uit bestand."
+
+admininfo:
+   error: "Kas info alleen in-game beschikbaar"
+   error2: "Ga in een kas staan om de info te zien."
+   flags: "[Kas Flags]"
+
+news:
+   headline: "[Kas Nieuws]"
+
+controlpanel:
+   title: "&aKassen"

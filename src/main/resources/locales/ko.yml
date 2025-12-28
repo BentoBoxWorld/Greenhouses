@@ -1,0 +1,179 @@
+###########################################################################################
+# 이 파일은 YML 파일입니다. 수정 시 주의하십시오.                                             #
+# http://yaml-online-parser.appspot.com 같은 YAML 검사기에서 수정을 확인하십시오.              #
+# 이 파일을 삭제하면 다음 다시 로드할 때 다시 생성됩니다.                                      #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: 온실
+      description: |
+        &b 온실을 제어할 수 있는
+        &b 사용자를 설정합니다   
+
+greenhouses:
+  general:
+   greenhouses: "온실"
+   
+  errors:
+    move: "먼저 본인 소유의 온실로 이동하십시오."
+    no-rank: "&c 그 작업을 수행할 권한이 없습니다."
+    notyours: "이것은 당신의 온실이 아닙니다!"
+    not-inside: "&c 온실 내부에 있지 않습니다!"
+    tooexpensive: "비용을 지불할 수 없습니다: [price]" 
+    alreadyexists: "온실이 이미 존재합니다!"
+    norecipe: "온실을 만들 수 없습니다!"
+    
+  event:
+   broke: "온실이 파손되었습니다! 바이옴을 [biome](으)로 되돌립니다!"
+   entering: "[biome]&f 온실에 입장했습니다"
+   leaving: "[biome]&f 온실에서 나갔습니다"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] 레시피]"
+   watermustbe: "물 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   icemustbe: "얼음 블록 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   lavamustbe: "용암 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   minimumblockstitle: "[최소 필요 블록]"
+   nootherblocks: "다른 블록은 필요하지 않습니다."
+   missing: "온실이 유실되었습니다"
+   
+  commands:
+    user:
+      description: "온실 선택 GUI를 엽니다"
+      remove:
+        description: "소유자인 경우, 현재 서 있는 온실을 제거합니다"        
+      make:
+        description: "온실 제작을 시도합니다"
+        parameters: "<레시피>"
+        error:
+          already: "&c이곳에는 이미 온실이 있습니다!"
+          FAIL_BAD_ROOF_BLOCKS: "&c 지붕에 허용되지 않는 블록이 포함되어 있습니다!"
+          FAIL_BAD_WALL_BLOCKS: "&c 벽에 허용되지 않는 블록이 포함되어 있습니다!"
+          FAIL_BELOW: "&c 온실 내부에서 제작을 시도해야 합니다"
+          FAIL_BLOCKS_ABOVE: "&c 온실 위에는 어떤 블록도 없어야 합니다! 빨간색 유리 블록이 문제 지점을 표시합니다."
+          FAIL_HOLE_IN_ROOF: |
+            &c 지붕에 구멍이 있거나 평평하지 않습니다!
+            &c 빨간색 유리 블록이 문제 지점을 표시합니다.
+            &c 제작 시 반드시 온실 내부에 있어야 합니다.
+          FAIL_HOLE_IN_WALL: "&c 벽에 구멍이 있습니다!"
+          FAIL_NO_ROOF: "&c 지붕이 없는 것 같습니다! 반드시 온실 내부에 있어야 합니다."
+          FAIL_TOO_MANY_DOORS: "&c 온실에는 문을 4개 이상 설치할 수 없습니다!"
+          FAIL_TOO_MANY_HOPPERS: "&c 벽이나 지붕에는 깔때기를 하나만 설치할 수 있습니다."
+          FAIL_UNEVEN_WALLS: "&c 벽이 고르지 않습니다. 빨간색 유리 블록이 문제 지점을 표시합니다."
+          FAIL_INSUFFICIENT_ICE: "&c 이 레시피를 위한 얼음이 부족합니다"
+          FAIL_INSUFFICIENT_LAVA: "&c 이 레시피를 위한 용암이 부족합니다"
+          FAIL_INSUFFICIENT_WATER: "&c 이 레시피를 위한 물이 부족합니다"
+          FAIL_NO_ICE: "&c 이 레시피에는 얼음이 필요합니다"
+          FAIL_NO_LAVA: "&c 이 레시피에는 용암이 필요합니다"
+          FAIL_NO_WATER: "&c 이 레시피에는 물이 필요합니다"
+          FAIL_NO_RECIPE_FOUND: "&c 이 온실과 일치하는 레시피를 찾을 수 없습니다"
+          FAIL_INSUFFICIENT_BLOCKS: "&c 이 레시피를 제작하려면 블록이 더 필요합니다!"
+          FAIL_OVERLAPPING: "&c 죄송합니다, 온실은 벽을 공유할 수 없습니다."
+        success: "&2 [biome] 바이옴 온실을 성공적으로 만들었습니다! 바이옴은 다음 텔레포트나 접속 시 동기화됩니다."
+        missing-blocks: "&c 부족함: [material] x [number]"
+        unknown-recipe: "&c 알 수 없는 레시피"
+        try-these: "&c 다음 중 하나를 시도해 보세요:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [온실 짓는 방법]"
+        instructions: |
+          &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
+          &e 벽에 최대 &f 4개의 문&e을 설치하세요.
+          &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
+          &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
+          &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
+          &e 바이옴 레시피를 확인하세요.
+
+help:
+   help: "도움말"
+   make: "온실 제작 시도"
+   remove: "소유한 경우 현재 위치의 온실 제거"
+   info: "온실 제작 방법 안내"
+   list: "제작 가능한 모든 온실 바이옴 목록"
+   recipe: "특정 온실 바이옴 제작 방법 안내"
+   opengui: "온실 GUI 열기"
+
+list:
+   title: "[온실 바이옴 레시피]"
+   info: "/greenhouse recipe <번호> 명령어로 각 온실의 상세 제작법을 확인하세요"
+
+error:
+   greenhouseProtected: "보호된 온실입니다"
+   move: "먼저 본인 소유의 온실로 이동하십시오."
+   notowner: "이 작업을 수행하려면 해당 온실의 소유자여야 합니다."
+   removing: "온실을 제거하는 중!"
+   notyours: "이것은 당신의 온실이 아닙니다!"
+   notinside: "온실 안에 있지 않습니다!"
+   tooexpensive: "비용을 지불할 수 없습니다: [price]" 
+   alreadyexists: "온실이 이미 존재합니다!"
+   norecipe: "온실을 만들 수 없습니다!"
+   
+messages:
+   enter: "[owner] 님의 [biome] 온실에 입장했습니다!"
+   leave: "[owner] 님의 온실에서 퇴장했습니다."
+   youarein: "현재 [owner] 님의 [biome] 온실 안에 있습니다!"
+   removed: "이 온실은 더 이상 존재하지 않습니다..."
+   removedmessage: "당신의 [biome] 온실이 제거되었습니다!"
+   ecolost: "[location]에 있는 온실이 생태계를 잃어 제거되었습니다."
+
+info:
+   title: "&a [온실 짓는 방법]"
+   instructions: |
+     &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
+     &e 벽에 최대 &f 4개의 문&e을 설치하세요.
+     &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
+     &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
+     &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
+     &e 바이옴 레시피를 확인하세요.
+   info: "[온실 정보]"
+   none: "없음"
+   nomore: "&4 더 이상 온실을 지을 수 없습니다!"
+   onemore: "&6 온실을 하나 더 지을 수 있습니다."
+   youcanbuild: "&a 앞으로 [number]개의 온실을 더 지을 수 있습니다!"
+   unlimited: "&a 무제한으로 온실을 지을 수 있습니다!"
+   welcome: "&b 환영합니다! 지침을 보려면 여기를 클릭하세요"
+
+recipe:
+   blockscolor: "&f"
+   hint: "/greenhouse list 명령어로 레시피 번호 목록을 확인하세요!"
+   wrongnumber: "레시피 번호는 1에서 [size] 사이여야 합니다"
+   title: "[[biome] 레시피]"
+   nowater: "물은 허용되지 않습니다."
+   noice: "얼음은 허용되지 않습니다."
+   nolava: "용암은 허용되지 않습니다."
+   watermustbe: "물 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   icemustbe: "얼음 블록 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   lavamustbe: "용암 > 바닥 면적의 [coverage]% 이상이어야 합니다."
+   minimumblockstitle: "[최소 필요 블록]"
+   nootherblocks: "다른 블록은 필요하지 않습니다."
+   missing: "온실이 유실되었습니다"
+
+event:
+   broke: "온실이 파손되었습니다! 바이옴을 [biome](으)로 되돌립니다!"
+   fix: "온실을 수리한 후 다시 제작하세요."
+   cannotplace: "온실 위에는 블록을 설치할 수 없습니다!"
+   pistonerror: "피스톤으로 온실 위로 블록을 밀 수 없습니다!"
+
+limits:
+   noneallowed: "권한이 없어 온실을 소유할 수 없습니다. [number]개가 제거되었습니다."
+   limitedto: "권한에 따라 온실 소유가 [limit]개로 제한됩니다. [number]개가 제거되었습니다."
+
+adminHelp:
+   reload: "파일에서 설정을 다시 불러옵니다."
+   info: "현재 위치한 온실에 대한 정보를 제공합니다"
+
+reload:
+   configReloaded: "파일에서 설정을 다시 불러왔습니다."
+
+admininfo:
+   error: "온실 정보는 게임 내에서만 확인 가능합니다"
+   error2: "정보를 보려면 온실 안으로 들어가세요."
+   flags: "[온실 플래그]"
+
+news:
+   headline: "[온실 뉴스]"
+
+controlpanel:
+   title: "&a온실"

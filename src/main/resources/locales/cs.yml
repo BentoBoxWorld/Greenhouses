@@ -22,7 +22,7 @@ greenhouses:
     no-rank: "&cNa toto nemáš hodnost."
     notyours: "Toto není tvůj skleník!"
     not-inside: "&cNejsi ve skleníku!"
-    tooexpensive: "Nemůžeš si dovolit [price]" 
+    tooexpensive: "Nemůžeš si dovolit [price]"
     alreadyexists: "Skleník již existuje!"
     norecipe: "Nelze vytvořit skleník!"
     
@@ -38,120 +38,119 @@ greenhouses:
     icemustbe: "Ledové bloky > [coverage]% povrchu podlahy."
     lavamustbe: "Láva > [coverage]% povrchu podlahy."
     minimumblockstitle: "[Minimum bloků vyžadováno]"
-    nootherblocks: "Žádné další bloky nejsou vyžadovány."
+    nootherblocks: "Žádné další bloky již nejsou vyžadovány."
     missing: "Skleník chybí"
-
+   
   commands:
     user:
+      description: "Otevře GUI pro výběr skleníku"
       remove:
-        description: "Odstraní skleník, ve kterém stojíš, jsi-li vlastníkem"
+        description: "Odstraní skleník, ve kterém stojíš, pokud jsi jeho vlastník"        
       make:
-        description: "Pokusit se o výrobu skelníku"
-        parameters: "<recipe>"
+        description: "Pokusit se vytvořit skleník"
+        parameters: "<recept>"
         error:
-          already: "&cTady už je skleník!"
+          already: "&cZde již skleník existuje!"
           FAIL_BAD_ROOF_BLOCKS: "&cStřecha obsahuje nepovolené bloky!"
-          FAIL_BAD_WALL_BLOCKS: "&cStěny obsahují nepovolené bloky!"
-          FAIL_BELOW: "&cMusíš být uvnitř skleníku, aby ses pokusis jej vytvořit"
-          FAIL_BLOCKS_ABOVE: "&cNad skleníkem nesmí být žádné bloky! Bloky červeného skla by měly ukázat problémové bloky."
-          FAIL_HOLE_IN_ROOF: "&cVe střeše je díra nebo není rovná! Bloky červeného skla by měly ukázat problém."
-          FAIL_HOLE_IN_WALL: "&cVe stěně je díra!"
-          FAIL_NO_ROOF: "&cVypadá to, že tu není žádná střecha!"
-          FAIL_TOO_MANY_DOORS: "&cNemůžeš mít více, než 4 dveře ve skleníku!"
-          FAIL_TOO_MANY_HOPPERS: "&cVe stěnách nebo střeše je povolena jen jedna násypka."
-          FAIL_UNEVEN_WALLS: "&cStěny jsou nepravidelné. Bloky červeného skla by měly ukázat problémové bloky."
+          FAIL_BAD_WALL_BLOCKS: "&cStěna obsahuje nepovolené bloky!"
+          FAIL_BELOW: "&cMusíš být uvnitř skleníku, abys ho mohl zkusit vytvořit"
+          FAIL_BLOCKS_ABOVE: "&cNad skleníkem nesmí být žádné bloky! Červené skleněné bloky by měly ukázat problematické bloky."
+          FAIL_HOLE_IN_ROOF: |
+            &cVe střeše je díra nebo není rovná!
+            &cČervené skleněné bloky by měly ukázat problém.
+            &cUjisti se, že jsi uvnitř skleníku, abys ho mohl vytvořit.
+          FAIL_HOLE_IN_WALL: "&cVestěně je díra!"
+          FAIL_NO_ROOF: "&cZdá se, že zde není střecha! Ujisti se, že jsi uvnitř skleníku, abys ho mohl vytvořit."
+          FAIL_TOO_MANY_DOORS: "&cVe skleníku nemůžeš mít více než 4 dveře!"
+          FAIL_TOO_MANY_HOPPERS: "&cVestěnách nebo střeše je povolen pouze jeden násypník (hopper)."
+          FAIL_UNEVEN_WALLS: "&cStěny jsou nerovnoměrné. Červené skleněné bloky by měly ukázat problematické bloky."
           FAIL_INSUFFICIENT_ICE: "&cNedostatek ledu k vytvoření tohoto receptu"
           FAIL_INSUFFICIENT_LAVA: "&cNedostatek lávy k vytvoření tohoto receptu"
           FAIL_INSUFFICIENT_WATER: "&cNedostatek vody k vytvoření tohoto receptu"
-          FAIL_NO_ICE: "&cLed je potřeba k vytvoření tohoto receptu"
-          FAIL_NO_LAVA: "&cLáva je potřeba k vytvoření tohoto receptu"
-          FAIL_NO_WATER: "&cVoda je potřeba k vytvoření tohoto receptu"
-          FAIL_INSUFFICIENT_BLOCKS: "&cVíce bloků je potřeba k vytvoření tohoto receptu!"
-          FAIL_OVERLAPPING: "&cPardon, skleníky nesmí sdílet stěny."
-        success: "&2Úspěšně jsi vytvořil skleník biomu [biome]! Biom se synchronizuje s dalším teleportem nebo přihlášením."
+          FAIL_NO_ICE: "&cK vytvoření tohoto receptu je vyžadován led"
+          FAIL_NO_LAVA: "&cK vytvoření tohoto receptu je vyžadována láva"
+          FAIL_NO_WATER: "&cK vytvoření tohoto receptu je vyžadována voda"
+          FAIL_NO_RECIPE_FOUND: "&cNebyl nalezen žádný recept, který by odpovídal tomuto skleníku"
+          FAIL_INSUFFICIENT_BLOCKS: "&cK vytvoření tohoto receptu je vyžadováno více bloků!"
+          FAIL_OVERLAPPING: "&cSkleníky nemohou sdílet stěny, omlouváme se."
+        success: "&2Úspěšně jsi vytvořil skleník s biomem [biome]! Biom se synchronizuje při příštím teleportu nebo přihlášení."
         missing-blocks: "&cChybí [material] x [number]"
         unknown-recipe: "&cNeznámý recept"
-        try-these: "&cZkus něco z tohoto:"
+        try-these: "&cZkus jeden z těchto:"
         recipe-format: "&3[name]"
       info:
-        title: "&A[Jak postavit skleník]"
+        title: "&a [Jak postavit skleník]"
         instructions: |
-          &EUdělej kostku ze skla se 4 stěnami a rovnou skleněnou
-          &Estřechou a přihoď k tomu &F4 dveře &Eve stěnách.
-          &EPlácni &F1 násypku &Edo stěny nebo střechy a přidej kbelíky vody.
-          &Epro sníh a/nebo kostní moučku pro automatický růst rostlin.
-          &EPodívej se do receptů biomu pro typy bloků, které musí být
-          &Euvnitř skleníku pro úspěšné vytvoření. 
+          &e Vyrob krabici ze skla se 4 stěnami a plochou skleněnou
+          &e střechou a přidej do stěn až &f 4 dveře.
+          &e Umísti &f 1 násypník (hopper) &e do stěny nebo střechy a přidej kbelíky s vodou,
+          &e abys automaticky vyráběl sníh a/nebo kostní moučku pro růst rostlin.
+          &e Podívej se na recepty biomů, jaké bloky musí být uvnitř skleníku,
+          &e aby byl úspěšně vytvořen.
 
-
-######### Old locale for reference
 help:
-  help: "nápověda"
-  make: "Pokusí se vytvořit skleník"
-  remove: "Odstraní skleník, ve kterém stojíš, pokud jsi vlastníkem"
-  info: "Jak vytvořit skleník"
-  list: "Vypíše seznam všech biomů, které lze použít ve skleníku"
-  recipe: "Napoví, jak vytvořit skleník biomu"
-  opengui: "Otevře GUI Skleníků"
+   help: "nápověda"
+   make: "Pokusí se vytvořit skleník"
+   remove: "Odstraní skleník, ve kterém stojíš, pokud jsi vlastník"
+   info: "Jak vyrobit skleník"
+   list: "Seznam všech biomů skleníků, které lze vytvořit"
+   recipe: "Řekne ti, jak vyrobit daný biom skleníku"
+   opengui: "Otevře GUI skleníku"
 
 list:
-  title: "[Recepty biomů skleníku]"
-  info: "Použij /greenhouse recipe <number> k zobrazení detailů, jak vytvořit jednotlivé skleníky"
+   title: "[Recepty biomů skleníků]"
+   info: "Použij /greenhouse recipe <číslo> k zobrazení podrobností o každém skleníku"
 
-
-################
-#General Errors#
-################
 error:
-  greenhouseProtected: "Skleník je chráněn"
-  move: "Nejdříve se přesuň do skleníku, který vlastníš."
-  notowner: "Na toto musíš být vlastník tohoto skleníku."
-  removing: "Odstraňuji skleník!"
-  notyours: "Toto není tvůj skleník!"
-  notinside: "Nejsi ve skleníku!"
-  tooexpensive: "Nemůžeš si dovolit [price]" 
-  alreadyexists: "Skleník již existuje!"
-  norecipe: "Nelze vytvořit skleník!"
+   greenhouseProtected: "Skleník je chráněn"
+   move: "Nejdříve se přesuň do skleníku, který vlastníš."
+   notowner: "K provedení této akce musíš být vlastníkem tohoto skleníku."
+   removing: "Odstraňování skleníku!"
+   notyours: "Toto není tvůj skleník!"
+   notinside: "Nejsi ve skleníku!"
+   tooexpensive: "Nemůžeš si dovolit [price]"
+   alreadyexists: "Skleník již existuje!"
+   norecipe: "Nelze vytvořit skleník!"
    
 messages:
-  enter: "Vcházíš do [biome] skleníku [owner]!"
-  leave: "Odcházíš ze skleníku [owner]."
-  youarein: "Právě jsi v [biome] skleníku [owner]!"
-  removed: "Tento skleník již neeexistuje..."
-  removedmessage: "Tvůj [biome] skleník již neeistuje!"
-  ecolost: "Tvůj skleník na [location] ztratil svůj ekosystém a byl odstraněn."
+   enter: "Vstupuješ do skleníku [owner], biom [biome]!"
+   leave: "Opouštíš skleník [owner]."
+   youarein: "Nyní jsi ve skleníku [owner], biom [biome]!"
+   removed: "Tento skleník již neexistuje..."
+   removedmessage: "Tvůj skleník [biome] již neexistuje!"
+   ecolost: "Tvůj skleník na [location] ztratil svůj ekosystém a byl odstraněn."
 
 info:
-  title: "&A[Jak postavit skleník]"
-  instructions: |
-    &EUdělej kostku ze skla se 4 stěnami a rovnou skleněnou
-    &Estřechou a přihoď k tomu &F4 dveře &Eve stěnách.
-    &EPlácni &F1 násypku &Edo stěny nebo střechy a přidej kbelíky vody.
-    &Epro sníh a/nebo kostní moučku pro automatický růst rostlin.
-    &EPodívej se do receptů biomu pro typy bloků, které musí být
-    &Euvnitř skleníku pro úspěšné vytvoření. 
-  info: "[Info o skleníku]"
-  none: "Žádné"
-  nomore: "&4Nemůžeš postavit další skleníky!"
-  onemore: "&6Můžeš postavit ještě jeden skleník."
-  youcanbuild: "&AMůžeš postavit ještě [number] dalších skleníků!"
-  unlimited: "&AMůžeš postavit bezpočet dalších skleníků!"
-  welcome: "&BVítej! Klikni sem pro instrukce"
+   title: "&A[Jak postavit skleník]"
+   instructions: |
+     &E Vyrob krabici ze skla se 4 stěnami a plochou skleněnou
+     &E střechou a přidej do stěn až &F 4 dveře.
+     &E Umísti &F 1 násypník &E do stěny nebo střechy a přidej kbelíky s vodou,
+     &E abys automaticky vyráběl sníh a/nebo kostní moučku pro růst rostlin.
+     &E Podívej se na recepty biomů, jaké bloky musí být uvnitř skleníku,
+     &E aby byl úspěšně vytvořen.
+   info: "[Informace o skleníku]"
+   none: "Žádné"
+   nomore: "&4 Nemůžeš postavit žádné další skleníky!"
+   onemore: "&6 Můžeš postavit ještě jeden skleník."
+   youcanbuild: "&A Můžeš postavit až [number] dalších skleníků!"
+   unlimited: "&A Můžeš postavit neomezený počet skleníků!"
+   welcome: "&B Vítej! Klikni zde pro instrukce"
 
 recipe:
-  blockscolor: "&f"
-  hint: "Použij /greenhouse list k zobrazení seznamu čísel receptů!"
-  wrongnumber: "Číslo receptu musí být mezi 1 a [size]"
-  title: "[Recept [biome]]"
-  nowater: "Voda není povolena."
-  noice: "Led není povolen."
-  nolava: "Láva není povolena."
-  watermustbe: "Voda > [coverage]% povrchu podlahy."
-  icemustbe: "Ledové bloky > [coverage]% povrchu podlahy."
-  lavamustbe: "Láva > [coverage]% povrchu podlahy."
-  minimumblockstitle: "[Minimum bloků vyžadováno]"
-  nootherblocks: "Žádné další bloky již nejsou vyžadovány."
-  missing: "Skleník chybí"
+   blockscolor: "&f"
+   hint: "Použij /greenhouse list k zobrazení seznamu čísel receptů!"
+   wrongnumber: "Číslo receptu musí být mezi 1 a [size]"
+   title: "[Recept [biome]]"
+   nowater: "Voda není povolena."
+   noice: "Led není povolen."
+   nolava: "Láva není povolena."
+   watermustbe: "Voda > [coverage]% povrchu podlahy."
+   icemustbe: "Ledové bloky > [coverage]% povrchu podlahy."
+   lavamustbe: "Láva > [coverage]% povrchu podlahy."
+   minimumblockstitle: "[Minimum bloků vyžadováno]"
+   nootherblocks: "Žádné další bloky již nejsou vyžadovány."
+   missing: "Skleník chybí"
 
 event:
    broke: "Zničil jsi tento skleník! Vracím biom zpět na [biome]!"
@@ -159,33 +158,24 @@ event:
    cannotplace: "Nemůžeš položit bloky nad skleník!"
    pistonerror: "Píst nemůže posunout bloky nad skleník!"
 
-
 limits:
    noneallowed: "Nemáš oprávnění vytvářet žádné skleníky, takže jich bylo [number] smazáno."
    limitedto: "Máš oprávnění vytvořit jen [limit] skleníků, takže jich bylo [number] smazáno."
-   
 
-##################################
-#Admin commands that use /gadmin #
-##################################
-
-#Help
 adminHelp:
    reload: "obnovit konfiguraci ze souboru."
-   info: "poskytuje info o skleníku, v němž se nacházíš"
+   info: "poskytuje informace o skleníku, ve kterém se nacházíš"
 
-#reload
 reload:
-   configReloaded: "Obnovena konfigurace ze souboru."
+   configReloaded: "Konfigurace byla znovu načtena ze souboru."
 
 admininfo:
-   error: "Info o skleníku je přístupné jen ve hře"
-   error2: "Postav se do skleníku, abys viděl info."
-   flags: "[Vlaječky skleníku]"
+   error: "Informace o skleníku jsou dostupné pouze ve hře"
+   error2: "Vstup do skleníku, abys viděl informace."
+   flags: "[Vlajky skleníku]"
 
 news:
-   headline: "[Novinky skleníku]"
+   headline: "[Novinky skleníků]"
 
 controlpanel:
    title: "&ASkleníky"
-

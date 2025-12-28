@@ -1,0 +1,179 @@
+###########################################################################################
+# Este es un archivo YML. Ten cuidado al editar. Verifica tus ediciones en un             #
+# verificador de YAML como http://yaml-online-parser.appspot.com                          #
+# Si este archivo se elimina, se volverá a crear en la próxima carga.                     #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Invernaderos
+      description: |
+        &b Alterna quién puede
+        &b controlar los invernaderos   
+
+greenhouses:
+  general:
+   greenhouses: "Invernaderos"
+   
+  errors:
+    move: "Primero muévete a un invernadero que te pertenezca."
+    no-rank: "&c No tienes el rango necesario para hacer eso."
+    notyours: "¡Este no es tu invernadero!"
+    not-inside: "&c ¡No estás dentro de un invernadero!"
+    tooexpensive: "No puedes permitirte [price]" 
+    alreadyexists: "¡El invernadero ya existe!"
+    norecipe: "¡No se puede crear el invernadero!"
+    
+  event:
+   broke: "¡Has roto este invernadero! Revirtiendo el bioma a [biome]!"
+   entering: "Entrando al invernadero [biome]&f"
+   leaving: "Saliendo del invernadero [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Receta de [biome]]"
+   watermustbe: "Agua > [coverage]% del área del suelo."
+   icemustbe: "Bloques de hielo > [coverage]% del área del suelo."
+   lavamustbe: "Lava > [coverage]% del área del suelo."
+   minimumblockstitle: "[Bloques mínimos requeridos]"
+   nootherblocks: "No se requieren otros bloques."
+   missing: "Falta el invernadero"
+   
+  commands:
+    user:
+      description: "Abre la interfaz de selección de invernaderos"
+      remove:
+        description: "Elimina el invernadero en el que estás si eres el dueño"        
+      make:
+        description: "Intenta crear un invernadero"
+        parameters: "<receta>"
+        error:
+          already: "&c¡Ya hay un invernadero aquí!"
+          FAIL_BAD_ROOF_BLOCKS: "&c ¡El techo contiene bloques no permitidos!"
+          FAIL_BAD_WALL_BLOCKS: "&c ¡La pared contiene bloques no permitidos!"
+          FAIL_BELOW: "&c Debes estar dentro del invernadero para intentar crearlo"
+          FAIL_BLOCKS_ABOVE: "&c ¡No puede haber bloques sobre el invernadero! Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
+          FAIL_HOLE_IN_ROOF: |
+            &c ¡Hay un agujero en el techo o no es plano!
+            &c Los bloques de cristal rojo deberían mostrar el problema.
+            &c Asegúrate de estar dentro de tu invernadero para crearlo.
+          FAIL_HOLE_IN_WALL: "&c ¡Hay un agujero en la pared!"
+          FAIL_NO_ROOF: "&c ¡Parece que no hay techo! Asegúrate de estar dentro del invernadero para crearlo."
+          FAIL_TOO_MANY_DOORS: "&c ¡No puedes tener más de 4 puertas en el invernadero!"
+          FAIL_TOO_MANY_HOPPERS: "&c Solo se permite una tolva en las paredes o el techo."
+          FAIL_UNEVEN_WALLS: "&c Las paredes están desiguales. Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
+          FAIL_INSUFFICIENT_ICE: "&c Hielo insuficiente para crear esta receta"
+          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para crear esta receta"
+          FAIL_INSUFFICIENT_WATER: "&c Agua insuficiente para crear esta receta"
+          FAIL_NO_ICE: "&c Se requiere hielo para crear esta receta"
+          FAIL_NO_LAVA: "&c Se requiere lava para crear esta receta"
+          FAIL_NO_WATER: "&c Se requiere agua para crear esta receta"
+          FAIL_NO_RECIPE_FOUND: "&c No se encontró ninguna receta que coincida con este invernadero"
+          FAIL_INSUFFICIENT_BLOCKS: "&c ¡Se requieren más bloques para crear esta receta!"
+          FAIL_OVERLAPPING: "&c Lo sentimos, los invernaderos no pueden compartir paredes."
+        success: "&2 ¡Has creado con éxito un invernadero de bioma [biome]! El bioma se sincronizará en el próximo teletransporte o inicio de sesión."
+        missing-blocks: "&c Falta [material] x [number]"
+        unknown-recipe: "&c Receta desconocida"
+        try-these: "&c Prueba una de estas:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Cómo construir un invernadero]"
+        instructions: |
+          &e Crea una caja de cristal con 4 paredes y un techo de cristal
+          &e plano, y añade hasta &f 4 puertas &e en las paredes.
+          &e Coloca &f 1 tolva &e en una pared o techo y añade cubos de agua.
+          &e para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
+          &e Consulta las recetas de biomas para ver qué bloques deben estar dentro
+          &e de un invernadero para crearlo con éxito.
+
+help:
+   help: "ayuda"
+   make: "Intenta crear un invernadero"
+   remove: "Elimina el invernadero en el que estás si eres el dueño"
+   info: "Cómo crear un invernadero"
+   list: "Muestra todos los biomas de invernadero que se pueden crear"
+   recipe: "Te indica cómo crear un bioma de invernadero"
+   opengui: "Abre la interfaz de invernaderos"
+
+list:
+   title: "[Recetas de Biomas de Invernadero]"
+   info: "Usa /greenhouse recipe <número> para ver detalles sobre cómo crear cada invernadero"
+
+error:
+   greenhouseProtected: "Invernadero protegido"
+   move: "Primero muévete a un invernadero que te pertenezca."
+   notowner: "Debes ser el dueño de este invernadero para hacer eso."
+   removing: "¡Eliminando invernadero!"
+   notyours: "¡Este no es tu invernadero!"
+   notinside: "¡No estás en un invernadero!"
+   tooexpensive: "No puedes permitirte [price]" 
+   alreadyexists: "¡El invernadero ya existe!"
+   norecipe: "¡No se puede crear el invernadero!"
+   
+messages:
+   enter: "¡Entrando al invernadero de [owner] ([biome]&f)!"
+   leave: "Saliendo del invernadero de [owner]."
+   youarein: "¡Ahora estás en el invernadero de [owner] ([biome]&f)!"
+   removed: "Este invernadero ya no existe..."
+   removedmessage: "¡Tu invernadero de [biome]&f ya no existe!"
+   ecolost: "Tu invernadero en [location] perdió su ecosistema y fue eliminado."
+
+info:
+   title: "&A[Cómo construir un invernadero]"
+   instructions: |
+     &E Crea una caja de cristal con 4 paredes y un techo de cristal
+     &E plano, y añade hasta &F 4 puertas &E en las paredes.
+     &E Coloca &F 1 tolva &E en una pared o techo y añade cubos de agua.
+     &E para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
+     &E Consulta las recetas de biomas para ver qué bloques deben estar dentro
+     &E de un invernadero para crearlo con éxito. 
+   info: "[Información del Invernadero]"
+   none: "Ninguno"
+   nomore: "&4 ¡No puedes construir más invernaderos!"
+   onemore: "&6 Puedes construir un invernadero más."
+   youcanbuild: "&A ¡Puedes construir hasta [number] invernaderos más!"
+   unlimited: "&A ¡Puedes construir un número ilimitado de invernaderos!"
+   welcome: "&B ¡Bienvenido! Haz clic aquí para ver las instrucciones"
+
+recipe:
+   blockscolor: "&f"
+   hint: "¡Usa /greenhouse list para ver una lista de números de recetas!"
+   wrongnumber: "El número de receta debe estar entre 1 y [size]"
+   title: "[Receta de [biome]]"
+   nowater: "No se permite agua."
+   noice: "No se permite hielo."
+   nolava: "No se permite lava."
+   watermustbe: "Agua > [coverage]% del área del suelo."
+   icemustbe: "Bloques de hielo > [coverage]% del área del suelo."
+   lavamustbe: "Lava > [coverage]% del área del suelo."
+   minimumblockstitle: "[Bloques mínimos requeridos]"
+   nootherblocks: "No se requieren otros bloques."
+   missing: "Falta el invernadero"
+
+event:
+   broke: "¡Has roto este invernadero! Revirtiendo el bioma a [biome]!"
+   fix: "Repara el invernadero y luego créalo de nuevo."
+   cannotplace: "¡No se pueden colocar bloques sobre un invernadero!"
+   pistonerror: "¡Los pistones no pueden empujar bloques sobre un invernadero!"
+
+limits:
+   noneallowed: "Los permisos no te permiten tener invernaderos, por lo que se eliminaron [number]."
+   limitedto: "Los permisos te limitan a [limit] invernaderos, por lo que se eliminaron [number]."
+
+adminHelp:
+   reload: "recargar configuración desde el archivo."
+   info: "proporciona información sobre el invernadero en el que te encuentras"
+
+reload:
+   configReloaded: "Configuración recargada desde el archivo."
+
+admininfo:
+   error: "Información de invernadero solo disponible en el juego"
+   error2: "Ponte dentro de un invernadero para ver la información."
+   flags: "[Banderas del Invernadero]"
+
+news:
+   headline: "[Noticias de Invernaderos]"
+
+controlpanel:
+   title: "&AInvernaderos"

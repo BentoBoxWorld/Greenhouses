@@ -1,0 +1,179 @@
+###########################################################################################
+# 這是一個 YML 檔案。編輯時請務必小心。                                                  #
+# 請在 YAML 檢查器（如 http://yaml-online-parser.appspot.com）中驗證您的更改。           #
+# 如果此檔案被刪除，它將在下次插件重載時重新生成。                                         #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: 溫室
+      description: |
+        &b 切換誰可以
+        &b 控制溫室   
+
+greenhouses:
+  general:
+   greenhouses: "溫室"
+   
+  errors:
+    move: "請先移動到您擁有的溫室。"
+    no-rank: "&c 您沒有足夠的權限執行此操作。"
+    notyours: "這不是您的溫室！"
+    not-inside: "&c 您不在溫室內！"
+    tooexpensive: "您負擔不起 [price]" 
+    alreadyexists: "溫室已存在！"
+    norecipe: "無法創建溫室！"
+    
+  event:
+   broke: "您破壞了這個溫室！生物群系已還原為 [biome]！"
+   entering: "進入 [biome]&f 溫室"
+   leaving: "離開 [biome]&f 溫室"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] 食譜]"
+   watermustbe: "水 > 地面面積的 [coverage]%。"
+   icemustbe: "冰塊 > 地面面積的 [coverage]%。"
+   lavamustbe: "岩漿 > 地面面積的 [coverage]%。"
+   minimumblockstitle: "[所需最低方塊數量]"
+   nootherblocks: "不需要其他方塊。"
+   missing: "溫室結構不完整"
+   
+  commands:
+    user:
+      description: "打開溫室選擇選單"
+      remove:
+        description: "如果您是所有者，則移除您所在的溫室"        
+      make:
+        description: "嘗試創建溫室"
+        parameters: "<食譜>"
+        error:
+          already: "&c這裡已經有一個溫室了！"
+          FAIL_BAD_ROOF_BLOCKS: "&c 屋頂包含不允許的方塊！"
+          FAIL_BAD_WALL_BLOCKS: "&c 牆壁包含不允許的方塊！"
+          FAIL_BELOW: "&c 您必須在溫室內才能嘗試創建"
+          FAIL_BLOCKS_ABOVE: "&c 溫室上方不能有任何方塊！紅色玻璃方塊將顯示有問題的位置。"
+          FAIL_HOLE_IN_ROOF: |
+            &c 屋頂有洞或不平整！
+            &c 紅色玻璃方塊將顯示問題所在。
+            &c 請確保創建時您人在溫室內部。
+          FAIL_HOLE_IN_WALL: "&c 牆壁上有洞！"
+          FAIL_NO_ROOF: "&c 似乎沒有屋頂！請確保您在溫室內部。"
+          FAIL_TOO_MANY_DOORS: "&c 溫室不能有超過 4 扇門！"
+          FAIL_TOO_MANY_HOPPERS: "&c 牆壁或屋頂僅允許放置一個漏斗。"
+          FAIL_UNEVEN_WALLS: "&c 牆壁不平整。紅色玻璃方塊將顯示有問題的位置。"
+          FAIL_INSUFFICIENT_ICE: "&c 冰塊不足，無法製作此食譜"
+          FAIL_INSUFFICIENT_LAVA: "&c 岩漿不足，無法製作此食譜"
+          FAIL_INSUFFICIENT_WATER: "&c 水源不足，無法製作此食譜"
+          FAIL_NO_ICE: "&c 製作此食譜需要冰塊"
+          FAIL_NO_LAVA: "&c 製作此食譜需要岩漿"
+          FAIL_NO_WATER: "&c 製作此食譜需要水源"
+          FAIL_NO_RECIPE_FOUND: "&c 找不到與此溫室匹配的食譜"
+          FAIL_INSUFFICIENT_BLOCKS: "&c 製作此食譜需要更多方塊！"
+          FAIL_OVERLAPPING: "&c 抱歉，溫室不能共用牆壁。"
+        success: "&2 您已成功創建 [biome] 生物群系溫室！生物群系將在下次傳送或登入時同步。"
+        missing-blocks: "&c 缺少 [material] x [number]"
+        unknown-recipe: "&c 未知食譜"
+        try-these: "&c 請嘗試以下其中之一："
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [如何建造溫室]"
+        instructions: |
+          &e 用玻璃建造一個有 4 面牆和玻璃平屋頂的盒子，
+          &e 並在牆上添加最多 &f 4 扇門&e。
+          &e 在牆壁或屋頂放置 &f 1 個漏斗&e，並添加水桶以
+          &e 自動生成積雪和/或骨粉，讓植物自動生長。
+          &e 請查看生物群系食譜，了解內部必須放置哪些方塊
+          &e 才能成功創建。
+
+help:
+   help: "幫助"
+   make: "嘗試創建溫室"
+   remove: "如果您是所有者，則移除您所在的溫室"
+   info: "如何製作溫室"
+   list: "列出所有可製作的溫室生物群系"
+   recipe: "告訴您如何製作特定的溫室生物群系"
+   opengui: "打開溫室界面"
+
+list:
+   title: "[溫室生物群系食譜]"
+   info: "使用 /greenhouse recipe <編號> 查看每種溫室的製作詳情"
+
+error:
+   greenhouseProtected: "溫室受保護"
+   move: "請先移動到您擁有的溫室。"
+   notowner: "您必須是此溫室的所有者才能執行此操作。"
+   removing: "正在移除溫室！"
+   notyours: "這不是您的溫室！"
+   notinside: "您不在溫室內！"
+   tooexpensive: "您負擔不起 [price]" 
+   alreadyexists: "溫室已存在！"
+   norecipe: "無法創建溫室！"
+   
+messages:
+   enter: "進入 [owner] 的溫室，群系：[biome]&f！"
+   leave: "離開 [owner] 的溫室。"
+   youarein: "您現在處於 [owner] 的溫室中，群系：[biome]&f！"
+   removed: "此溫室已不存在..."
+   removedmessage: "您的 [biome]&f 溫室已被移除！"
+   ecolost: "您位於 [location] 的溫室失去了生態系統，已被移除。"
+
+info:
+   title: "&a [如何建造溫室]"
+   instructions: |
+     &e 用玻璃建造一個有 4 面牆和玻璃平屋頂的盒子，
+     &e 並在牆上添加最多 &f 4 扇門&e。
+     &e 在牆壁或屋頂放置 &f 1 個漏斗&e，並添加水桶以
+     &e 自動生成積雪和/或骨粉，讓植物自動生長。
+     &e 請查看生物群系食譜，了解內部必須放置哪些方塊
+     &e 才能成功創建。
+   info: "[溫室資訊]"
+   none: "無"
+   nomore: "&4 您不能再建造更多溫室了！"
+   onemore: "&6 您還可以再建造一個溫室。"
+   youcanbuild: "&a 您還可以建造最多 [number] 個溫室！"
+   unlimited: "&a 您可以建造無限數量的溫室！"
+   welcome: "&b 歡迎！點擊此處查看說明"
+
+recipe:
+   blockscolor: "&f"
+   hint: "使用 /greenhouse list 查看食譜編號列表！"
+   wrongnumber: "食譜編號必須介於 1 到 [size] 之間"
+   title: "[[biome] 食譜]"
+   nowater: "不允許有水。"
+   noice: "不允許有冰。"
+   nolava: "不允許有岩漿。"
+   watermustbe: "水 > 地面面積的 [coverage]%。"
+   icemustbe: "冰塊 > 地面面積的 [coverage]%。"
+   lavamustbe: "岩漿 > 地面面積的 [coverage]%。"
+   minimumblockstitle: "[所需最低方塊數量]"
+   nootherblocks: "不需要其他方塊。"
+   missing: "溫室結構不完整"
+
+event:
+   broke: "您破壞了這個溫室！生物群系已還原為 [biome]！"
+   fix: "修復溫室，然後重新創建。"
+   cannotplace: "不能在溫室上方放置方塊！"
+   pistonerror: "活塞不能將方塊推到溫室上方！"
+
+limits:
+   noneallowed: "權限不允許您擁有溫室，因此 [number] 個溫室已被移除。"
+   limitedto: "權限限制您只能擁有 [limit] 個溫室，因此 [number] 個溫室已被移除。"
+
+adminHelp:
+   reload: "從檔案重新載入設定。"
+   info: "提供您所在溫室的資訊"
+
+reload:
+   configReloaded: "設定已從檔案重新載入。"
+
+admininfo:
+   error: "溫室資訊僅在遊戲內可用"
+   error2: "進入溫室以查看資訊。"
+   flags: "[溫室標籤]"
+
+news:
+   headline: "[溫室新聞]"
+
+controlpanel:
+   title: "&a溫室選單"

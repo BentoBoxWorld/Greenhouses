@@ -20,7 +20,7 @@ greenhouses:
     no-rank: "&c Bạn không có cấp bậc để làm điều đó."
     notyours: "Đây không phải nhà kính của bạn!"
     not-inside: "&c Bạn không có ở trong nhà kính của bạn!"
-    tooexpensive: "Bạn không có đủ [price]" 
+    tooexpensive: "Bạn không có đủ [price]"
     alreadyexists: "Nhà kính đã tồn tại!"
     norecipe: "Không thể tạo nhà kính!"
     
@@ -38,104 +38,83 @@ greenhouses:
    minimumblockstitle: "[Cần số khối tối thiểu]"
    nootherblocks: "Không cần khối khác."
    missing: "Nhà kính đang bị thiếu"
-
+   
   commands:
     user:
+      description: "Mở giao diện chọn Nhà kính"
       remove:
-        description: "Xóa nhà kính ở chỗ bạn đứng nếu bạn là chủ"        
+        description: "Xóa nhà kính bạn đang đứng nếu bạn là chủ sở hữu"
       make:
-        description: "Tạo một nhà kính"
-        parameters: "<công thức>"
+        description: "Thử tạo một nhà kính"
+        parameters: "<recipe>"
         error:
-          already: "&cNhà kính đã tồn tại!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Trần nhà có khối không hợp lệ!"
-          FAIL_BAD_WALL_BLOCKS: "&c Tường nhà có khối không hợp lệ!"
-          FAIL_BELOW: "&c Bạn phải ở trong nhà kính để tạo nó"
-          FAIL_BLOCKS_ABOVE: "&c Không có khối ở trên nhà kính! Khối kính đỏ sẽ cho biết chỗ có vấn đề."
-          FAIL_HOLE_IN_ROOF: "&c Có một lỗ trên trần hoặc trần không phẳng! Khối kính đỏ sẽ cho biết chỗ có vấn đề."
-          FAIL_HOLE_IN_WALL: "&c Có một lỗ trên tường!"
-          FAIL_NO_ROOF: "&c Có vẻ chưa có trần nhà!"
-          FAIL_TOO_MANY_DOORS: "&c Bạn không thể có hơn 4 cánh cửa trong nhà kính!"
-          FAIL_TOO_MANY_HOPPERS: "&c Chỉ có một phễu được cho phép trên tường hoặc trên trần."
-          FAIL_UNEVEN_WALLS: "&c Tường không cân bằng. Khối kính đỏ sẽ cho biết chỗ có vấn đề."
-          FAIL_INSUFFICIENT_ICE: "&c Không đủ băng để làm công thức này"
-          FAIL_INSUFFICIENT_LAVA: "&c Không đủ nham thạch để làm công thức này"
-          FAIL_INSUFFICIENT_WATER: "&c Không đủ nước để làm công thức này"
-          FAIL_NO_ICE: "&c Cần băng để làm công thức này"
-          FAIL_NO_LAVA: "&c Cần nham thạch để làm công thức này"
-          FAIL_NO_WATER: "&c Cần nước để làm công thức này"
-          FAIL_NO_RECIPE_FOUND: "&c Không có công thức phù hợp cho nhà kính này"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Cần nhiều khối hơn để làm công thức này!"
-          FAIL_OVERLAPPING: "&c Nhà kính không thể có tường chung, xin lỗi."
-        success: "&2 Bạn đã tạo nhà kính [biome]! Nó sẽ đồng bộ ở lần dịch chuyển hoặc đăng nhập tiếp theo."
+          already: "&cĐã có một nhà kính ở đây!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Mái nhà chứa các khối không được phép!"
+          FAIL_BAD_WALL_BLOCKS: "&c Tường chứa các khối không được phép!"
+          FAIL_BELOW: "&c Bạn phải ở bên trong nhà kính để thử tạo nó"
+          FAIL_BLOCKS_ABOVE: "&c Không được có khối nào phía trên nhà kính! Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề."
+          FAIL_HOLE_IN_ROOF: |
+            &c Có một lỗ hổng trên mái nhà hoặc nó không phẳng!
+            &c Các khối kính đỏ sẽ hiển thị vấn đề.
+            &c Đảm bảo bạn đang ở bên trong nhà kính để tạo nó.
+          FAIL_HOLE_IN_WALL: "&c Có một lỗ hổng trên tường!"
+          FAIL_NO_ROOF: "&c Dường như không có mái nhà! Đảm bảo bạn đang ở bên trong nhà kính để tạo nó."
+          FAIL_TOO_MANY_DOORS: "&c Bạn không thể có quá 4 cánh cửa trong nhà kính!"
+          FAIL_TOO_MANY_HOPPERS: "&c Chỉ cho phép một phễu trong tường hoặc mái nhà."
+          FAIL_UNEVEN_WALLS: "&c Các bức tường không đều nhau. Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề."
+          FAIL_INSUFFICIENT_ICE: "&c Không đủ băng để thực hiện công thức này"
+          FAIL_INSUFFICIENT_LAVA: "&c Không đủ nham thạch để thực hiện công thức này"
+          FAIL_INSUFFICIENT_WATER: "&c Không đủ nước để thực hiện công thức này"
+          FAIL_NO_ICE: "&c Cần có băng để thực hiện công thức này"
+          FAIL_NO_LAVA: "&c Cần có nham thạch để thực hiện công thức này"
+          FAIL_NO_WATER: "&c Cần có nước để thực hiện công thức này"
+          FAIL_NO_RECIPE_FOUND: "&c Không tìm thấy công thức nào phù hợp với nhà kính này"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Cần thêm các khối để thực hiện công thức này!"
+          FAIL_OVERLAPPING: "&c Rất tiếc, các nhà kính không thể dùng chung tường."
+        success: "&2 Bạn đã tạo thành công nhà kính sinh thái [biome]! Hệ sinh thái sẽ đồng bộ hóa ở lần dịch chuyển hoặc đăng nhập tiếp theo."
         missing-blocks: "&c Thiếu [material] x [number]"
-        unknown-recipe: "&c Công thức không tồn tại"
-        try-these: "&c Thử một trong những cái này:"
+        unknown-recipe: "&c Công thức không xác định"
+        try-these: "&c Hãy thử một trong những cách sau:"
         recipe-format: "&3[name]"
       info:
-        title: "&a [Cách tạo một nhà kính]"
+        title: "&a [Cách xây dựng nhà kính]"
         instructions: |
-          &e Tạo một hộp bằng kính với 4 bức tường và một cái trần phẳng
-          &e và thêm vào tối đa &f 4 cánh cửa &Etrên tường.
-          &e Đặt &f 1 cái phễu &e trên tường hoặc trần nhà và thêm nào đó các xô nước.
-          &e để tạo tuyết hoặc thêm bột xương để mọc cây tự động.
-          &e Kiểm tra các công thức để biết các khối cần có
-          &e trong nhà kính để tạo một cái. 
+          &e Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,
+          &e thêm tối đa &f 4 cánh cửa &e ở các bức tường.
+          &e Đặt &f 1 cái phễu &e vào tường hoặc mái nhà và thêm các xô nước.
+          &e để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.
+          &e Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong
+          &e nhà kính để tạo thành công.
+      help:
+        help: "trợ giúp"
+        make: "thử tạo một nhà kính"
+        remove: "xóa nhà kính bạn đang đứng nếu bạn sở hữu nó"
+        list: "liệt kê các công thức nhà kính"
 
-
-######### Old locale for reference
-help:
-   help: "hướng dẫn"
-   make: "Tạo một nhà kính"
-   remove: "Xóa nhà kính ở chỗ bạn đứng nếu bạn là chủ"
-   info: "Cách tạo một nhà kính"
-   list: "Liệt kê các biome trong nhà kính bạn có thể tạo"
-   recipe: "Hướng dẫn cách tạo một biome trong nhà kính"
-   opengui: "Mở Menu nhà kính"
-
-list:
-   title: "[Công thức Biome nhà kính]"
-   info: "Dùng /greenhouse recipe <số> để xem thông tin cách tạo nhà kính"
-
-
-################
-#General Errors#
-################
-error:
-   greenhouseProtected: "Đã bảo vệ nhà kính"
-   move: "Di chuyển đến nhà kính của bạn trước."
-   notowner: "Bạn phải là chủ nhà kính để làm điều này."
-   removing: "Đang xóa nhà kính!"
-   notyours: "Đây không phải nhà kính của bạn!"
-   notinside: "Bạn không có ở trong nhà kính!"
-   tooexpensive: "Bạn không có đủ [price]" 
-   alreadyexists: "Nhà kính đã tồn tại!"
-   norecipe: "Không thể tạo nhà kính!"
-   
 messages:
-   enter: "Đang vào nhà kính [biome] của [owner]!"
-   leave: "Đang rời nhà kính của [owner]."
-   youarein: "Bạn đang ở nhà kính [biome] của [owner]!"
-   removed: "Nhà kính này không còn nữa..."
-   removedmessage: "Một nhà kính [biome] của bạn không còn nữa!"
-   ecolost: "Nhà kính của bạn ở [location] mất hệ sinh thái và đã bị xóa."
+   enter: "Bạn đã vào nhà kính [biome] của [owner]!"
+   leave: "Bạn đã rời khỏi nhà kính của [owner]."
+   youarein: "Bạn đang ở trong nhà kính [biome] của [owner]!"
+   removed: "Nhà kính này không còn tồn tại..."
+   removedmessage: "Nhà kính [biome] của bạn không còn nữa!"
+   ecolost: "Nhà kính tại [location] đã mất hệ sinh thái và đã bị xóa."
 
 info:
-   title: "&A[Cách tạo một nhà kính]"
+   title: "&a [Cách xây dựng nhà kính]"
    instructions: |
-     &e Tạo một hộp bằng kính với 4 bức tường và một cái trần phẳng
-     &e và thêm vào tối đa &f 4 cánh cửa &Etrên tường.
-     &e Đặt &f 1 cái phễu &e trên tường hoặc trần nhà và thêm nào đó các xô nước.
-     &e để tạo tuyết hoặc thêm bột xương để mọc cây tự động.
-     &e Kiểm tra các công thức để biết các khối cần có
-     &e trong nhà kính để tạo một cái.  
+     &e Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,
+     &e thêm tối đa &f 4 cánh cửa &e ở các bức tường.
+     &e Đặt &f 1 cái phễu &e vào tường hoặc mái nhà và thêm các xô nước.
+     &e để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.
+     &e Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong
+     &e nhà kính để tạo thành công.
    info: "[Thông tin nhà kính]"
-   none: "Không có"
-   nomore: "&4 Bạn không thể xây thêm nhà kính!"
-   onemore: "&6 Bạn có thể xây thêm một nhà kính."
-   youcanbuild: "&A Bạn có thể xây thêm tối đa [number] nhà kính nữa!"
-   unlimited: "&A Bạn có thể xây vô hạn nhà kính!"
-   welcome: "&B Xin chào! Nhấp vào đây để xem hướng dẫn"
+   none: "không có"
+   nomore: "&4Bạn không thể xây thêm bất kỳ nhà kính nào nữa!"
+   onemore: "&6Bạn có thể xây thêm một nhà kính nữa."
+   youcanbuild: "&aBạn có thể xây thêm tối đa [number] nhà kính!"
+   unlimited: "&aBạn có thể xây dựng số lượng nhà kính không giới hạn!"
+   welcome: "&bChào mừng! Nhấn vào đây để xem hướng dẫn"
 
 recipe:
    blockscolor: "&f"
@@ -158,33 +137,24 @@ event:
    cannotplace: "Các khối không thể đặt trên nhà kính!"
    pistonerror: "Pít tông không thể đẩy khối vào một nhà kính!"
 
-
 limits:
    noneallowed: "Quyền không cho phép bạn nên [number] đã bị xóa."
    limitedto: "Quyền đã giới hạn bạn chỉ [limit] nhà kính nên [number] đã bị xóa."
-   
 
-##################################
-#Admin commands that use /gadmin #
-##################################
-
-#Help
 adminHelp:
-   reload: "nạp các tùy chỉnh từ tệp."
+   reload: "nạp lại các tùy chỉnh từ tệp."
    info: "xem các thông tin về nhà kính bạn đang đứng"
 
-#reload
 reload:
-   configReloaded: "Đã nạp các tùy chỉnh từ tệp."
+   configReloaded: "Cấu hình đã được nạp lại từ tệp."
 
 admininfo:
-   error: "Thông tin nhà kính chỉ tồn tại trong game"
-   error2: "Đặt bạn vào một nhà kính để xem thông tin."
-   flags: "[Cờ Nhà Kính]"
+   error: "Thông tin nhà kính chỉ có sẵn trong trò chơi"
+   error2: "Hãy vào trong một nhà kính để xem thông tin."
+   flags: "[Cờ nhà kính]"
 
 news:
-   headline: "[Bản Tin Nhà Kính]"
+   headline: "[Tin tức nhà kính]"
 
 controlpanel:
-   title: "&ANhà kính"
-
+   title: "&aNhà kính"
