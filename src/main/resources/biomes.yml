@@ -339,9 +339,9 @@ biomes:
       HORSE: 18:GRASS_BLOCK
       DONKEY: 2:GRASS_BLOCK
       COW: 20:GRASS_BLOCK
-      CHICKEN: 25:GRASS_BLOCK
-      PIG: 25:GRASS_BLOCK
-      SHEEP: 25:GRASS_BLOCK
+      CHICKEN: 20:GRASS_BLOCK
+      PIG: 20:GRASS_BLOCK
+      SHEEP: 20:GRASS_BLOCK
     moblimit: 1
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
