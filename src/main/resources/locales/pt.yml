@@ -1,0 +1,179 @@
+###########################################################################################
+# Este é um arquivo YML. Tenha cuidado ao editar. Verifique suas edições em um            #
+# verificador YAML como http://yaml-online-parser.appspot.com                             #
+# Se este arquivo for excluído, ele será recriado no próximo carregamento.                #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Estufas
+      description: |
+        &b Alternar quem pode
+        &b controlar as estufas   
+
+greenhouses:
+  general:
+   greenhouses: "Estufas"
+   
+  errors:
+    move: "Mova-se primeiro para uma estufa que lhe pertença."
+    no-rank: "&c Não tem o cargo necessário para fazer isso."
+    notyours: "Esta estufa não é sua!"
+    not-inside: "&c Não está dentro de uma estufa!"
+    tooexpensive: "Não tem dinheiro suficiente para [price]" 
+    alreadyexists: "A estufa já existe!"
+    norecipe: "Não foi possível criar a estufa!"
+    
+  event:
+   broke: "Partiu esta estufa! Revertendo o bioma para [biome]!"
+   entering: "A entrar na estufa [biome]&f"
+   leaving: "A sair da estufa [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Receita de [biome]]"
+   watermustbe: "Água > [coverage]% da área do chão."
+   icemustbe: "Blocos de gelo > [coverage]% da área do chão."
+   lavamustbe: "Lava > [coverage]% da área do chão."
+   minimumblockstitle: "[Blocos mínimos necessários]"
+   nootherblocks: "Nenhum outro bloco é necessário."
+   missing: "A estufa está em falta"
+   
+  commands:
+    user:
+      description: "Abre o menu de seleção de estufas"
+      remove:
+        description: "Remove a estufa onde se encontra, se for o dono"        
+      make:
+        description: "Tentar criar uma estufa"
+        parameters: "<receita>"
+        error:
+          already: "&cJá existe uma estufa aqui!"
+          FAIL_BAD_ROOF_BLOCKS: "&c O telhado contém blocos não permitidos!"
+          FAIL_BAD_WALL_BLOCKS: "&c As paredes contêm blocos não permitidos!"
+          FAIL_BELOW: "&c Deve estar dentro da estufa para tentar criá-la"
+          FAIL_BLOCKS_ABOVE: "&c Não pode haver blocos por cima da estufa! Blocos de vidro vermelho mostrarão os blocos problemáticos."
+          FAIL_HOLE_IN_ROOF: |
+            &c Há um buraco no telhado ou ele não é plano!
+            &c Blocos de vidro vermelho mostrarão o problema.
+            &c Certifique-se de que está dentro da sua estufa para criá-la.
+          FAIL_HOLE_IN_WALL: "&c Há um buraco na parede!"
+          FAIL_NO_ROOF: "&c Parece não haver telhado! Certifique-se de que está dentro da estufa para criá-la."
+          FAIL_TOO_MANY_DOORS: "&c Não pode ter mais de 4 portas na estufa!"
+          FAIL_TOO_MANY_HOPPERS: "&c Apenas um funil é permitido nas paredes ou no telhado."
+          FAIL_UNEVEN_WALLS: "&c As paredes estão desiguais. Blocos de vidro vermelho mostrarão os blocos problemáticos."
+          FAIL_INSUFFICIENT_ICE: "&c Gelo insuficiente para criar esta receita"
+          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para criar esta receita"
+          FAIL_INSUFFICIENT_WATER: "&c Água insuficiente para criar esta receita"
+          FAIL_NO_ICE: "&c É necessário gelo para criar esta receita"
+          FAIL_NO_LAVA: "&c É necessária lava para criar esta receita"
+          FAIL_NO_WATER: "&c É necessária água para criar esta receita"
+          FAIL_NO_RECIPE_FOUND: "&c Nenhuma receita correspondente encontrada para esta estufa"
+          FAIL_INSUFFICIENT_BLOCKS: "&c São necessários mais blocos para criar esta receita!"
+          FAIL_OVERLAPPING: "&c Desculpe, as estufas não podem partilhar paredes."
+        success: "&2 Criou com sucesso uma estufa de bioma [biome]! O bioma será sincronizado no próximo teletransporte ou login."
+        missing-blocks: "&c Em falta [material] x [number]"
+        unknown-recipe: "&c Receita desconhecida"
+        try-these: "&c Tente uma destas:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Como construir uma estufa]"
+        instructions: |
+          &e Crie uma caixa de vidro com 4 paredes e um telhado
+          &e de vidro plano, e adicione até &f 4 portas &e nas paredes.
+          &e Coloque &f 1 funil &e numa parede ou telhado e adicione baldes
+          &e de água para criar neve e/ou farinha de osso para cultivar
+          &e plantas automaticamente. Verifique as receitas de biomas
+          &e para ver que blocos devem estar no interior para ter sucesso.
+
+help:
+   help: "ajuda"
+   make: "Tenta criar uma estufa"
+   remove: "Remove a estufa onde se encontra, se for o dono"
+   info: "Como criar uma estufa"
+   list: "Lista todos os biomas de estufa que podem ser feitos"
+   recipe: "Diz-lhe como criar um bioma de estufa específico"
+   opengui: "Abre o menu das estufas"
+
+list:
+   title: "[Receitas de Biomas de Estufa]"
+   info: "Use /greenhouse recipe <número> para ver detalhes sobre como fazer cada estufa"
+
+error:
+   greenhouseProtected: "Estufa protegida"
+   move: "Mova-se primeiro para uma estufa que lhe pertença."
+   notowner: "Deve ser o dono desta estufa para fazer isso."
+   removing: "A remover estufa!"
+   notyours: "Esta estufa não é sua!"
+   notinside: "Não está numa estufa!"
+   tooexpensive: "Não tem dinheiro suficiente para [price]" 
+   alreadyexists: "A estufa já existe!"
+   norecipe: "Não foi possível criar a estufa!"
+   
+messages:
+   enter: "A entrar na estufa de [owner] ([biome]&f)!"
+   leave: "A sair da estufa de [owner]."
+   youarein: "Está agora na estufa de [owner] ([biome]&f)!"
+   removed: "Esta estufa já não existe..."
+   removedmessage: "A sua estufa ([biome]&f) foi removida!"
+   ecolost: "A sua estufa em [location] perdeu o ecossistema e foi removida."
+
+info:
+   title: "&A[Como construir uma estufa]"
+   instructions: |
+     &E Crie uma caixa de vidro com 4 paredes e um telhado
+     &E de vidro plano, e adicione até &F 4 portas &E nas paredes.
+     &E Coloque &F 1 funil &E numa parede ou telhado e adicione baldes
+     &E de água para criar neve e/ou farinha de osso para cultivar
+     &E plantas automaticamente. Verifique as receitas de biomas
+     &E para ver que blocos devem estar no interior para ter sucesso. 
+   info: "[Informação da Estufa]"
+   none: "Nenhum"
+   nomore: "&4 Não pode construir mais estufas!"
+   onemore: "&6 Pode construir mais uma estufa."
+   youcanbuild: "&A Pode construir até mais [number] estufas!"
+   unlimited: "&A Pode construir estufas ilimitadas!"
+   welcome: "&B Bem-vindo! Clique aqui para instruções"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Use /greenhouse list para ver uma lista de números de receitas!"
+   wrongnumber: "O número da receita deve estar entre 1 e [size]"
+   title: "[Receita de [biome]]"
+   nowater: "Água não permitida."
+   noice: "Gelo não permitido."
+   nolava: "Lava não permitida."
+   watermustbe: "Água > [coverage]% da área do chão."
+   icemustbe: "Blocos de gelo > [coverage]% da área do chão."
+   lavamustbe: "Lava > [coverage]% da área do chão."
+   minimumblockstitle: "[Blocos mínimos necessários]"
+   nootherblocks: "Nenhum outro bloco é necessário."
+   missing: "A estufa está em falta"
+
+event:
+   broke: "Partiu esta estufa! Revertendo o bioma para [biome]!"
+   fix: "Repare a estufa e depois crie-a novamente."
+   cannotplace: "Não podem ser colocados blocos por cima de uma estufa!"
+   pistonerror: "Pistões não podem empurrar blocos por cima de uma estufa!"
+
+limits:
+   noneallowed: "As permissões não permitem que tenha estufas, por isso [number] foram removidas."
+   limitedto: "As permissões limitam-no a [limit] estufas, por isso [number] foram removidas."
+
+adminHelp:
+   reload: "recarregar configuração a partir do arquivo."
+   info: "fornece informações sobre a estufa em que se encontra"
+
+reload:
+   configReloaded: "Configuração recarregada a partir do arquivo."
+
+admininfo:
+   error: "Informação de estufa disponível apenas dentro do jogo"
+   error2: "Entre numa estufa para ver a informação."
+   flags: "[Flags da Estufa]"
+
+news:
+   headline: "[Notícias da Estufa]"
+
+controlpanel:
+   title: "&AEstufas"

@@ -1,0 +1,179 @@
+###########################################################################################
+# Šis ir YML fails. Esiet uzmanīgi rediģējot. Pārbaudiet labojumus YAML pārbaudītājā,    #
+# piemēram, http://yaml-online-parser.appspot.com                                         #
+# Ja šis fails tiks izdzēsts, tas tiks izveidots no jauna nākamajā ielādes reizē.         #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Siltumnīcas
+      description: |
+        &b Pārslēgt, kurš var
+        &b kontrolēt siltumnīcas   
+
+greenhouses:
+  general:
+   greenhouses: "Siltumnīcas"
+   
+  errors:
+    move: "Vispirms dodieties uz siltumnīcu, kas pieder jums."
+    no-rank: "&c Jums nav nepieciešamā ranga, lai to darītu."
+    notyours: "Šī nav jūsu siltumnīca!"
+    not-inside: "&c Jūs neatrodaties siltumnīcā!"
+    tooexpensive: "Jūs nevarat to atļauties [price]" 
+    alreadyexists: "Siltumnīca jau eksistē!"
+    norecipe: "Nevar izveidot siltumnīcu!"
+    
+  event:
+   broke: "Jūs salauzāt šo siltumnīcu! Bioms tiek atgriezts uz [biome]!"
+   entering: "Ieiešana [biome]&f siltumnīcā"
+   leaving: "Iziešana no [biome]&f siltumnīcas"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] recepte]"
+   watermustbe: "Ūdens > [coverage]% no grīdas platības."
+   icemustbe: "Ledus bloki > [coverage]% no grīdas platības."
+   lavamustbe: "Lava > [coverage]% no grīdas platības."
+   minimumblockstitle: "[Minimālie nepieciešamie bloki]"
+   nootherblocks: "Citi bloki nav nepieciešami."
+   missing: "Siltumnīca nav pabeigta"
+   
+  commands:
+    user:
+      description: "Atver siltumnīcu izvēles izvēlni"
+      remove:
+        description: "Noņem siltumnīcu, kurā stāvat, ja esat tās īpašnieks"        
+      make:
+        description: "Mēģināt izveidot siltumnīcu"
+        parameters: "<recepte>"
+        error:
+          already: "&cŠeit jau ir siltumnīca!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Jumts satur neatļautus blokus!"
+          FAIL_BAD_WALL_BLOCKS: "&c Sienas satur neatļautus blokus!"
+          FAIL_BELOW: "&c Jums jāatrodas siltumnīcas iekšpusē, lai mēģinātu to izveidot"
+          FAIL_BLOCKS_ABOVE: "&c Virs siltumnīcas nedrīkst būt nekādu bloku! Sarkanie stikla bloki parādīs problēmu vietas."
+          FAIL_HOLE_IN_ROOF: |
+            &c Jumtā ir caurums vai tas nav plakans!
+            &c Sarkanie stikla bloki parādīs problēmu.
+            &c Pārliecinieties, ka izveides brīdī atrodaties iekšpusē.
+          FAIL_HOLE_IN_WALL: "&c Sienā ir caurums!"
+          FAIL_NO_ROOF: "&c Šķiet, ka nav jumta! Pārliecinieties, ka atrodaties siltumnīcas iekšpusē."
+          FAIL_TOO_MANY_DOORS: "&c Siltumnīcā nevar būt vairāk par 4 durvīm!"
+          FAIL_TOO_MANY_HOPPERS: "&c Sienās vai jumtā ir atļauta tikai viena piltuve."
+          FAIL_UNEVEN_WALLS: "&c Sienas nav vienādas. Sarkanie stikla bloki parādīs problēmu vietas."
+          FAIL_INSUFFICIENT_ICE: "&c Nepietiekami ledus šai receptei"
+          FAIL_INSUFFICIENT_LAVA: "&c Nepietiekami lavas šai receptei"
+          FAIL_INSUFFICIENT_WATER: "&c Nepietiekami ūdens šai receptei"
+          FAIL_NO_ICE: "&c Šai receptei ir nepieciešams ledus"
+          FAIL_NO_LAVA: "&c Šai receptei ir nepieciešama lava"
+          FAIL_NO_WATER: "&c Šai receptei ir nepieciešams ūdens"
+          FAIL_NO_RECIPE_FOUND: "&c Netika atrasta recepte, kas atbilstu šai siltumnīcai"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Šai receptei ir nepieciešams vairāk bloku!"
+          FAIL_OVERLAPPING: "&c Atvainojiet, siltumnīcas nevar dalīt kopīgas sienas."
+        success: "&2 Jūs veiksmīgi izveidojāt [biome] bioma siltumnīcu! Bioms tiks sinhronizēts nākamajā teleportācijas vai pieslēgšanās reizē."
+        missing-blocks: "&c Trūkst [material] x [number]"
+        unknown-recipe: "&c Nezināma recepte"
+        try-these: "&c Izmēģiniet kādu no šīm:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Kā uzbūvēt siltumnīcu]"
+        instructions: |
+          &e Izveidojiet stikla kasti ar 4 sienām un plakanu stikla
+          &e jumtu, sienās pievienojiet līdz &f 4 durvīm&e.
+          &e Ievietojiet &f 1 piltuvi &e sienā vai jumtā un pievienojiet
+          &e ūdens spainus, lai automātiski radītu sniegu un/vai kaulu
+          &e miltus augu augšanai. Pārbaudiet bioma receptes, lai uzzinātu,
+          &e kādiem blokiem jābūt iekšpusē veiksmīgai izveidei.
+
+help:
+   help: "palīdzība"
+   make: "Mēģina izveidot siltumnīcu"
+   remove: "Noņem siltumnīcu, kurā stāvat, ja esat īpašnieks"
+   info: "Kā izveidot siltumnīcu"
+   list: "Saraksts ar visiem izveidojamajiem siltumnīcu biomiem"
+   recipe: "Pastāsta, kā izveidot konkrētu siltumnīcas biomu"
+   opengui: "Atver siltumnīcu izvēlni"
+
+list:
+   title: "[Siltumnīcu biomu receptes]"
+   info: "Izmantojiet /greenhouse recipe <numurs>, lai redzētu detaļas"
+
+error:
+   greenhouseProtected: "Siltumnīca ir aizsargāta"
+   move: "Vispirms dodieties uz siltumnīcu, kas pieder jums."
+   notowner: "Jums jābūt siltumnīcas īpašniekam, lai to darītu."
+   removing: "Siltumnīcas noņemšana!"
+   notyours: "Šī nav jūsu siltumnīca!"
+   notinside: "Jūs neatrodaties siltumnīcā!"
+   tooexpensive: "Jūs nevarat to atļauties [price]" 
+   alreadyexists: "Siltumnīca jau eksistē!"
+   norecipe: "Nevar izveidot siltumnīcu!"
+   
+messages:
+   enter: "Ieiešana [owner] piederošā [biome]&f siltumnīcā!"
+   leave: "Iziešana no [owner] siltumnīcas."
+   youarein: "Jūs pašlaik atrodaties [owner] siltumnīcā, bioms: [biome]&f!"
+   removed: "Šī siltumnīca vairs neeksistē..."
+   removedmessage: "Jūsu [biome]&f siltumnīca vairs neeksistē!"
+   ecolost: "Siltumnīca lokācijā [location] zaudēja ekosistēmu un tika noņemta."
+
+info:
+   title: "&a [Kā uzbūvēt siltumnīcu]"
+   instructions: |
+     &e Izveidojiet stikla kasti ar 4 sienām un plakanu stikla
+     &e jumtu, sienās pievienojiet līdz &f 4 durvīm&e.
+     &e Ievietojiet &f 1 piltuvi &e sienā vai jumtā un pievienojiet
+     &e ūdens spainus, lai automātiski radītu sniegu un/vai kaulu
+     &e miltus augu augšanai. Pārbaudiet bioma receptes, lai uzzinātu,
+     &e kādiem blokiem jābūt iekšpusē veiksmīgai izveidei.
+   info: "[Siltumnīcas info]"
+   none: "nav"
+   nomore: "&4 Jūs vairs nevarat būvēt siltumnīcas!"
+   onemore: "&6 Jūs varat uzbūvēt vēl vienu siltumnīcu."
+   youcanbuild: "&a Jūs varat uzbūvēt vēl līdz [number] siltumnīcām!"
+   unlimited: "&a Jūs varat būvēt neierobežotu skaitu siltumnīcu!"
+   welcome: "&b Esiet sveicināti! Spiediet šeit, lai redzētu instrukcijas"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Izmantojiet /greenhouse list, lai redzētu recepšu numurus!"
+   wrongnumber: "Receptes numuram jābūt starp 1 un [size]"
+   title: "[[biome] recepte]"
+   nowater: "Ūdens nav atļauts."
+   noice: "Ledus nav atļauts."
+   nolava: "Lava nav atļauta."
+   watermustbe: "Ūdens > [coverage]% no grīdas platības."
+   icemustbe: "Ledus bloki > [coverage]% no grīdas platības."
+   lavamustbe: "Lava > [coverage]% no grīdas platības."
+   minimumblockstitle: "[Minimālie nepieciešamie bloki]"
+   nootherblocks: "Citi bloki nav nepieciešami."
+   missing: "Siltumnīca nav pabeigta"
+
+event:
+   broke: "Jūs salauzāt šo siltumnīcu! Bioms tiek atgriezts uz [biome]!"
+   fix: "Salabojiet siltumnīcu un tad mēģiniet vēlreiz."
+   cannotplace: "Blokus nevar novietot virs siltumnīcas!"
+   pistonerror: "Virzuļi nevar bīdīt blokus pāri siltumnīcai!"
+
+limits:
+   noneallowed: "Atļaujas neļauj jums piederēt siltumnīcas, tāpēc [number] tika noņemtas."
+   limitedto: "Atļaujas ierobežo jūs līdz [limit] siltumnīcām, tāpēc [number] tika noņemtas."
+
+adminHelp:
+   reload: "pārlādēt konfigurāciju no faila."
+   info: "sniedz informāciju par siltumnīcu, kurā atrodaties"
+
+reload:
+   configReloaded: "Konfigurācija pārlādēta no faila."
+
+admininfo:
+   error: "Siltumnīcas info pieejama tikai esot spēlē"
+   error2: "Ieejiet siltumnīcā, lai redzētu informāciju."
+   flags: "[Siltumnīcas karogi]"
+
+news:
+   headline: "[Siltumnīcu ziņas]"
+
+controlpanel:
+   title: "&aSiltumnīcas"

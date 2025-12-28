@@ -1,0 +1,179 @@
+###########################################################################################
+# Acesta este un fișier YML. Atenție la editare. Verificați modificările cu un            #
+# verificator YAML precum http://yaml-online-parser.appspot.com                             #
+# Dacă acest fișier este șters, acesta va fi recreat la următoarea reîncărcare.           #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Sere
+      description: |
+        &b Schimbă cine poate
+        &b controla serele   
+
+greenhouses:
+  general:
+   greenhouses: "Sere"
+   
+  errors:
+    move: "Mută-te mai întâi într-o seră care îți aparține."
+    no-rank: "&c Nu ai rangul necesar pentru a face asta."
+    notyours: "Aceasta nu este sera ta!"
+    not-inside: "&c Nu ești în interiorul unei sere!"
+    tooexpensive: "Nu îți poți permite [price]" 
+    alreadyexists: "Sera există deja!"
+    norecipe: "Nu s-a putut crea sera!"
+    
+  event:
+   broke: "Ai distrus această seră! Biometul revine la [biome]!"
+   entering: "Intrare în sera [biome]&f"
+   leaving: "Ieșire din sera [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Rețetă [biome]]"
+   watermustbe: "Apă > [coverage]% din suprafața podelei."
+   icemustbe: "Blocuri de gheață > [coverage]% din suprafața podelei."
+   lavamustbe: "Lavă > [coverage]% din suprafața podelei."
+   minimumblockstitle: "[Blocuri minime necesare]"
+   nootherblocks: "Nu sunt necesare alte blocuri."
+   missing: "Sera lipsește"
+   
+  commands:
+    user:
+      description: "Deschide meniul de selecție a serelor"
+      remove:
+        description: "Șterge sera în care te afli, dacă ești proprietarul"        
+      make:
+        description: "Încearcă să creezi o seră"
+        parameters: "<rețetă>"
+        error:
+          already: "&cExistă deja o seră aici!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Acoperișul conține blocuri nepermise!"
+          FAIL_BAD_WALL_BLOCKS: "&c Pereții conțin blocuri nepermise!"
+          FAIL_BELOW: "&c Trebuie să fii în interiorul serei pentru a încerca să o creezi"
+          FAIL_BLOCKS_ABOVE: "&c Nu pot exista blocuri deasupra serei! Blocurile de sticlă roșie vor indica blocurile problematice."
+          FAIL_HOLE_IN_ROOF: |
+            &c Există o gaură în acoperiș sau acesta nu este plat!
+            &c Blocurile de sticlă roșie vor indica problema.
+            &c Asigură-te că ești în interiorul serei pentru a o crea.
+          FAIL_HOLE_IN_WALL: "&c Există o gaură în perete!"
+          FAIL_NO_ROOF: "&c Se pare că nu există acoperiș! Asigură-te că ești în interiorul serei pentru a o crea."
+          FAIL_TOO_MANY_DOORS: "&c Nu poți avea mai mult de 4 uși în seră!"
+          FAIL_TOO_MANY_HOPPERS: "&c Este permisă o singură pâlnie (hopper) în pereți sau acoperiș."
+          FAIL_UNEVEN_WALLS: "&c Pereții sunt inegali. Blocurile de sticlă roșie vor indica blocurile problematice."
+          FAIL_INSUFFICIENT_ICE: "&c Gheață insuficientă pentru această rețetă"
+          FAIL_INSUFFICIENT_LAVA: "&c Lavă insuficientă pentru această rețetă"
+          FAIL_INSUFFICIENT_WATER: "&c Apă insuficientă pentru această rețetă"
+          FAIL_NO_ICE: "&c Gheața este necesară pentru această rețetă"
+          FAIL_NO_LAVA: "&c Lava este necesară pentru această rețetă"
+          FAIL_NO_WATER: "&c Apa este necesară pentru această rețetă"
+          FAIL_NO_RECIPE_FOUND: "&c Nu a fost găsită nicio rețetă corespunzătoare pentru această seră"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Sunt necesare mai multe blocuri pentru această rețetă!"
+          FAIL_OVERLAPPING: "&c Ne pare rău, serele nu pot împărți pereți comuni."
+        success: "&2 Ai creat cu succes o seră cu biometul [biome]! Biometul se va sincroniza la următoarea teleportare sau conectare."
+        missing-blocks: "&c Lipsesc [material] x [number]"
+        unknown-recipe: "&c Rețetă necunoscută"
+        try-these: "&c Încearcă una dintre acestea:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Cum să construiești o seră]"
+        instructions: |
+          &e Construiește o cutie din sticlă cu 4 pereți și un
+          &e acoperiș plat din sticlă, și adaugă până la &f 4 uși &e în pereți.
+          &e Plasează &f 1 pâlnie &e într-un perete sau acoperiș și adaugă
+          &e găleți cu apă pentru a crea zăpadă și/sau făină de oase
+          &e pentru creșterea automată. Verifică rețetele de biomet pentru
+          &e a vedea ce blocuri trebuie să fie în interior.
+
+help:
+   help: "ajutor"
+   make: "Încearcă să creezi o seră"
+   remove: "Șterge sera în care te afli, dacă ești proprietarul"
+   info: "Cum să faci o seră"
+   list: "Listează toate biomurile de seră ce pot fi create"
+   recipe: "Îți spune cum să creezi un anumit biomet de seră"
+   opengui: "Deschide meniul serelor"
+
+list:
+   title: "[Rețete Biomete Seră]"
+   info: "Folosește /greenhouse recipe <număr> pentru detalii despre crearea fiecărei sere"
+
+error:
+   greenhouseProtected: "Seră protejată"
+   move: "Mută-te mai întâi într-o seră care îți aparține."
+   notowner: "Trebuie să fii proprietarul serei pentru a face asta."
+   removing: "Se șterge sera!"
+   notyours: "Aceasta nu este sera ta!"
+   notinside: "Nu ești într-o seră!"
+   tooexpensive: "Nu îți poți permite [price]" 
+   alreadyexists: "Sera există deja!"
+   norecipe: "Nu s-a putut crea sera!"
+   
+messages:
+   enter: "Ai intrat în sera lui [owner] ([biome]&f)!"
+   leave: "Ai părăsit sera lui [owner]."
+   youarein: "Ești acum în sera lui [owner] ([biome]&f)!"
+   removed: "Această seră nu mai există..."
+   removedmessage: "Sera ta ([biome]&f) a fost ștearsă!"
+   ecolost: "Sera ta din [location] și-a pierdut ecosistemul și a fost ștearsă."
+
+info:
+   title: "&A[Cum să construiești o seră]"
+   instructions: |
+     &E Construiește o cutie din sticlă cu 4 pereți și un
+     &E acoperiș plat din sticlă, și adaugă până la &F 4 uși &E în pereți.
+     &E Plasează &F 1 pâlnie &E într-un perete sau acoperiș și adaugă
+     &E găleți cu apă pentru a crea zăpadă și/sau făină de oase
+     &E pentru creșterea automată. Verifică rețetele de biomet pentru
+     &E a vedea ce blocuri trebuie să fie în interior. 
+   info: "[Info Seră]"
+   none: "niciunul"
+   nomore: "&4 Nu mai poți construi alte sere!"
+   onemore: "&6 Mai poți construi încă o seră."
+   youcanbuild: "&A Mai poți construi până la [number] sere!"
+   unlimited: "&A Poți construi un număr nelimitat de sere!"
+   welcome: "&B Bine ai venit! Click aici pentru instrucțiuni"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Folosește /greenhouse list pentru a vedea lista numerelor de rețete!"
+   wrongnumber: "Numărul rețetei trebuie să fie între 1 și [size]"
+   title: "[Rețetă [biome]]"
+   nowater: "Apa nu este permisă."
+   noice: "Gheața nu este permisă."
+   nolava: "Lava nu este permisă."
+   watermustbe: "Apă > [coverage]% din suprafața podelei."
+   icemustbe: "Blocuri de gheață > [coverage]% din suprafața podelei."
+   lavamustbe: "Lavă > [coverage]% din suprafața podelei."
+   minimumblockstitle: "[Blocuri minime necesare]"
+   nootherblocks: "Nu sunt necesare alte blocuri."
+   missing: "Sera lipsește"
+
+event:
+   broke: "Ai distrus această seră! Biometul revine la [biome]!"
+   fix: "Repară sera și apoi creează-o din nou."
+   cannotplace: "Blocurile nu pot fi plasate deasupra unei sere!"
+   pistonerror: "Pistoanele nu pot împinge blocuri deasupra unei sere!"
+
+limits:
+   noneallowed: "Permisiunile nu îți permit să ai sere, prin urmare [number] au fost șterse."
+   limitedto: "Permisiunile te limitează la [limit] sere, prin urmare [number] au fost șterse."
+
+adminHelp:
+   reload: "reîncarcă configurația din fișier."
+   info: "oferă informații despre sera în care te afli"
+
+reload:
+   configReloaded: "Configurația a fost reîncărcată din fișier."
+
+admininfo:
+   error: "Informațiile despre seră sunt disponibile doar în joc"
+   error2: "Intră într-o seră pentru a vedea informațiile."
+   flags: "[Flag-uri Seră]"
+
+news:
+   headline: "[Știri Sere]"
+
+controlpanel:
+   title: "&ASere"

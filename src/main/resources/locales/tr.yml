@@ -1,0 +1,179 @@
+###########################################################################################
+# Bu bir YML dosyasıdır. Düzenlerken dikkatli olun. Değişikliklerinizi                #
+# http://yaml-online-parser.appspot.com gibi bir YAML kontrolcüsünde doğrulayın.          #
+# Bu dosya silinirse, bir sonraki yüklemede otomatik olarak yeniden oluşturulacaktır.     #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Seralar
+      description: |
+        &b Seraları kimlerin kontrol
+        &b edebileceğini belirle   
+
+greenhouses:
+  general:
+   greenhouses: "Seralar"
+   
+  errors:
+    move: "Önce sahibi olduğunuz bir seraya gidin."
+    no-rank: "&c Bunu yapmak için gerekli rütbeniz yok."
+    notyours: "Bu sera size ait değil!"
+    not-inside: "&c Bir seranın içinde değilsiniz!"
+    tooexpensive: "Bunu karşılayacak paranız yok: [price]" 
+    alreadyexists: "Sera zaten mevcut!"
+    norecipe: "Sera oluşturulamadı!"
+    
+  event:
+   broke: "Bu serayı bozdunuz! Biyom [biome] olarak geri döndürülüyor!"
+   entering: "[biome]&f serasına giriliyor"
+   leaving: "[biome]&f serasından çıkılıyor"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] Tarifi]"
+   watermustbe: "Su > Zemin alanının %[coverage] kadarı olmalı."
+   icemustbe: "Buz blokları > Zemin alanının %[coverage] kadarı olmalı."
+   lavamustbe: "Lav > Zemin alanının %[coverage] kadarı olmalı."
+   minimumblockstitle: "[Gerekli Minimum Bloklar]"
+   nootherblocks: "Başka blok gerekli değil."
+   missing: "Sera eksik"
+   
+  commands:
+    user:
+      description: "Sera seçim arayüzünü açar"
+      remove:
+        description: "Sahibiyseniz içinde durduğunuz serayı kaldırır"        
+      make:
+        description: "Bir sera oluşturmayı dener"
+        parameters: "<tarif>"
+        error:
+          already: "&cBurada zaten bir sera var!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Çatıda izin verilmeyen bloklar var!"
+          FAIL_BAD_WALL_BLOCKS: "&c Duvarlarda izin verilmeyen bloklar var!"
+          FAIL_BELOW: "&c Oluşturmayı denemek için seranın içinde olmalısınız"
+          FAIL_BLOCKS_ABOVE: "&c Seranın üzerinde hiçbir blok olmamalı! Kırmızı cam bloklar sorunlu yerleri gösterecektir."
+          FAIL_HOLE_IN_ROOF: |
+            &c Çatıda delik var veya çatı düz değil!
+            &c Kırmızı cam bloklar sorunu gösterecektir.
+            &c Oluştururken seranın içinde olduğunuzdan emin olun.
+          FAIL_HOLE_IN_WALL: "&c Duvarda delik var!"
+          FAIL_NO_ROOF: "&c Çatı bulunamadı! Seranın içinde olduğunuzdan emin olun."
+          FAIL_TOO_MANY_DOORS: "&c Bir serada 4'ten fazla kapı olamaz!"
+          FAIL_TOO_MANY_HOPPERS: "&c Duvarlarda veya çatıda sadece bir huniye izin verilir."
+          FAIL_UNEVEN_WALLS: "&c Duvarlar düzgün değil. Kırmızı cam bloklar sorunlu yerleri gösterecektir."
+          FAIL_INSUFFICIENT_ICE: "&c Bu tarif için yeterli buz yok"
+          FAIL_INSUFFICIENT_LAVA: "&c Bu tarif için yeterli lav yok"
+          FAIL_INSUFFICIENT_WATER: "&c Bu tarif için yeterli su yok"
+          FAIL_NO_ICE: "&c Bu tarif için buz gereklidir"
+          FAIL_NO_LAVA: "&c Bu tarif için lav gereklidir"
+          FAIL_NO_WATER: "&c Bu tarif için su gereklidir"
+          FAIL_NO_RECIPE_FOUND: "&c Bu seraya uygun bir tarif bulunamadı"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Bu tarifi oluşturmak için daha fazla blok gerekiyor!"
+          FAIL_OVERLAPPING: "&c Üzgünüz, seralar ortak duvar kullanamaz."
+        success: "&2 Başarıyla bir [biome] biyomu serası oluşturdunuz! Biyom bir sonraki ışınlanmada veya girişte senkronize edilecektir."
+        missing-blocks: "&c Eksik: [material] x [number]"
+        unknown-recipe: "&c Bilinmeyen tarif"
+        try-these: "&c Bunlardan birini deneyin:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Nasıl Sera İnşa Edilir]"
+        instructions: |
+          &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
+          &e duvarlara en fazla &f 4 kapı &e ekleyin.
+          &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
+          &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
+          &e Başarılı bir kurulum için hangi blokların içeride olması
+          &e gerektiğini biyom tariflerinden kontrol edin.
+
+help:
+   help: "yardım"
+   make: "Sera oluşturmayı dener"
+   remove: "Sahibiyseniz içinde durduğunuz serayı kaldırır"
+   info: "Sera nasıl yapılır"
+   list: "Oluşturulabilir tüm sera biyomlarını listeler"
+   recipe: "Belirli bir sera biyomunun nasıl yapılacağını söyler"
+   opengui: "Sera arayüzünü açar"
+
+list:
+   title: "[Sera Biyom Tarifleri]"
+   info: "Her seranın yapım detaylarını görmek için /greenhouse recipe <numara> kullanın"
+
+error:
+   greenhouseProtected: "Sera korumalı"
+   move: "Önce sahibi olduğunuz bir seraya gidin."
+   notowner: "Bunu yapmak için bu seranın sahibi olmalısınız."
+   removing: "Sera kaldırılıyor!"
+   notyours: "Bu sera sizin değil!"
+   notinside: "Bir serada değilsiniz!"
+   tooexpensive: "Bunu karşılayacak paranız yok: [price]" 
+   alreadyexists: "Sera zaten mevcut!"
+   norecipe: "Sera oluşturulamadı!"
+   
+messages:
+   enter: "[owner] adlı oyuncunun serasına giriyorsunuz, biyom: [biome]&f!"
+   leave: "[owner] adlı oyuncunun serasından çıkıyorsunuz."
+   youarein: "Şu anda [owner] adlı oyuncunun serasındasınız, biyom: [biome]&f!"
+   removed: "Bu sera artık mevcut değil..."
+   removedmessage: "[biome]&f seranız kaldırıldı!"
+   ecolost: "[location] konumundaki seranız ekosistemini kaybetti ve kaldırıldı."
+
+info:
+   title: "&a [Nasıl Sera İnşa Edilir]"
+   instructions: |
+     &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
+     &e duvarlara en fazla &f 4 kapı &e ekleyin.
+     &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
+     &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
+     &e Başarılı bir kurulum için hangi blokların içeride olması
+     &e gerektiğini biyom tariflerinden kontrol edin.
+   info: "[Sera Bilgisi]"
+   none: "Yok"
+   nomore: "&4 Daha fazla sera inşa edemezsiniz!"
+   onemore: "&6 Bir tane daha sera inşa edebilirsiniz."
+   youcanbuild: "&a [number] adet daha sera inşa edebilirsiniz!"
+   unlimited: "&a Sınırsız sayıda sera inşa edebilirsiniz!"
+   welcome: "&b Hoş geldiniz! Talimatlar için buraya tıklayın"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Tarif numaralarının listesini görmek için /greenhouse list kullanın!"
+   wrongnumber: "Tarif numarası 1 ile [size] arasında olmalıdır"
+   title: "[[biome] Tarifi]"
+   nowater: "Suya izin verilmiyor."
+   noice: "Buza izin verilmiyor."
+   nolava: "Lava izin verilmiyor."
+   watermustbe: "Su > Zemin alanının %[coverage] kadarı olmalı."
+   icemustbe: "Buz blokları > Zemin alanının %[coverage] kadarı olmalı."
+   lavamustbe: "Lav > Zemin alanının %[coverage] kadarı olmalı."
+   minimumblockstitle: "[Gerekli Minimum Bloklar]"
+   nootherblocks: "Başka blok gerekli değil."
+   missing: "Sera eksik"
+
+event:
+   broke: "Bu serayı bozdunuz! Biyom [biome] olarak geri döndürülüyor!"
+   fix: "Serayı onarın ve ardından tekrar oluşturun."
+   cannotplace: "Seranın üzerine blok yerleştirilemez!"
+   pistonerror: "Pistonlar seranın üzerinden blok itemez!"
+
+limits:
+   noneallowed: "İzinleriniz sera sahibi olmanıza izin vermiyor, bu yüzden [number] adet sera kaldırıldı."
+   limitedto: "İzinleriniz sizi [limit] sera ile sınırlandırıyor, bu yüzden [number] adet sera kaldırıldı."
+
+adminHelp:
+   reload: "Yapılandırmayı dosyadan yeniler."
+   info: "İçinde bulunduğunuz sera hakkında bilgi verir"
+
+reload:
+   configReloaded: "Yapılandırma dosyadan yenilendi."
+
+admininfo:
+   error: "Sera bilgisi sadece oyun içinden görülebilir"
+   error2: "Bilgiyi görmek için bir seranın içine girin."
+   flags: "[Sera Bayrakları]"
+
+news:
+   headline: "[Sera Haberleri]"
+
+controlpanel:
+   title: "&aSeralar"

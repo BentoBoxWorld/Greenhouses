@@ -1,0 +1,179 @@
+###########################################################################################
+# Ovo je YML datoteka. Budite oprezni pri uređivanju. Provjerite svoje izmjene u YAML      #
+# provjerivaču kao što je http://yaml-online-parser.appspot.com                          #
+# Ako se ova datoteka izbriše, ponovno će se stvoriti pri sljedećem učitavanju.           #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Staklenici
+      description: |
+        &b Prebaci tko može
+        &b upravljati staklenicima   
+
+greenhouses:
+  general:
+   greenhouses: "Staklenici"
+   
+  errors:
+    move: "Prvo se pomaknite u staklenik koji posjedujete."
+    no-rank: "&c Nemate potreban čin da biste to učinili."
+    notyours: "Ovo nije vaš staklenik!"
+    not-inside: "&c Niste unutar staklenika!"
+    tooexpensive: "Ne možete si to priuštiti [price]" 
+    alreadyexists: "Staklenik već postoji!"
+    norecipe: "Ne mogu napraviti staklenik!"
+    
+  event:
+   broke: "Razbili ste ovaj staklenik! Vraćanje bioma na [biome]!"
+   entering: "Ulazak u [biome]&f staklenik"
+   leaving: "Izlazak iz [biome]&f staklenika"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[[biome] recept]"
+   watermustbe: "Voda > [coverage]% površine poda."
+   icemustbe: "Ledeni blokovi > [coverage]% površine poda."
+   lavamustbe: "Lava > [coverage]% površine poda."
+   minimumblockstitle: "[Minimalno potrebnih blokova]"
+   nootherblocks: "Nisu potrebni drugi blokovi."
+   missing: "Nedostaje staklenik"
+   
+  commands:
+    user:
+      description: "Otvara sučelje za odabir staklenika"
+      remove:
+        description: "Uklanja staklenik u kojem stojite ako ste vlasnik"        
+      make:
+        description: "Pokušaj napraviti staklenik"
+        parameters: "<recept>"
+        error:
+          already: "&cOvdje već postoji staklenik!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Krov sadrži nedopuštene blokove!"
+          FAIL_BAD_WALL_BLOCKS: "&c Zid sadrži nedopuštene blokove!"
+          FAIL_BELOW: "&c Morate biti unutar staklenika kako biste ga pokušali napraviti"
+          FAIL_BLOCKS_ABOVE: "&c Iznad staklenika ne smije biti blokova! Crveni stakleni blokovi trebali bi pokazati problematične blokove."
+          FAIL_HOLE_IN_ROOF: |
+            &c Postoji rupa u krovu ili krov nije ravan!
+            &c Crveni stakleni blokovi trebali bi pokazati problem.
+            &c Provjerite jeste li unutar staklenika prilikom izrade.
+          FAIL_HOLE_IN_WALL: "&c Postoji rupa u zidu!"
+          FAIL_NO_ROOF: "&c Čini se da nema krova! Provjerite jeste li unutar staklenika."
+          FAIL_TOO_MANY_DOORS: "&c U stakleniku ne možete imati više od 4 vrata!"
+          FAIL_TOO_MANY_HOPPERS: "&c Dopušten je samo jedan lijevak (hopper) u zidovima ili krovu."
+          FAIL_UNEVEN_WALLS: "&c Zidovi su neravni. Crveni stakleni blokovi trebali bi pokazati problematične blokove."
+          FAIL_INSUFFICIENT_ICE: "&c Nedovoljno leda za ovaj recept"
+          FAIL_INSUFFICIENT_LAVA: "&c Nedovoljno lave za ovaj recept"
+          FAIL_INSUFFICIENT_WATER: "&c Nedovoljno vode za ovaj recept"
+          FAIL_NO_ICE: "&c Led je potreban za ovaj recept"
+          FAIL_NO_LAVA: "&c Lava je potrebna za ovaj recept"
+          FAIL_NO_WATER: "&c Voda je potrebna za ovaj recept"
+          FAIL_NO_RECIPE_FOUND: "&c Nije pronađen recept koji odgovara ovom stakleniku"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Potrebno je više blokova za izradu ovog recepta!"
+          FAIL_OVERLAPPING: "&c Žao nam je, staklenici ne mogu dijeliti zidove."
+        success: "&2 Uspješno ste stvorili staklenik bioma [biome]! Biom će se sinkronizirati pri sljedećoj teleportaciji ili prijavi."
+        missing-blocks: "&c Nedostaje [material] x [number]"
+        unknown-recipe: "&c Nepoznat recept"
+        try-these: "&c Pokušajte jedan od ovih:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Kako izgraditi staklenik]"
+        instructions: |
+          &e Napravite kutiju od stakla s 4 zida i ravnim staklenim
+          &e krovom te dodajte do &f 4 vrata &e u zidove.
+          &e Postavite &f 1 lijevak (hopper) &e u zid ili krov i dodajte kante
+          &e s vodom kako biste automatski stvarali snijeg i/ili koštanu
+          &e prašinu za rast biljaka. Provjerite recepte bioma kako biste
+          &e saznali koji blokovi moraju biti unutra za uspjeh.
+
+help:
+   help: "pomoć"
+   make: "Pokušava napraviti staklenik"
+   remove: "Uklanja staklenik u kojem stojite ako ste vlasnik"
+   info: "Kako napraviti staklenik"
+   list: "Popis svih bioma staklenika koji se mogu napraviti"
+   recipe: "Govori vam kako napraviti određeni biom staklenika"
+   opengui: "Otvara sučelje staklenika"
+
+list:
+   title: "[Recepti bioma staklenika]"
+   info: "Koristite /greenhouse recipe <broj> za detalje o izradi svakog staklenika"
+
+error:
+   greenhouseProtected: "Staklenik je zaštićen"
+   move: "Prvo se pomaknite u staklenik koji posjedujete."
+   notowner: "Morate biti vlasnik ovog staklenika da biste to učinili."
+   removing: "Uklanjanje staklenika!"
+   notyours: "Ovo nije vaš staklenik!"
+   notinside: "Niste u stakleniku!"
+   tooexpensive: "Ne možete si to priuštiti [price]" 
+   alreadyexists: "Staklenik već postoji!"
+   norecipe: "Ne mogu napraviti staklenik!"
+   
+messages:
+   enter: "Ulazak u staklenik igrača [owner], biom: [biome]&f!"
+   leave: "Napuštanje staklenika igrača [owner]."
+   youarein: "Trenutno ste u stakleniku igrača [owner], biom: [biome]&f!"
+   removed: "Ovaj staklenik više ne postoji..."
+   removedmessage: "Vaš staklenik ([biome]&f) više ne postoji!"
+   ecolost: "Vaš staklenik na lokaciji [location] izgubio je ekosustav i uklonjen je."
+
+info:
+   title: "&a [Kako izgraditi staklenik]"
+   instructions: |
+     &e Napravite kutiju od stakla s 4 zida i ravnim staklenim
+     &e krovom te dodajte do &f 4 vrata &e u zidove.
+     &e Postavite &f 1 lijevak (hopper) &e u zid ili krov i dodajte kante
+     &e s vodom kako biste automatski stvarali snijeg i/ili koštanu
+     &e prašinu za rast biljaka. Provjerite recepte bioma kako biste
+     &e saznali koji blokovi moraju biti unutra za uspjeh.
+   info: "[Informacije o stakleniku]"
+   none: "Nema"
+   nomore: "&4 Ne možete graditi više staklenika!"
+   onemore: "&6 Možete izgraditi još jedan staklenik."
+   youcanbuild: "&a Možete izgraditi još do [number] staklenika!"
+   unlimited: "&a Možete graditi neograničen broj staklenika!"
+   welcome: "&b Dobrodošli! Kliknite ovdje za upute"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Koristite /greenhouse list da biste vidjeli popis brojeva recepata!"
+   wrongnumber: "Broj recepta mora biti između 1 i [size]"
+   title: "[[biome] recept]"
+   nowater: "Voda nije dopuštena."
+   noice: "Led nije dopušten."
+   nolava: "Lava nije dopuštena."
+   watermustbe: "Voda > [coverage]% površine poda."
+   icemustbe: "Ledeni blokovi > [coverage]% površine poda."
+   lavamustbe: "Lava > [coverage]% površine poda."
+   minimumblockstitle: "[Minimalno potrebnih blokova]"
+   nootherblocks: "Nisu potrebni drugi blokovi."
+   missing: "Nedostaje staklenik"
+
+event:
+   broke: "Razbili ste ovaj staklenik! Vraćanje bioma na [biome]!"
+   fix: "Popravite staklenik, a zatim ga ponovno napravite."
+   cannotplace: "Blokovi se ne mogu postavljati iznad staklenika!"
+   pistonerror: "Klipovi (pistons) ne mogu gurati blokove iznad staklenika!"
+
+limits:
+   noneallowed: "Dopuštenja vam ne dopuštaju staklenike pa je [number] njih uklonjeno."
+   limitedto: "Dopuštenja vas ograničavaju na [limit] staklenika pa je [number] njih uklonjeno."
+
+adminHelp:
+   reload: "ponovno učitaj konfiguraciju iz datoteke."
+   info: "pruža informacije o stakleniku u kojem se nalazite"
+
+reload:
+   configReloaded: "Konfiguracija je ponovno učitana iz datoteke."
+
+admininfo:
+   error: "Informacije o stakleniku dostupne su samo u igri"
+   error2: "Uđite u staklenik da biste vidjeli informacije."
+   flags: "[Oznake staklenika]"
+
+news:
+   headline: "[Vijesti o staklenicima]"
+
+controlpanel:
+   title: "&aStaklenici"

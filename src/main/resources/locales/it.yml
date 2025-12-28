@@ -1,0 +1,179 @@
+###########################################################################################
+# Questo è un file YML. Fai attenzione durante la modifica. Controlla le tue modifiche    #
+# in un verificatore YAML come http://yaml-online-parser.appspot.com                      #
+# Se questo file viene eliminato, verrà ricreato al prossimo riavvio.                    #
+###########################################################################################
+protection:
+  flags:
+    GREENHOUSE:
+      name: Serre
+      description: |
+        &b Scegli chi può
+        &b controllare le serre   
+
+greenhouses:
+  general:
+   greenhouses: "Serre"
+   
+  errors:
+    move: "Spostati prima in una serra di tua proprietà."
+    no-rank: "&c Non hai il grado necessario per farlo."
+    notyours: "Questa non è la tua serra!"
+    not-inside: "&c Non sei all'interno di una serra!"
+    tooexpensive: "Non puoi permetterti [price]" 
+    alreadyexists: "La serra esiste già!"
+    norecipe: "Impossibile creare una serra!"
+    
+  event:
+   broke: "Hai rotto questa serra! Ripristino del bioma a [biome]!"
+   entering: "Ingresso nella serra [biome]&f"
+   leaving: "Uscita dalla serra [biome]&f"
+   
+  recipe:
+   blockscolor: "&f"
+   title: "[Ricetta [biome]]"
+   watermustbe: "Acqua > [coverage]% della superficie del pavimento."
+   icemustbe: "Blocchi di ghiaccio > [coverage]% della superficie del pavimento."
+   lavamustbe: "Lava > [coverage]% della superficie del pavimento."
+   minimumblockstitle: "[Blocchi minimi richiesti]"
+   nootherblocks: "Nessun altro blocco richiesto."
+   missing: "Serra mancante"
+   
+  commands:
+    user:
+      description: "Apre l'interfaccia di selezione delle serre"
+      remove:
+        description: "Rimuove la serra in cui ti trovi se ne sei il proprietario"        
+      make:
+        description: "Tenta di creare una serra"
+        parameters: "<ricetta>"
+        error:
+          already: "&cC'è già una serra qui!"
+          FAIL_BAD_ROOF_BLOCKS: "&c Il tetto contiene blocchi non consentiti!"
+          FAIL_BAD_WALL_BLOCKS: "&c Le pareti contengono blocchi non consentiti!"
+          FAIL_BELOW: "&c Devi essere all'interno della serra per provare a crearla"
+          FAIL_BLOCKS_ABOVE: "&c Non possono esserci blocchi sopra la serra! I blocchi di vetro rosso indicheranno i blocchi problematici."
+          FAIL_HOLE_IN_ROOF: |
+            &c C'è un buco nel tetto o non è piatto!
+            &c I blocchi di vetro rosso indicheranno il problema.
+            &c Assicurati di essere all'interno della serra per crearla.
+          FAIL_HOLE_IN_WALL: "&c C'è un buco nella parete!"
+          FAIL_NO_ROOF: "&c Sembra che non ci sia il tetto! Assicurati di essere all'interno della serra per crearla."
+          FAIL_TOO_MANY_DOORS: "&c Non puoi avere più di 4 porte nella serra!"
+          FAIL_TOO_MANY_HOPPERS: "&c È consentita solo una tramoggia (hopper) nelle pareti o nel tetto."
+          FAIL_UNEVEN_WALLS: "&c Le pareti non sono uniformi. I blocchi di vetro rosso indicheranno i blocchi problematici."
+          FAIL_INSUFFICIENT_ICE: "&c Ghiaccio insufficiente per creare questa ricetta"
+          FAIL_INSUFFICIENT_LAVA: "&c Lava insufficiente per creare questa ricetta"
+          FAIL_INSUFFICIENT_WATER: "&c Acqua insufficiente per creare questa ricetta"
+          FAIL_NO_ICE: "&c Il ghiaccio è richiesto per questa ricetta"
+          FAIL_NO_LAVA: "&c La lava è richiesta per questa ricetta"
+          FAIL_NO_WATER: "&c L'acqua è richiesta per questa ricetta"
+          FAIL_NO_RECIPE_FOUND: "&c Nessuna ricetta corrispondente trovata per questa serra"
+          FAIL_INSUFFICIENT_BLOCKS: "&c Sono necessari più blocchi per creare questa ricetta!"
+          FAIL_OVERLAPPING: "&c Spiacenti, le serre non possono condividere le pareti."
+        success: "&2 Hai creato con successo una serra del bioma [biome]! Il bioma si sincronizzerà al prossimo teletrasporto o accesso."
+        missing-blocks: "&c Mancante [material] x [number]"
+        unknown-recipe: "&c Ricetta sconosciuta"
+        try-these: "&c Prova una di queste:"
+        recipe-format: "&3[name]"
+      info:
+        title: "&a [Come costruire una serra]"
+        instructions: |
+          &e Crea una scatola di vetro con 4 pareti e un tetto di vetro
+          &e piatto, aggiungi fino a &f 4 porte &e nelle pareti.
+          &e Posiziona &f 1 tramoggia &e in una parete o nel tetto e aggiungi secchi d'acqua
+          &e per creare neve e/o farina d'ossa per far crescere le piante automaticamente.
+          &e Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno
+          &e della serra per crearla con successo.
+
+help:
+   help: "aiuto"
+   make: "Tenta di creare una serra"
+   remove: "Rimuove la serra in cui ti trovi se sei il proprietario"
+   info: "Come creare una serra"
+   list: "Elenca tutti i biomi delle serre creabili"
+   recipe: "Ti spiega come creare un bioma specifico per la serra"
+   opengui: "Apre l'interfaccia delle serre"
+
+list:
+   title: "[Ricette Biomi Serra]"
+   info: "Usa /greenhouse recipe <numero> per vedere i dettagli su come creare ogni serra"
+
+error:
+   greenhouseProtected: "Serra protetta"
+   move: "Spostati prima in una serra di tua proprietà."
+   notowner: "Devi essere il proprietario di questa serra per farlo."
+   removing: "Rimozione della serra!"
+   notyours: "Questa non è la tua serra!"
+   notinside: "Non sei in una serra!"
+   tooexpensive: "Non puoi permetterti [price]" 
+   alreadyexists: "La serra esiste già!"
+   norecipe: "Impossibile creare una serra!"
+   
+messages:
+   enter: "Ingresso nella serra di [owner], bioma: [biome]&f!"
+   leave: "Uscita dalla serra di [owner]."
+   youarein: "Ti trovi nella serra di [owner], bioma: [biome]&f!"
+   removed: "Questa serra non esiste più..."
+   removedmessage: "La tua serra [biome]&f è stata rimossa!"
+   ecolost: "La tua serra in [location] ha perso l'ecosistema ed è stata rimossa."
+
+info:
+   title: "&a [Come costruire una serra]"
+   instructions: |
+     &e Crea una scatola di vetro con 4 pareti e un tetto di vetro
+     &e piatto, aggiungi fino a &f 4 porte &e nelle pareti.
+     &e Posiziona &f 1 tramoggia &e in una parete o nel tetto e aggiungi secchi d'acqua
+     &e per creare neve e/o farina d'ossa per far crescere le piante automaticamente.
+     &e Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno
+     &e della serra per crearla con successo.
+   info: "[Info Serra]"
+   none: "Nessuno"
+   nomore: "&4 Non puoi costruire altre serre!"
+   onemore: "&6 Puoi costruire ancora una serra."
+   youcanbuild: "&a Puoi costruire ancora fino a [number] serre!"
+   unlimited: "&a Puoi costruire un numero illimitato di serre!"
+   welcome: "&b Benvenuto! Clicca qui per le istruzioni"
+
+recipe:
+   blockscolor: "&f"
+   hint: "Usa /greenhouse list per vedere l'elenco dei numeri delle ricette!"
+   wrongnumber: "Il numero della ricetta deve essere compreso tra 1 e [size]"
+   title: "[Ricetta [biome]]"
+   nowater: "Acqua non consentita."
+   noice: "Ghiaccio non consentito."
+   nolava: "Lava non consentita."
+   watermustbe: "Acqua > [coverage]% della superficie del pavimento."
+   icemustbe: "Blocchi di ghiaccio > [coverage]% della superficie del pavimento."
+   lavamustbe: "Lava > [coverage]% della superficie del pavimento."
+   minimumblockstitle: "[Blocchi minimi richiesti]"
+   nootherblocks: "Nessun altro blocco richiesto."
+   missing: "Serra mancante"
+
+event:
+   broke: "Hai rotto questa serra! Ripristino del bioma a [biome]!"
+   fix: "Ripara la serra e poi creala di nuovo."
+   cannotplace: "I blocchi non possono essere piazzati sopra una serra!"
+   pistonerror: "I pistoni non possono spingere blocchi sopra una serra!"
+
+limits:
+   noneallowed: "I permessi non ti consentono di avere serre, quindi ne sono state rimosse [number]."
+   limitedto: "I permessi ti limitano a [limit] serre, quindi ne sono state rimosse [number]."
+
+adminHelp:
+   reload: "ricarica la configurazione dal file."
+   info: "fornisce informazioni sulla serra in cui ti trovi"
+
+reload:
+   configReloaded: "Configurazione ricaricata dal file."
+
+admininfo:
+   error: "Info serra disponibili solo in-game"
+   error2: "Entra in una serra per vedere le info."
+   flags: "[Flag della Serra]"
+
+news:
+   headline: "[News Serre]"
+
+controlpanel:
+   title: "&aSerre"
