@@ -89,6 +89,8 @@ public class BiomeRecipeTest {
     private BukkitScheduler scheduler;
     @Mock
     private Settings settings;
+    @Mock
+    private Biome type;
 
     @Before
     public void setUp() {
@@ -100,7 +102,7 @@ public class BiomeRecipeTest {
         when(Bukkit.getUnsafe()).thenReturn(unsafe);
 
         when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
-        Biome type = Biome.BADLANDS;
+        when(type.name()).thenReturn("BADLANDS");
         // Greenhouse
         when(gh.getArea()).thenReturn(100);
         when(gh.getFloorHeight()).thenReturn(100);
@@ -195,7 +197,7 @@ public class BiomeRecipeTest {
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError("Mob chances add up to > 100% in null biome recipe! Skipping CAT");
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
     }
 
     /**
@@ -208,7 +210,7 @@ public class BiomeRecipeTest {
         Material mobSpawnOn = Material.GRASS_BLOCK;
         br.addMobs(mobType, mobProbability, mobSpawnOn);
         br.addMobs(mobType, mobProbability, mobSpawnOn);
-        verify(addon).logError("Mob chances add up to > 100% in null biome recipe! Skipping CAT");
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping CAT");
     }
 
     /**
@@ -233,7 +235,7 @@ public class BiomeRecipeTest {
         Material plantGrowOn = Material.DIRT;
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
         br.addPlants(plantMaterial, plantProbability, plantGrowOn);
-        verify(addon).logError("Plant chances add up to > 100% in null biome recipe! Skipping JUNGLE_SAPLING");
+        verify(addon).logError("Plant chances add up to > 100% in BADLANDS biome recipe! Skipping JUNGLE_SAPLING");
     }
 
     /**
@@ -360,7 +362,7 @@ public class BiomeRecipeTest {
      */
     @Test
     public void testGetBiome() {
-        assertEquals(Biome.BADLANDS, br.getBiome());
+        assertEquals(type, br.getBiome());
     }
 
     /**
