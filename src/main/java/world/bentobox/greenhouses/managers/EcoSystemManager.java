@@ -193,14 +193,15 @@ public class EcoSystemManager {
         }
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
+            final BoundingBox internalBb = gh.getInternalBoundingBox();
             // Get a list of all available blocks
             List<GrowthBlock> list = getAvailableBlocks(gh, false);
             Collections.shuffle(list);
-            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, false) ? 1 : 0).sum();
+            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, false, internalBb) ? 1 : 0).sum();
             // Underwater plants
             list = getAvailableBlocks(gh, true);
             Collections.shuffle(list);
-            plantsGrown += list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, true) ? 1 : 0).sum();
+            plantsGrown += list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, true, internalBb) ? 1 : 0).sum();
             if (plantsGrown > 0) {
                 setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
             }

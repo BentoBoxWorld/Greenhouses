@@ -3,6 +3,8 @@ package world.bentobox.greenhouses.ui.panel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 import world.bentobox.bentobox.api.panels.builders.PanelBuilder;
 import world.bentobox.bentobox.api.panels.builders.PanelItemBuilder;
 import world.bentobox.bentobox.api.user.User;
@@ -35,23 +37,23 @@ public class Panel {
 
     private List<String> getDescription(User user, BiomeRecipe br) {
         List<String> d = new ArrayList<>();
-        // Make description
-        d.add(user.getTranslation("greenhouses.recipe.title", "[biome]", Util.prettifyText(br.getBiome().getKey().getKey())));
+        // Make description - each line gets a reset prefix to prevent color bleed from item name
+        d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.title", "[biome]", Util.prettifyText(br.getBiome().getKey().getKey())));
         if (!br.getRecipeBlocks().isEmpty()) {
-            d.add(user.getTranslation("greenhouses.recipe.minimumblockstitle"));
+            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.minimumblockstitle"));
             br.getRecipeBlocks().forEach(b -> d.add(user.getTranslation("greenhouses.recipe.blockscolor") + b));
         }
         if (br.getWaterCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.watermustbe", COVERAGE, String.valueOf(br.getWaterCoverage())));
+            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.watermustbe", COVERAGE, String.valueOf(br.getWaterCoverage())));
         }
         if (br.getLavaCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.lavamustbe", COVERAGE, String.valueOf(br.getLavaCoverage())));
+            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.lavamustbe", COVERAGE, String.valueOf(br.getLavaCoverage())));
         }
         if (br.getIceCoverage() > 0) {
-            d.add(user.getTranslation("greenhouses.recipe.icemustbe", COVERAGE, String.valueOf(br.getIceCoverage())));
+            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.icemustbe", COVERAGE, String.valueOf(br.getIceCoverage())));
         }
         if (br.getRecipeBlocks().isEmpty()) {
-            d.add(user.getTranslation("greenhouses.recipe.nootherblocks"));
+            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.nootherblocks"));
         }
         return d;
     }

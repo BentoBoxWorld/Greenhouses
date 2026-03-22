@@ -71,6 +71,7 @@ public class BiomeRecipeTest {
     private Greenhouse gh;
 
     private BoundingBox bb;
+    private BoundingBox ibb;
     @Mock
     private World world;
     @Mock
@@ -109,7 +110,7 @@ public class BiomeRecipeTest {
         when(gh.getCeilingHeight()).thenReturn(120);
         bb = new BoundingBox(10, 100, 10, 20, 120, 20);
         when(gh.getBoundingBox()).thenReturn(bb);
-        BoundingBox ibb = bb.clone().expand(-1);
+        ibb = bb.clone().expand(-1);
         when(gh.getInternalBoundingBox()).thenReturn(ibb);
         when(gh.getWorld()).thenReturn(world);
         when(gh.contains(any())).thenReturn(true);
@@ -631,7 +632,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantNotAir() {
         when(block.getType()).thenReturn(Material.SOUL_SAND);
-        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
     }
 
     /**
@@ -641,7 +642,7 @@ public class BiomeRecipeTest {
     public void testGrowPlantNoPlants() {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
-        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
     }
 
     /**
@@ -653,7 +654,7 @@ public class BiomeRecipeTest {
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
     }
 
     /**
@@ -669,7 +670,7 @@ public class BiomeRecipeTest {
 
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.BAMBOO_SAPLING, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(new GrowthBlock(block, true), false));
+        assertTrue(br.growPlant(new GrowthBlock(block, true), false, ibb));
         verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
                 anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
@@ -688,7 +689,7 @@ public class BiomeRecipeTest {
 
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
-        assertTrue(br.growPlant(new GrowthBlock(block, false), false));
+        assertTrue(br.growPlant(new GrowthBlock(block, false), false, ibb));
         verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
                 anyDouble());
         verify(block).setBlockData(eq(bd), eq(false));
@@ -708,7 +709,7 @@ public class BiomeRecipeTest {
         when(block.getRelative(any())).thenReturn(ob);
         assertTrue(br.addPlants(Material.SPORE_BLOSSOM, 100, Material.GLASS));
         // Not a ceiling block
-        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
     }
 
     /**
@@ -724,9 +725,15 @@ public class BiomeRecipeTest {
         Block ob = mock(Block.class);
         when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
         when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
-        when(block.getRelative(BlockFace.UP)).thenReturn(block);
+        Block upperBlock = mock(Block.class);
+        when(upperBlock.getType()).thenReturn(Material.AIR);
+        // Coordinates inside the internal bounding box
+        when(upperBlock.getX()).thenReturn(15);
+        when(upperBlock.getY()).thenReturn(110);
+        when(upperBlock.getZ()).thenReturn(15);
+        when(block.getRelative(BlockFace.UP)).thenReturn(upperBlock);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertTrue(br.growPlant(new GrowthBlock(block, true), false));
+        assertTrue(br.growPlant(new GrowthBlock(block, true), false, ibb));
         verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
                 anyDouble());
         verify(bisected).setHalf(Half.BOTTOM);
@@ -748,7 +755,31 @@ public class BiomeRecipeTest {
         when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
         when(block.getRelative(BlockFace.UP)).thenReturn(ob);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
-        assertFalse(br.growPlant(new GrowthBlock(block, true), false));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
+    }
+
+    /**
+     * Test method for double plant placement where upper half is outside greenhouse bounding box.
+     */
+    @Test
+    public void testGrowPlantPlantsDoublePlantOutsideBoundingBox() {
+        Bisected bisected = mock(Bisected.class);
+        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(BlockFace.DOWN)).thenReturn(ob);
+        Block upperBlock = mock(Block.class);
+        when(upperBlock.getType()).thenReturn(Material.AIR);
+        // Coordinates outside the internal bounding box (Y above ceiling)
+        when(upperBlock.getX()).thenReturn(15);
+        when(upperBlock.getY()).thenReturn(120);
+        when(upperBlock.getZ()).thenReturn(15);
+        when(block.getRelative(BlockFace.UP)).thenReturn(upperBlock);
+        assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
     }
 
     /**
