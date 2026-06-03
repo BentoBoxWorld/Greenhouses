@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -287,6 +289,24 @@ public class EcoSystemManagerTest {
         when(recipe.getMaxMob()).thenReturn(10);
         when(recipe.spawnMob(any())).thenReturn(true);
         assertTrue(eco.addMobs(gh));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse)}.
+     * Issue #127 - the absolute maxmobs cap must be enforced on every spawn iteration, not only
+     * before the loop. The greenhouse area is 16 and the mob limit (density) is set to 1, so density
+     * alone would allow up to 16 mobs. maxmobs is 3, so exactly 3 mobs should spawn.
+     */
+    @Test
+    public void testAddMobsRespectsMaxMobLimit() {
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        when(recipe.noMobs()).thenReturn(false);
+        when(recipe.getMaxMob()).thenReturn(3);
+        when(recipe.getMobLimit()).thenReturn(1);
+        when(recipe.spawnMob(any())).thenReturn(true);
+        assertTrue(eco.addMobs(gh));
+        // Without the fix the loop ignores maxMob and keeps spawning until density stops
+        verify(recipe, times(3)).spawnMob(any());
     }
 
 }
