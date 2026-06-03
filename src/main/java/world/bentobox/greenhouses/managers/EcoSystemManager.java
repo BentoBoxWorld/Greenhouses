@@ -170,7 +170,10 @@ public class EcoSystemManager {
         if (gh.getBiomeRecipe().getMaxMob() > -1 && sum >= gh.getBiomeRecipe().getMaxMob()) {
             return false;
         }
-        while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
+        while (it.hasNext()
+                // Enforce the absolute maxmobs cap on every iteration, not just before the loop (issue #127)
+                && (gh.getBiomeRecipe().getMaxMob() <= -1 || sum < gh.getBiomeRecipe().getMaxMob())
+                && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
                 // Add a mob to the sum in the greenhouse

@@ -74,7 +74,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         m.add(Material.SEA_PICKLE);
         m.add(Material.SEAGRASS);
         m.add(Material.KELP);
-        m.add(Material.GLOW_LICHEN);
+        // Note: GLOW_LICHEN is deliberately NOT classed as underwater-only. It can grow on
+        // exposed block faces on land as well as underwater, and placeLichen() handles both
+        // (including waterlogging). Listing it here would route it into the underwater plant
+        // tree and make canGrowOn() reject it on land - see issue #127.
         UNDERWATER_PLANTS = Collections.unmodifiableList(m);
     }
 

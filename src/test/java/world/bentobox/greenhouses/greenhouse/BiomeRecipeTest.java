@@ -12,6 +12,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -24,9 +25,11 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -780,6 +783,37 @@ public class BiomeRecipeTest {
         when(block.getRelative(BlockFace.UP)).thenReturn(upperBlock);
         assertTrue(br.addPlants(Material.SUNFLOWER, 100, Material.GRASS_BLOCK));
         assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(GrowthBlock, boolean, BoundingBox)}.
+     * Issue #127 - Glow Lichen must be able to grow on exposed (non-underwater) blocks such as stone.
+     * It used to be classed as an underwater-only plant, so it never grew on land.
+     */
+    @Test
+    public void testGrowPlantGlowLichenOnLand() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        // Stone source block directly below the growth block
+        Block stone = mock(Block.class);
+        when(stone.getType()).thenReturn(Material.STONE);
+        when(block.getRelative(BlockFace.DOWN)).thenReturn(stone);
+        // An exposed air face next to the stone for the lichen to attach to
+        Block face = mock(Block.class);
+        when(face.getType()).thenReturn(Material.AIR);
+        GlowLichen gl = mock(GlowLichen.class);
+        when(gl.getAllowedFaces()).thenReturn(EnumSet.allOf(BlockFace.class));
+        when(face.getBlockData()).thenReturn(gl);
+        BlockState state = mock(BlockState.class);
+        when(face.getState()).thenReturn(state);
+        when(stone.getRelative(any())).thenReturn(face);
+
+        assertTrue(br.addPlants(Material.GLOW_LICHEN, 100, Material.STONE));
+        assertTrue(br.growPlant(new GrowthBlock(block, true), false, ibb));
+        verify(face).setType(Material.GLOW_LICHEN);
+        // The face opposite to the chosen direction is lit up
+        verify(gl).setFace(BlockFace.UP, true);
     }
 
     /**
