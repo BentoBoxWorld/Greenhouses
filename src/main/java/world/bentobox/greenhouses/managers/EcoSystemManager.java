@@ -170,7 +170,10 @@ public class EcoSystemManager {
         if (gh.getBiomeRecipe().getMaxMob() > -1 && sum >= gh.getBiomeRecipe().getMaxMob()) {
             return false;
         }
-        while (it.hasNext() && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
+        while (it.hasNext()
+                // Enforce the absolute maxmobs cap on every iteration, not just before the loop (issue #127)
+                && (gh.getBiomeRecipe().getMaxMob() <= -1 || sum < gh.getBiomeRecipe().getMaxMob())
+                && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
                 // Add a mob to the sum in the greenhouse
@@ -193,14 +196,15 @@ public class EcoSystemManager {
         }
         int bonemeal = getBoneMeal(gh);
         if (bonemeal > 0) {
+            final BoundingBox internalBb = gh.getInternalBoundingBox();
             // Get a list of all available blocks
             List<GrowthBlock> list = getAvailableBlocks(gh, false);
             Collections.shuffle(list);
-            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, false) ? 1 : 0).sum();
+            int plantsGrown = list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, false, internalBb) ? 1 : 0).sum();
             // Underwater plants
             list = getAvailableBlocks(gh, true);
             Collections.shuffle(list);
-            plantsGrown += list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, true) ? 1 : 0).sum();
+            plantsGrown += list.stream().limit(bonemeal).mapToInt(bl -> gh.getBiomeRecipe().growPlant(bl, true, internalBb) ? 1 : 0).sum();
             if (plantsGrown > 0) {
                 setBoneMeal(gh, bonemeal - (int)Math.ceil((double)plantsGrown / PLANTS_PER_BONEMEAL ));
             }

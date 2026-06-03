@@ -30,6 +30,7 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.block.data.type.GlowLichen;
 import org.bukkit.entity.*;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import com.google.common.base.Enums;
@@ -73,7 +74,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         m.add(Material.SEA_PICKLE);
         m.add(Material.SEAGRASS);
         m.add(Material.KELP);
-        m.add(Material.GLOW_LICHEN);
+        // Note: GLOW_LICHEN is deliberately NOT classed as underwater-only. It can grow on
+        // exposed block faces on land as well as underwater, and placeLichen() handles both
+        // (including waterlogging). Listing it here would route it into the underwater plant
+        // tree and make canGrowOn() reject it on land - see issue #127.
         UNDERWATER_PLANTS = Collections.unmodifiableList(m);
     }
 
@@ -499,12 +503,13 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * Plants a plant on block bl if it makes sense.
      * @param block - block that can have growth
      * @param underwater - if the block is underwater or not
+     * @param bb - greenhouse internal bounding box for double-plant validation
      * @return true if successful
      */
-    public boolean growPlant(GrowthBlock block, boolean underwater) {
+    public boolean growPlant(GrowthBlock block, boolean underwater, BoundingBox bb) {
         Block bl = block.block();
         return getRandomPlant(underwater).map(p -> {
-            if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p)) {
+            if (bl.getY() != 0 && canGrowOn(block, p) && plantIt(bl, p, bb)) {
                 bl.getWorld().spawnParticle(Particle.ASH, bl.getLocation(), 10, 2, 2, 2);
                 return true;
             }
@@ -516,9 +521,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      * Plants the plant
      * @param bl - block to turn into a plant
      * @param p - the greenhouse plant to be grown
+     * @param bb - greenhouse internal bounding box for double-plant validation
      * @return true if successful, false if not
      */
-    private boolean plantIt(Block bl, GreenhousePlant p) {
+    private boolean plantIt(Block bl, GreenhousePlant p, BoundingBox bb) {
         boolean underwater = bl.getType().equals(Material.WATER);
         BlockData dataBottom = p.plantMaterial().createBlockData();
         // Check if this is a double-height plant
@@ -527,11 +533,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
             bi.setHalf(Bisected.Half.BOTTOM);
             BlockData dataTop = p.plantMaterial().createBlockData();
             ((Bisected) dataTop).setHalf(Bisected.Half.TOP);
-            if (bl.getRelative(BlockFace.UP).getType().equals(Material.AIR)) {
+            Block upper = bl.getRelative(BlockFace.UP);
+            if (upper.getType().equals(Material.AIR) && bb.contains(upper.getX(), upper.getY(), upper.getZ())) {
                 bl.setBlockData(dataBottom, false);
-                bl.getRelative(BlockFace.UP).setBlockData(dataTop, false);
+                upper.setBlockData(dataTop, false);
             } else {
-                return false; // No room
+                return false; // No room or outside greenhouse
             }
         } else if (p.plantMaterial().equals(Material.GLOW_LICHEN)) {
             return placeLichen(bl);

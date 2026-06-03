@@ -150,7 +150,7 @@ public class RecipeManager {
         b.setPermission(biomeRecipeConfig.getString("permission",""));
         // Set the icon
         b.setIcon(Material.valueOf(biomeRecipeConfig.getString("icon", "SAPLING")));
-        b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipeConfig.getString("friendlyname", Util.prettifyText(biomeType))));
+        b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipeConfig.getString("friendlyname", Util.prettifyText(biomeType))) + ChatColor.RESET);
         // A value of zero on these means that there must be NO coverage, e.g., desert. If the value is not present, then the default is -1
         b.setWatercoverage(biomeRecipeConfig.getInt("watercoverage",-1));
         b.setLavacoverage(biomeRecipeConfig.getInt("lavacoverage",-1));

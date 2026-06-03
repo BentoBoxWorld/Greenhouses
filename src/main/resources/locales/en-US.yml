@@ -25,9 +25,9 @@ greenhouses:
     norecipe: "Cannot make a greenhouse!"
     
   event:
-   broke: "You broke this greenhouse! Reverting biome to [biome]!"
-   entering: "Entering [biome]&f  greenhouse"
-   leaving: "Leaving [biome]&f  greenhouse"
+   broke: "You broke this greenhouse! Reverting biome to [biome]&r!"
+   entering: "Entering [biome]&r  greenhouse"
+   leaving: "Leaving [biome]&r  greenhouse"
    
   recipe:
    blockscolor: "&f"
@@ -117,11 +117,11 @@ error:
    norecipe: "Cannot make a greenhouse!"
    
 messages:
-   enter: "Entering [owner]'s [biome]&f  greenhouse!"
+   enter: "Entering [owner]'s [biome]&r  greenhouse!"
    leave: "Now leaving [owner]'s greenhouse."
-   youarein: "You are now in [owner]'s [biome]&f  greenhouse!"
+   youarein: "You are now in [owner]'s [biome]&r  greenhouse!"
    removed: "This greenhouse is no more..."
-   removedmessage: "A [biome]&f  greenhouse of yours is no more!"
+   removedmessage: "A [biome]&r  greenhouse of yours is no more!"
    ecolost: "Your greenhouse at [location] lost its eco system and was removed."
 
 info:
@@ -157,7 +157,7 @@ recipe:
    missing: "Greenhouse is missing"
 
 event:
-   broke: "You broke this greenhouse! Reverting biome to [biome]!"
+   broke: "You broke this greenhouse! Reverting biome to [biome]&r!"
    fix: "Fix the greenhouse and then make it again."
    cannotplace: "Blocks cannot be placed above a greenhouse!"
    pistonerror: "Pistons cannot push blocks over a greenhouse!"
