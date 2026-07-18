@@ -318,7 +318,6 @@ biomes:
     # Lots of water required!
     watercoverage: 95
     mobs:
-      SQUID: 10:WATER
       DROWNED: 1:WATER
       COD: 40:WATER
       DOLPHIN: 20:WATER
