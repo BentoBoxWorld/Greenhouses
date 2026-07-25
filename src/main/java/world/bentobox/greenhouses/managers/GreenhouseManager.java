@@ -2,8 +2,10 @@ package world.bentobox.greenhouses.managers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -26,6 +28,11 @@ import world.bentobox.greenhouses.listeners.IslandChangeEvents;
 import world.bentobox.greenhouses.listeners.SnowTracker;
 
 public class GreenhouseManager implements Listener {
+
+    /**
+     * Placeholder used in log messages when a greenhouse's details cannot be determined
+     */
+    private static final String UNKNOWN = "unknown";
 
     /**
      * Result of greenhouse making
@@ -93,13 +100,28 @@ public class GreenhouseManager implements Listener {
         map.clear();
         addon.log("Loading greenhouses...");
         List<Greenhouse> toBeRemoved = new ArrayList<>();
-        handler.loadObjects().forEach(g -> {
+        // Sort by unique ID so that load order - and therefore which of a pair of overlapping
+        // greenhouses wins - is stable across restarts and independent of the database's
+        // iteration order.
+        List<Greenhouse> toLoad = new ArrayList<>(handler.loadObjects());
+        toLoad.sort(Comparator.comparing(Greenhouse::getUniqueId));
+        int overlaps = 0;
+        for (Greenhouse g : toLoad) {
+            // Grab the conflict before addGreenhouse so it can be reported if the add fails
+            Optional<Greenhouse> overlapping = map.getOverlappingGreenhouse(g);
             GreenhouseResult result = map.addGreenhouse(g);
             switch (result) {
             case FAIL_NO_ISLAND ->
             // Delete the failed greenhouse
             toBeRemoved.add(g);
-            case FAIL_OVERLAPPING -> addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
+            case FAIL_OVERLAPPING -> {
+                overlaps++;
+                addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
+                addon.logError("  Skipped:  " + describe(g));
+                overlapping.ifPresent(o -> addon.logError("  Overlaps: " + describe(o)));
+                addon.logError("  To fix, delete one of these records from the Greenhouses database table"
+                        + " (match on uniqueId) and restart the server.");
+            }
             case NULL -> addon.logError("Null location of greenhouse. Cannot load. Skipping...");
             case SUCCESS -> activateGreenhouse(g);
             case FAIL_NO_WORLD -> addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
@@ -110,10 +132,35 @@ public class GreenhouseManager implements Listener {
             default -> {
             }
             }
-        });
-        addon.log("Loaded " + map.getSize() + " greenhouses.");
+        }
+        addon.log("Loaded " + map.getSize() + " greenhouses out of " + toLoad.size() + " in the database.");
+        if (overlaps > 0) {
+            addon.logError(overlaps + " greenhouse(s) were skipped because they overlap another greenhouse."
+                    + " See the details above. These will be reported again on every restart until the"
+                    + " duplicate records are removed from the database.");
+        }
         // Remove the old or outdated greenhouses
         toBeRemoved.forEach(handler::deleteObject);
+    }
+
+    /**
+     * Describes a greenhouse for logging purposes - unique ID, recipe, owner, world, location
+     * and bounding box.
+     * @param gh - greenhouse
+     * @return human readable, single-line description
+     */
+    private String describe(Greenhouse gh) {
+        Location loc = gh.getLocation();
+        String world = loc == null || loc.getWorld() == null ? UNKNOWN : loc.getWorld().getName();
+        String position = loc == null ? UNKNOWN : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+        String owner = loc == null ? UNKNOWN
+                : addon.getIslands().getIslandAt(loc).map(Island::getOwner).map(uuid -> addon.getPlayers().getName(uuid)
+                        + " (" + uuid + ")").orElse("unowned");
+        BoundingBox bb = gh.getBoundingBox();
+        return "id=" + gh.getUniqueId() + ", recipe=" + gh.getBiomeRecipeName() + ", owner=" + owner + ", world="
+                + world + ", location=" + position + ", bbox=[" + (int) bb.getMinX() + "," + (int) bb.getMinY() + ","
+                + (int) bb.getMinZ() + " -> " + (int) bb.getMaxX() + "," + (int) bb.getMaxY() + "," + (int) bb.getMaxZ()
+                + "]";
     }
 
     /**
