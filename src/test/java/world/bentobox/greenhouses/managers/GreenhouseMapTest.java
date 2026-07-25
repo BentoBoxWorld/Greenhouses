@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -46,7 +47,9 @@ public class GreenhouseMapTest {
     @Mock
     private World world;
 
+    @InjectMocks
     private GreenhouseMap map;
+
     private BiomeRecipe br;
 
     @Before
@@ -56,7 +59,6 @@ public class GreenhouseMapTest {
         when(im.getIslandAt(any(Location.class))).thenReturn(Optional.of(island));
         br = mock(BiomeRecipe.class);
         when(br.getBiome()).thenReturn(mock(Biome.class));
-        map = new GreenhouseMap(addon);
     }
 
     @After

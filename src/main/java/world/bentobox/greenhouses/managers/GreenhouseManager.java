@@ -30,6 +30,11 @@ import world.bentobox.greenhouses.listeners.SnowTracker;
 public class GreenhouseManager implements Listener {
 
     /**
+     * Placeholder used in log messages when a greenhouse's details cannot be determined
+     */
+    private static final String UNKNOWN = "unknown";
+
+    /**
      * Result of greenhouse making
      *
      */
@@ -146,9 +151,9 @@ public class GreenhouseManager implements Listener {
      */
     private String describe(Greenhouse gh) {
         Location loc = gh.getLocation();
-        String world = loc == null || loc.getWorld() == null ? "unknown" : loc.getWorld().getName();
-        String position = loc == null ? "unknown" : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
-        String owner = loc == null ? "unknown"
+        String world = loc == null || loc.getWorld() == null ? UNKNOWN : loc.getWorld().getName();
+        String position = loc == null ? UNKNOWN : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+        String owner = loc == null ? UNKNOWN
                 : addon.getIslands().getIslandAt(loc).map(Island::getOwner).map(uuid -> addon.getPlayers().getName(uuid)
                         + " (" + uuid + ")").orElse("unowned");
         BoundingBox bb = gh.getBoundingBox();

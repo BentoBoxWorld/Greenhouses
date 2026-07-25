@@ -110,13 +110,15 @@ public class GreenhouseMap {
      * @return the conflicting greenhouse, or empty if there is no overlap
      */
     public Optional<Greenhouse> getOverlappingGreenhouse(Greenhouse greenhouse) {
-        if (greenhouse.getLocation() == null) {
+        final Location loc = greenhouse.getLocation();
+        if (loc == null) {
             return Optional.empty();
         }
-        return addon.getIslands().getIslandAt(greenhouse.getLocation()).flatMap(i -> {
+        return addon.getIslands().getIslandAt(loc).flatMap(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
             return greenhouses.get(i).stream()
-                    .filter(g -> g.getLocation().getWorld().equals(greenhouse.getLocation().getWorld())
+                    .filter(g -> g.getLocation() != null && g.getLocation().getWorld() != null
+                            && g.getLocation().getWorld().equals(loc.getWorld())
                             && g.getBoundingBox().overlaps(greenhouse.getBoundingBox()))
                     .findFirst();
         });
