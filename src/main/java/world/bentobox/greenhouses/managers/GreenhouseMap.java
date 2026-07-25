@@ -45,7 +45,7 @@ public class GreenhouseMap {
         return addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
             // Check if overlapping
-            if (!isOverlapping(greenhouse)) {
+            if (getOverlappingGreenhouse(greenhouse).isEmpty()) {
                 greenhouses.get(i).add(greenhouse);
                 return GreenhouseResult.SUCCESS;
             } else {
@@ -103,14 +103,23 @@ public class GreenhouseMap {
         return getXZGreenhouse(location).map(g -> location.getBlockY() > g.getCeilingHeight()).orElse(false);
     }
 
-    private boolean isOverlapping(Greenhouse greenhouse) {
-        return greenhouse.getLocation() != null && addon.getIslands().getIslandAt(greenhouse.getLocation()).map(i -> {
+    /**
+     * Find the already-loaded greenhouse that this greenhouse overlaps with, if any.
+     * Only greenhouses on the same island and in the same world are considered.
+     * @param greenhouse - greenhouse to check
+     * @return the conflicting greenhouse, or empty if there is no overlap
+     */
+    public Optional<Greenhouse> getOverlappingGreenhouse(Greenhouse greenhouse) {
+        if (greenhouse.getLocation() == null) {
+            return Optional.empty();
+        }
+        return addon.getIslands().getIslandAt(greenhouse.getLocation()).flatMap(i -> {
             greenhouses.putIfAbsent(i, new ArrayList<>());
-            return greenhouses.get(i).stream().anyMatch(g ->
-            g.getLocation().getWorld().equals(greenhouse.getLocation().getWorld()) &&
-            g.getBoundingBox().overlaps(greenhouse.getBoundingBox()));
-        }).orElse(false);
-
+            return greenhouses.get(i).stream()
+                    .filter(g -> g.getLocation().getWorld().equals(greenhouse.getLocation().getWorld())
+                            && g.getBoundingBox().overlaps(greenhouse.getBoundingBox()))
+                    .findFirst();
+        });
     }
 
     /**
