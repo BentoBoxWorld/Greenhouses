@@ -38,10 +38,15 @@ mvn clean verify               # Full build + analysis (used in CI)
 
 ### Command Structure
 
-Player commands registered under `/is greenhouse` (or gamemode equivalent):
-- `make`, `remove`, `list`, `recipe`, `info`
+Player commands registered under `/is greenhouse` (aliases: `greenhouses`, `gh`, or gamemode equivalent), in `ui/user/`:
 
-Admin commands include `reload` and `info`.
+| Sub-command | Status |
+|---|---|
+| `make` | Registered. Also the default when `/is greenhouse` is run with no args and the player has an island. |
+| `remove` | Registered |
+| `info`, `list`, `recipe` | **Classes exist but are commented out in `UserCommand.setup()`** — not functional. See Stage 2b below. |
+
+There are **no admin commands** — `ui/` contains only the `user` and `panel` packages, and `Greenhouses.java` never calls `gm.getAdminCommand()`. Diagnostics such as inspecting or repairing persisted greenhouses currently require reading the server log or the database directly (see BentoBoxWorld/Greenhouses#137).
 
 ### Configuration
 
@@ -99,7 +104,7 @@ Work through the stages below **in order**. Each stage should be a separate comm
 
 ### Stage 2 — Command System
 
-#### 2a. Add plural alias `/is greenhouses`
+#### 2a. Add plural alias `/is greenhouses` — **DONE**
 - File: `src/main/java/world/bentobox/greenhouses/ui/user/UserCommand.java`
 - **Problem:** The addon is called "greenhouses" everywhere but the command is `/is greenhouse` (singular).
 - **Fix:** Add `"greenhouses"` to the alias list in the `super(...)` constructor call. Example:
@@ -125,6 +130,10 @@ Work through the stages below **in order**. Each stage should be a separate comm
 
 #### 2c. Update CLAUDE.md architecture notes
 - Update the "Command Structure" section of this file to reflect the restored commands and the new plural alias.
+- The section has been corrected to describe what is actually registered today; revisit it again once 2b lands.
+
+#### 2d. Admin commands — tracked in [#137](https://github.com/BentoBoxWorld/Greenhouses/issues/137)
+- There is no admin command tree at all. Proposed: `list`, `info`, `delete`, `tp`, `verify`, `reload` under `gm.getAdminCommand()` in a new `ui/admin/` package, plus retaining load-rejected greenhouse records in memory so they can be inspected and deleted at runtime (the gap exposed by [#135](https://github.com/BentoBoxWorld/Greenhouses/issues/135)).
 
 ---
 
