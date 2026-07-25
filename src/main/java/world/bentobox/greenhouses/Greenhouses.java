@@ -14,6 +14,7 @@ import world.bentobox.bentobox.api.flags.Flag.Type;
 import world.bentobox.greenhouses.greenhouse.Walls;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.RecipeManager;
+import world.bentobox.greenhouses.ui.admin.AdminCommand;
 import world.bentobox.greenhouses.ui.user.UserCommand;
 
 /**
@@ -64,8 +65,9 @@ public class Greenhouses extends Addon {
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .filter(gm -> settings.getGameModes().stream().anyMatch(gm.getDescription().getName()::equalsIgnoreCase))
         .forEach(gm ->  {
-            // Register command
+            // Register commands
             gm.getPlayerCommand().ifPresent(playerCmd -> new UserCommand(this, playerCmd));
+            gm.getAdminCommand().ifPresent(adminCmd -> new AdminCommand(this, adminCmd));
             // Log
             this.log("Hooking into " + gm.getDescription().getName());
             // Store active world
