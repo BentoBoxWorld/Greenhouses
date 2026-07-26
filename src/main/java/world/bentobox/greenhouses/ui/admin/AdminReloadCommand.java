@@ -21,19 +21,11 @@ class AdminReloadCommand extends CompositeCommand {
         super(parent, "reload");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.reload");
-        this.setOnlyPlayer(false);
-        this.setDescription("greenhouses.commands.admin.reload.description");
+        AdminUtil.setup(this, false);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         Greenhouses addon = this.getAddon();

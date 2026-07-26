@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
-import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 
 /**
@@ -26,30 +25,16 @@ class AdminTeleportCommand extends CompositeCommand {
         super(parent, "tp", "teleport");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.tp");
+        AdminUtil.setup(this, true);
         this.setOnlyPlayer(true);
-        this.setParametersHelp("greenhouses.commands.admin.tp.parameters");
-        this.setDescription("greenhouses.commands.admin.tp.description");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        if (args.size() != 1) {
-            this.showHelp(this, user);
-            return false;
-        }
-        Greenhouses addon = this.getAddon();
-        gh = addon.getManager().getGreenhouseById(args.get(0)).orElse(null);
+        gh = AdminUtil.requireOne(this, user, args);
         if (gh == null) {
-            user.sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", args.get(0));
             return false;
         }
         if (gh.getLocation() == null || gh.getLocation().getWorld() == null) {
@@ -60,9 +45,6 @@ class AdminTeleportCommand extends CompositeCommand {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         // Aim for the middle of the greenhouse floor rather than its minimum corner

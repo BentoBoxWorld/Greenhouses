@@ -22,9 +22,6 @@ public class AdminCommand extends CompositeCommand {
         super(addon, parent, "greenhouses", "greenhouse", "gh");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
         this.setPermission("greenhouses.admin");
@@ -39,9 +36,6 @@ public class AdminCommand extends CompositeCommand {
         new AdminReloadCommand(this);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         return showHelp(this, user);

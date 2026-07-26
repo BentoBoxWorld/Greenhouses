@@ -28,43 +28,30 @@ class AdminVerifyCommand extends CompositeCommand {
         super(parent, "verify", "check");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.verify");
-        this.setOnlyPlayer(false);
-        this.setParametersHelp("greenhouses.commands.admin.verify.parameters");
-        this.setDescription("greenhouses.commands.admin.verify.description");
+        AdminUtil.setup(this, true);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        Greenhouses addon = this.getAddon();
-        if (args.isEmpty()) {
-            toCheck = new ArrayList<>(addon.getManager().getMap().getGreenhouses());
-            if (toCheck.isEmpty()) {
-                user.sendMessage("greenhouses.commands.admin.list.none");
+        if (!args.isEmpty()) {
+            Greenhouse gh = AdminUtil.byId(this, user, args.get(0));
+            if (gh == null) {
                 return false;
             }
+            toCheck = List.of(gh);
             return true;
         }
-        Greenhouse gh = addon.getManager().getGreenhouseById(args.get(0)).orElse(null);
-        if (gh == null) {
-            user.sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", args.get(0));
+        Greenhouses addon = this.getAddon();
+        toCheck = new ArrayList<>(addon.getManager().getMap().getGreenhouses());
+        if (toCheck.isEmpty()) {
+            user.sendMessage("greenhouses.commands.admin.list.none");
             return false;
         }
-        toCheck = List.of(gh);
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         user.sendMessage("greenhouses.commands.admin.verify.checking", TextVariables.NUMBER,

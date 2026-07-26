@@ -26,47 +26,31 @@ class AdminInfoCommand extends CompositeCommand {
         super(parent, "info");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.info");
-        this.setOnlyPlayer(false);
-        this.setParametersHelp("greenhouses.commands.admin.info.parameters");
-        this.setDescription("greenhouses.commands.admin.info.description");
+        AdminUtil.setup(this, true);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        Greenhouses addon = this.getAddon();
-        if (args.isEmpty()) {
-            // No ID given - use the greenhouse the admin is standing in
-            if (!user.isPlayer()) {
-                user.sendMessage("greenhouses.commands.admin.errors.id-required");
-                return false;
-            }
-            gh = addon.getManager().getMap().getGreenhouse(user.getLocation()).orElse(null);
-            if (gh == null) {
-                user.sendMessage("greenhouses.errors.not-inside");
-                return false;
-            }
-            return true;
+        if (!args.isEmpty()) {
+            gh = AdminUtil.byId(this, user, args.get(0));
+            return gh != null;
         }
-        gh = addon.getManager().getGreenhouseById(args.get(0)).orElse(null);
+        // No ID given - use the greenhouse the admin is standing in
+        if (!user.isPlayer()) {
+            user.sendMessage("greenhouses.commands.admin.errors.id-required");
+            return false;
+        }
+        Greenhouses addon = this.getAddon();
+        gh = addon.getManager().getMap().getGreenhouse(user.getLocation()).orElse(null);
         if (gh == null) {
-            user.sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", args.get(0));
+            user.sendMessage("greenhouses.errors.not-inside");
             return false;
         }
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         Greenhouses addon = this.getAddon();

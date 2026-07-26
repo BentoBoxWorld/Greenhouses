@@ -33,20 +33,11 @@ class AdminListCommand extends CompositeCommand {
         super(parent, "list");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.list");
-        this.setOnlyPlayer(false);
-        this.setParametersHelp("greenhouses.commands.admin.list.parameters");
-        this.setDescription("greenhouses.commands.admin.list.description");
+        AdminUtil.setup(this, true);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
         Greenhouses addon = this.getAddon();
@@ -80,9 +71,6 @@ class AdminListCommand extends CompositeCommand {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         Greenhouses addon = this.getAddon();
@@ -118,9 +106,6 @@ class AdminListCommand extends CompositeCommand {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#tabComplete(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
         if (args.size() == 2) {

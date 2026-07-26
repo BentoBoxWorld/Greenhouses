@@ -26,38 +26,17 @@ class AdminDeleteCommand extends ConfirmableCommand {
         super(parent, "delete");
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#setup()
-     */
     @Override
     public void setup() {
-        this.setPermission("greenhouses.admin.delete");
-        this.setOnlyPlayer(false);
-        this.setParametersHelp("greenhouses.commands.admin.delete.parameters");
-        this.setDescription("greenhouses.commands.admin.delete.description");
+        AdminUtil.setup(this, true);
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#canExecute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        if (args.size() != 1) {
-            this.showHelp(this, user);
-            return false;
-        }
-        Greenhouses addon = this.getAddon();
-        gh = addon.getManager().getGreenhouseById(args.get(0)).orElse(null);
-        if (gh == null) {
-            user.sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", args.get(0));
-            return false;
-        }
-        return true;
+        gh = AdminUtil.requireOne(this, user, args);
+        return gh != null;
     }
 
-    /* (non-Javadoc)
-     * @see world.bentobox.bentobox.api.commands.BentoBoxCommand#execute(world.bentobox.bentobox.api.user.User, java.lang.String, java.util.List)
-     */
     @Override
     public boolean execute(User user, String label, List<String> args) {
         Greenhouses addon = this.getAddon();
