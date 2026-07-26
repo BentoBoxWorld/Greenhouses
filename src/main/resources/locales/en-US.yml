@@ -85,6 +85,56 @@ greenhouses:
           &e to make snow and/or bonemeal to grow plants automatically.
           &e Check the biome recipes for what blocks must be inside a
           &e greenhouse to make one successfully. 
+    admin:
+      description: "Greenhouses admin commands"
+      errors:
+        unknown-id: "&c No greenhouse found with ID [id]. Use the list command to see IDs. A partial ID works if it only matches one greenhouse."
+        id-required: "&c Run this from in-game inside a greenhouse, or give a greenhouse ID."
+        no-location: "&c Greenhouse [id] has no valid location or its world is not loaded."
+      list:
+        description: "Lists greenhouses, optionally for one player"
+        parameters: "[player] [page]"
+        title: "&a [Greenhouses] &7([number] total, page [page] of [pages])"
+        entry: "&7 [id] &f[recipe] &7at &f[xyz] &7in &f[world] &7- &f[owner][broken]"
+        broken: " &c(broken)"
+        more: "&7 Use &f/[label] greenhouses list [page] &7for more"
+        none: "&c No greenhouses found."
+        unloaded-title: "&c [Not loaded: [number]] &7These records are in the database but are not active:"
+        unloaded-entry: "&c [id] &7[reason] &7at &f[xyz] &7in &f[world]"
+      info:
+        description: "Shows full detail of a greenhouse"
+        parameters: "[id]"
+        title: "&a [Greenhouse Info]"
+        id: "&7 ID: &f[id]"
+        recipe: "&7 Recipe: &f[recipe]"
+        owner: "&7 Owner: &f[owner]"
+        world: "&7 World: &f[world]"
+        location: "&7 Location: &f[xyz]"
+        bounding-box: "&7 Bounding box: &f[min] &7to &f[max]"
+        area: "&7 Internal area: &f[area] blocks"
+        original-biome: "&7 Original biome: &f[biome]"
+        hopper: "&7 Hopper: &f[hopper]"
+        broken: "&7 Broken: &f[broken]"
+        not-loaded: "&c Not loaded: [reason]"
+      delete:
+        description: "Deletes a greenhouse record by ID, loaded or not"
+        parameters: "<id>"
+        confirm: "&c Delete greenhouse [id] belonging to [owner] at [xyz]? This cannot be undone."
+        success: "&a Greenhouse [id] deleted."
+      tp:
+        description: "Teleports you to a greenhouse"
+        parameters: "<id>"
+        success: "&a Teleported to greenhouse [id]"
+      verify:
+        description: "Re-checks greenhouses against their recipe"
+        parameters: "[id]"
+        checking: "&7 Checking [number] greenhouse(s)..."
+        ok: "&a [id] at [xyz] meets its recipe"
+        broken: "&c [id] at [xyz] fails: [reasons]"
+      reload:
+        description: "Reloads biomes.yml and re-reads greenhouses from the database"
+        success: "&a Reloaded. [number] greenhouses active."
+        unloaded: "&c [number] record(s) could not be loaded - use the list command to see them."
 
 
 ######### Old locale for reference

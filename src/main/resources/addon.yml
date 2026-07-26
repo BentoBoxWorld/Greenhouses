@@ -17,3 +17,21 @@ permissions:
   '[gamemode].greenhouses.admin':
      description: Gives access to admin commands
      default: op
+  '[gamemode].greenhouses.admin.list':
+     description: Allows listing greenhouses
+     default: op
+  '[gamemode].greenhouses.admin.info':
+     description: Allows viewing the detail of a greenhouse
+     default: op
+  '[gamemode].greenhouses.admin.delete':
+     description: Allows deleting a greenhouse record
+     default: op
+  '[gamemode].greenhouses.admin.tp':
+     description: Allows teleporting to a greenhouse
+     default: op
+  '[gamemode].greenhouses.admin.verify':
+     description: Allows re-checking greenhouses against their recipe
+     default: op
+  '[gamemode].greenhouses.admin.reload':
+     description: Allows reloading biomes.yml and the greenhouse database
+     default: op

@@ -44,15 +44,31 @@ Player commands registered under `/is greenhouse` (aliases: `greenhouses`, `gh`,
 |---|---|
 | `make` | Registered. Also the default when `/is greenhouse` is run with no args and the player has an island. |
 | `remove` | Registered |
-| `info`, `list`, `recipe` | **Classes exist but are commented out in `UserCommand.setup()`** — not functional. See Stage 2b below. |
+| `info`, `list`, `recipe` | **Do not exist.** The unregistered stub classes were deleted; see Stage 2b below to write them properly. |
 
-There are **no admin commands** — `ui/` contains only the `user` and `panel` packages, and `Greenhouses.java` never calls `gm.getAdminCommand()`. Diagnostics such as inspecting or repairing persisted greenhouses currently require reading the server log or the database directly (see BentoBoxWorld/Greenhouses#137).
+Admin commands live in `ui/admin/`, registered on the game mode's admin command (e.g. `/bsbadmin greenhouses`, aliases `greenhouse`/`gh`), permission root `greenhouses.admin`:
+
+| Sub-command | Purpose |
+|---|---|
+| `list [player] [page]` | Paginated list of loaded greenhouses; always also lists records that failed to load |
+| `info [id]` | Full detail of one greenhouse, or the one you are standing in |
+| `delete <id>` | Deletes a record by ID, loaded or not, after confirmation |
+| `tp <id>` | Teleports to the centre of a greenhouse floor |
+| `verify [id]` | Re-runs the recipe check against the world for one or all greenhouses |
+| `reload` | Re-reads `biomes.yml` then re-loads greenhouses from the database |
+
+IDs may be abbreviated to any unique prefix; an ambiguous prefix is deliberately treated as no match.
+
+Each sub-command has its own permission, `greenhouses.admin.<label>`, derived from the label by `AdminUtil.setup()`. All of them — and the player permissions — are declared in `src/main/resources/addon.yml`, so a new sub-command needs an entry there as well as locale keys.
+
+Records that fail to load (overlapping, unknown recipe, no world, null location) are retained in `GreenhouseManager.getUnloaded()` as `UnloadedGreenhouse(greenhouse, reason)` rather than being dropped, so the admin commands can inspect and delete them. Only `FAIL_NO_ISLAND` records are auto-deleted at load; nothing else is ever removed without an explicit admin action.
 
 ### Configuration
 
 - **`config.yml`** — tick intervals (plant/block/mob/eco), snow settings, allowed materials
 - **`biomes.yml`** — biome recipe definitions with contents, plants, mobs, conversions, priorities
 - **`locales/`** — 25+ language files
+- **`addon.yml`** — addon metadata and the permission declarations
 
 ### Greenhouse Detection
 
@@ -119,7 +135,7 @@ Work through the stages below **in order**. Each stage should be a separate comm
   - `src/main/java/world/bentobox/greenhouses/ui/user/ListCommand.java`
   - `src/main/java/world/bentobox/greenhouses/ui/user/RecipeCommand.java`
   - `src/main/java/world/bentobox/greenhouses/ui/user/UserCommand.java`
-- **Problem:** These three command classes exist but are commented out in `UserCommand`. The README documents them but they are not functional.
+- **Problem:** These three command classes were unregistered, unimplemented stubs (`InfoCommand` even registered itself under the label `"make"`, colliding with `MakeCommand`) and have been deleted. Write them fresh; the legacy bodies are in git history.
 - **Fix:**
   - Implement `InfoCommand.execute()`: display the biome recipe name, block counts, and broken status of the greenhouse the player is currently standing in (use `GreenhouseMap.getGreenhouse(location)`). If the player is not in a greenhouse, send the `greenhouses.info.not-in-greenhouse` locale message.
   - Implement `ListCommand.execute()`: open the existing `Panel` GUI (same as the no-arg path in `MakeCommand`) so the player can browse all available recipes.
@@ -132,8 +148,8 @@ Work through the stages below **in order**. Each stage should be a separate comm
 - Update the "Command Structure" section of this file to reflect the restored commands and the new plural alias.
 - The section has been corrected to describe what is actually registered today; revisit it again once 2b lands.
 
-#### 2d. Admin commands — tracked in [#137](https://github.com/BentoBoxWorld/Greenhouses/issues/137)
-- There is no admin command tree at all. Proposed: `list`, `info`, `delete`, `tp`, `verify`, `reload` under `gm.getAdminCommand()` in a new `ui/admin/` package, plus retaining load-rejected greenhouse records in memory so they can be inspected and deleted at runtime (the gap exposed by [#135](https://github.com/BentoBoxWorld/Greenhouses/issues/135)).
+#### 2d. Admin commands — **DONE**, see [#137](https://github.com/BentoBoxWorld/Greenhouses/issues/137)
+- `list`, `info`, `delete`, `tp`, `verify` and `reload` under `gm.getAdminCommand()` in `ui/admin/`, plus retention of load-rejected greenhouse records so they can be inspected and deleted at runtime (the gap exposed by [#135](https://github.com/BentoBoxWorld/Greenhouses/issues/135)). See the Command Structure section above.
 
 ---
 

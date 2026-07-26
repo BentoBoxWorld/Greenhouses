@@ -139,41 +139,22 @@ public class EcoSystemManager {
      */
     boolean addMobs(Greenhouse gh) {
         final BoundingBox bb = gh.getBoundingBox();
-        if(gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
-            // Skipping addmobs for unloaded greenhouse
+        if (!chunksLoaded(gh, bb) || gh.getBiomeRecipe().noMobs()) {
             return false;
-        }
-        if (gh.getBiomeRecipe().noMobs()) {
-            return false;
-        }
-        // Check greenhouse chunks are loaded
-        for (double blockX = bb.getMinX(); blockX < bb.getMaxX(); blockX+=16) {
-            for (double blockZ = bb.getMinZ(); blockZ < bb.getMaxZ(); blockZ+=16) {
-                int chunkX = (int)(blockX / 16);
-                int chunkZ = (int)(blockZ / 16);
-                if (!gh.getWorld().isChunkLoaded(chunkX, chunkZ)) {
-                    return false;
-                }
-            }
         }
         // Count the entities in the greenhouse
         long sum = gh.getWorld().getEntities().stream()
                 .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
                 .filter(e -> gh.contains(e.getLocation())).count();
-        // Get the blocks in the greenhouse where spawning could occur
-        List<GrowthBlock> list = new ArrayList<>(getAvailableBlocks(gh, false));
-        Collections.shuffle(list, new Random(System.currentTimeMillis()));
-        Iterator<GrowthBlock> it = list.iterator();
         // Check if the greenhouse is full
         if (gh.getBiomeRecipe().getMaxMob() > -1 && sum >= gh.getBiomeRecipe().getMaxMob()) {
             return false;
         }
-        while (it.hasNext()
-                // Enforce the absolute maxmobs cap on every iteration, not just before the loop (issue #127)
-                && (gh.getBiomeRecipe().getMaxMob() <= -1 || sum < gh.getBiomeRecipe().getMaxMob())
-                && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit())) {
+        // Get the blocks in the greenhouse where spawning could occur
+        List<GrowthBlock> list = new ArrayList<>(getAvailableBlocks(gh, false));
+        Collections.shuffle(list, new Random(System.currentTimeMillis()));
+        Iterator<GrowthBlock> it = list.iterator();
+        while (it.hasNext() && hasRoomForMore(gh, sum)) {
             // Spawn something if chance says so
             if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
                 // Add a mob to the sum in the greenhouse
@@ -181,6 +162,42 @@ public class EcoSystemManager {
             }
         }
         return sum > 0;
+    }
+
+    /**
+     * Checks that the greenhouse has a world and that every chunk it covers is loaded. Mobs
+     * cannot be spawned into unloaded chunks.
+     * @param gh - greenhouse
+     * @param bb - the greenhouse's bounding box
+     * @return true if the greenhouse can be worked on
+     */
+    private boolean chunksLoaded(Greenhouse gh, BoundingBox bb) {
+        if (gh.getLocation() == null || gh.getLocation().getWorld() == null || gh.getWorld() == null
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
+                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)) {
+            // Skipping addmobs for unloaded greenhouse
+            return false;
+        }
+        for (double blockX = bb.getMinX(); blockX < bb.getMaxX(); blockX += 16) {
+            for (double blockZ = bb.getMinZ(); blockZ < bb.getMaxZ(); blockZ += 16) {
+                if (!gh.getWorld().isChunkLoaded((int) (blockX / 16), (int) (blockZ / 16))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Whether another mob may be spawned. The absolute maxmobs cap is enforced on every
+     * iteration, not just before the loop (issue #127), alongside the per-area mob limit.
+     * @param gh - greenhouse
+     * @param sum - mobs currently in the greenhouse
+     * @return true if there is room for one more
+     */
+    private boolean hasRoomForMore(Greenhouse gh, long sum) {
+        int maxMob = gh.getBiomeRecipe().getMaxMob();
+        return (maxMob <= -1 || sum < maxMob) && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit());
     }
 
     /**
@@ -241,10 +258,11 @@ public class EcoSystemManager {
         final BoundingBox ibb = gh.getInternalBoundingBox();
         List<GrowthBlock> result = new ArrayList<>();
         if (gh.getWorld() == null) return result;
-        for (double x = ibb.getMinX(); x < ibb.getMaxX(); x++) {
-            for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
-                for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
-                    Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
+        // Block coordinates, so iterate as ints rather than incrementing doubles
+        for (int x = NumberConversions.floor(ibb.getMinX()); x < ibb.getMaxX(); x++) {
+            for (int z = NumberConversions.floor(ibb.getMinZ()); z < ibb.getMaxZ(); z++) {
+                for (int y = NumberConversions.floor(ibb.getMaxY()) - 1; y >= bb.getMinY(); y--) {
+                    Block b = gh.getWorld().getBlockAt(x, y, z);
                     checkBlock(result, b, ignoreLiquid);
                 }
             }

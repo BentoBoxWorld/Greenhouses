@@ -1,8 +1,6 @@
 package world.bentobox.greenhouses.listeners;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,50 +51,54 @@ public class SnowTracker implements Listener {
      * @return true if snow was create, false if not.
      */
     private boolean getAirBlocks(Greenhouse gh) {
-        if (gh.getLocation() == null) {
+        if (gh.getLocation() == null || gh.getLocation().getWorld() == null) {
             // Greenhouse does not have a location for some reason.
             return false;
         }
-        boolean createdSnow = false;
-        List<Block> waterBlocks = new ArrayList<>();
+        World world = gh.getLocation().getWorld();
         final BoundingBox bb = gh.getBoundingBox();
-        for (int x = (int)bb.getMinX() + 1; x < (int)bb.getMaxX() -1; x++) {
-            for (int z = (int)bb.getMinZ() + 1; z < (int)bb.getMaxZ() - 1; z++) {
-                for (int y = (int)bb.getMaxY() - 2; y >= (int)bb.getMinY(); y--) {
-                    Block b = Objects.requireNonNull(gh.getLocation().getWorld()).getBlockAt(x, y, z);
-                    Material type = b.getType();
-                    if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {
-                        b.getWorld().spawnParticle(Particle.SNOWFLAKE, b.getLocation(), 5);
-                    } else {
-                        // Add snow
-                        if (type.equals(Material.WATER)) {
-                            waterBlocks.add(b);
-                        } else {
-                            // Not water
-                            if (Math.random() < addon.getSettings().getSnowDensity()
-                                    && !b.isLiquid()
-                                    && (b.getRelative(BlockFace.UP).getType().equals(Material.AIR)
-                                            || b.getRelative(BlockFace.UP).getType().equals(Material.SNOW))) {
-
-
-                                createdSnow = placeSnow(b);
-                            }
-                        }
-
-                        break;
-                    }
-                }
+        boolean createdSnow = false;
+        for (int x = (int) bb.getMinX() + 1; x < (int) bb.getMaxX() - 1; x++) {
+            for (int z = (int) bb.getMinZ() + 1; z < (int) bb.getMaxZ() - 1; z++) {
+                createdSnow |= snowColumn(world, bb, x, z);
             }
         }
-        // Check if any water blocks can be turned to ice
-        /*
-         * TODO - find a way to calculate water blocks
-        int maxSize = waterBlocks.size() - (gh.getArea() / gh.getBiomeRecipe().getWaterCoverage());
-        if (maxSize > 0) {
-            waterBlocks.stream().limit(maxSize).filter(b -> Math.random() < addon.getSettings().getSnowDensity()).forEach(b -> b.setType(Material.ICE));
-        }
-         */
         return createdSnow;
+    }
+
+    /**
+     * Works down one column from just below the ceiling, showing falling snow in the open air
+     * and settling snow on the first block it lands on.
+     * @param world - world
+     * @param bb - the greenhouse's bounding box
+     * @param x - column x coord
+     * @param z - column z coord
+     * @return true if snow was placed in this column
+     */
+    private boolean snowColumn(World world, BoundingBox bb, int x, int z) {
+        for (int y = (int) bb.getMaxY() - 2; y >= (int) bb.getMinY(); y--) {
+            Block b = world.getBlockAt(x, y, z);
+            Material type = b.getType();
+            if (type.equals(Material.AIR) || type.equals(Material.SNOW)) {
+                // Still falling
+                b.getWorld().spawnParticle(Particle.SNOWFLAKE, b.getLocation(), 5);
+                continue;
+            }
+            // First block the snow lands on - nothing below it can be reached
+            return !type.equals(Material.WATER) && settleSnow(b);
+        }
+        return false;
+    }
+
+    /**
+     * Places snow on a block if the dice say so and there is room above it.
+     * @param b - the block the snow would sit on
+     * @return true if snow was placed
+     */
+    private boolean settleSnow(Block b) {
+        Material above = b.getRelative(BlockFace.UP).getType();
+        return Math.random() < addon.getSettings().getSnowDensity() && !b.isLiquid()
+                && (above.equals(Material.AIR) || above.equals(Material.SNOW)) && placeSnow(b);
     }
 
     private boolean placeSnow(Block b) {
@@ -140,7 +142,8 @@ public class SnowTracker implements Listener {
     }
 
     /**
-     * TODO finish
+     * Stops vanilla snow forming on top of a greenhouse roof - the greenhouse makes its own
+     * snow inside instead.
      * @param e block form event
      */
     @EventHandler

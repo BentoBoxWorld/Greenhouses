@@ -168,32 +168,44 @@ public class GreenhouseFinder {
         final int x = v.getBlockX();
         final int y = v.getBlockY();
         final int z = v.getBlockZ();
-        // Check wall blocks only
-        if (y == roof.getHeight() || x == walls.getMinX() || x == walls.getMaxX() || z == walls.getMinZ() || z== walls.getMaxZ()) {
-            // Check for non-wall blocks or non-roof blocks at the top of walls
-            if ((y != roof.getHeight() && !addon.wallBlocks(m))
-                    || (y == roof.getHeight() && !roof.roofBlocks(m))) {
-                if (m.equals(Material.AIR)) {
-                    // Air hole found
-                    cc.airHole = true;
-                    if (y == roof.getHeight()) {
-                        // Air hole is in ceiling
-                        inCeiling = true;
-                    }
-                } else {
-                    // A non-wall or roof block found
-                    cc.otherBlock = true;
-                }
-                // Record the incorrect location
-                redGlass.add(v);
-                return false;
-            } else {
-                // Normal wall blocks
-                wallBlockCount++;
-                return checkDoorsHoppers(cc, m, v);
-            }
+        // Only wall and roof positions are of interest
+        if (y != roof.getHeight() && x != walls.getMinX() && x != walls.getMaxX() && z != walls.getMinZ()
+                && z != walls.getMaxZ()) {
+            return true;
         }
-        return true;
+        boolean inRoof = y == roof.getHeight();
+        // Check for non-wall blocks, or non-roof blocks at the top of walls
+        if ((!inRoof && !addon.wallBlocks(m)) || (inRoof && !roof.roofBlocks(m))) {
+            recordBadBlock(cc, m, v, inRoof);
+            return false;
+        }
+        // Normal wall blocks
+        wallBlockCount++;
+        return checkDoorsHoppers(cc, m, v);
+    }
+
+    /**
+     * Records a block that should not be part of the greenhouse shell, so that it can be shown
+     * to the player as red glass.
+     * @param cc - counter check
+     * @param m - material of the offending block
+     * @param v - position of the offending block
+     * @param inRoof - true if the block is at roof height
+     */
+    private void recordBadBlock(CounterCheck cc, Material m, Vector v, boolean inRoof) {
+        if (m.equals(Material.AIR)) {
+            // Air hole found
+            cc.airHole = true;
+            if (inRoof) {
+                // Air hole is in ceiling
+                inCeiling = true;
+            }
+        } else {
+            // A non-wall or roof block found
+            cc.otherBlock = true;
+        }
+        // Record the incorrect location
+        redGlass.add(v);
     }
 
     /**

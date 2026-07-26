@@ -85,19 +85,23 @@ Read the file release notes for changes and instructions on how to upgrade.
 
 Add these commands to /island, /ai:
 
+* **greenhouses** - opens the recipe GUI; clicking a recipe will try to make that greenhouse
 * **greenhouses help** - lists these commands
 * **greenhouses make**: Tries to make a greenhouse by finding the first valid recipe
 * **greenhouses remove**: Removes a greenhouse that you are standing in if you are the owner
-* **greenhouses list**: Lists all the recipes available
-* **greenhouses recipe**: Display the recipe GUI - clicking on a recipe will try to make a greenhouse
 
 ## Admin Commands
 
-Use after the game mode admin command, e.g. /bsb or /acid
+Use after the game mode admin command, e.g. **/bsbadmin** or **/acid**. Aliases: **greenhouse**, **gh**.
 
-* **greenhouses reload** : Reloads config files
-* **greenhouses info <player>**: provides info on the player's island greenhouses
-* **greenhouses info**: provides info on the greenhouse you are in
+* **greenhouses list [player] [page]**: lists greenhouses, optionally only those on a player's island. Records that are in the database but could not be loaded are always listed too, with the reason.
+* **greenhouses info [id]**: shows the full detail of a greenhouse - recipe, owner, world, location, bounding box, area, original biome, hopper and broken status. With no ID, uses the greenhouse you are standing in.
+* **greenhouses delete <id>**: deletes a greenhouse record, whether or not it loaded, after asking you to confirm. This is how you clear out a record that is skipped at startup, for example one that overlaps another greenhouse.
+* **greenhouses tp <id>**: teleports you to a greenhouse.
+* **greenhouses verify [id]**: re-checks one or all greenhouses against their recipe and reports any that no longer meet it, along with the blocks they are missing.
+* **greenhouses reload**: reloads biomes.yml and re-reads the greenhouses from the database.
+
+IDs come from the list command and may be shortened to any prefix that matches only one greenhouse. All of these commands work from the server console except **tp**.
 
 ## Permissions
 
@@ -122,3 +126,6 @@ The permission can be anything you like, e.g., a rank permission, **myserver.VIP
   
      description: Gives access to admin commands
      default: op
+
+Each admin sub-command also has its own permission, so access can be given command by command:
+**greenhouses.admin.list**, **greenhouses.admin.info**, **greenhouses.admin.delete**, **greenhouses.admin.tp**, **greenhouses.admin.verify** and **greenhouses.admin.reload**. All default to op.

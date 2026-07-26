@@ -242,13 +242,13 @@ public class GreenhouseFinderTest {
         // Set the greenhouse so the world is known
         gf.setGh(gh);
         when(Tag.DOORS.isTagged(any(Material.class))).thenReturn(false);
-        CounterCheck cc = new CounterCheck();
-        assertTrue(gf.checkDoorsHoppers(cc, Material.HOPPER, new Vector(5,14,25)));
+        CounterCheck counter = new CounterCheck();
+        assertTrue(gf.checkDoorsHoppers(counter, Material.HOPPER, new Vector(5,14,25)));
         assertTrue(gf.getRedGlass().isEmpty());
         assertEquals(5, gf.getGh().getRoofHopperLocation().getBlockX());
         assertEquals(14, gf.getGh().getRoofHopperLocation().getBlockY());
         assertEquals(25, gf.getGh().getRoofHopperLocation().getBlockZ());
-        assertFalse(gf.checkDoorsHoppers(cc, Material.HOPPER, new Vector(5,14,25)));
+        assertFalse(gf.checkDoorsHoppers(counter, Material.HOPPER, new Vector(5,14,25)));
     }
 
 
