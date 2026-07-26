@@ -99,10 +99,10 @@ public class AsyncWorldCache {
      * @return material type or Material.AIR if there is an exception
      */
     public Material getBlockType(final int x, final int y, final int z) {
-        // Convert block coords to chunk coords
-        // TODO: simplify this - it must be easier than this!
-        int xx = x >= 0 ? x % 16 : (16 + (x % 16)) % 16;
-        int zz = z >= 0 ? z % 16 : (16 + (z % 16)) % 16;
+        // Convert block coords to coords within the chunk. floorMod gives the same result as
+        // the sign-corrected remainder this used to spell out by hand.
+        int xx = Math.floorMod(x, 16);
+        int zz = Math.floorMod(z, 16);
         try {
             return Objects.requireNonNull(getSnap(x, z)).getBlockType(xx, y, zz);
         } catch (InterruptedException | ExecutionException e) {

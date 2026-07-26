@@ -44,7 +44,7 @@ Player commands registered under `/is greenhouse` (aliases: `greenhouses`, `gh`,
 |---|---|
 | `make` | Registered. Also the default when `/is greenhouse` is run with no args and the player has an island. |
 | `remove` | Registered |
-| `info`, `list`, `recipe` | **Classes exist but are commented out in `UserCommand.setup()`** — not functional. See Stage 2b below. |
+| `info`, `list`, `recipe` | **Do not exist.** The unregistered stub classes were deleted; see Stage 2b below to write them properly. |
 
 Admin commands live in `ui/admin/`, registered on the game mode's admin command (e.g. `/bsbadmin greenhouses`, aliases `greenhouse`/`gh`), permission root `greenhouses.admin`:
 
@@ -132,7 +132,7 @@ Work through the stages below **in order**. Each stage should be a separate comm
   - `src/main/java/world/bentobox/greenhouses/ui/user/ListCommand.java`
   - `src/main/java/world/bentobox/greenhouses/ui/user/RecipeCommand.java`
   - `src/main/java/world/bentobox/greenhouses/ui/user/UserCommand.java`
-- **Problem:** These three command classes exist but are commented out in `UserCommand`. The README documents them but they are not functional.
+- **Problem:** These three command classes were unregistered, unimplemented stubs (`InfoCommand` even registered itself under the label `"make"`, colliding with `MakeCommand`) and have been deleted. Write them fresh; the legacy bodies are in git history.
 - **Fix:**
   - Implement `InfoCommand.execute()`: display the biome recipe name, block counts, and broken status of the greenhouse the player is currently standing in (use `GreenhouseMap.getGreenhouse(location)`). If the player is not in a greenhouse, send the `greenhouses.info.not-in-greenhouse` locale message.
   - Implement `ListCommand.execute()`: open the existing `Panel` GUI (same as the no-arg path in `MakeCommand`) so the player can browse all available recipes.

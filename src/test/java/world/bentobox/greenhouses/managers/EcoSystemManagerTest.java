@@ -126,7 +126,7 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksPlantAboveBlock() {
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(plant);
+        when(block.getRelative(BlockFace.UP)).thenReturn(plant);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(64, result.size());
         assertEquals(plant, result.get(0).block());
@@ -147,7 +147,7 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksAllLiquid() {
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(liquid.getRelative(BlockFace.UP)).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(64, result.size());
@@ -158,7 +158,7 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksAllLiquid2() {
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(liquid.getRelative(BlockFace.UP)).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(0, result.size());
@@ -169,7 +169,7 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksAllPlant() {
-        when(plant.getRelative(eq(BlockFace.UP))).thenReturn(plant);
+        when(plant.getRelative(BlockFace.UP)).thenReturn(plant);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(plant);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(64, result.size());
@@ -181,7 +181,7 @@ public class EcoSystemManagerTest {
      */
     @Test
     public void testGetAvailableBlocksLiquidAboveBlockIgnoreLiquids() {
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(block.getRelative(BlockFace.UP)).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(64, result.size());
         assertEquals(liquid, result.get(0).block());
@@ -195,8 +195,8 @@ public class EcoSystemManagerTest {
         when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
         when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(liquid.getRelative(BlockFace.UP)).thenReturn(air);
+        when(block.getRelative(BlockFace.UP)).thenReturn(liquid);
 
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(48, result.size());
@@ -229,8 +229,8 @@ public class EcoSystemManagerTest {
         when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
         when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
-        when(liquid.getRelative(eq(BlockFace.UP))).thenReturn(air);
-        when(block.getRelative(eq(BlockFace.UP))).thenReturn(liquid);
+        when(liquid.getRelative(BlockFace.UP)).thenReturn(air);
+        when(block.getRelative(BlockFace.UP)).thenReturn(liquid);
 
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(32, result.size());

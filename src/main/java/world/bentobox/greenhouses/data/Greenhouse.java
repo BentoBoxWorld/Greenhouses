@@ -84,7 +84,9 @@ public class Greenhouse implements DataObject {
      * @return the floorHeight
      */
     public int getFloorHeight() {
-        return location.getBlockY();
+        // location is the minimum corner of the bounding box, so fall back to it if a record
+        // has lost its location - the alternative here is an NPE
+        return location == null ? (int) getBoundingBox().getMinY() : location.getBlockY();
     }
 
     /**

@@ -184,18 +184,48 @@ public class Roof extends MinMaxXZ {
 
     private Vector spiralSearch(Vector v, int startY) {
         for (int radius = 0; radius < 3; radius++) {
-            for (int x = v.getBlockX() - radius; x <= v.getBlockX() + radius; x++) {
-                for (int z = v.getBlockZ() - radius; z <= v.getBlockZ() + radius; z++) {
-                    if (!((x > v.getBlockX() - radius && x < v.getBlockX() + radius) && (z > v.getBlockZ() - radius && z < v.getBlockZ() + radius))) {
-                        Optional<Vector> r = checkVertically(x, startY, z);
-                        if (r.isPresent()) {
-                            return r.get();
-                        }
+            Optional<Vector> found = searchRing(v, startY, radius);
+            if (found.isPresent()) {
+                return found.get();
+            }
+        }
+        return v;
+    }
+
+    /**
+     * Searches the square ring at the given radius around v for a roof block.
+     * @param v - centre of the search
+     * @param startY - starting y coord
+     * @param radius - distance from the centre
+     * @return the first roof block found on this ring, or empty
+     */
+    private Optional<Vector> searchRing(Vector v, int startY, int radius) {
+        for (int x = v.getBlockX() - radius; x <= v.getBlockX() + radius; x++) {
+            for (int z = v.getBlockZ() - radius; z <= v.getBlockZ() + radius; z++) {
+                if (isOnRing(v, radius, x, z)) {
+                    Optional<Vector> r = checkVertically(x, startY, z);
+                    if (r.isPresent()) {
+                        return r;
                     }
                 }
             }
         }
-        return v;
+        return Optional.empty();
+    }
+
+    /**
+     * Only the perimeter of the square at this radius is new - anything inside it was already
+     * covered by a smaller radius.
+     * @param v - centre of the search
+     * @param radius - distance from the centre
+     * @param x - x coord being considered
+     * @param z - z coord being considered
+     * @return true if the coordinate lies on the ring rather than inside it
+     */
+    private boolean isOnRing(Vector v, int radius, int x, int z) {
+        boolean insideX = x > v.getBlockX() - radius && x < v.getBlockX() + radius;
+        boolean insideZ = z > v.getBlockZ() - radius && z < v.getBlockZ() + radius;
+        return !(insideX && insideZ);
     }
 
     /**

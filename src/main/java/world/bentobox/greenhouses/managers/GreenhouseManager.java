@@ -178,6 +178,7 @@ public class GreenhouseManager implements Listener {
                 addon.logError("Greenhouse Id " + g.getUniqueId());
             }
             default -> {
+                // Every other result is either impossible here or needs no action
             }
             }
         }
@@ -313,8 +314,9 @@ public class GreenhouseManager implements Listener {
      */
     private CompletableFuture<Set<GreenhouseResult>> findRecipe(GreenhouseFinder finder) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
-        // Get sorted list of all recipes
-        List<BiomeRecipe> list = addon.getRecipes().getBiomeRecipes().stream().sorted().collect(Collectors.toList());
+        // Get sorted list of all recipes. This must stay mutable - findRecipe pops the head off
+        // it as it works through the recipes, so Stream.toList() would throw here.
+        List<BiomeRecipe> list = new ArrayList<>(addon.getRecipes().getBiomeRecipes().stream().sorted().toList());
         findRecipe(r, list, finder);
         return r;
     }
