@@ -7,6 +7,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -206,6 +207,13 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public CompletableFuture<Set<GreenhouseResult>> checkRecipe(Greenhouse gh) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
+        if (addon == null) {
+            // The no-arg constructor produces a degenerate recipe, handed out by
+            // Greenhouse#getBiomeRecipe when the recipe named in the database is not in
+            // biomes.yml. It has no addon, so there is nothing to check against.
+            r.complete(Collections.singleton(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
+            return r;
+        }
         Bukkit.getScheduler().runTaskAsynchronously(addon.getPlugin(), () -> checkRecipeAsync(r, gh));
         return r;
 
@@ -741,9 +749,32 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         this.waterCoverage = waterCoverage;
     }
 
+    /**
+     * Recipes sort by descending priority, which is how the best match is picked when no
+     * specific recipe is requested. Note that this ordering is deliberately inconsistent with
+     * {@link #equals(Object)}: two different recipes may share a priority, but they are only
+     * equal if they are the same named recipe.
+     */
     @Override
     public int compareTo(BiomeRecipe o) {
         return Integer.compare(o.getPriority(), this.getPriority());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof BiomeRecipe other)) {
+            return false;
+        }
+        // A recipe is identified by its name in biomes.yml
+        return Objects.equals(name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
 

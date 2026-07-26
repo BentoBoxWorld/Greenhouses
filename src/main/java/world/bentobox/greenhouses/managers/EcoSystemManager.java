@@ -241,10 +241,11 @@ public class EcoSystemManager {
         final BoundingBox ibb = gh.getInternalBoundingBox();
         List<GrowthBlock> result = new ArrayList<>();
         if (gh.getWorld() == null) return result;
-        for (double x = ibb.getMinX(); x < ibb.getMaxX(); x++) {
-            for (double z = ibb.getMinZ(); z < ibb.getMaxZ(); z++) {
-                for (double y = ibb.getMaxY() - 1; y >= bb.getMinY(); y--) {
-                    Block b = gh.getWorld().getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
+        // Block coordinates, so iterate as ints rather than incrementing doubles
+        for (int x = NumberConversions.floor(ibb.getMinX()); x < ibb.getMaxX(); x++) {
+            for (int z = NumberConversions.floor(ibb.getMinZ()); z < ibb.getMaxZ(); z++) {
+                for (int y = NumberConversions.floor(ibb.getMaxY()) - 1; y >= bb.getMinY(); y--) {
+                    Block b = gh.getWorld().getBlockAt(x, y, z);
                     checkBlock(result, b, ignoreLiquid);
                 }
             }
