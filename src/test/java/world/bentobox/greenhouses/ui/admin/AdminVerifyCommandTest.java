@@ -116,7 +116,7 @@ public class AdminVerifyCommandTest {
     public void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "verify", List.of("nope")));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.errors.unknown-id"), eq("[id]"), eq("nope"));
+        verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
     }
 
     /**
@@ -146,8 +146,8 @@ public class AdminVerifyCommandTest {
         // Reasons are sorted so the output is stable
         verify(user).sendMessage(eq("greenhouses.commands.admin.verify.broken"), eq("[id]"), anyString(), eq("[xyz]"),
                 eq("1,60,2"), eq("[reasons]"), eq("FAIL_INSUFFICIENT_BLOCKS, FAIL_INSUFFICIENT_WATER"));
-        verify(user).sendMessage(eq("greenhouses.commands.user.make.missing-blocks"), eq("[material]"), eq("DIRT"),
-                eq("[number]"), eq("4"));
+        verify(user).sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", "DIRT",
+                "[number]", "4");
     }
 
     /**
@@ -159,7 +159,7 @@ public class AdminVerifyCommandTest {
         when(br.checkRecipe(any())).thenReturn(CompletableFuture.completedFuture(Collections.emptySet()));
         assertTrue(cmd.canExecute(user, "verify", Collections.emptyList()));
         assertTrue(cmd.execute(user, "verify", Collections.emptyList()));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.verify.checking"), eq("[number]"), eq("1"));
+        verify(user).sendMessage("greenhouses.commands.admin.verify.checking", "[number]", "1");
     }
 
 }

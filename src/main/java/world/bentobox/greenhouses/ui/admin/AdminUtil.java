@@ -28,6 +28,11 @@ final class AdminUtil {
      */
     private static final String KEY = "greenhouses.commands.admin.";
 
+    /**
+     * Shown when a greenhouse record is too broken to report a real value
+     */
+    private static final String UNKNOWN = "unknown";
+
     private AdminUtil() {
         // Utility class
     }
@@ -97,7 +102,7 @@ final class AdminUtil {
     static String ownerName(Greenhouses addon, Greenhouse gh) {
         Location loc = gh.getLocation();
         if (loc == null) {
-            return "unknown";
+            return UNKNOWN;
         }
         return addon.getIslands().getIslandAt(loc).map(Island::getOwner)
                 .map(uuid -> addon.getPlayers().getName(uuid)).filter(n -> !n.isEmpty()).orElse("unowned");
@@ -109,7 +114,7 @@ final class AdminUtil {
      */
     static String xyz(Greenhouse gh) {
         Location loc = gh.getLocation();
-        return loc == null ? "unknown" : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+        return loc == null ? UNKNOWN : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 
     /**
@@ -118,6 +123,6 @@ final class AdminUtil {
      */
     static String worldName(Greenhouse gh) {
         Location loc = gh.getLocation();
-        return loc == null || loc.getWorld() == null ? "unknown" : loc.getWorld().getName();
+        return loc == null || loc.getWorld() == null ? UNKNOWN : loc.getWorld().getName();
     }
 }

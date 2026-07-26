@@ -174,7 +174,7 @@ public class AdminInfoCommandTest {
     public void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "info", List.of("nope")));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.errors.unknown-id"), eq("[id]"), eq("nope"));
+        verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
     }
 
     /**
@@ -186,10 +186,10 @@ public class AdminInfoCommandTest {
         assertTrue(cmd.canExecute(user, "info", List.of(ID)));
         assertTrue(cmd.execute(user, "info", List.of(ID)));
         verify(user).sendMessage("greenhouses.commands.admin.info.title");
-        verify(user).sendMessage(eq("greenhouses.commands.admin.info.id"), eq("[id]"), eq(ID));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.info.recipe"), eq("[recipe]"), eq("PLAINS"));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.info.bounding-box"), eq("[min]"), eq("0,60,0"),
-                eq("[max]"), eq("10,70,10"));
+        verify(user).sendMessage("greenhouses.commands.admin.info.id", "[id]", ID);
+        verify(user).sendMessage("greenhouses.commands.admin.info.recipe", "[recipe]", "PLAINS");
+        verify(user).sendMessage("greenhouses.commands.admin.info.bounding-box", "[min]", "0,60,0",
+                "[max]", "10,70,10");
     }
 
     /**
@@ -202,8 +202,8 @@ public class AdminInfoCommandTest {
                 GreenhouseManager.GreenhouseResult.FAIL_OVERLAPPING)));
         assertTrue(cmd.canExecute(user, "info", List.of(ID)));
         assertTrue(cmd.execute(user, "info", List.of(ID)));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.info.not-loaded"), eq("[reason]"),
-                eq("FAIL_OVERLAPPING"));
+        verify(user).sendMessage("greenhouses.commands.admin.info.not-loaded", "[reason]",
+                "FAIL_OVERLAPPING");
     }
 
 }

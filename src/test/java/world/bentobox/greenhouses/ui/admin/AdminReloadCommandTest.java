@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -99,7 +98,7 @@ public class AdminReloadCommandTest {
         InOrder order = inOrder(rm, gm);
         order.verify(rm).reload();
         order.verify(gm).reload();
-        verify(user).sendMessage(eq("greenhouses.commands.admin.reload.success"), eq("[number]"), eq("7"));
+        verify(user).sendMessage("greenhouses.commands.admin.reload.success", "[number]", "7");
         verify(user, never()).sendMessage(eq("greenhouses.commands.admin.reload.unloaded"), eq("[number]"),
                 eq("0"));
     }
@@ -112,7 +111,7 @@ public class AdminReloadCommandTest {
         when(gm.getUnloaded())
         .thenReturn(List.of(new UnloadedGreenhouse(null, GreenhouseResult.FAIL_OVERLAPPING)));
         assertTrue(cmd.execute(user, "reload", Collections.emptyList()));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.reload.unloaded"), eq("[number]"), eq("1"));
+        verify(user).sendMessage("greenhouses.commands.admin.reload.unloaded", "[number]", "1");
     }
 
 }

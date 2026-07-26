@@ -69,7 +69,7 @@ public class GreenhouseManagerTest {
 
     @SuppressWarnings("unchecked")
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ServerMocks.newServer();
         handler = mock(Database.class);
         when(addon.getIslands()).thenReturn(im);

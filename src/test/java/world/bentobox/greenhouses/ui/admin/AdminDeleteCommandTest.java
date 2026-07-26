@@ -136,7 +136,7 @@ public class AdminDeleteCommandTest {
     public void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "delete", List.of("nope")));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.errors.unknown-id"), eq("[id]"), eq("nope"));
+        verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
     }
 
     /**
@@ -173,7 +173,7 @@ public class AdminDeleteCommandTest {
         // Record vanished between the prompt and the confirmation
         when(gm.deleteById(ID)).thenReturn(false);
         captor.getValue().run();
-        verify(user).sendMessage(eq("greenhouses.commands.admin.errors.unknown-id"), eq("[id]"), eq(ID));
+        verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", ID);
     }
 
 }

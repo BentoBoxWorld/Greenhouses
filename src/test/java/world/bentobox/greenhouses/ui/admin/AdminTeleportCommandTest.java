@@ -1,5 +1,6 @@
 package world.bentobox.greenhouses.ui.admin;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -121,7 +122,7 @@ public class AdminTeleportCommandTest {
     public void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "tp", List.of("nope")));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.errors.unknown-id"), eq("[id]"), eq("nope"));
+        verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
     }
 
     /**
@@ -150,9 +151,9 @@ public class AdminTeleportCommandTest {
         Util.teleportAsync(eq(player), captor.capture());
         Location target = captor.getValue();
         // Centre of the box in x/z, standing on the floor rather than in it
-        assertTrue(target.getX() == 5D);
-        assertTrue(target.getZ() == 5D);
-        assertTrue(target.getY() == 61D);
+        assertEquals(5D, target.getX(), 0D);
+        assertEquals(5D, target.getZ(), 0D);
+        assertEquals(61D, target.getY(), 0D);
         verify(user).sendMessage(eq("greenhouses.commands.admin.tp.success"), eq("[id]"), anyString());
     }
 

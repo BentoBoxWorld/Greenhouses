@@ -143,8 +143,8 @@ public class AdminListCommandTest {
         when(map.getGreenhouses()).thenReturn(list);
         assertTrue(cmd.canExecute(user, "list", Collections.emptyList()));
         assertTrue(cmd.execute(user, "list", Collections.emptyList()));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.list.title"), eq("[number]"), eq("12"), eq("[page]"),
-                eq("1"), eq("[pages]"), eq("2"));
+        verify(user).sendMessage("greenhouses.commands.admin.list.title", "[number]", "12", "[page]",
+                "1", "[pages]", "2");
         // Only 10 of the 12 on page one
         verify(user, times(10)).sendMessage(eq("greenhouses.commands.admin.list.entry"), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
@@ -162,8 +162,8 @@ public class AdminListCommandTest {
         when(map.getGreenhouses()).thenReturn(list);
         assertTrue(cmd.canExecute(user, "list", List.of("2")));
         assertTrue(cmd.execute(user, "list", List.of("2")));
-        verify(user).sendMessage(eq("greenhouses.commands.admin.list.title"), eq("[number]"), eq("12"), eq("[page]"),
-                eq("2"), eq("[pages]"), eq("2"));
+        verify(user).sendMessage("greenhouses.commands.admin.list.title", "[number]", "12", "[page]",
+                "2", "[pages]", "2");
         // The 2 remaining entries
         verify(user, times(2)).sendMessage(eq("greenhouses.commands.admin.list.entry"), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
@@ -177,7 +177,7 @@ public class AdminListCommandTest {
     public void testCanExecuteUnknownPlayer() {
         when(pm.getUUID(anyString())).thenReturn(null);
         assertFalse(cmd.canExecute(user, "list", List.of("nobody")));
-        verify(user).sendMessage(eq("general.errors.unknown-player"), eq("[name]"), eq("nobody"));
+        verify(user).sendMessage("general.errors.unknown-player", "[name]", "nobody");
     }
 
     /**
@@ -194,8 +194,8 @@ public class AdminListCommandTest {
         assertTrue(cmd.execute(user, "list", List.of("tastybento")));
         // Scoped to the player's island, not everything
         verify(map, never()).getGreenhouses();
-        verify(user).sendMessage(eq("greenhouses.commands.admin.list.title"), eq("[number]"), eq("1"), eq("[page]"),
-                eq("1"), eq("[pages]"), eq("1"));
+        verify(user).sendMessage("greenhouses.commands.admin.list.title", "[number]", "1", "[page]",
+                "1", "[pages]", "1");
     }
 
     /**
@@ -210,7 +210,7 @@ public class AdminListCommandTest {
         assertTrue(cmd.execute(user, "list", Collections.emptyList()));
         // Not reported as "none" - there is something to act on
         verify(user, never()).sendMessage("greenhouses.commands.admin.list.none");
-        verify(user).sendMessage(eq("greenhouses.commands.admin.list.unloaded-title"), eq("[number]"), eq("1"));
+        verify(user).sendMessage("greenhouses.commands.admin.list.unloaded-title", "[number]", "1");
         verify(user).sendMessage(eq("greenhouses.commands.admin.list.unloaded-entry"), anyString(), anyString(),
                 eq("[reason]"), eq("FAIL_OVERLAPPING"), anyString(), anyString(), anyString(), anyString());
     }

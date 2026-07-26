@@ -77,8 +77,19 @@ class AdminListCommand extends CompositeCommand {
         List<UnloadedGreenhouse> unloaded = addon.getManager().getUnloaded();
         if (toShow.isEmpty() && unloaded.isEmpty()) {
             user.sendMessage("greenhouses.commands.admin.list.none");
-            return true;
+        } else {
+            showPage(user, addon);
+            showUnloaded(user, unloaded);
         }
+        return true;
+    }
+
+    /**
+     * Sends the requested page of loaded greenhouses.
+     * @param user - user
+     * @param addon - addon
+     */
+    private void showPage(User user, Greenhouses addon) {
         int pages = Math.max(1, (int) Math.ceil((double) toShow.size() / PER_PAGE));
         if (page > pages) {
             page = pages;
@@ -94,8 +105,15 @@ class AdminListCommand extends CompositeCommand {
             user.sendMessage("greenhouses.commands.admin.list.more", "[label]", this.getTopLabel(), "[page]",
                     String.valueOf(Math.min(page + 1, pages)));
         }
-        // Records in the database that could not be loaded are always shown - they are the ones
-        // an admin most needs to know about, and they appear on no island listing.
+    }
+
+    /**
+     * Records in the database that could not be loaded are always shown - they are the ones an
+     * admin most needs to know about, and they appear on no island listing.
+     * @param user - user
+     * @param unloaded - records that failed to load
+     */
+    private void showUnloaded(User user, List<UnloadedGreenhouse> unloaded) {
         if (!unloaded.isEmpty()) {
             user.sendMessage("greenhouses.commands.admin.list.unloaded-title", TextVariables.NUMBER,
                     String.valueOf(unloaded.size()));
@@ -103,7 +121,6 @@ class AdminListCommand extends CompositeCommand {
                     AdminUtil.shortId(u.greenhouse()), "[reason]", u.reason().name(), "[world]",
                     AdminUtil.worldName(u.greenhouse()), "[xyz]", AdminUtil.xyz(u.greenhouse())));
         }
-        return true;
     }
 
     @Override
