@@ -33,10 +33,7 @@ public class UserCommand extends CompositeCommand {
         this.setOnlyPlayer(true);
         this.setDescription("greenhouses.commands.user.description");
 
-        //new InfoCommand(this);
-        //new ListCommand(this);
         makeCommand = new MakeCommand(this);
-        //new RecipeCommand(this);
         new RemoveCommand(this);
     }
 

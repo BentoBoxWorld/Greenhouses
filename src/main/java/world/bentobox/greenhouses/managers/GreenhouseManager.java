@@ -130,6 +130,7 @@ public class GreenhouseManager implements Listener {
                 addon.logError("Greenhouse Id " + g.getUniqueId());
             }
             default -> {
+                // Every other result is either impossible here or needs no action
             }
             }
         }

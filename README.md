@@ -85,11 +85,10 @@ Read the file release notes for changes and instructions on how to upgrade.
 
 Add these commands to /island, /ai:
 
+* **greenhouses** - opens the recipe GUI; clicking a recipe will try to make that greenhouse
 * **greenhouses help** - lists these commands
 * **greenhouses make**: Tries to make a greenhouse by finding the first valid recipe
 * **greenhouses remove**: Removes a greenhouse that you are standing in if you are the owner
-* **greenhouses list**: Lists all the recipes available
-* **greenhouses recipe**: Display the recipe GUI - clicking on a recipe will try to make a greenhouse
 
 ## Admin Commands
 
