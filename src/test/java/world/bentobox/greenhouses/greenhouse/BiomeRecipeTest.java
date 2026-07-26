@@ -676,7 +676,7 @@ public class BiomeRecipeTest {
         assertTrue(br.growPlant(new GrowthBlock(block, true), false, ibb));
         verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
                 anyDouble());
-        verify(block).setBlockData(eq(bd), eq(false));
+        verify(block).setBlockData(bd, false);
     }
 
     /**
@@ -695,7 +695,7 @@ public class BiomeRecipeTest {
         assertTrue(br.growPlant(new GrowthBlock(block, false), false, ibb));
         verify(world).spawnParticle(eq(Particle.ASH), any(Location.class), anyInt(), anyDouble(), anyDouble(),
                 anyDouble());
-        verify(block).setBlockData(eq(bd), eq(false));
+        verify(block).setBlockData(bd, false);
     }
 
     /**
