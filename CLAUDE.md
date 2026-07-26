@@ -59,6 +59,8 @@ Admin commands live in `ui/admin/`, registered on the game mode's admin command 
 
 IDs may be abbreviated to any unique prefix; an ambiguous prefix is deliberately treated as no match.
 
+Each sub-command has its own permission, `greenhouses.admin.<label>`, derived from the label by `AdminUtil.setup()`. All of them — and the player permissions — are declared in `src/main/resources/addon.yml`, so a new sub-command needs an entry there as well as locale keys.
+
 Records that fail to load (overlapping, unknown recipe, no world, null location) are retained in `GreenhouseManager.getUnloaded()` as `UnloadedGreenhouse(greenhouse, reason)` rather than being dropped, so the admin commands can inspect and delete them. Only `FAIL_NO_ISLAND` records are auto-deleted at load; nothing else is ever removed without an explicit admin action.
 
 ### Configuration
@@ -66,6 +68,7 @@ Records that fail to load (overlapping, unknown recipe, no world, null location)
 - **`config.yml`** — tick intervals (plant/block/mob/eco), snow settings, allowed materials
 - **`biomes.yml`** — biome recipe definitions with contents, plants, mobs, conversions, priorities
 - **`locales/`** — 25+ language files
+- **`addon.yml`** — addon metadata and the permission declarations
 
 ### Greenhouse Detection
 
