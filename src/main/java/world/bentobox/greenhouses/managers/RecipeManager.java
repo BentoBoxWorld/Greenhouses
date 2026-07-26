@@ -43,6 +43,17 @@ public class RecipeManager {
     }
 
     /**
+     * Re-read biomes.yml, replacing the currently loaded recipes.
+     */
+    public void reload() {
+        try {
+            loadBiomeRecipes();
+        } catch (Exception e) {
+            addon.logError(e.getMessage());
+        }
+    }
+
+    /**
      * Get BiomeRecipe by name
      * @param name - name
      * @return Optional BiomeRecipe found

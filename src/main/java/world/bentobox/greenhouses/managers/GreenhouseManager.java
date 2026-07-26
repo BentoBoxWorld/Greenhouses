@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
@@ -63,15 +66,36 @@ public class GreenhouseManager implements Listener {
         FAIL_NO_WORLD, FAIL_UNKNOWN_RECIPE
     }
 
+    /**
+     * A greenhouse record that is in the database but could not be loaded into the map, paired
+     * with the reason it was rejected. These are kept in memory so that admins can inspect and
+     * delete them at runtime rather than having to hand-edit the database.
+     *
+     * @param greenhouse - the rejected greenhouse
+     * @param reason - why it could not be loaded
+     */
+    public record UnloadedGreenhouse(Greenhouse greenhouse, GreenhouseResult reason) {}
+
     private final Greenhouses addon;
     // Greenhouses
     private final GreenhouseMap map;
     private final Database<Greenhouse> handler;
     private EcoSystemManager ecoMgr;
+    // Records in the database that could not be loaded. Kept for admin diagnostics.
+    private final List<UnloadedGreenhouse> unloaded = new ArrayList<>();
 
     public GreenhouseManager(Greenhouses addon) {
+        this(addon, new Database<>(addon, Greenhouse.class));
+    }
+
+    /**
+     * Constructor that takes the database handler, for testing.
+     * @param addon - addon
+     * @param handler - database handler
+     */
+    GreenhouseManager(Greenhouses addon, Database<Greenhouse> handler) {
         this.addon = addon;
-        handler = new Database<>(addon, Greenhouse.class);
+        this.handler = handler;
         map = new GreenhouseMap(addon);
     }
 
@@ -93,10 +117,27 @@ public class GreenhouseManager implements Listener {
     }
 
     /**
+     * Records that are in the database but are not loaded into the map, with the reason why.
+     * @return unmodifiable list of unloaded greenhouses
+     */
+    public List<UnloadedGreenhouse> getUnloaded() {
+        return Collections.unmodifiableList(unloaded);
+    }
+
+    /**
+     * Reload all greenhouses from the database, re-applying biomes. Any records that cannot be
+     * loaded are recorded in {@link #getUnloaded()}.
+     */
+    public void reload() {
+        loadGreenhouses();
+    }
+
+    /**
      * Load all known greenhouses
      */
     private void loadGreenhouses() {
         map.clear();
+        unloaded.clear();
         addon.log("Loading greenhouses...");
         List<Greenhouse> toBeRemoved = new ArrayList<>();
         // Sort by unique ID so that load order - and therefore which of a pair of overlapping
@@ -115,16 +156,24 @@ public class GreenhouseManager implements Listener {
             toBeRemoved.add(g);
             case FAIL_OVERLAPPING -> {
                 overlaps++;
+                unloaded.add(new UnloadedGreenhouse(g, result));
                 addon.logError("Greenhouse overlaps with another greenhouse. Skipping...");
                 addon.logError("  Skipped:  " + describe(g));
                 overlapping.ifPresent(o -> addon.logError("  Overlaps: " + describe(o)));
-                addon.logError("  To fix, delete one of these records from the Greenhouses database table"
-                        + " (match on uniqueId) and restart the server.");
+                addon.logError("  To fix, run '/<gamemodeadmin> greenhouses delete " + g.getUniqueId()
+                        + "' or delete one of these records from the Greenhouses database table.");
             }
-            case NULL -> addon.logError("Null location of greenhouse. Cannot load. Skipping...");
+            case NULL -> {
+                unloaded.add(new UnloadedGreenhouse(g, result));
+                addon.logError("Null location of greenhouse. Cannot load. Skipping...");
+            }
             case SUCCESS -> activateGreenhouse(g);
-            case FAIL_NO_WORLD -> addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
+            case FAIL_NO_WORLD -> {
+                unloaded.add(new UnloadedGreenhouse(g, result));
+                addon.logError("Database contains greenhouse for a non-loaded world. Skipping...");
+            }
             case FAIL_UNKNOWN_RECIPE -> {
+                unloaded.add(new UnloadedGreenhouse(g, result));
                 addon.logError("Greenhouse uses a recipe that does not exist in the biomes.yml. Skipping...");
                 addon.logError("Greenhouse Id " + g.getUniqueId());
             }
@@ -144,12 +193,49 @@ public class GreenhouseManager implements Listener {
     }
 
     /**
-     * Describes a greenhouse for logging purposes - unique ID, recipe, owner, world, location
-     * and bounding box.
+     * Find a greenhouse by its unique ID. Both loaded greenhouses and records that failed to
+     * load are searched. The ID may be abbreviated as long as it matches exactly one record.
+     * @param id - unique ID, or a unique prefix of one
+     * @return the greenhouse, or empty if no record matches or the prefix is ambiguous
+     */
+    public Optional<Greenhouse> getGreenhouseById(String id) {
+        if (id == null || id.isEmpty()) {
+            return Optional.empty();
+        }
+        String lower = id.toLowerCase(Locale.ENGLISH);
+        List<Greenhouse> matches = Stream
+                .concat(map.getGreenhouses().stream(), unloaded.stream().map(UnloadedGreenhouse::greenhouse))
+                .filter(g -> g.getUniqueId().toLowerCase(Locale.ENGLISH).startsWith(lower)).toList();
+        // An ambiguous prefix is not a match - deleting the wrong greenhouse is unrecoverable
+        return matches.size() == 1 ? Optional.of(matches.get(0)) : Optional.empty();
+    }
+
+    /**
+     * Delete a greenhouse record by unique ID, whether or not it is loaded. Loaded greenhouses
+     * have their biome reset; unloaded records never had their biome applied, so only the
+     * database record is removed.
+     * @param id - unique ID, or a unique prefix of one
+     * @return true if a record was found and deleted
+     */
+    public boolean deleteById(String id) {
+        return getGreenhouseById(id).map(gh -> {
+            if (unloaded.removeIf(u -> u.greenhouse().equals(gh))) {
+                // Never activated, so there is no biome to put back
+                handler.deleteObject(gh);
+            } else {
+                removeGreenhouse(gh);
+            }
+            return true;
+        }).orElse(false);
+    }
+
+    /**
+     * Describes a greenhouse for logging and admin commands - unique ID, recipe, owner, world,
+     * location and bounding box.
      * @param gh - greenhouse
      * @return human readable, single-line description
      */
-    private String describe(Greenhouse gh) {
+    public String describe(Greenhouse gh) {
         Location loc = gh.getLocation();
         String world = loc == null || loc.getWorld() == null ? UNKNOWN : loc.getWorld().getName();
         String position = loc == null ? UNKNOWN : loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
