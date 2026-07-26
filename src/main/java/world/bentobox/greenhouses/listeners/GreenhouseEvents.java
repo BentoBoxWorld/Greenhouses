@@ -33,12 +33,14 @@ import world.bentobox.greenhouses.data.Greenhouse;
  */
 public class GreenhouseEvents implements Listener {
     private static final String BIOME = "[biome]";
-    private static List<Biome> NETHER_BIOMES;
+    private final List<Biome> netherBiomes;
     private final Greenhouses addon;
 
     public GreenhouseEvents(final Greenhouses addon) {
         this.addon = addon;
-        NETHER_BIOMES = Arrays.asList(Biome.NETHER_WASTES, Biome.WARPED_FOREST, Biome.CRIMSON_FOREST,
+        // Built per instance rather than statically: the biome registry is not populated until
+        // the server is running, so a static initializer would resolve these too early
+        netherBiomes = Arrays.asList(Biome.NETHER_WASTES, Biome.WARPED_FOREST, Biome.CRIMSON_FOREST,
                 Biome.SOUL_SAND_VALLEY,
                 Biome.BASALT_DELTAS);
     }
@@ -56,7 +58,7 @@ public class GreenhouseEvents implements Listener {
         Block b = e.getBlockClicked().getRelative(e.getBlockFace());
         if (e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && !addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(netherBiomes::contains).orElse(true)) {
             // In Nether not a nether greenhouse
             if (blockData instanceof Waterlogged w) {
                 w.setWaterlogged(true);
@@ -66,7 +68,7 @@ public class GreenhouseEvents implements Listener {
             b.setType(Material.WATER);
         } else if (!e.getPlayer().getWorld().getEnvironment().equals(World.Environment.NETHER)
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(netherBiomes::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse
             e.setCancelled(true);
             if (e.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.WATER_BUCKET)) {
@@ -93,12 +95,12 @@ public class GreenhouseEvents implements Listener {
         Block b = e.getBlock();
         if (b.getWorld().getEnvironment() == World.Environment.NETHER
                 && !addon.getManager().getMap().getGreenhouse(b.getLocation())
-                        .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(true)) {
+                        .map(gh -> gh.getBiomeRecipe().getBiome()).map(netherBiomes::contains).orElse(true)) {
             e.setCancelled(true);
             b.setType(Material.WATER);
         } else if (e.getPlayer().getWorld().getEnvironment() != World.Environment.NETHER
                 && addon.getManager().getMap().getGreenhouse(b.getLocation())
-                .map(gh -> gh.getBiomeRecipe().getBiome()).map(NETHER_BIOMES::contains).orElse(false)) {
+                .map(gh -> gh.getBiomeRecipe().getBiome()).map(netherBiomes::contains).orElse(false)) {
             // Not in Nether, in a nether greenhouse
             e.setCancelled(true);
             b.setType(Material.AIR);

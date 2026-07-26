@@ -105,6 +105,16 @@ public class GreenhouseTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#getFloorHeight()}.
+     */
+    @Test
+    public void testGetFloorHeightNullLocation() {
+        // A database record can have no location; falls back to the bounding box instead of NPEing
+        gh.setLocation(null);
+        assertEquals(FLOOR, gh.getFloorHeight());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#getLocation()}.
      */
     @Test

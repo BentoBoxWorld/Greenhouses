@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
@@ -229,8 +228,9 @@ public class GreenhouseManager implements Listener {
      */
     private CompletableFuture<Set<GreenhouseResult>> findRecipe(GreenhouseFinder finder) {
         CompletableFuture<Set<GreenhouseResult>> r = new CompletableFuture<>();
-        // Get sorted list of all recipes
-        List<BiomeRecipe> list = addon.getRecipes().getBiomeRecipes().stream().sorted().collect(Collectors.toList());
+        // Get sorted list of all recipes. This must stay mutable - findRecipe pops the head off
+        // it as it works through the recipes, so Stream.toList() would throw here.
+        List<BiomeRecipe> list = new ArrayList<>(addon.getRecipes().getBiomeRecipes().stream().sorted().toList());
         findRecipe(r, list, finder);
         return r;
     }

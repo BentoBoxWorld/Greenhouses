@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.EnumSet;
+import java.util.Set;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -55,6 +56,7 @@ import world.bentobox.greenhouses.Settings;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
+import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
 import world.bentobox.greenhouses.mocks.ServerMocks;
 
@@ -899,6 +901,20 @@ public class BiomeRecipeTest {
         assertTrue(br.getMobTypes().isEmpty());
         this.testAddMobs();
         assertFalse(br.getMobTypes().isEmpty());
+    }
+
+
+    /**
+     * Test method for {@link BiomeRecipe#checkRecipe(Greenhouse)}.
+     */
+    @Test
+    public void testCheckRecipeOnDegenerateRecipe() throws Exception {
+        // Greenhouse#getBiomeRecipe hands out a no-arg BiomeRecipe when the recipe named in the
+        // database is missing from biomes.yml. It has no addon, so it must not be dereferenced.
+        BiomeRecipe degenerate = new BiomeRecipe();
+        Set<GreenhouseResult> result = degenerate.checkRecipe(gh).get();
+        assertEquals(1, result.size());
+        assertTrue(result.contains(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
     }
 
 }
