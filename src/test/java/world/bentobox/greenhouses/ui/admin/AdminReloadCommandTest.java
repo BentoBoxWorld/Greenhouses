@@ -1,7 +1,6 @@
 package world.bentobox.greenhouses.ui.admin;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -99,8 +98,7 @@ public class AdminReloadCommandTest {
         order.verify(rm).reload();
         order.verify(gm).reload();
         verify(user).sendMessage("greenhouses.commands.admin.reload.success", "[number]", "7");
-        verify(user, never()).sendMessage(eq("greenhouses.commands.admin.reload.unloaded"), eq("[number]"),
-                eq("0"));
+        verify(user, never()).sendMessage("greenhouses.commands.admin.reload.unloaded", "[number]", "0");
     }
 
     /**
