@@ -96,8 +96,8 @@ public class GreenhouseEventsTest {
         when(gm.getMap()).thenReturn(map);
         when(map.inGreenhouse(any())).thenReturn(true);
         // Get greenhouse
-        when(map.getGreenhouse(eq(location))).thenReturn(Optional.of(gh1));
-        when(map.getGreenhouse(eq(location2))).thenReturn(Optional.of(gh2));
+        when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
+        when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh2));
         BiomeRecipe br = new BiomeRecipe();
         br.setFriendlyName("recipe1");
         br.setType(Biome.PLAINS);
@@ -227,7 +227,7 @@ public class GreenhouseEventsTest {
      */
     @Test
     public void testOnPlayerInteractInNetherNotInGreenhouse() {
-        when(map.getGreenhouse(eq(location))).thenReturn(Optional.empty());
+        when(map.getGreenhouse(location)).thenReturn(Optional.empty());
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
@@ -358,8 +358,8 @@ public class GreenhouseEventsTest {
     public void testOnPlayerMove() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
         ghe.onPlayerMove(e);
-        verify(user).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
     }
 
     /**
@@ -368,11 +368,11 @@ public class GreenhouseEventsTest {
     @Test
     public void testOnPlayerMoveEnteringOnly() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
-        when(map.getGreenhouse(eq(location))).thenReturn(Optional.empty());
-        when(map.getGreenhouse(eq(location2))).thenReturn(Optional.of(gh2));
+        when(map.getGreenhouse(location)).thenReturn(Optional.empty());
+        when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh2));
         ghe.onPlayerMove(e);
-        verify(user, never()).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user, never()).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
     }
 
     /**
@@ -381,11 +381,11 @@ public class GreenhouseEventsTest {
     @Test
     public void testOnPlayerMoveLeavingOnly() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
-        when(map.getGreenhouse(eq(location))).thenReturn(Optional.of(gh1));
-        when(map.getGreenhouse(eq(location2))).thenReturn(Optional.empty());
+        when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
+        when(map.getGreenhouse(location2)).thenReturn(Optional.empty());
         ghe.onPlayerMove(e);
-        verify(user).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user, never()).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user, never()).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
     }
 
     /**
@@ -394,11 +394,11 @@ public class GreenhouseEventsTest {
     @Test
     public void testOnPlayerMoveSameGreenhouse() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
-        when(map.getGreenhouse(eq(location))).thenReturn(Optional.of(gh1));
-        when(map.getGreenhouse(eq(location2))).thenReturn(Optional.of(gh1));
+        when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
+        when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh1));
         ghe.onPlayerMove(e);
-        verify(user, never()).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user, never()).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user, never()).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user, never()).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
     }
 
     /**
@@ -408,8 +408,8 @@ public class GreenhouseEventsTest {
     public void testOnPlayerTeleport() {
         PlayerTeleportEvent e = new PlayerTeleportEvent(player, location, location2, TeleportCause.CHORUS_FRUIT);
         ghe.onPlayerTeleport(e );
-        verify(user).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
 
     }
 
@@ -420,8 +420,8 @@ public class GreenhouseEventsTest {
     public void testOnPlayerTeleportNulls() {
         PlayerTeleportEvent e = new PlayerTeleportEvent(player, location, null, TeleportCause.CHORUS_FRUIT);
         ghe.onPlayerTeleport(e );
-        verify(user, never()).sendMessage(eq("greenhouses.event.leaving"), eq("[biome]"), eq("recipe1"));
-        verify(user, never()).sendMessage(eq("greenhouses.event.entering"), eq("[biome]"), eq("recipe2"));
+        verify(user, never()).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
+        verify(user, never()).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
 
     }
 
@@ -437,7 +437,7 @@ public class GreenhouseEventsTest {
         when(block.getLocation()).thenReturn(location);
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onBlockBreak(e);
-        verify(user).sendMessage(eq("greenhouses.event.broke"), eq("[biome]"), eq("Bamboo Jungle"));
+        verify(user).sendMessage("greenhouses.event.broke", "[biome]", "Bamboo Jungle");
         verify(gm).removeGreenhouse(any());
     }
 
