@@ -170,19 +170,6 @@ public class BiomeRecipeTest {
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#addConvBlocks(org.bukkit.Material, org.bukkit.Material, double, org.bukkit.Material)}.
      */
-    /**
-     * Test method for {@link BiomeRecipe#checkRecipe(Greenhouse)}.
-     */
-    @Test
-    public void testCheckRecipeOnDegenerateRecipe() throws Exception {
-        // Greenhouse#getBiomeRecipe hands out a no-arg BiomeRecipe when the recipe named in the
-        // database is missing from biomes.yml. It has no addon, so it must not be dereferenced.
-        BiomeRecipe degenerate = new BiomeRecipe();
-        Set<GreenhouseResult> result = degenerate.checkRecipe(gh).get();
-        assertEquals(1, result.size());
-        assertTrue(result.contains(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
-    }
-
     @Test
     public void testAddConvBlocks() {
         Material oldMaterial = Material.SAND;
@@ -914,6 +901,20 @@ public class BiomeRecipeTest {
         assertTrue(br.getMobTypes().isEmpty());
         this.testAddMobs();
         assertFalse(br.getMobTypes().isEmpty());
+    }
+
+
+    /**
+     * Test method for {@link BiomeRecipe#checkRecipe(Greenhouse)}.
+     */
+    @Test
+    public void testCheckRecipeOnDegenerateRecipe() throws Exception {
+        // Greenhouse#getBiomeRecipe hands out a no-arg BiomeRecipe when the recipe named in the
+        // database is missing from biomes.yml. It has no addon, so it must not be dereferenced.
+        BiomeRecipe degenerate = new BiomeRecipe();
+        Set<GreenhouseResult> result = degenerate.checkRecipe(gh).get();
+        assertEquals(1, result.size());
+        assertTrue(result.contains(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
     }
 
 }
