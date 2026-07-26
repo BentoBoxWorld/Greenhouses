@@ -305,19 +305,19 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         }
     }
 
-    private void rollTheDice(Block b, GreenhouseBlockConversions conversion_option) {
+    private void rollTheDice(Block b, GreenhouseBlockConversions conversionOption) {
         // Roll the dice before bothering with checking the surrounding block as I think it's more common for greenhouses to be filled with convertable blocks and thus this dice roll wont be "wasted"
-        if(ThreadLocalRandom.current().nextDouble() < conversion_option.probability()) {
+        if(ThreadLocalRandom.current().nextDouble() < conversionOption.probability()) {
             // Check if any of the adjacent blocks matches the required LocalMaterial, if there are any required LocalMaterials
-            if(conversion_option.localMaterial() != null) {
-                for(BlockFace adjacent_block : ADJ_BLOCKS) {
-                    if(b.getRelative(adjacent_block).getType() == conversion_option.localMaterial()) {
-                        b.setType(conversion_option.newMaterial());
+            if(conversionOption.localMaterial() != null) {
+                for(BlockFace adjacentBlock : ADJ_BLOCKS) {
+                    if(b.getRelative(adjacentBlock).getType() == conversionOption.localMaterial()) {
+                        b.setType(conversionOption.newMaterial());
                         break;
                     }
                 }
             } else {
-                b.setType(conversion_option.newMaterial());
+                b.setType(conversionOption.newMaterial());
             }
         }
 
@@ -602,10 +602,10 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         BlockFace d = null;
         boolean waterLogged = false;
         for (BlockFace adj : ADJ_BLOCKS) {
-            Material type = b.getRelative(adj).getType();
-            if (type.equals(Material.AIR) || type.equals(Material.WATER)) {
+            Material adjType = b.getRelative(adj).getType();
+            if (adjType.equals(Material.AIR) || adjType.equals(Material.WATER)) {
                 d = adj;
-                if (type.equals(Material.WATER)) {
+                if (adjType.equals(Material.WATER)) {
                     waterLogged = true;
                 }
                 break;
