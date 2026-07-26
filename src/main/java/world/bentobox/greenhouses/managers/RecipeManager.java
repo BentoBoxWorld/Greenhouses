@@ -31,6 +31,7 @@ public class RecipeManager {
     private final Greenhouses addon;
     private static final List<BiomeRecipe> biomeRecipes = new ArrayList<>();
     private static final String COULD_NOT_PARSE = "Could not parse ";
+    private static final String UNKNOWN_MOB_DATA = "Unknown mob data: %s.";
 
     public RecipeManager(Greenhouses addon) {
         this.addon = addon;
@@ -259,76 +260,58 @@ public class RecipeManager {
     }
 
     private Consumer<Entity> parseCustomMobData(EntityType mobType, String customData) {
-        String UNKNOWN_MOB_DATA = "Unknown mob data: %s.";
-        switch (mobType) {
-            case CREEPER -> {
-                if (customData.equals("CHARGED")) {
-                    return entity -> ((Creeper) entity).setPowered(true);
-                } else {
-                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
-                    return null;
-                }
-            }
-            case CHICKEN -> {
-                if (customData.equals("JOCKEY")) {
-                    return entity -> {
-                        Zombie zombie = (Zombie) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIE);
-                        zombie.setBaby();
-                        entity.addPassenger(zombie);
-                    };
-                } else {
-                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
-                    return null;
-                }
-            }
-            case SHEEP -> {
-                if (customData.equals("RAINBOW")) {
-                    return entity -> entity.setCustomName("jeb_");
-                } else {
-                    addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
-                    return null;
-                }
-            }
-            case WOLF -> {
-                switch (customData) {
-                    case "ASHEN" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.ASHEN);
-                    }
-                    case "BLACK" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.BLACK);
-                    }
-                    case "CHESTNUT" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.CHESTNUT);
-                    }
-                    case "PALE" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.PALE);
-                    }
-                    case "RUSTY" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.RUSTY);
-                    }
-                    case "SNOWY" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.SNOWY);
-                    }
-                    case "SPOTTED" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.SPOTTED);
-                    }
-                    case "STRIPED" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.STRIPED);
-                    }
-                    case "WOODS" -> {
-                        return entity -> ((Wolf) entity).setVariant(Wolf.Variant.WOODS);
-                    }
-                    default -> {
-                        addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
-                        return null;
-                    }
-                }
-            }
-            default -> {
-                addon.logError("Custom mob data for " + mobType + " is not supported.");
-                return null;
-            }
+        return switch (mobType) {
+        case CREEPER -> requireData("CHARGED", customData, entity -> ((Creeper) entity).setPowered(true));
+        case CHICKEN -> requireData("JOCKEY", customData, entity -> {
+            Zombie zombie = (Zombie) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.ZOMBIE);
+            zombie.setBaby();
+            entity.addPassenger(zombie);
+        });
+        case SHEEP -> requireData("RAINBOW", customData, entity -> entity.setCustomName("jeb_"));
+        case WOLF -> wolfVariant(customData);
+        default -> {
+            addon.logError("Custom mob data for " + mobType + " is not supported.");
+            yield null;
         }
+        };
+    }
+
+    /**
+     * For mobs that accept a single custom data value, returns the action if the configured
+     * value is that one and logs an error if it is not.
+     * @param expected - the only value this mob supports
+     * @param customData - the value from biomes.yml
+     * @param action - what to do to the spawned entity
+     * @return the action, or null if the data was not recognised
+     */
+    private Consumer<Entity> requireData(String expected, String customData, Consumer<Entity> action) {
+        if (expected.equals(customData)) {
+            return action;
+        }
+        addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+        return null;
+    }
+
+    /**
+     * @param customData - wolf variant name from biomes.yml
+     * @return an action setting that variant on the spawned wolf, or null if unrecognised
+     */
+    private Consumer<Entity> wolfVariant(String customData) {
+        return switch (customData) {
+        case "ASHEN" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.ASHEN);
+        case "BLACK" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.BLACK);
+        case "CHESTNUT" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.CHESTNUT);
+        case "PALE" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.PALE);
+        case "RUSTY" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.RUSTY);
+        case "SNOWY" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.SNOWY);
+        case "SPOTTED" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.SPOTTED);
+        case "STRIPED" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.STRIPED);
+        case "WOODS" -> entity -> ((Wolf) entity).setVariant(Wolf.Variant.WOODS);
+        default -> {
+            addon.logError(String.format(UNKNOWN_MOB_DATA, customData));
+            yield null;
+        }
+        };
     }
 
     private void parseReqBlock(BiomeRecipe b, String rq, ConfigurationSection reqContents) {
