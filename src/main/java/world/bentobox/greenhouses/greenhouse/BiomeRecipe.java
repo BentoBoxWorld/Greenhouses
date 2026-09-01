@@ -404,7 +404,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * Spawn a mob on block b if it makes sense and random change suggests it
      * @param b - block
-     * @return true if a mob was spawned
+     * @return true if a mob was spawned, false if none was chosen, the spawn was cancelled,
+     *         or the mob did not fit inside the greenhouse
      */
     public boolean spawnMob(Block b) {
         if (b.getY() == 0) {
@@ -421,6 +422,13 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
                     Entity entity = b.getWorld().spawnEntity(spawnLoc, m.mobType());
+                    if (entity.isDead()) {
+                        // The spawn was cancelled by another plugin (e.g. Limits at its cap).
+                        // The entity was discarded without ever entering the world, so do not
+                        // touch it further: calling remove() on it fires a second
+                        // EntityRemoveEvent that other plugins would count as a real removal.
+                        return false;
+                    }
                     if (m.customizer() != null) {
                         m.customizer().accept(entity);
                     }

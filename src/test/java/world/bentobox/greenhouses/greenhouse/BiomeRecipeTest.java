@@ -509,6 +509,31 @@ public class BiomeRecipeTest {
 
     /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
+     * A spawn cancelled by another plugin (e.g. Limits) returns a dead entity. It must be
+     * left alone: calling remove() on it fires a second EntityRemoveEvent, which Limits
+     * counts as a real removal and so lets the next spawn through.
+     */
+    @Test
+    public void testSpawnMobCancelled() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(block);
+
+        Entity cat = mock(Cat.class);
+        when(cat.isDead()).thenReturn(true);
+        // Would not fit, so the old code would have called remove()
+        when(cat.getBoundingBox()).thenReturn(bb);
+        when(world.spawnEntity(any(), any())).thenReturn(cat);
+
+        br.addMobs(EntityType.CAT, 100, Material.GRASS_BLOCK);
+        assertFalse(br.spawnMob(block));
+        verify(world).spawnEntity(location, EntityType.CAT);
+        verify(cat, never()).remove();
+        verify(cat, never()).getBoundingBox();
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
     @Test
     public void testSpawnMobHoglin() {
