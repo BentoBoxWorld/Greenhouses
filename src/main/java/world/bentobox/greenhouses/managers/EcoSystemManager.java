@@ -231,17 +231,20 @@ public class EcoSystemManager {
     }
 
     /**
-     * Set a hopper's bone meal to this value
+     * Set a hopper's bone meal to this value. If the value is zero or less the bone meal is
+     * simply removed; an ItemStack with an amount of zero is rejected by newer server APIs.
      * @param gh - greenhouse
      * @param value - value to set
      */
-    private void setBoneMeal(Greenhouse gh, int value) {
+    protected void setBoneMeal(Greenhouse gh, int value) {
         Hopper hopper = getHopper(gh);
-        if (hopper != null) {
-            hopper.getInventory().remove(Material.BONE_MEAL);
+        if (hopper == null) {
+            return;
+        }
+        hopper.getInventory().remove(Material.BONE_MEAL);
+        if (value > 0) {
             hopper.getInventory().addItem(new ItemStack(Material.BONE_MEAL, value));
         }
-
     }
 
     public record GrowthBlock(Block block, Boolean floor) {}
