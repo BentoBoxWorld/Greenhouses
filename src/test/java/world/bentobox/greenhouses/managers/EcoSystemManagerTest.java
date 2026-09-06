@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,15 +19,20 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Hopper;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -307,6 +313,69 @@ public class EcoSystemManagerTest {
         assertTrue(eco.addMobs(gh));
         // Without the fix the loop ignores maxMob and keeps spawning until density stops
         verify(recipe, times(3)).spawnMob(any());
+    }
+
+    /**
+     * Wire a hopper block into the greenhouse's roof hopper location.
+     * @return the hopper's inventory mock
+     */
+    private Inventory mockHopper() {
+        Block hopperBlock = mock(Block.class);
+        Hopper hopper = mock(Hopper.class);
+        Inventory inv = mock(Inventory.class);
+        when(hopperBlock.getType()).thenReturn(Material.HOPPER);
+        when(hopperBlock.getState()).thenReturn(hopper);
+        when(hopper.getInventory()).thenReturn(inv);
+        when(world.getBlockAt(any(Location.class))).thenReturn(hopperBlock);
+        gh.setRoofHopperLocation(new Vector(1, 1, 1));
+        return inv;
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
+     * A zero-amount ItemStack is rejected by newer Paper APIs, so the last bone meal must just be removed.
+     */
+    @Test
+    public void testSetBoneMealZeroRemovesWithoutAdding() {
+        Inventory inv = mockHopper();
+        eco.setBoneMeal(gh, 0);
+        verify(inv).remove(Material.BONE_MEAL);
+        verify(inv, never()).addItem(any(ItemStack.class));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
+     */
+    @Test
+    public void testSetBoneMealNegativeRemovesWithoutAdding() {
+        Inventory inv = mockHopper();
+        eco.setBoneMeal(gh, -1);
+        verify(inv).remove(Material.BONE_MEAL);
+        verify(inv, never()).addItem(any(ItemStack.class));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
+     */
+    @Test
+    public void testSetBoneMealPositiveReplacesStack() {
+        Inventory inv = mockHopper();
+        eco.setBoneMeal(gh, 5);
+        verify(inv).remove(Material.BONE_MEAL);
+        ArgumentCaptor<ItemStack> captor = ArgumentCaptor.forClass(ItemStack.class);
+        verify(inv).addItem(captor.capture());
+        assertEquals(Material.BONE_MEAL, captor.getValue().getType());
+        assertEquals(5, captor.getValue().getAmount());
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
+     */
+    @Test
+    public void testSetBoneMealNoHopper() {
+        // No hopper location set - nothing to do and no exception
+        eco.setBoneMeal(gh, 0);
+        eco.setBoneMeal(gh, 5);
     }
 
 }
