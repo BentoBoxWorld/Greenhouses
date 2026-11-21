@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Sere
       description: |
-        &b Schimbă cine poate
-        &b controla serele   
+        <aqua>Schimbă cine poate</aqua>
+        <aqua>controla serele   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Mută-te mai întâi într-o seră care îți aparține."
-    no-rank: "&c Nu ai rangul necesar pentru a face asta."
+    no-rank: "<red>Nu ai rangul necesar pentru a face asta.</red>"
     notyours: "Aceasta nu este sera ta!"
-    not-inside: "&c Nu ești în interiorul unei sere!"
+    not-inside: "<red>Nu ești în interiorul unei sere!</red>"
     tooexpensive: "Nu îți poți permite [price]" 
     alreadyexists: "Sera există deja!"
     norecipe: "Nu s-a putut crea sera!"
     
   event:
    broke: "Ai distrus această seră! Biometul revine la [biome]!"
-   entering: "Intrare în sera [biome]&f"
-   leaving: "Ieșire din sera [biome]&f"
+   entering: "Intrare în sera [biome]<white></white>"
+   leaving: "Ieșire din sera [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Rețetă [biome]]"
    watermustbe: "Apă > [coverage]% din suprafața podelei."
    icemustbe: "Blocuri de gheață > [coverage]% din suprafața podelei."
    lavamustbe: "Lavă > [coverage]% din suprafața podelei."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Încearcă să creezi o seră"
         parameters: "<rețetă>"
         error:
-          already: "&cExistă deja o seră aici!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Acoperișul conține blocuri nepermise!"
-          FAIL_BAD_WALL_BLOCKS: "&c Pereții conțin blocuri nepermise!"
-          FAIL_BELOW: "&c Trebuie să fii în interiorul serei pentru a încerca să o creezi"
-          FAIL_BLOCKS_ABOVE: "&c Nu pot exista blocuri deasupra serei! Blocurile de sticlă roșie vor indica blocurile problematice."
+          already: "<red>Există deja o seră aici!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Acoperișul conține blocuri nepermise!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Pereții conțin blocuri nepermise!</red>"
+          FAIL_BELOW: "<red>Trebuie să fii în interiorul serei pentru a încerca să o creezi</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Nu pot exista blocuri deasupra serei! Blocurile de sticlă roșie vor indica blocurile problematice.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Există o gaură în acoperiș sau acesta nu este plat!
-            &c Blocurile de sticlă roșie vor indica problema.
-            &c Asigură-te că ești în interiorul serei pentru a o crea.
-          FAIL_HOLE_IN_WALL: "&c Există o gaură în perete!"
-          FAIL_NO_ROOF: "&c Se pare că nu există acoperiș! Asigură-te că ești în interiorul serei pentru a o crea."
-          FAIL_TOO_MANY_DOORS: "&c Nu poți avea mai mult de 4 uși în seră!"
-          FAIL_TOO_MANY_HOPPERS: "&c Este permisă o singură pâlnie (hopper) în pereți sau acoperiș."
-          FAIL_UNEVEN_WALLS: "&c Pereții sunt inegali. Blocurile de sticlă roșie vor indica blocurile problematice."
-          FAIL_INSUFFICIENT_ICE: "&c Gheață insuficientă pentru această rețetă"
-          FAIL_INSUFFICIENT_LAVA: "&c Lavă insuficientă pentru această rețetă"
-          FAIL_INSUFFICIENT_WATER: "&c Apă insuficientă pentru această rețetă"
-          FAIL_NO_ICE: "&c Gheața este necesară pentru această rețetă"
-          FAIL_NO_LAVA: "&c Lava este necesară pentru această rețetă"
-          FAIL_NO_WATER: "&c Apa este necesară pentru această rețetă"
-          FAIL_NO_RECIPE_FOUND: "&c Nu a fost găsită nicio rețetă corespunzătoare pentru această seră"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Sunt necesare mai multe blocuri pentru această rețetă!"
-          FAIL_OVERLAPPING: "&c Ne pare rău, serele nu pot împărți pereți comuni."
-        success: "&2 Ai creat cu succes o seră cu biometul [biome]! Biometul se va sincroniza la următoarea teleportare sau conectare."
-        missing-blocks: "&c Lipsesc [material] x [number]"
-        unknown-recipe: "&c Rețetă necunoscută"
-        try-these: "&c Încearcă una dintre acestea:"
-        recipe-format: "&3[name]"
+            <red>Există o gaură în acoperiș sau acesta nu este plat!</red>
+            <red>Blocurile de sticlă roșie vor indica problema.</red>
+            <red>Asigură-te că ești în interiorul serei pentru a o crea.</red>
+          FAIL_HOLE_IN_WALL: "<red>Există o gaură în perete!</red>"
+          FAIL_NO_ROOF: "<red>Se pare că nu există acoperiș! Asigură-te că ești în interiorul serei pentru a o crea.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Nu poți avea mai mult de 4 uși în seră!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Este permisă o singură pâlnie (hopper) în pereți sau acoperiș.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Pereții sunt inegali. Blocurile de sticlă roșie vor indica blocurile problematice.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Gheață insuficientă pentru această rețetă</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lavă insuficientă pentru această rețetă</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Apă insuficientă pentru această rețetă</red>"
+          FAIL_NO_ICE: "<red>Gheața este necesară pentru această rețetă</red>"
+          FAIL_NO_LAVA: "<red>Lava este necesară pentru această rețetă</red>"
+          FAIL_NO_WATER: "<red>Apa este necesară pentru această rețetă</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nu a fost găsită nicio rețetă corespunzătoare pentru această seră</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Sunt necesare mai multe blocuri pentru această rețetă!</red>"
+          FAIL_OVERLAPPING: "<red>Ne pare rău, serele nu pot împărți pereți comuni.</red>"
+        success: "<dark_green>Ai creat cu succes o seră cu biometul [biome]! Biometul se va sincroniza la următoarea teleportare sau conectare.</dark_green>"
+        missing-blocks: "<red>Lipsesc [material] x [number]</red>"
+        unknown-recipe: "<red>Rețetă necunoscută</red>"
+        try-these: "<red>Încearcă una dintre acestea:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cum să construiești o seră]"
+        title: "<green>[Cum să construiești o seră]</green>"
         instructions: |
-          &e Construiește o cutie din sticlă cu 4 pereți și un
-          &e acoperiș plat din sticlă, și adaugă până la &f 4 uși &e în pereți.
-          &e Plasează &f 1 pâlnie &e într-un perete sau acoperiș și adaugă
-          &e găleți cu apă pentru a crea zăpadă și/sau făină de oase
-          &e pentru creșterea automată. Verifică rețetele de biomet pentru
-          &e a vedea ce blocuri trebuie să fie în interior.
+          <yellow>Construiește o cutie din sticlă cu 4 pereți și un</yellow>
+          <yellow>acoperiș plat din sticlă, și adaugă până la </yellow><white>4 uși </white><yellow>în pereți.</yellow>
+          <yellow>Plasează </yellow><white>1 pâlnie </white><yellow>într-un perete sau acoperiș și adaugă</yellow>
+          <yellow>găleți cu apă pentru a crea zăpadă și/sau făină de oase</yellow>
+          <yellow>pentru creșterea automată. Verifică rețetele de biomet pentru</yellow>
+          <yellow>a vedea ce blocuri trebuie să fie în interior.</yellow>
 
 help:
    help: "ajutor"
@@ -111,35 +109,33 @@ error:
    norecipe: "Nu s-a putut crea sera!"
    
 messages:
-   enter: "Ai intrat în sera lui [owner] ([biome]&f)!"
+   enter: "Ai intrat în sera lui [owner] ([biome]<white>)!</white>"
    leave: "Ai părăsit sera lui [owner]."
-   youarein: "Ești acum în sera lui [owner] ([biome]&f)!"
+   youarein: "Ești acum în sera lui [owner] ([biome]<white>)!</white>"
    removed: "Această seră nu mai există..."
-   removedmessage: "Sera ta ([biome]&f) a fost ștearsă!"
+   removedmessage: "Sera ta ([biome]<white>) a fost ștearsă!</white>"
    ecolost: "Sera ta din [location] și-a pierdut ecosistemul și a fost ștearsă."
 
 info:
-   title: "&A[Cum să construiești o seră]"
+   title: "<green>[Cum să construiești o seră]</green>"
    instructions: |
-     &E Construiește o cutie din sticlă cu 4 pereți și un
-     &E acoperiș plat din sticlă, și adaugă până la &F 4 uși &E în pereți.
-     &E Plasează &F 1 pâlnie &E într-un perete sau acoperiș și adaugă
-     &E găleți cu apă pentru a crea zăpadă și/sau făină de oase
-     &E pentru creșterea automată. Verifică rețetele de biomet pentru
-     &E a vedea ce blocuri trebuie să fie în interior. 
+     <yellow>Construiește o cutie din sticlă cu 4 pereți și un</yellow>
+     <yellow>acoperiș plat din sticlă, și adaugă până la </yellow><white>4 uși </white><yellow>în pereți.</yellow>
+     <yellow>Plasează </yellow><white>1 pâlnie </white><yellow>într-un perete sau acoperiș și adaugă</yellow>
+     <yellow>găleți cu apă pentru a crea zăpadă și/sau făină de oase</yellow>
+     <yellow>pentru creșterea automată. Verifică rețetele de biomet pentru</yellow>
+     <yellow>a vedea ce blocuri trebuie să fie în interior. </yellow>
    info: "[Info Seră]"
    none: "niciunul"
-   nomore: "&4 Nu mai poți construi alte sere!"
-   onemore: "&6 Mai poți construi încă o seră."
-   youcanbuild: "&A Mai poți construi până la [number] sere!"
-   unlimited: "&A Poți construi un număr nelimitat de sere!"
-   welcome: "&B Bine ai venit! Click aici pentru instrucțiuni"
+   nomore: "<dark_red>Nu mai poți construi alte sere!</dark_red>"
+   onemore: "<gold>Mai poți construi încă o seră.</gold>"
+   youcanbuild: "<green>Mai poți construi până la [number] sere!</green>"
+   unlimited: "<green>Poți construi un număr nelimitat de sere!</green>"
+   welcome: "<aqua>Bine ai venit! Click aici pentru instrucțiuni</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Folosește /greenhouse list pentru a vedea lista numerelor de rețete!"
    wrongnumber: "Numărul rețetei trebuie să fie între 1 și [size]"
-   title: "[Rețetă [biome]]"
    nowater: "Apa nu este permisă."
    noice: "Gheața nu este permisă."
    nolava: "Lava nu este permisă."
@@ -176,4 +172,4 @@ news:
    headline: "[Știri Sere]"
 
 controlpanel:
-   title: "&ASere"
+   title: "<green>Sere</green>"

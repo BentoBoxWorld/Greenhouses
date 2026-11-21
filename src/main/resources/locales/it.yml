@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Serre
       description: |
-        &b Scegli chi può
-        &b controllare le serre   
+        <aqua>Scegli chi può</aqua>
+        <aqua>controllare le serre   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Spostati prima in una serra di tua proprietà."
-    no-rank: "&c Non hai il grado necessario per farlo."
+    no-rank: "<red>Non hai il grado necessario per farlo.</red>"
     notyours: "Questa non è la tua serra!"
-    not-inside: "&c Non sei all'interno di una serra!"
+    not-inside: "<red>Non sei all'interno di una serra!</red>"
     tooexpensive: "Non puoi permetterti [price]" 
     alreadyexists: "La serra esiste già!"
     norecipe: "Impossibile creare una serra!"
     
   event:
    broke: "Hai rotto questa serra! Ripristino del bioma a [biome]!"
-   entering: "Ingresso nella serra [biome]&f"
-   leaving: "Uscita dalla serra [biome]&f"
+   entering: "Ingresso nella serra [biome]<white></white>"
+   leaving: "Uscita dalla serra [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Ricetta [biome]]"
    watermustbe: "Acqua > [coverage]% della superficie del pavimento."
    icemustbe: "Blocchi di ghiaccio > [coverage]% della superficie del pavimento."
    lavamustbe: "Lava > [coverage]% della superficie del pavimento."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Tenta di creare una serra"
         parameters: "<ricetta>"
         error:
-          already: "&cC'è già una serra qui!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Il tetto contiene blocchi non consentiti!"
-          FAIL_BAD_WALL_BLOCKS: "&c Le pareti contengono blocchi non consentiti!"
-          FAIL_BELOW: "&c Devi essere all'interno della serra per provare a crearla"
-          FAIL_BLOCKS_ABOVE: "&c Non possono esserci blocchi sopra la serra! I blocchi di vetro rosso indicheranno i blocchi problematici."
+          already: "<red>C'è già una serra qui!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Il tetto contiene blocchi non consentiti!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Le pareti contengono blocchi non consentiti!</red>"
+          FAIL_BELOW: "<red>Devi essere all'interno della serra per provare a crearla</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Non possono esserci blocchi sopra la serra! I blocchi di vetro rosso indicheranno i blocchi problematici.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c C'è un buco nel tetto o non è piatto!
-            &c I blocchi di vetro rosso indicheranno il problema.
-            &c Assicurati di essere all'interno della serra per crearla.
-          FAIL_HOLE_IN_WALL: "&c C'è un buco nella parete!"
-          FAIL_NO_ROOF: "&c Sembra che non ci sia il tetto! Assicurati di essere all'interno della serra per crearla."
-          FAIL_TOO_MANY_DOORS: "&c Non puoi avere più di 4 porte nella serra!"
-          FAIL_TOO_MANY_HOPPERS: "&c È consentita solo una tramoggia (hopper) nelle pareti o nel tetto."
-          FAIL_UNEVEN_WALLS: "&c Le pareti non sono uniformi. I blocchi di vetro rosso indicheranno i blocchi problematici."
-          FAIL_INSUFFICIENT_ICE: "&c Ghiaccio insufficiente per creare questa ricetta"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava insufficiente per creare questa ricetta"
-          FAIL_INSUFFICIENT_WATER: "&c Acqua insufficiente per creare questa ricetta"
-          FAIL_NO_ICE: "&c Il ghiaccio è richiesto per questa ricetta"
-          FAIL_NO_LAVA: "&c La lava è richiesta per questa ricetta"
-          FAIL_NO_WATER: "&c L'acqua è richiesta per questa ricetta"
-          FAIL_NO_RECIPE_FOUND: "&c Nessuna ricetta corrispondente trovata per questa serra"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Sono necessari più blocchi per creare questa ricetta!"
-          FAIL_OVERLAPPING: "&c Spiacenti, le serre non possono condividere le pareti."
-        success: "&2 Hai creato con successo una serra del bioma [biome]! Il bioma si sincronizzerà al prossimo teletrasporto o accesso."
-        missing-blocks: "&c Mancante [material] x [number]"
-        unknown-recipe: "&c Ricetta sconosciuta"
-        try-these: "&c Prova una di queste:"
-        recipe-format: "&3[name]"
+            <red>C'è un buco nel tetto o non è piatto!</red>
+            <red>I blocchi di vetro rosso indicheranno il problema.</red>
+            <red>Assicurati di essere all'interno della serra per crearla.</red>
+          FAIL_HOLE_IN_WALL: "<red>C'è un buco nella parete!</red>"
+          FAIL_NO_ROOF: "<red>Sembra che non ci sia il tetto! Assicurati di essere all'interno della serra per crearla.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Non puoi avere più di 4 porte nella serra!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>È consentita solo una tramoggia (hopper) nelle pareti o nel tetto.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Le pareti non sono uniformi. I blocchi di vetro rosso indicheranno i blocchi problematici.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Ghiaccio insufficiente per creare questa ricetta</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava insufficiente per creare questa ricetta</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Acqua insufficiente per creare questa ricetta</red>"
+          FAIL_NO_ICE: "<red>Il ghiaccio è richiesto per questa ricetta</red>"
+          FAIL_NO_LAVA: "<red>La lava è richiesta per questa ricetta</red>"
+          FAIL_NO_WATER: "<red>L'acqua è richiesta per questa ricetta</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nessuna ricetta corrispondente trovata per questa serra</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Sono necessari più blocchi per creare questa ricetta!</red>"
+          FAIL_OVERLAPPING: "<red>Spiacenti, le serre non possono condividere le pareti.</red>"
+        success: "<dark_green>Hai creato con successo una serra del bioma [biome]! Il bioma si sincronizzerà al prossimo teletrasporto o accesso.</dark_green>"
+        missing-blocks: "<red>Mancante [material] x [number]</red>"
+        unknown-recipe: "<red>Ricetta sconosciuta</red>"
+        try-these: "<red>Prova una di queste:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Come costruire una serra]"
+        title: "<green>[Come costruire una serra]</green>"
         instructions: |
-          &e Crea una scatola di vetro con 4 pareti e un tetto di vetro
-          &e piatto, aggiungi fino a &f 4 porte &e nelle pareti.
-          &e Posiziona &f 1 tramoggia &e in una parete o nel tetto e aggiungi secchi d'acqua
-          &e per creare neve e/o farina d'ossa per far crescere le piante automaticamente.
-          &e Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno
-          &e della serra per crearla con successo.
+          <yellow>Crea una scatola di vetro con 4 pareti e un tetto di vetro</yellow>
+          <yellow>piatto, aggiungi fino a </yellow><white>4 porte </white><yellow>nelle pareti.</yellow>
+          <yellow>Posiziona </yellow><white>1 tramoggia </white><yellow>in una parete o nel tetto e aggiungi secchi d'acqua</yellow>
+          <yellow>per creare neve e/o farina d'ossa per far crescere le piante automaticamente.</yellow>
+          <yellow>Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno</yellow>
+          <yellow>della serra per crearla con successo.</yellow>
 
 help:
    help: "aiuto"
@@ -111,35 +109,33 @@ error:
    norecipe: "Impossibile creare una serra!"
    
 messages:
-   enter: "Ingresso nella serra di [owner], bioma: [biome]&f!"
+   enter: "Ingresso nella serra di [owner], bioma: [biome]<white>!</white>"
    leave: "Uscita dalla serra di [owner]."
-   youarein: "Ti trovi nella serra di [owner], bioma: [biome]&f!"
+   youarein: "Ti trovi nella serra di [owner], bioma: [biome]<white>!</white>"
    removed: "Questa serra non esiste più..."
-   removedmessage: "La tua serra [biome]&f è stata rimossa!"
+   removedmessage: "La tua serra [biome]<white> è stata rimossa!</white>"
    ecolost: "La tua serra in [location] ha perso l'ecosistema ed è stata rimossa."
 
 info:
-   title: "&a [Come costruire una serra]"
+   title: "<green>[Come costruire una serra]</green>"
    instructions: |
-     &e Crea una scatola di vetro con 4 pareti e un tetto di vetro
-     &e piatto, aggiungi fino a &f 4 porte &e nelle pareti.
-     &e Posiziona &f 1 tramoggia &e in una parete o nel tetto e aggiungi secchi d'acqua
-     &e per creare neve e/o farina d'ossa per far crescere le piante automaticamente.
-     &e Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno
-     &e della serra per crearla con successo.
+     <yellow>Crea una scatola di vetro con 4 pareti e un tetto di vetro</yellow>
+     <yellow>piatto, aggiungi fino a </yellow><white>4 porte </white><yellow>nelle pareti.</yellow>
+     <yellow>Posiziona </yellow><white>1 tramoggia </white><yellow>in una parete o nel tetto e aggiungi secchi d'acqua</yellow>
+     <yellow>per creare neve e/o farina d'ossa per far crescere le piante automaticamente.</yellow>
+     <yellow>Controlla le ricette dei biomi per sapere quali blocchi devono essere all'interno</yellow>
+     <yellow>della serra per crearla con successo.</yellow>
    info: "[Info Serra]"
    none: "Nessuno"
-   nomore: "&4 Non puoi costruire altre serre!"
-   onemore: "&6 Puoi costruire ancora una serra."
-   youcanbuild: "&a Puoi costruire ancora fino a [number] serre!"
-   unlimited: "&a Puoi costruire un numero illimitato di serre!"
-   welcome: "&b Benvenuto! Clicca qui per le istruzioni"
+   nomore: "<dark_red>Non puoi costruire altre serre!</dark_red>"
+   onemore: "<gold>Puoi costruire ancora una serra.</gold>"
+   youcanbuild: "<green>Puoi costruire ancora fino a [number] serre!</green>"
+   unlimited: "<green>Puoi costruire un numero illimitato di serre!</green>"
+   welcome: "<aqua>Benvenuto! Clicca qui per le istruzioni</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Usa /greenhouse list per vedere l'elenco dei numeri delle ricette!"
    wrongnumber: "Il numero della ricetta deve essere compreso tra 1 e [size]"
-   title: "[Ricetta [biome]]"
    nowater: "Acqua non consentita."
    noice: "Ghiaccio non consentito."
    nolava: "Lava non consentita."
@@ -176,4 +172,4 @@ news:
    headline: "[News Serre]"
 
 controlpanel:
-   title: "&aSerre"
+   title: "<green>Serre</green>"

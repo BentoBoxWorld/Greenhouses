@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Invernaderos
       description: |
-        &b Alterna quién puede
-        &b controlar los invernaderos   
+        <aqua>Alterna quién puede</aqua>
+        <aqua>controlar los invernaderos   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Primero muévete a un invernadero que te pertenezca."
-    no-rank: "&c No tienes el rango necesario para hacer eso."
+    no-rank: "<red>No tienes el rango necesario para hacer eso.</red>"
     notyours: "¡Este no es tu invernadero!"
-    not-inside: "&c ¡No estás dentro de un invernadero!"
+    not-inside: "<red>¡No estás dentro de un invernadero!</red>"
     tooexpensive: "No puedes permitirte [price]" 
     alreadyexists: "¡El invernadero ya existe!"
     norecipe: "¡No se puede crear el invernadero!"
     
   event:
    broke: "¡Has roto este invernadero! Revirtiendo el bioma a [biome]!"
-   entering: "Entrando al invernadero [biome]&f"
-   leaving: "Saliendo del invernadero [biome]&f"
+   entering: "Entrando al invernadero [biome]<white></white>"
+   leaving: "Saliendo del invernadero [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receta de [biome]]"
    watermustbe: "Agua > [coverage]% del área del suelo."
    icemustbe: "Bloques de hielo > [coverage]% del área del suelo."
    lavamustbe: "Lava > [coverage]% del área del suelo."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Intenta crear un invernadero"
         parameters: "<receta>"
         error:
-          already: "&c¡Ya hay un invernadero aquí!"
-          FAIL_BAD_ROOF_BLOCKS: "&c ¡El techo contiene bloques no permitidos!"
-          FAIL_BAD_WALL_BLOCKS: "&c ¡La pared contiene bloques no permitidos!"
-          FAIL_BELOW: "&c Debes estar dentro del invernadero para intentar crearlo"
-          FAIL_BLOCKS_ABOVE: "&c ¡No puede haber bloques sobre el invernadero! Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
+          already: "<red>¡Ya hay un invernadero aquí!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>¡El techo contiene bloques no permitidos!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>¡La pared contiene bloques no permitidos!</red>"
+          FAIL_BELOW: "<red>Debes estar dentro del invernadero para intentar crearlo</red>"
+          FAIL_BLOCKS_ABOVE: "<red>¡No puede haber bloques sobre el invernadero! Los bloques de cristal rojo deberían mostrar los bloques problemáticos.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c ¡Hay un agujero en el techo o no es plano!
-            &c Los bloques de cristal rojo deberían mostrar el problema.
-            &c Asegúrate de estar dentro de tu invernadero para crearlo.
-          FAIL_HOLE_IN_WALL: "&c ¡Hay un agujero en la pared!"
-          FAIL_NO_ROOF: "&c ¡Parece que no hay techo! Asegúrate de estar dentro del invernadero para crearlo."
-          FAIL_TOO_MANY_DOORS: "&c ¡No puedes tener más de 4 puertas en el invernadero!"
-          FAIL_TOO_MANY_HOPPERS: "&c Solo se permite una tolva en las paredes o el techo."
-          FAIL_UNEVEN_WALLS: "&c Las paredes están desiguales. Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
-          FAIL_INSUFFICIENT_ICE: "&c Hielo insuficiente para crear esta receta"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para crear esta receta"
-          FAIL_INSUFFICIENT_WATER: "&c Agua insuficiente para crear esta receta"
-          FAIL_NO_ICE: "&c Se requiere hielo para crear esta receta"
-          FAIL_NO_LAVA: "&c Se requiere lava para crear esta receta"
-          FAIL_NO_WATER: "&c Se requiere agua para crear esta receta"
-          FAIL_NO_RECIPE_FOUND: "&c No se encontró ninguna receta que coincida con este invernadero"
-          FAIL_INSUFFICIENT_BLOCKS: "&c ¡Se requieren más bloques para crear esta receta!"
-          FAIL_OVERLAPPING: "&c Lo sentimos, los invernaderos no pueden compartir paredes."
-        success: "&2 ¡Has creado con éxito un invernadero de bioma [biome]! El bioma se sincronizará en el próximo teletransporte o inicio de sesión."
-        missing-blocks: "&c Falta [material] x [number]"
-        unknown-recipe: "&c Receta desconocida"
-        try-these: "&c Prueba una de estas:"
-        recipe-format: "&3[name]"
+            <red>¡Hay un agujero en el techo o no es plano!</red>
+            <red>Los bloques de cristal rojo deberían mostrar el problema.</red>
+            <red>Asegúrate de estar dentro de tu invernadero para crearlo.</red>
+          FAIL_HOLE_IN_WALL: "<red>¡Hay un agujero en la pared!</red>"
+          FAIL_NO_ROOF: "<red>¡Parece que no hay techo! Asegúrate de estar dentro del invernadero para crearlo.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>¡No puedes tener más de 4 puertas en el invernadero!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Solo se permite una tolva en las paredes o el techo.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Las paredes están desiguales. Los bloques de cristal rojo deberían mostrar los bloques problemáticos.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Hielo insuficiente para crear esta receta</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava insuficiente para crear esta receta</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Agua insuficiente para crear esta receta</red>"
+          FAIL_NO_ICE: "<red>Se requiere hielo para crear esta receta</red>"
+          FAIL_NO_LAVA: "<red>Se requiere lava para crear esta receta</red>"
+          FAIL_NO_WATER: "<red>Se requiere agua para crear esta receta</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>No se encontró ninguna receta que coincida con este invernadero</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>¡Se requieren más bloques para crear esta receta!</red>"
+          FAIL_OVERLAPPING: "<red>Lo sentimos, los invernaderos no pueden compartir paredes.</red>"
+        success: "<dark_green>¡Has creado con éxito un invernadero de bioma [biome]! El bioma se sincronizará en el próximo teletransporte o inicio de sesión.</dark_green>"
+        missing-blocks: "<red>Falta [material] x [number]</red>"
+        unknown-recipe: "<red>Receta desconocida</red>"
+        try-these: "<red>Prueba una de estas:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cómo construir un invernadero]"
+        title: "<green>[Cómo construir un invernadero]</green>"
         instructions: |
-          &e Crea una caja de cristal con 4 paredes y un techo de cristal
-          &e plano, y añade hasta &f 4 puertas &e en las paredes.
-          &e Coloca &f 1 tolva &e en una pared o techo y añade cubos de agua.
-          &e para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
-          &e Consulta las recetas de biomas para ver qué bloques deben estar dentro
-          &e de un invernadero para crearlo con éxito.
+          <yellow>Crea una caja de cristal con 4 paredes y un techo de cristal</yellow>
+          <yellow>plano, y añade hasta </yellow><white>4 puertas </white><yellow>en las paredes.</yellow>
+          <yellow>Coloca </yellow><white>1 tolva </white><yellow>en una pared o techo y añade cubos de agua.</yellow>
+          <yellow>para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.</yellow>
+          <yellow>Consulta las recetas de biomas para ver qué bloques deben estar dentro</yellow>
+          <yellow>de un invernadero para crearlo con éxito.</yellow>
 
 help:
    help: "ayuda"
@@ -111,35 +109,33 @@ error:
    norecipe: "¡No se puede crear el invernadero!"
    
 messages:
-   enter: "¡Entrando al invernadero de [owner] ([biome]&f)!"
+   enter: "¡Entrando al invernadero de [owner] ([biome]<white>)!</white>"
    leave: "Saliendo del invernadero de [owner]."
-   youarein: "¡Ahora estás en el invernadero de [owner] ([biome]&f)!"
+   youarein: "¡Ahora estás en el invernadero de [owner] ([biome]<white>)!</white>"
    removed: "Este invernadero ya no existe..."
-   removedmessage: "¡Tu invernadero de [biome]&f ya no existe!"
+   removedmessage: "¡Tu invernadero de [biome]<white> ya no existe!</white>"
    ecolost: "Tu invernadero en [location] perdió su ecosistema y fue eliminado."
 
 info:
-   title: "&A[Cómo construir un invernadero]"
+   title: "<green>[Cómo construir un invernadero]</green>"
    instructions: |
-     &E Crea una caja de cristal con 4 paredes y un techo de cristal
-     &E plano, y añade hasta &F 4 puertas &E en las paredes.
-     &E Coloca &F 1 tolva &E en una pared o techo y añade cubos de agua.
-     &E para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
-     &E Consulta las recetas de biomas para ver qué bloques deben estar dentro
-     &E de un invernadero para crearlo con éxito. 
+     <yellow>Crea una caja de cristal con 4 paredes y un techo de cristal</yellow>
+     <yellow>plano, y añade hasta </yellow><white>4 puertas </white><yellow>en las paredes.</yellow>
+     <yellow>Coloca </yellow><white>1 tolva </white><yellow>en una pared o techo y añade cubos de agua.</yellow>
+     <yellow>para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.</yellow>
+     <yellow>Consulta las recetas de biomas para ver qué bloques deben estar dentro</yellow>
+     <yellow>de un invernadero para crearlo con éxito. </yellow>
    info: "[Información del Invernadero]"
    none: "Ninguno"
-   nomore: "&4 ¡No puedes construir más invernaderos!"
-   onemore: "&6 Puedes construir un invernadero más."
-   youcanbuild: "&A ¡Puedes construir hasta [number] invernaderos más!"
-   unlimited: "&A ¡Puedes construir un número ilimitado de invernaderos!"
-   welcome: "&B ¡Bienvenido! Haz clic aquí para ver las instrucciones"
+   nomore: "<dark_red>¡No puedes construir más invernaderos!</dark_red>"
+   onemore: "<gold>Puedes construir un invernadero más.</gold>"
+   youcanbuild: "<green>¡Puedes construir hasta [number] invernaderos más!</green>"
+   unlimited: "<green>¡Puedes construir un número ilimitado de invernaderos!</green>"
+   welcome: "<aqua>¡Bienvenido! Haz clic aquí para ver las instrucciones</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "¡Usa /greenhouse list para ver una lista de números de recetas!"
    wrongnumber: "El número de receta debe estar entre 1 y [size]"
-   title: "[Receta de [biome]]"
    nowater: "No se permite agua."
    noice: "No se permite hielo."
    nolava: "No se permite lava."
@@ -176,4 +172,4 @@ news:
    headline: "[Noticias de Invernaderos]"
 
 controlpanel:
-   title: "&AInvernaderos"
+   title: "<green>Invernaderos</green>"

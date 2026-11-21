@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Rumah Kaca
       description: |
-        &b Atur siapa yang bisa
-        &b mengontrol rumah kaca   
+        <aqua>Atur siapa yang bisa</aqua>
+        <aqua>mengontrol rumah kaca   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Pindahlah ke rumah kaca milikmu terlebih dahulu."
-    no-rank: "&c Kamu tidak memiliki peringkat untuk melakukan itu."
+    no-rank: "<red>Kamu tidak memiliki peringkat untuk melakukan itu.</red>"
     notyours: "Ini bukan rumah kacammu!"
-    not-inside: "&c Kamu tidak berada di dalam rumah kaca!"
+    not-inside: "<red>Kamu tidak berada di dalam rumah kaca!</red>"
     tooexpensive: "Kamu tidak mampu membeli [price]" 
     alreadyexists: "Rumah kaca sudah ada!"
     norecipe: "Tidak dapat membuat rumah kaca!"
     
   event:
    broke: "Kamu menghancurkan rumah kaca ini! Mengembalikan bioma ke [biome]!"
-   entering: "Memasuki rumah kaca [biome]&f"
-   leaving: "Meninggalkan rumah kaca [biome]&f"
+   entering: "Memasuki rumah kaca [biome]<white></white>"
+   leaving: "Meninggalkan rumah kaca [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Resep [biome]]"
    watermustbe: "Air > [coverage]% dari luas lantai."
    icemustbe: "Blok es > [coverage]% dari luas lantai."
    lavamustbe: "Lava > [coverage]% dari luas lantai."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Mencoba membuat rumah kaca"
         parameters: "<resep>"
         error:
-          already: "&cSudah ada rumah kaca di sini!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Atap mengandung blok yang tidak diperbolehkan!"
-          FAIL_BAD_WALL_BLOCKS: "&c Dinding mengandung blok yang tidak diperbolehkan!"
-          FAIL_BELOW: "&c Kamu harus berada di dalam rumah kaca untuk mencoba membuatnya"
-          FAIL_BLOCKS_ABOVE: "&c Tidak boleh ada blok di atas rumah kaca! Blok kaca merah akan menunjukkan blok yang bermasalah."
+          already: "<red>Sudah ada rumah kaca di sini!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Atap mengandung blok yang tidak diperbolehkan!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Dinding mengandung blok yang tidak diperbolehkan!</red>"
+          FAIL_BELOW: "<red>Kamu harus berada di dalam rumah kaca untuk mencoba membuatnya</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Tidak boleh ada blok di atas rumah kaca! Blok kaca merah akan menunjukkan blok yang bermasalah.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Ada lubang di atap atau atap tidak rata!
-            &c Blok kaca merah akan menunjukkan masalahnya.
-            &c Pastikan kamu berada di dalam rumah kaca untuk membuatnya.
-          FAIL_HOLE_IN_WALL: "&c Ada lubang di dinding!"
-          FAIL_NO_ROOF: "&c Sepertinya tidak ada atap! Pastikan kamu berada di dalam rumah kaca."
-          FAIL_TOO_MANY_DOORS: "&c Kamu tidak boleh memiliki lebih dari 4 pintu di rumah kaca!"
-          FAIL_TOO_MANY_HOPPERS: "&c Hanya diperbolehkan satu hopper di dinding atau atap."
-          FAIL_UNEVEN_WALLS: "&c Dinding tidak rata. Blok kaca merah akan menunjukkan blok yang bermasalah."
-          FAIL_INSUFFICIENT_ICE: "&c Es tidak cukup untuk membuat resep ini"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava tidak cukup untuk membuat resep ini"
-          FAIL_INSUFFICIENT_WATER: "&c Air tidak cukup untuk membuat resep ini"
-          FAIL_NO_ICE: "&c Es diperlukan untuk membuat resep ini"
-          FAIL_NO_LAVA: "&c Lava diperlukan untuk membuat resep ini"
-          FAIL_NO_WATER: "&c Air diperlukan untuk membuat resep ini"
-          FAIL_NO_RECIPE_FOUND: "&c Tidak ada resep yang cocok untuk rumah kaca ini"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Diperlukan lebih banyak blok untuk membuat resep ini!"
-          FAIL_OVERLAPPING: "&c Maaf, rumah kaca tidak boleh berbagi dinding."
-        success: "&2 Kamu berhasil membuat rumah kaca bioma [biome]! Bioma akan sinkron pada teleportasi atau login berikutnya."
-        missing-blocks: "&c Kurang [material] x [number]"
-        unknown-recipe: "&c Resep tidak dikenal"
-        try-these: "&c Coba salah satu dari ini:"
-        recipe-format: "&3[name]"
+            <red>Ada lubang di atap atau atap tidak rata!</red>
+            <red>Blok kaca merah akan menunjukkan masalahnya.</red>
+            <red>Pastikan kamu berada di dalam rumah kaca untuk membuatnya.</red>
+          FAIL_HOLE_IN_WALL: "<red>Ada lubang di dinding!</red>"
+          FAIL_NO_ROOF: "<red>Sepertinya tidak ada atap! Pastikan kamu berada di dalam rumah kaca.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Kamu tidak boleh memiliki lebih dari 4 pintu di rumah kaca!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Hanya diperbolehkan satu hopper di dinding atau atap.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Dinding tidak rata. Blok kaca merah akan menunjukkan blok yang bermasalah.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Es tidak cukup untuk membuat resep ini</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava tidak cukup untuk membuat resep ini</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Air tidak cukup untuk membuat resep ini</red>"
+          FAIL_NO_ICE: "<red>Es diperlukan untuk membuat resep ini</red>"
+          FAIL_NO_LAVA: "<red>Lava diperlukan untuk membuat resep ini</red>"
+          FAIL_NO_WATER: "<red>Air diperlukan untuk membuat resep ini</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Tidak ada resep yang cocok untuk rumah kaca ini</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Diperlukan lebih banyak blok untuk membuat resep ini!</red>"
+          FAIL_OVERLAPPING: "<red>Maaf, rumah kaca tidak boleh berbagi dinding.</red>"
+        success: "<dark_green>Kamu berhasil membuat rumah kaca bioma [biome]! Bioma akan sinkron pada teleportasi atau login berikutnya.</dark_green>"
+        missing-blocks: "<red>Kurang [material] x [number]</red>"
+        unknown-recipe: "<red>Resep tidak dikenal</red>"
+        try-these: "<red>Coba salah satu dari ini:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cara Membangun Rumah Kaca]"
+        title: "<green>[Cara Membangun Rumah Kaca]</green>"
         instructions: |
-          &e Buatlah kotak dari kaca dengan 4 dinding dan atap kaca
-          &e yang datar, lalu tambahkan hingga &f 4 pintu &e pada dinding.
-          &e Letakkan &f 1 hopper &e di dinding atau atap dan tambahkan ember air
-          &e untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.
-          &e Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam
-          &e rumah kaca agar berhasil dibuat.
+          <yellow>Buatlah kotak dari kaca dengan 4 dinding dan atap kaca</yellow>
+          <yellow>yang datar, lalu tambahkan hingga </yellow><white>4 pintu </white><yellow>pada dinding.</yellow>
+          <yellow>Letakkan </yellow><white>1 hopper </white><yellow>di dinding atau atap dan tambahkan ember air</yellow>
+          <yellow>untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.</yellow>
+          <yellow>Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam</yellow>
+          <yellow>rumah kaca agar berhasil dibuat.</yellow>
 
 help:
    help: "bantuan"
@@ -111,35 +109,33 @@ error:
    norecipe: "Tidak dapat membuat rumah kaca!"
    
 messages:
-   enter: "Memasuki rumah kaca milik [owner], bioma: [biome]&f!"
+   enter: "Memasuki rumah kaca milik [owner], bioma: [biome]<white>!</white>"
    leave: "Meninggalkan rumah kaca milik [owner]."
-   youarein: "Kamu sekarang berada di rumah kaca milik [owner], bioma: [biome]&f!"
+   youarein: "Kamu sekarang berada di rumah kaca milik [owner], bioma: [biome]<white>!</white>"
    removed: "Rumah kaca ini sudah tidak ada..."
-   removedmessage: "Rumah kaca [biome]&f milikmu sudah tidak ada!"
+   removedmessage: "Rumah kaca [biome]<white> milikmu sudah tidak ada!</white>"
    ecolost: "Rumah kaca milikmu di [location] kehilangan ekosistemnya dan telah dihapus."
 
 info:
-   title: "&a [Cara Membangun Rumah Kaca]"
+   title: "<green>[Cara Membangun Rumah Kaca]</green>"
    instructions: |
-     &e Buatlah kotak dari kaca dengan 4 dinding dan atap kaca
-     &e yang datar, lalu tambahkan hingga &f 4 pintu &e pada dinding.
-     &e Letakkan &f 1 hopper &e di dinding atau atap dan tambahkan ember air
-     &e untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.
-     &e Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam
-     &e rumah kaca agar berhasil dibuat.
+     <yellow>Buatlah kotak dari kaca dengan 4 dinding dan atap kaca</yellow>
+     <yellow>yang datar, lalu tambahkan hingga </yellow><white>4 pintu </white><yellow>pada dinding.</yellow>
+     <yellow>Letakkan </yellow><white>1 hopper </white><yellow>di dinding atau atap dan tambahkan ember air</yellow>
+     <yellow>untuk menghasilkan salju dan/atau bone meal agar tanaman tumbuh otomatis.</yellow>
+     <yellow>Periksa resep bioma untuk melihat blok apa saja yang harus ada di dalam</yellow>
+     <yellow>rumah kaca agar berhasil dibuat.</yellow>
    info: "[Info Rumah Kaca]"
    none: "Tidak ada"
-   nomore: "&4 Kamu tidak bisa membangun rumah kaca lagi!"
-   onemore: "&6 Kamu bisa membangun satu rumah kaca lagi."
-   youcanbuild: "&a Kamu bisa membangun hingga [number] rumah kaca lagi!"
-   unlimited: "&a Kamu bisa membangun rumah kaca tanpa batas!"
-   welcome: "&b Selamat datang! Klik di sini untuk instruksi"
+   nomore: "<dark_red>Kamu tidak bisa membangun rumah kaca lagi!</dark_red>"
+   onemore: "<gold>Kamu bisa membangun satu rumah kaca lagi.</gold>"
+   youcanbuild: "<green>Kamu bisa membangun hingga [number] rumah kaca lagi!</green>"
+   unlimited: "<green>Kamu bisa membangun rumah kaca tanpa batas!</green>"
+   welcome: "<aqua>Selamat datang! Klik di sini untuk instruksi</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Gunakan /greenhouse list untuk melihat daftar nomor resep!"
    wrongnumber: "Nomor resep harus antara 1 dan [size]"
-   title: "[Resep [biome]]"
    nowater: "Air tidak diperbolehkan."
    noice: "Es tidak diperbolehkan."
    nolava: "Lava tidak diperbolehkan."
@@ -176,4 +172,4 @@ news:
    headline: "[Berita Rumah Kaca]"
 
 controlpanel:
-   title: "&aRumah Kaca"
+   title: "<green>Rumah Kaca</green>"

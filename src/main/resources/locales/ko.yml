@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: 온실
       description: |
-        &b 온실을 제어할 수 있는
-        &b 사용자를 설정합니다   
+        <aqua>온실을 제어할 수 있는</aqua>
+        <aqua>사용자를 설정합니다   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "먼저 본인 소유의 온실로 이동하십시오."
-    no-rank: "&c 그 작업을 수행할 권한이 없습니다."
+    no-rank: "<red>그 작업을 수행할 권한이 없습니다.</red>"
     notyours: "이것은 당신의 온실이 아닙니다!"
-    not-inside: "&c 온실 내부에 있지 않습니다!"
+    not-inside: "<red>온실 내부에 있지 않습니다!</red>"
     tooexpensive: "비용을 지불할 수 없습니다: [price]" 
     alreadyexists: "온실이 이미 존재합니다!"
     norecipe: "온실을 만들 수 없습니다!"
     
   event:
    broke: "온실이 파손되었습니다! 바이옴을 [biome](으)로 되돌립니다!"
-   entering: "[biome]&f 온실에 입장했습니다"
-   leaving: "[biome]&f 온실에서 나갔습니다"
+   entering: "[biome]<white> 온실에 입장했습니다</white>"
+   leaving: "[biome]<white> 온실에서 나갔습니다</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] 레시피]"
    watermustbe: "물 > 바닥 면적의 [coverage]% 이상이어야 합니다."
    icemustbe: "얼음 블록 > 바닥 면적의 [coverage]% 이상이어야 합니다."
    lavamustbe: "용암 > 바닥 면적의 [coverage]% 이상이어야 합니다."
@@ -48,43 +46,43 @@ greenhouses:
         description: "온실 제작을 시도합니다"
         parameters: "<레시피>"
         error:
-          already: "&c이곳에는 이미 온실이 있습니다!"
-          FAIL_BAD_ROOF_BLOCKS: "&c 지붕에 허용되지 않는 블록이 포함되어 있습니다!"
-          FAIL_BAD_WALL_BLOCKS: "&c 벽에 허용되지 않는 블록이 포함되어 있습니다!"
-          FAIL_BELOW: "&c 온실 내부에서 제작을 시도해야 합니다"
-          FAIL_BLOCKS_ABOVE: "&c 온실 위에는 어떤 블록도 없어야 합니다! 빨간색 유리 블록이 문제 지점을 표시합니다."
+          already: "<red>이곳에는 이미 온실이 있습니다!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>지붕에 허용되지 않는 블록이 포함되어 있습니다!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>벽에 허용되지 않는 블록이 포함되어 있습니다!</red>"
+          FAIL_BELOW: "<red>온실 내부에서 제작을 시도해야 합니다</red>"
+          FAIL_BLOCKS_ABOVE: "<red>온실 위에는 어떤 블록도 없어야 합니다! 빨간색 유리 블록이 문제 지점을 표시합니다.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c 지붕에 구멍이 있거나 평평하지 않습니다!
-            &c 빨간색 유리 블록이 문제 지점을 표시합니다.
-            &c 제작 시 반드시 온실 내부에 있어야 합니다.
-          FAIL_HOLE_IN_WALL: "&c 벽에 구멍이 있습니다!"
-          FAIL_NO_ROOF: "&c 지붕이 없는 것 같습니다! 반드시 온실 내부에 있어야 합니다."
-          FAIL_TOO_MANY_DOORS: "&c 온실에는 문을 4개 이상 설치할 수 없습니다!"
-          FAIL_TOO_MANY_HOPPERS: "&c 벽이나 지붕에는 깔때기를 하나만 설치할 수 있습니다."
-          FAIL_UNEVEN_WALLS: "&c 벽이 고르지 않습니다. 빨간색 유리 블록이 문제 지점을 표시합니다."
-          FAIL_INSUFFICIENT_ICE: "&c 이 레시피를 위한 얼음이 부족합니다"
-          FAIL_INSUFFICIENT_LAVA: "&c 이 레시피를 위한 용암이 부족합니다"
-          FAIL_INSUFFICIENT_WATER: "&c 이 레시피를 위한 물이 부족합니다"
-          FAIL_NO_ICE: "&c 이 레시피에는 얼음이 필요합니다"
-          FAIL_NO_LAVA: "&c 이 레시피에는 용암이 필요합니다"
-          FAIL_NO_WATER: "&c 이 레시피에는 물이 필요합니다"
-          FAIL_NO_RECIPE_FOUND: "&c 이 온실과 일치하는 레시피를 찾을 수 없습니다"
-          FAIL_INSUFFICIENT_BLOCKS: "&c 이 레시피를 제작하려면 블록이 더 필요합니다!"
-          FAIL_OVERLAPPING: "&c 죄송합니다, 온실은 벽을 공유할 수 없습니다."
-        success: "&2 [biome] 바이옴 온실을 성공적으로 만들었습니다! 바이옴은 다음 텔레포트나 접속 시 동기화됩니다."
-        missing-blocks: "&c 부족함: [material] x [number]"
-        unknown-recipe: "&c 알 수 없는 레시피"
-        try-these: "&c 다음 중 하나를 시도해 보세요:"
-        recipe-format: "&3[name]"
+            <red>지붕에 구멍이 있거나 평평하지 않습니다!</red>
+            <red>빨간색 유리 블록이 문제 지점을 표시합니다.</red>
+            <red>제작 시 반드시 온실 내부에 있어야 합니다.</red>
+          FAIL_HOLE_IN_WALL: "<red>벽에 구멍이 있습니다!</red>"
+          FAIL_NO_ROOF: "<red>지붕이 없는 것 같습니다! 반드시 온실 내부에 있어야 합니다.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>온실에는 문을 4개 이상 설치할 수 없습니다!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>벽이나 지붕에는 깔때기를 하나만 설치할 수 있습니다.</red>"
+          FAIL_UNEVEN_WALLS: "<red>벽이 고르지 않습니다. 빨간색 유리 블록이 문제 지점을 표시합니다.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>이 레시피를 위한 얼음이 부족합니다</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>이 레시피를 위한 용암이 부족합니다</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>이 레시피를 위한 물이 부족합니다</red>"
+          FAIL_NO_ICE: "<red>이 레시피에는 얼음이 필요합니다</red>"
+          FAIL_NO_LAVA: "<red>이 레시피에는 용암이 필요합니다</red>"
+          FAIL_NO_WATER: "<red>이 레시피에는 물이 필요합니다</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>이 온실과 일치하는 레시피를 찾을 수 없습니다</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>이 레시피를 제작하려면 블록이 더 필요합니다!</red>"
+          FAIL_OVERLAPPING: "<red>죄송합니다, 온실은 벽을 공유할 수 없습니다.</red>"
+        success: "<dark_green>[biome] 바이옴 온실을 성공적으로 만들었습니다! 바이옴은 다음 텔레포트나 접속 시 동기화됩니다.</dark_green>"
+        missing-blocks: "<red>부족함: [material] x [number]</red>"
+        unknown-recipe: "<red>알 수 없는 레시피</red>"
+        try-these: "<red>다음 중 하나를 시도해 보세요:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [온실 짓는 방법]"
+        title: "<green>[온실 짓는 방법]</green>"
         instructions: |
-          &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
-          &e 벽에 최대 &f 4개의 문&e을 설치하세요.
-          &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
-          &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
-          &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
-          &e 바이옴 레시피를 확인하세요.
+          <yellow>4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,</yellow>
+          <yellow>벽에 최대 </yellow><white>4개의 문</white><yellow>을 설치하세요.</yellow>
+          <yellow>벽이나 지붕에 </yellow><white>1개의 깔때기</white><yellow>를 설치하고 물 양동이를 넣어</yellow>
+          <yellow>식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.</yellow>
+          <yellow>제작에 성공하려면 어떤 블록이 내부에 있어야 하는지</yellow>
+          <yellow>바이옴 레시피를 확인하세요.</yellow>
 
 help:
    help: "도움말"
@@ -119,27 +117,25 @@ messages:
    ecolost: "[location]에 있는 온실이 생태계를 잃어 제거되었습니다."
 
 info:
-   title: "&a [온실 짓는 방법]"
+   title: "<green>[온실 짓는 방법]</green>"
    instructions: |
-     &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
-     &e 벽에 최대 &f 4개의 문&e을 설치하세요.
-     &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
-     &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
-     &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
-     &e 바이옴 레시피를 확인하세요.
+     <yellow>4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,</yellow>
+     <yellow>벽에 최대 </yellow><white>4개의 문</white><yellow>을 설치하세요.</yellow>
+     <yellow>벽이나 지붕에 </yellow><white>1개의 깔때기</white><yellow>를 설치하고 물 양동이를 넣어</yellow>
+     <yellow>식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.</yellow>
+     <yellow>제작에 성공하려면 어떤 블록이 내부에 있어야 하는지</yellow>
+     <yellow>바이옴 레시피를 확인하세요.</yellow>
    info: "[온실 정보]"
    none: "없음"
-   nomore: "&4 더 이상 온실을 지을 수 없습니다!"
-   onemore: "&6 온실을 하나 더 지을 수 있습니다."
-   youcanbuild: "&a 앞으로 [number]개의 온실을 더 지을 수 있습니다!"
-   unlimited: "&a 무제한으로 온실을 지을 수 있습니다!"
-   welcome: "&b 환영합니다! 지침을 보려면 여기를 클릭하세요"
+   nomore: "<dark_red>더 이상 온실을 지을 수 없습니다!</dark_red>"
+   onemore: "<gold>온실을 하나 더 지을 수 있습니다.</gold>"
+   youcanbuild: "<green>앞으로 [number]개의 온실을 더 지을 수 있습니다!</green>"
+   unlimited: "<green>무제한으로 온실을 지을 수 있습니다!</green>"
+   welcome: "<aqua>환영합니다! 지침을 보려면 여기를 클릭하세요</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "/greenhouse list 명령어로 레시피 번호 목록을 확인하세요!"
    wrongnumber: "레시피 번호는 1에서 [size] 사이여야 합니다"
-   title: "[[biome] 레시피]"
    nowater: "물은 허용되지 않습니다."
    noice: "얼음은 허용되지 않습니다."
    nolava: "용암은 허용되지 않습니다."
@@ -176,4 +172,4 @@ news:
    headline: "[온실 뉴스]"
 
 controlpanel:
-   title: "&a온실"
+   title: "<green>온실</green>"

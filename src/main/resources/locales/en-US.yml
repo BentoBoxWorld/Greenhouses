@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Greenhouses
       description: |
-        &b Toggle who can
-        &b control greenhouses   
+        <aqua>Toggle who can</aqua>
+        <aqua>control greenhouses   </aqua>
 
 greenhouses:
   general:
@@ -17,26 +17,29 @@ greenhouses:
    
   errors:
     move: "Move to a greenhouse you own first."
-    no-rank: "&c You do not have rank to do that."
+    no-rank: "<red>You do not have rank to do that.</red>"
     notyours: "This is not your greenhouse!"
-    not-inside: "&c You are not in a greenhouse!"
+    not-inside: "<red>You are not in a greenhouse!</red>"
     tooexpensive: "You cannot afford [price]" 
     alreadyexists: "Greenhouse already exists!"
     norecipe: "Cannot make a greenhouse!"
     
   event:
-   broke: "You broke this greenhouse! Reverting biome to [biome]&r!"
-   entering: "Entering [biome]&r  greenhouse"
-   leaving: "Leaving [biome]&r  greenhouse"
+   broke: "You broke this greenhouse! Reverting biome to [biome]!"
+   entering: "Entering [biome]  greenhouse"
+   leaving: "Leaving [biome]  greenhouse"
    
+  # Recipe tooltips in the greenhouse panel
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] recipe]"
-   watermustbe: "Water > [coverage]% of floor area."
-   icemustbe: "Ice blocks > [coverage]% of floor area."
-   lavamustbe: "Lava > [coverage]% of floor area."
-   minimumblockstitle: "[Minimum blocks required]"
-   nootherblocks: "No other blocks required."
+   # Each line of the recipe's description; [text] is one word-wrapped line of it
+   description: "<gray>[text]</gray>"
+   minimumblockstitle: "<yellow>Needs at least:</yellow>"
+   # [block] is a required block and how many, e.g. "Sand x 1"
+   block: "<white> • [block]</white>"
+   watermustbe: "<aqua>Water over [coverage]% of the floor</aqua>"
+   icemustbe: "<aqua>Ice over [coverage]% of the floor</aqua>"
+   lavamustbe: "<gold>Lava over [coverage]% of the floor</gold>"
+   nootherblocks: "<white>No other blocks needed</white>"
    missing: "Greenhouse is missing"
    
   commands:
@@ -48,93 +51,93 @@ greenhouses:
         description: "Try to make a greenhouse"
         parameters: "<recipe>"
         error:
-          already: "&cThere is already a greenhouse here!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Roof contains disallowed blocks!"
-          FAIL_BAD_WALL_BLOCKS: "&c Wall contains disallowed blocks!"
-          FAIL_BELOW: "&c You must be inside the greenhouse to try to make it"
-          FAIL_BLOCKS_ABOVE: "&c There can be no blocks above the greenhouse! Red glass blocks should show the problem blocks."
+          already: "<red>There is already a greenhouse here!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Roof contains disallowed blocks!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Wall contains disallowed blocks!</red>"
+          FAIL_BELOW: "<red>You must be inside the greenhouse to try to make it</red>"
+          FAIL_BLOCKS_ABOVE: "<red>There can be no blocks above the greenhouse! Red glass blocks should show the problem blocks.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c There is a hole in the roof or it is not flat!
-            &c Red glass blocks should show the problem.
-            &c Make sure you are inside your greenhouse to make it.
-          FAIL_HOLE_IN_WALL: "&c There is a hole in the wall!"
-          FAIL_NO_ROOF: "&c There seems to be no roof! Make sure you are inside the greenhouse to make it."
-          FAIL_TOO_MANY_DOORS: "&c You cannot have more than 4 doors in the greenhouse!"
-          FAIL_TOO_MANY_HOPPERS: "&c Only one hopper is allowed in the walls or roof."
-          FAIL_UNEVEN_WALLS: "&c The walls are uneven. Red glass blocks should show the problem blocks."
-          FAIL_INSUFFICIENT_ICE: "&c Insufficient ice to make this recipe"
-          FAIL_INSUFFICIENT_LAVA: "&c Insufficient lava to make this recipe"
-          FAIL_INSUFFICIENT_WATER: "&c Insufficient water to make this recipe"
-          FAIL_NO_ICE: "&c Ice is required to make this recipe"
-          FAIL_NO_LAVA: "&c Lava is required to make this recipe"
-          FAIL_NO_WATER: "&c Water is required to make this recipe"
-          FAIL_NO_RECIPE_FOUND: "&c No recipe could be found that matches this greenhouse"
-          FAIL_INSUFFICIENT_BLOCKS: "&c More blocks are required to make this recipe!"
-          FAIL_OVERLAPPING: "&c Greenhouses cannot share walls, sorry."
-        success: "&2 You successfully made a [biome]&2  biome greenhouse! Biome will sync at next teleport or login."
-        missing-blocks: "&c Missing [material] x [number]"
-        unknown-recipe: "&c Unknown recipe"
-        try-these: "&c Try one of these:"
-        recipe-format: "&3[name]"
+            <red>There is a hole in the roof or it is not flat!</red>
+            <red>Red glass blocks should show the problem.</red>
+            <red>Make sure you are inside your greenhouse to make it.</red>
+          FAIL_HOLE_IN_WALL: "<red>There is a hole in the wall!</red>"
+          FAIL_NO_ROOF: "<red>There seems to be no roof! Make sure you are inside the greenhouse to make it.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>You cannot have more than 4 doors in the greenhouse!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Only one hopper is allowed in the walls or roof.</red>"
+          FAIL_UNEVEN_WALLS: "<red>The walls are uneven. Red glass blocks should show the problem blocks.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Insufficient ice to make this recipe</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Insufficient lava to make this recipe</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Insufficient water to make this recipe</red>"
+          FAIL_NO_ICE: "<red>Ice is required to make this recipe</red>"
+          FAIL_NO_LAVA: "<red>Lava is required to make this recipe</red>"
+          FAIL_NO_WATER: "<red>Water is required to make this recipe</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>No recipe could be found that matches this greenhouse</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>More blocks are required to make this recipe!</red>"
+          FAIL_OVERLAPPING: "<red>Greenhouses cannot share walls, sorry.</red>"
+        success: "<dark_green>You successfully made a [biome]</dark_green><dark_green>  biome greenhouse! Biome will sync at next teleport or login.</dark_green>"
+        missing-blocks: "<red>Missing [material] x [number]</red>"
+        unknown-recipe: "<red>Unknown recipe</red>"
+        try-these: "<red>Try one of these:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [How To Build A Greenhouse]"
+        title: "<green>[How To Build A Greenhouse]</green>"
         instructions: |
-          &e Make a box out of out of glass with 4 walls and a flat glass
-          &e roof and add up to &f 4 doors &Ein the walls.
-          &e Place &f 1 hopper &e in a wall or roof and add water buckets.
-          &e to make snow and/or bonemeal to grow plants automatically.
-          &e Check the biome recipes for what blocks must be inside a
-          &e greenhouse to make one successfully. 
+          <yellow>Make a box out of out of glass with 4 walls and a flat glass</yellow>
+          <yellow>roof and add up to </yellow><white>4 doors </white><yellow>in the walls.</yellow>
+          <yellow>Place </yellow><white>1 hopper </white><yellow>in a wall or roof and add water buckets.</yellow>
+          <yellow>to make snow and/or bonemeal to grow plants automatically.</yellow>
+          <yellow>Check the biome recipes for what blocks must be inside a</yellow>
+          <yellow>greenhouse to make one successfully. </yellow>
     admin:
       description: "Greenhouses admin commands"
       errors:
-        unknown-id: "&c No greenhouse found with ID [id]. Use the list command to see IDs. A partial ID works if it only matches one greenhouse."
-        id-required: "&c Run this from in-game inside a greenhouse, or give a greenhouse ID."
-        no-location: "&c Greenhouse [id] has no valid location or its world is not loaded."
+        unknown-id: "<red>No greenhouse found with ID [id]. Use the list command to see IDs. A partial ID works if it only matches one greenhouse.</red>"
+        id-required: "<red>Run this from in-game inside a greenhouse, or give a greenhouse ID.</red>"
+        no-location: "<red>Greenhouse [id] has no valid location or its world is not loaded.</red>"
       list:
         description: "Lists greenhouses, optionally for one player"
         parameters: "[player] [page]"
-        title: "&a [Greenhouses] &7([number] total, page [page] of [pages])"
-        entry: "&7 [id] &f[recipe] &7at &f[xyz] &7in &f[world] &7- &f[owner][broken]"
-        broken: " &c(broken)"
-        more: "&7 Use &f/[label] greenhouses list [page] &7for more"
-        none: "&c No greenhouses found."
-        unloaded-title: "&c [Not loaded: [number]] &7These records are in the database but are not active:"
-        unloaded-entry: "&c [id] &7[reason] &7at &f[xyz] &7in &f[world]"
+        title: "<green>[Greenhouses] </green><gray>([number] total, page [page] of [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>at </gray><white>[xyz] </white><gray>in </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(broken)</red>"
+        more: "<gray>Use </gray><white>/[label] greenhouses list [page] </white><gray>for more</gray>"
+        none: "<red>No greenhouses found.</red>"
+        unloaded-title: "<red>[Not loaded: [number]] </red><gray>These records are in the database but are not active:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>at </gray><white>[xyz] </white><gray>in </gray><white>[world]</white>"
       info:
         description: "Shows full detail of a greenhouse"
         parameters: "[id]"
-        title: "&a [Greenhouse Info]"
-        id: "&7 ID: &f[id]"
-        recipe: "&7 Recipe: &f[recipe]"
-        owner: "&7 Owner: &f[owner]"
-        world: "&7 World: &f[world]"
-        location: "&7 Location: &f[xyz]"
-        bounding-box: "&7 Bounding box: &f[min] &7to &f[max]"
-        area: "&7 Internal area: &f[area] blocks"
-        original-biome: "&7 Original biome: &f[biome]"
-        hopper: "&7 Hopper: &f[hopper]"
-        broken: "&7 Broken: &f[broken]"
-        not-loaded: "&c Not loaded: [reason]"
+        title: "<green>[Greenhouse Info]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Recipe: </gray><white>[recipe]</white>"
+        owner: "<gray>Owner: </gray><white>[owner]</white>"
+        world: "<gray>World: </gray><white>[world]</white>"
+        location: "<gray>Location: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Bounding box: </gray><white>[min] </white><gray>to </gray><white>[max]</white>"
+        area: "<gray>Internal area: </gray><white>[area] blocks</white>"
+        original-biome: "<gray>Original biome: </gray><white>[biome]</white>"
+        hopper: "<gray>Hopper: </gray><white>[hopper]</white>"
+        broken: "<gray>Broken: </gray><white>[broken]</white>"
+        not-loaded: "<red>Not loaded: [reason]</red>"
       delete:
         description: "Deletes a greenhouse record by ID, loaded or not"
         parameters: "<id>"
-        confirm: "&c Delete greenhouse [id] belonging to [owner] at [xyz]? This cannot be undone."
-        success: "&a Greenhouse [id] deleted."
+        confirm: "<red>Delete greenhouse [id] belonging to [owner] at [xyz]? This cannot be undone.</red>"
+        success: "<green>Greenhouse [id] deleted.</green>"
       tp:
         description: "Teleports you to a greenhouse"
         parameters: "<id>"
-        success: "&a Teleported to greenhouse [id]"
+        success: "<green>Teleported to greenhouse [id]</green>"
       verify:
         description: "Re-checks greenhouses against their recipe"
         parameters: "[id]"
-        checking: "&7 Checking [number] greenhouse(s)..."
-        ok: "&a [id] at [xyz] meets its recipe"
-        broken: "&c [id] at [xyz] fails: [reasons]"
+        checking: "<gray>Checking [number] greenhouse(s)...</gray>"
+        ok: "<green>[id] at [xyz] meets its recipe</green>"
+        broken: "<red>[id] at [xyz] fails: [reasons]</red>"
       reload:
         description: "Reloads biomes.yml and re-reads greenhouses from the database"
-        success: "&a Reloaded. [number] greenhouses active."
-        unloaded: "&c [number] record(s) could not be loaded - use the list command to see them."
+        success: "<green>Reloaded. [number] greenhouses active.</green>"
+        unloaded: "<red>[number] record(s) could not be loaded - use the list command to see them.</red>"
 
 
 ######### Old locale for reference
@@ -167,32 +170,32 @@ error:
    norecipe: "Cannot make a greenhouse!"
    
 messages:
-   enter: "Entering [owner]'s [biome]&r  greenhouse!"
+   enter: "Entering [owner]'s [biome]  greenhouse!"
    leave: "Now leaving [owner]'s greenhouse."
-   youarein: "You are now in [owner]'s [biome]&r  greenhouse!"
+   youarein: "You are now in [owner]'s [biome]  greenhouse!"
    removed: "This greenhouse is no more..."
-   removedmessage: "A [biome]&r  greenhouse of yours is no more!"
+   removedmessage: "A [biome]  greenhouse of yours is no more!"
    ecolost: "Your greenhouse at [location] lost its eco system and was removed."
 
 info:
-   title: "&A[How To Build A Greenhouse]"
+   title: "<green>[How To Build A Greenhouse]</green>"
    instructions: |
-     &E Make a box out of out of glass with 4 walls and a flat glass
-     &E roof and add up to &F 4 doors &Ein the walls.
-     &E Place &F 1 hopper &E in a wall or roof and add water buckets.
-     &E to make snow and/or bonemeal to grow plants automatically.
-     &E Check the biome recipes for what blocks must be inside a
-     &E greenhouse to make one successfully. 
+     <yellow>Make a box out of out of glass with 4 walls and a flat glass</yellow>
+     <yellow>roof and add up to </yellow><white>4 doors </white><yellow>in the walls.</yellow>
+     <yellow>Place </yellow><white>1 hopper </white><yellow>in a wall or roof and add water buckets.</yellow>
+     <yellow>to make snow and/or bonemeal to grow plants automatically.</yellow>
+     <yellow>Check the biome recipes for what blocks must be inside a</yellow>
+     <yellow>greenhouse to make one successfully. </yellow>
    info: "[Greenhouse Info]"
    none: "None"
-   nomore: "&4 You cannot build any more greenhouses!"
-   onemore: "&6 You can build one more greenhouse."
-   youcanbuild: "&A You can build up to [number] more greenhouses!"
-   unlimited: "&A You can build an unlimited number of greenhouses!"
-   welcome: "&B Welcome! Click here for instructions"
+   nomore: "<dark_red>You cannot build any more greenhouses!</dark_red>"
+   onemore: "<gold>You can build one more greenhouse.</gold>"
+   youcanbuild: "<green>You can build up to [number] more greenhouses!</green>"
+   unlimited: "<green>You can build an unlimited number of greenhouses!</green>"
+   welcome: "<aqua>Welcome! Click here for instructions</aqua>"
 
 recipe:
-   blockscolor: "&f"
+   blockscolor: "<white></white>"
    hint: "Use /greenhouse list to see a list of recipe numbers!"
    wrongnumber: "Recipe number must be between 1 and [size]"
    title: "[[biome] recipe]"
@@ -207,7 +210,7 @@ recipe:
    missing: "Greenhouse is missing"
 
 event:
-   broke: "You broke this greenhouse! Reverting biome to [biome]&r!"
+   broke: "You broke this greenhouse! Reverting biome to [biome]!"
    fix: "Fix the greenhouse and then make it again."
    cannotplace: "Blocks cannot be placed above a greenhouse!"
    pistonerror: "Pistons cannot push blocks over a greenhouse!"
@@ -240,5 +243,5 @@ news:
    headline: "[Greenhouse News]"
 
 controlpanel:
-   title: "&AGreenhouses"
+   title: "<green>Greenhouses</green>"
 

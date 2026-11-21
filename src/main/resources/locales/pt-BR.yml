@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Estufas
       description: |
-        &b Alternar quem pode
-        &b controlar as estufas   
+        <aqua>Alternar quem pode</aqua>
+        <aqua>controlar as estufas   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Mova-se primeiro para uma estufa que você possua."
-    no-rank: "&c Você não tem o cargo necessário para fazer isso."
+    no-rank: "<red>Você não tem o cargo necessário para fazer isso.</red>"
     notyours: "Esta estufa não é sua!"
-    not-inside: "&c Você não está dentro de uma estufa!"
+    not-inside: "<red>Você não está dentro de uma estufa!</red>"
     tooexpensive: "Você não tem dinheiro suficiente para [price]" 
     alreadyexists: "A estufa já existe!"
     norecipe: "Não foi possível criar a estufa!"
     
   event:
    broke: "Você quebrou esta estufa! Revertendo o bioma para [biome]!"
-   entering: "Entrando na estufa [biome]&f"
-   leaving: "Saindo da estufa [biome]&f"
+   entering: "Entrando na estufa [biome]<white></white>"
+   leaving: "Saindo da estufa [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receita de [biome]]"
    watermustbe: "Água > [coverage]% da área do chão."
    icemustbe: "Blocos de gelo > [coverage]% da área do chão."
    lavamustbe: "Lava > [coverage]% da área do chão."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Tenta criar uma estufa"
         parameters: "<receita>"
         error:
-          already: "&cJá existe uma estufa aqui!"
-          FAIL_BAD_ROOF_BLOCKS: "&c O teto contém blocos não permitidos!"
-          FAIL_BAD_WALL_BLOCKS: "&c As paredes contêm blocos não permitidos!"
-          FAIL_BELOW: "&c Você deve estar dentro da estufa para tentar criá-la"
-          FAIL_BLOCKS_ABOVE: "&c Não pode haver blocos acima da estufa! Blocos de vidro vermelho mostrarão os blocos problemáticos."
+          already: "<red>Já existe uma estufa aqui!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>O teto contém blocos não permitidos!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>As paredes contêm blocos não permitidos!</red>"
+          FAIL_BELOW: "<red>Você deve estar dentro da estufa para tentar criá-la</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Não pode haver blocos acima da estufa! Blocos de vidro vermelho mostrarão os blocos problemáticos.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Há um buraco no teto ou ele não é plano!
-            &c Blocos de vidro vermelho mostrarão o problema.
-            &c Certifique-se de estar dentro da sua estufa para criá-la.
-          FAIL_HOLE_IN_WALL: "&c Há um buraco na parede!"
-          FAIL_NO_ROOF: "&c Parece não haver teto! Certifique-se de estar dentro da estufa para criá-la."
-          FAIL_TOO_MANY_DOORS: "&c Você não pode ter mais de 4 portas na estufa!"
-          FAIL_TOO_MANY_HOPPERS: "&c Apenas um funil é permitido nas paredes ou no teto."
-          FAIL_UNEVEN_WALLS: "&c As paredes estão desiguais. Blocos de vidro vermelho mostrarão os blocos problemáticos."
-          FAIL_INSUFFICIENT_ICE: "&c Gelo insuficiente para criar esta receita"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para criar esta receita"
-          FAIL_INSUFFICIENT_WATER: "&c Água insuficiente para criar esta receita"
-          FAIL_NO_ICE: "&c É necessário gelo para criar esta receita"
-          FAIL_NO_LAVA: "&c É necessária lava para criar esta receita"
-          FAIL_NO_WATER: "&c É necessária água para criar esta receita"
-          FAIL_NO_RECIPE_FOUND: "&c Nenhuma receita correspondente encontrada para esta estufa"
-          FAIL_INSUFFICIENT_BLOCKS: "&c São necessários mais blocos para criar esta receita!"
-          FAIL_OVERLAPPING: "&c Desculpe, as estufas não podem compartilhar paredes."
-        success: "&2 Você criou com sucesso uma estufa de bioma [biome]! O bioma será sincronizado no próximo teletransporte ou login."
-        missing-blocks: "&c Faltando [material] x [number]"
-        unknown-recipe: "&c Receita desconhecida"
-        try-these: "&c Tente uma destas:"
-        recipe-format: "&3[name]"
+            <red>Há um buraco no teto ou ele não é plano!</red>
+            <red>Blocos de vidro vermelho mostrarão o problema.</red>
+            <red>Certifique-se de estar dentro da sua estufa para criá-la.</red>
+          FAIL_HOLE_IN_WALL: "<red>Há um buraco na parede!</red>"
+          FAIL_NO_ROOF: "<red>Parece não haver teto! Certifique-se de estar dentro da estufa para criá-la.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Você não pode ter mais de 4 portas na estufa!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Apenas um funil é permitido nas paredes ou no teto.</red>"
+          FAIL_UNEVEN_WALLS: "<red>As paredes estão desiguais. Blocos de vidro vermelho mostrarão os blocos problemáticos.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Gelo insuficiente para criar esta receita</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava insuficiente para criar esta receita</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Água insuficiente para criar esta receita</red>"
+          FAIL_NO_ICE: "<red>É necessário gelo para criar esta receita</red>"
+          FAIL_NO_LAVA: "<red>É necessária lava para criar esta receita</red>"
+          FAIL_NO_WATER: "<red>É necessária água para criar esta receita</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nenhuma receita correspondente encontrada para esta estufa</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>São necessários mais blocos para criar esta receita!</red>"
+          FAIL_OVERLAPPING: "<red>Desculpe, as estufas não podem compartilhar paredes.</red>"
+        success: "<dark_green>Você criou com sucesso uma estufa de bioma [biome]! O bioma será sincronizado no próximo teletransporte ou login.</dark_green>"
+        missing-blocks: "<red>Faltando [material] x [number]</red>"
+        unknown-recipe: "<red>Receita desconhecida</red>"
+        try-these: "<red>Tente uma destas:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Como construir uma estufa]"
+        title: "<green>[Como construir uma estufa]</green>"
         instructions: |
-          &e Crie uma caixa de vidro com 4 paredes e um teto
-          &e de vidro plano, e adicione até &f 4 portas &e nas paredes.
-          &e Coloque &f 1 funil &e em uma parede ou teto e adicione baldes
-          &e de água para criar neve e/ou farinha de osso para cultivar
-          &e plantas automaticamente. Verifique as receitas de biomas
-          &e para ver quais blocos devem estar no interior para ter sucesso.
+          <yellow>Crie uma caixa de vidro com 4 paredes e um teto</yellow>
+          <yellow>de vidro plano, e adicione até </yellow><white>4 portas </white><yellow>nas paredes.</yellow>
+          <yellow>Coloque </yellow><white>1 funil </white><yellow>em uma parede ou teto e adicione baldes</yellow>
+          <yellow>de água para criar neve e/ou farinha de osso para cultivar</yellow>
+          <yellow>plantas automaticamente. Verifique as receitas de biomas</yellow>
+          <yellow>para ver quais blocos devem estar no interior para ter sucesso.</yellow>
 
 help:
    help: "ajuda"
@@ -111,35 +109,33 @@ error:
    norecipe: "Não foi possível criar a estufa!"
    
 messages:
-   enter: "Entrando na estufa de [owner] ([biome]&f)!"
+   enter: "Entrando na estufa de [owner] ([biome]<white>)!</white>"
    leave: "Saindo da estufa de [owner]."
-   youarein: "Você agora está na estufa de [owner] ([biome]&f)!"
+   youarein: "Você agora está na estufa de [owner] ([biome]<white>)!</white>"
    removed: "Esta estufa não existe mais..."
-   removedmessage: "Sua estufa ([biome]&f) foi removida!"
+   removedmessage: "Sua estufa ([biome]<white>) foi removida!</white>"
    ecolost: "Sua estufa em [location] perdeu o ecossistema e foi removida."
 
 info:
-   title: "&A[Como construir uma estufa]"
+   title: "<green>[Como construir uma estufa]</green>"
    instructions: |
-     &E Crie uma caixa de vidro com 4 paredes e um teto
-     &E de vidro plano, e adicione até &F 4 portas &E nas paredes.
-     &E Coloque &F 1 funil &E em uma parede ou teto e adicione baldes
-     &E de água para criar neve e/ou farinha de osso para cultivar
-     &E plantas automaticamente. Verifique as receitas de biomas
-     &E para ver quais blocos devem estar no interior para ter sucesso. 
+     <yellow>Crie uma caixa de vidro com 4 paredes e um teto</yellow>
+     <yellow>de vidro plano, e adicione até </yellow><white>4 portas </white><yellow>nas paredes.</yellow>
+     <yellow>Coloque </yellow><white>1 funil </white><yellow>em uma parede ou teto e adicione baldes</yellow>
+     <yellow>de água para criar neve e/ou farinha de osso para cultivar</yellow>
+     <yellow>plantas automaticamente. Verifique as receitas de biomas</yellow>
+     <yellow>para ver quais blocos devem estar no interior para ter sucesso. </yellow>
    info: "[Informação da Estufa]"
    none: "Nenhum"
-   nomore: "&4 Você não pode construir mais estufas!"
-   onemore: "&6 Você pode construir mais uma estufa."
-   youcanbuild: "&A Você pode construir até mais [number] estufas!"
-   unlimited: "&A Você pode construir estufas ilimitadas!"
-   welcome: "&B Bem-vindo! Clique aqui para instruções"
+   nomore: "<dark_red>Você não pode construir mais estufas!</dark_red>"
+   onemore: "<gold>Você pode construir mais uma estufa.</gold>"
+   youcanbuild: "<green>Você pode construir até mais [number] estufas!</green>"
+   unlimited: "<green>Você pode construir estufas ilimitadas!</green>"
+   welcome: "<aqua>Bem-vindo! Clique aqui para instruções</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Use /greenhouse list para ver uma lista de números de receitas!"
    wrongnumber: "O número da receita deve estar entre 1 e [size]"
-   title: "[Receita de [biome]]"
    nowater: "Água não permitida."
    noice: "Gelo não permitido."
    nolava: "Lava não permitida."
@@ -176,4 +172,4 @@ news:
    headline: "[Notícias da Estufa]"
 
 controlpanel:
-   title: "&AEstufas"
+   title: "<green>Estufas</green>"

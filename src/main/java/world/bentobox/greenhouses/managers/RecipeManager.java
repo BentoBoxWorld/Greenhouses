@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.block.Biome;
@@ -163,7 +162,8 @@ public class RecipeManager {
         b.setPermission(biomeRecipeConfig.getString("permission",""));
         // Set the icon
         b.setIcon(Material.valueOf(biomeRecipeConfig.getString("icon", "SAPLING")));
-        b.setFriendlyName(ChatColor.translateAlternateColorCodes('&', biomeRecipeConfig.getString("friendlyname", Util.prettifyText(biomeType))) + ChatColor.RESET);
+        b.setFriendlyName(toMiniMessage(biomeRecipeConfig.getString("friendlyname", Util.prettifyText(biomeType))));
+        b.setDescription(toMiniMessage(biomeRecipeConfig.getString("description", "")));
         // A value of zero on these means that there must be NO coverage, e.g., desert. If the value is not present, then the default is -1
         b.setWatercoverage(biomeRecipeConfig.getInt("watercoverage",-1));
         b.setLavacoverage(biomeRecipeConfig.getInt("lavacoverage",-1));
@@ -176,6 +176,16 @@ public class RecipeManager {
         }
         b.setMaxMob(biomeRecipeConfig.getInt("maxmobs", -1));
         return b;
+    }
+
+    /**
+     * Text in biomes.yml may use MiniMessage tags or old {@code &} color codes; old codes are
+     * converted so everything downstream deals with MiniMessage only.
+     * @param text text from biomes.yml
+     * @return MiniMessage text
+     */
+    static String toMiniMessage(String text) {
+        return Util.isLegacyFormat(text) ? Util.legacyToMiniMessage(text) : text;
     }
 
     private void loadPlants(ConfigurationSection biomeRecipeConfig, BiomeRecipe b) {

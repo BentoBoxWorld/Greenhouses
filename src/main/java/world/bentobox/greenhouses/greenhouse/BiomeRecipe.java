@@ -56,6 +56,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private int priority;
     private String name;
     private String friendlyName;
+    private String description = "";
 
     private static final List<Material> CEILING_PLANTS = new ArrayList<>();
     static {
@@ -701,6 +702,20 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * @param friendlyName - set the friendly name
      */
+    /**
+     * @return the description shown in the recipe panel: plain text or MiniMessage, empty for none
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description shown in the recipe panel, or null for none
+     */
+    public void setDescription(String description) {
+        this.description = description == null ? "" : description;
+    }
+
     public void setFriendlyName(String friendlyName) {
         this.friendlyName = friendlyName;
     }

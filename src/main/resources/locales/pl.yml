@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Szklarnie
       description: |
-        &b Przełącz, kto może
-        &b zarządzać szklarniami   
+        <aqua>Przełącz, kto może</aqua>
+        <aqua>zarządzać szklarniami   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Najpierw udaj się do szklarni, której jesteś właścicielem."
-    no-rank: "&c Nie masz uprawnień, aby to zrobić."
+    no-rank: "<red>Nie masz uprawnień, aby to zrobić.</red>"
     notyours: "To nie jest Twoja szklarnia!"
-    not-inside: "&c Nie jesteś wewnątrz szklarni!"
+    not-inside: "<red>Nie jesteś wewnątrz szklarni!</red>"
     tooexpensive: "Nie stać Cię na to [price]" 
     alreadyexists: "Szklarnia już istnieje!"
     norecipe: "Nie można utworzyć szklarni!"
     
   event:
    broke: "Zniszczyłeś tę szklarnię! Przywracanie biomu do [biome]!"
-   entering: "Wejście do szklarni [biome]&f"
-   leaving: "Opuszczenie szklarni [biome]&f"
+   entering: "Wejście do szklarni [biome]<white></white>"
+   leaving: "Opuszczenie szklarni [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receptura [biome]]"
    watermustbe: "Woda > [coverage]% powierzchni podłogi."
    icemustbe: "Bloki lodu > [coverage]% powierzchni podłogi."
    lavamustbe: "Lawa > [coverage]% powierzchni podłogi."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Spróbuj utworzyć szklarnię"
         parameters: "<receptura>"
         error:
-          already: "&cTu już jest szklarnia!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Dach zawiera niedozwolone bloki!"
-          FAIL_BAD_WALL_BLOCKS: "&c Ściany zawierają niedozwolone bloki!"
-          FAIL_BELOW: "&c Musisz być wewnątrz szklarni, aby spróbować ją utworzyć"
-          FAIL_BLOCKS_ABOVE: "&c Nad szklarnią nie może być żadnych bloków! Czerwone szkło wskaże problematyczne bloki."
+          already: "<red>Tu już jest szklarnia!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Dach zawiera niedozwolone bloki!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Ściany zawierają niedozwolone bloki!</red>"
+          FAIL_BELOW: "<red>Musisz być wewnątrz szklarni, aby spróbować ją utworzyć</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Nad szklarnią nie może być żadnych bloków! Czerwone szkło wskaże problematyczne bloki.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c W dachu jest dziura lub nie jest on płaski!
-            &c Czerwone szkło wskaże problem.
-            &c Upewnij się, że jesteś wewnątrz swojej szklarni, aby ją utworzyć.
-          FAIL_HOLE_IN_WALL: "&c W ścianie jest dziura!"
-          FAIL_NO_ROOF: "&c Wygląda na to, że brakuje dachu! Upewnij się, że jesteś wewnątrz szklarni, aby ją utworzyć."
-          FAIL_TOO_MANY_DOORS: "&c Nie możesz mieć więcej niż 4 drzwi w szklarni!"
-          FAIL_TOO_MANY_HOPPERS: "&c Dozwolony jest tylko jeden lej w ścianach lub dachu."
-          FAIL_UNEVEN_WALLS: "&c Ściany są nierówne. Czerwone szkło wskaże problematyczne bloki."
-          FAIL_INSUFFICIENT_ICE: "&c Niewystarczająca ilość lodu dla tej receptury"
-          FAIL_INSUFFICIENT_LAVA: "&c Niewystarczająca ilość lawy dla tej receptury"
-          FAIL_INSUFFICIENT_WATER: "&c Niewystarczająca ilość wody dla tej receptury"
-          FAIL_NO_ICE: "&c Lód jest wymagany dla tej receptury"
-          FAIL_NO_LAVA: "&c Lawa jest wymagana dla tej receptury"
-          FAIL_NO_WATER: "&c Woda jest wymagana dla tej receptury"
-          FAIL_NO_RECIPE_FOUND: "&c Nie znaleziono receptury pasującej do tej szklarni"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Wymagane jest więcej bloków dla tej receptury!"
-          FAIL_OVERLAPPING: "&c Niestety szklarnie nie mogą dzielić wspólnych ścian."
-        success: "&2 Pomyślnie utworzono szklarnię biomu [biome]! Biom zsynchronizuje się przy następnej teleportacji lub logowaniu."
-        missing-blocks: "&c Brakuje [material] x [number]"
-        unknown-recipe: "&c Nieznana receptura"
-        try-these: "&c Spróbuj jednej z tych:"
-        recipe-format: "&3[name]"
+            <red>W dachu jest dziura lub nie jest on płaski!</red>
+            <red>Czerwone szkło wskaże problem.</red>
+            <red>Upewnij się, że jesteś wewnątrz swojej szklarni, aby ją utworzyć.</red>
+          FAIL_HOLE_IN_WALL: "<red>W ścianie jest dziura!</red>"
+          FAIL_NO_ROOF: "<red>Wygląda na to, że brakuje dachu! Upewnij się, że jesteś wewnątrz szklarni, aby ją utworzyć.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Nie możesz mieć więcej niż 4 drzwi w szklarni!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Dozwolony jest tylko jeden lej w ścianach lub dachu.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Ściany są nierówne. Czerwone szkło wskaże problematyczne bloki.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Niewystarczająca ilość lodu dla tej receptury</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Niewystarczająca ilość lawy dla tej receptury</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Niewystarczająca ilość wody dla tej receptury</red>"
+          FAIL_NO_ICE: "<red>Lód jest wymagany dla tej receptury</red>"
+          FAIL_NO_LAVA: "<red>Lawa jest wymagana dla tej receptury</red>"
+          FAIL_NO_WATER: "<red>Woda jest wymagana dla tej receptury</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nie znaleziono receptury pasującej do tej szklarni</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Wymagane jest więcej bloków dla tej receptury!</red>"
+          FAIL_OVERLAPPING: "<red>Niestety szklarnie nie mogą dzielić wspólnych ścian.</red>"
+        success: "<dark_green>Pomyślnie utworzono szklarnię biomu [biome]! Biom zsynchronizuje się przy następnej teleportacji lub logowaniu.</dark_green>"
+        missing-blocks: "<red>Brakuje [material] x [number]</red>"
+        unknown-recipe: "<red>Nieznana receptura</red>"
+        try-these: "<red>Spróbuj jednej z tych:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Jak zbudować szklarnię]"
+        title: "<green>[Jak zbudować szklarnię]</green>"
         instructions: |
-          &e Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
-          &e dachem oraz dodaj do &f 4 drzwi &e w ścianach.
-          &e Umieść &f 1 lej &e w ścianie lub dachu i dodaj wiadra z wodą,
-          &e aby automatycznie generować śnieg i/lub mączkę kostną
-          &e do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
-          &e jakie bloki muszą być wewnątrz dla sukcesu.
+          <yellow>Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym</yellow>
+          <yellow>dachem oraz dodaj do </yellow><white>4 drzwi </white><yellow>w ścianach.</yellow>
+          <yellow>Umieść </yellow><white>1 lej </white><yellow>w ścianie lub dachu i dodaj wiadra z wodą,</yellow>
+          <yellow>aby automatycznie generować śnieg i/lub mączkę kostną</yellow>
+          <yellow>do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,</yellow>
+          <yellow>jakie bloki muszą być wewnątrz dla sukcesu.</yellow>
 
 help:
    help: "pomoc"
@@ -111,35 +109,33 @@ error:
    norecipe: "Nie można utworzyć szklarni!"
    
 messages:
-   enter: "Wchodzisz do szklarni gracza [owner] ([biome]&f)!"
+   enter: "Wchodzisz do szklarni gracza [owner] ([biome]<white>)!</white>"
    leave: "Opuszczasz szklarnię gracza [owner]."
-   youarein: "Jesteś teraz w szklarni gracza [owner] ([biome]&f)!"
+   youarein: "Jesteś teraz w szklarni gracza [owner] ([biome]<white>)!</white>"
    removed: "Tej szklarni już nie ma..."
-   removedmessage: "Twoja szklarnia ([biome]&f) przestała istnieć!"
+   removedmessage: "Twoja szklarnia ([biome]<white>) przestała istnieć!</white>"
    ecolost: "Twoja szklarnia w lokalizacji [location] utraciła ekosystem i została usunięta."
 
 info:
-   title: "&A[Jak zbudować szklarnię]"
+   title: "<green>[Jak zbudować szklarnię]</green>"
    instructions: |
-     &E Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
-     &E dachem oraz dodaj do &F 4 drzwi &E w ścianach.
-     &E Umieść &F 1 lej &E w ścianie lub dachu i dodaj wiadra z wodą,
-     &E aby automatycznie generować śnieg i/lub mączkę kostną
-     &E do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
-     &E jakie bloki muszą być wewnątrz dla sukcesu. 
+     <yellow>Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym</yellow>
+     <yellow>dachem oraz dodaj do </yellow><white>4 drzwi </white><yellow>w ścianach.</yellow>
+     <yellow>Umieść </yellow><white>1 lej </white><yellow>w ścianie lub dachu i dodaj wiadra z wodą,</yellow>
+     <yellow>aby automatycznie generować śnieg i/lub mączkę kostną</yellow>
+     <yellow>do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,</yellow>
+     <yellow>jakie bloki muszą być wewnątrz dla sukcesu. </yellow>
    info: "[Informacje o szklarni]"
    none: "Brak"
-   nomore: "&4 Nie możesz już budować więcej szklarni!"
-   onemore: "&6 Możesz zbudować jeszcze jedną szklarnię."
-   youcanbuild: "&A Możesz zbudować jeszcze do [number] szklarni!"
-   unlimited: "&A Możesz budować nieograniczoną liczbę szklarni!"
-   welcome: "&B Witaj! Kliknij tutaj po instrukcje"
+   nomore: "<dark_red>Nie możesz już budować więcej szklarni!</dark_red>"
+   onemore: "<gold>Możesz zbudować jeszcze jedną szklarnię.</gold>"
+   youcanbuild: "<green>Możesz zbudować jeszcze do [number] szklarni!</green>"
+   unlimited: "<green>Możesz budować nieograniczoną liczbę szklarni!</green>"
+   welcome: "<aqua>Witaj! Kliknij tutaj po instrukcje</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Użyj /greenhouse list, aby zobaczyć listę numerów receptur!"
    wrongnumber: "Numer receptury musi mieścić się w przedziale od 1 do [size]"
-   title: "[Receptura [biome]]"
    nowater: "Woda niedozwolona."
    noice: "Lód niedozwolony."
    nolava: "Lawa niedozwolona."
@@ -176,4 +172,4 @@ news:
    headline: "[Wiadomości ze szklarni]"
 
 controlpanel:
-   title: "&ASzklarnie"
+   title: "<green>Szklarnie</green>"

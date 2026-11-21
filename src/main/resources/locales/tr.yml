@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Seralar
       description: |
-        &b Seraları kimlerin kontrol
-        &b edebileceğini belirle   
+        <aqua>Seraları kimlerin kontrol</aqua>
+        <aqua>edebileceğini belirle   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Önce sahibi olduğunuz bir seraya gidin."
-    no-rank: "&c Bunu yapmak için gerekli rütbeniz yok."
+    no-rank: "<red>Bunu yapmak için gerekli rütbeniz yok.</red>"
     notyours: "Bu sera size ait değil!"
-    not-inside: "&c Bir seranın içinde değilsiniz!"
+    not-inside: "<red>Bir seranın içinde değilsiniz!</red>"
     tooexpensive: "Bunu karşılayacak paranız yok: [price]" 
     alreadyexists: "Sera zaten mevcut!"
     norecipe: "Sera oluşturulamadı!"
     
   event:
    broke: "Bu serayı bozdunuz! Biyom [biome] olarak geri döndürülüyor!"
-   entering: "[biome]&f serasına giriliyor"
-   leaving: "[biome]&f serasından çıkılıyor"
+   entering: "[biome]<white> serasına giriliyor</white>"
+   leaving: "[biome]<white> serasından çıkılıyor</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] Tarifi]"
    watermustbe: "Su > Zemin alanının %[coverage] kadarı olmalı."
    icemustbe: "Buz blokları > Zemin alanının %[coverage] kadarı olmalı."
    lavamustbe: "Lav > Zemin alanının %[coverage] kadarı olmalı."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Bir sera oluşturmayı dener"
         parameters: "<tarif>"
         error:
-          already: "&cBurada zaten bir sera var!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Çatıda izin verilmeyen bloklar var!"
-          FAIL_BAD_WALL_BLOCKS: "&c Duvarlarda izin verilmeyen bloklar var!"
-          FAIL_BELOW: "&c Oluşturmayı denemek için seranın içinde olmalısınız"
-          FAIL_BLOCKS_ABOVE: "&c Seranın üzerinde hiçbir blok olmamalı! Kırmızı cam bloklar sorunlu yerleri gösterecektir."
+          already: "<red>Burada zaten bir sera var!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Çatıda izin verilmeyen bloklar var!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Duvarlarda izin verilmeyen bloklar var!</red>"
+          FAIL_BELOW: "<red>Oluşturmayı denemek için seranın içinde olmalısınız</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Seranın üzerinde hiçbir blok olmamalı! Kırmızı cam bloklar sorunlu yerleri gösterecektir.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Çatıda delik var veya çatı düz değil!
-            &c Kırmızı cam bloklar sorunu gösterecektir.
-            &c Oluştururken seranın içinde olduğunuzdan emin olun.
-          FAIL_HOLE_IN_WALL: "&c Duvarda delik var!"
-          FAIL_NO_ROOF: "&c Çatı bulunamadı! Seranın içinde olduğunuzdan emin olun."
-          FAIL_TOO_MANY_DOORS: "&c Bir serada 4'ten fazla kapı olamaz!"
-          FAIL_TOO_MANY_HOPPERS: "&c Duvarlarda veya çatıda sadece bir huniye izin verilir."
-          FAIL_UNEVEN_WALLS: "&c Duvarlar düzgün değil. Kırmızı cam bloklar sorunlu yerleri gösterecektir."
-          FAIL_INSUFFICIENT_ICE: "&c Bu tarif için yeterli buz yok"
-          FAIL_INSUFFICIENT_LAVA: "&c Bu tarif için yeterli lav yok"
-          FAIL_INSUFFICIENT_WATER: "&c Bu tarif için yeterli su yok"
-          FAIL_NO_ICE: "&c Bu tarif için buz gereklidir"
-          FAIL_NO_LAVA: "&c Bu tarif için lav gereklidir"
-          FAIL_NO_WATER: "&c Bu tarif için su gereklidir"
-          FAIL_NO_RECIPE_FOUND: "&c Bu seraya uygun bir tarif bulunamadı"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Bu tarifi oluşturmak için daha fazla blok gerekiyor!"
-          FAIL_OVERLAPPING: "&c Üzgünüz, seralar ortak duvar kullanamaz."
-        success: "&2 Başarıyla bir [biome] biyomu serası oluşturdunuz! Biyom bir sonraki ışınlanmada veya girişte senkronize edilecektir."
-        missing-blocks: "&c Eksik: [material] x [number]"
-        unknown-recipe: "&c Bilinmeyen tarif"
-        try-these: "&c Bunlardan birini deneyin:"
-        recipe-format: "&3[name]"
+            <red>Çatıda delik var veya çatı düz değil!</red>
+            <red>Kırmızı cam bloklar sorunu gösterecektir.</red>
+            <red>Oluştururken seranın içinde olduğunuzdan emin olun.</red>
+          FAIL_HOLE_IN_WALL: "<red>Duvarda delik var!</red>"
+          FAIL_NO_ROOF: "<red>Çatı bulunamadı! Seranın içinde olduğunuzdan emin olun.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Bir serada 4'ten fazla kapı olamaz!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Duvarlarda veya çatıda sadece bir huniye izin verilir.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Duvarlar düzgün değil. Kırmızı cam bloklar sorunlu yerleri gösterecektir.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Bu tarif için yeterli buz yok</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Bu tarif için yeterli lav yok</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Bu tarif için yeterli su yok</red>"
+          FAIL_NO_ICE: "<red>Bu tarif için buz gereklidir</red>"
+          FAIL_NO_LAVA: "<red>Bu tarif için lav gereklidir</red>"
+          FAIL_NO_WATER: "<red>Bu tarif için su gereklidir</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Bu seraya uygun bir tarif bulunamadı</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Bu tarifi oluşturmak için daha fazla blok gerekiyor!</red>"
+          FAIL_OVERLAPPING: "<red>Üzgünüz, seralar ortak duvar kullanamaz.</red>"
+        success: "<dark_green>Başarıyla bir [biome] biyomu serası oluşturdunuz! Biyom bir sonraki ışınlanmada veya girişte senkronize edilecektir.</dark_green>"
+        missing-blocks: "<red>Eksik: [material] x [number]</red>"
+        unknown-recipe: "<red>Bilinmeyen tarif</red>"
+        try-these: "<red>Bunlardan birini deneyin:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Nasıl Sera İnşa Edilir]"
+        title: "<green>[Nasıl Sera İnşa Edilir]</green>"
         instructions: |
-          &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
-          &e duvarlara en fazla &f 4 kapı &e ekleyin.
-          &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
-          &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
-          &e Başarılı bir kurulum için hangi blokların içeride olması
-          &e gerektiğini biyom tariflerinden kontrol edin.
+          <yellow>4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,</yellow>
+          <yellow>duvarlara en fazla </yellow><white>4 kapı </white><yellow>ekleyin.</yellow>
+          <yellow>Duvara veya çatıya </yellow><white>1 huni </white><yellow>yerleştirin ve otomatik</yellow>
+          <yellow>kar ve/veya kemik tozu üretimi için su kovaları ekleyin.</yellow>
+          <yellow>Başarılı bir kurulum için hangi blokların içeride olması</yellow>
+          <yellow>gerektiğini biyom tariflerinden kontrol edin.</yellow>
 
 help:
    help: "yardım"
@@ -111,35 +109,33 @@ error:
    norecipe: "Sera oluşturulamadı!"
    
 messages:
-   enter: "[owner] adlı oyuncunun serasına giriyorsunuz, biyom: [biome]&f!"
+   enter: "[owner] adlı oyuncunun serasına giriyorsunuz, biyom: [biome]<white>!</white>"
    leave: "[owner] adlı oyuncunun serasından çıkıyorsunuz."
-   youarein: "Şu anda [owner] adlı oyuncunun serasındasınız, biyom: [biome]&f!"
+   youarein: "Şu anda [owner] adlı oyuncunun serasındasınız, biyom: [biome]<white>!</white>"
    removed: "Bu sera artık mevcut değil..."
-   removedmessage: "[biome]&f seranız kaldırıldı!"
+   removedmessage: "[biome]<white> seranız kaldırıldı!</white>"
    ecolost: "[location] konumundaki seranız ekosistemini kaybetti ve kaldırıldı."
 
 info:
-   title: "&a [Nasıl Sera İnşa Edilir]"
+   title: "<green>[Nasıl Sera İnşa Edilir]</green>"
    instructions: |
-     &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
-     &e duvarlara en fazla &f 4 kapı &e ekleyin.
-     &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
-     &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
-     &e Başarılı bir kurulum için hangi blokların içeride olması
-     &e gerektiğini biyom tariflerinden kontrol edin.
+     <yellow>4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,</yellow>
+     <yellow>duvarlara en fazla </yellow><white>4 kapı </white><yellow>ekleyin.</yellow>
+     <yellow>Duvara veya çatıya </yellow><white>1 huni </white><yellow>yerleştirin ve otomatik</yellow>
+     <yellow>kar ve/veya kemik tozu üretimi için su kovaları ekleyin.</yellow>
+     <yellow>Başarılı bir kurulum için hangi blokların içeride olması</yellow>
+     <yellow>gerektiğini biyom tariflerinden kontrol edin.</yellow>
    info: "[Sera Bilgisi]"
    none: "Yok"
-   nomore: "&4 Daha fazla sera inşa edemezsiniz!"
-   onemore: "&6 Bir tane daha sera inşa edebilirsiniz."
-   youcanbuild: "&a [number] adet daha sera inşa edebilirsiniz!"
-   unlimited: "&a Sınırsız sayıda sera inşa edebilirsiniz!"
-   welcome: "&b Hoş geldiniz! Talimatlar için buraya tıklayın"
+   nomore: "<dark_red>Daha fazla sera inşa edemezsiniz!</dark_red>"
+   onemore: "<gold>Bir tane daha sera inşa edebilirsiniz.</gold>"
+   youcanbuild: "<green>[number] adet daha sera inşa edebilirsiniz!</green>"
+   unlimited: "<green>Sınırsız sayıda sera inşa edebilirsiniz!</green>"
+   welcome: "<aqua>Hoş geldiniz! Talimatlar için buraya tıklayın</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Tarif numaralarının listesini görmek için /greenhouse list kullanın!"
    wrongnumber: "Tarif numarası 1 ile [size] arasında olmalıdır"
-   title: "[[biome] Tarifi]"
    nowater: "Suya izin verilmiyor."
    noice: "Buza izin verilmiyor."
    nolava: "Lava izin verilmiyor."
@@ -176,4 +172,4 @@ news:
    headline: "[Sera Haberleri]"
 
 controlpanel:
-   title: "&aSeralar"
+   title: "<green>Seralar</green>"

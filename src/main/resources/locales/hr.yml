@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Staklenici
       description: |
-        &b Prebaci tko može
-        &b upravljati staklenicima   
+        <aqua>Prebaci tko može</aqua>
+        <aqua>upravljati staklenicima   </aqua>
 
 greenhouses:
   general:
@@ -17,21 +17,19 @@ greenhouses:
    
   errors:
     move: "Prvo se pomaknite u staklenik koji posjedujete."
-    no-rank: "&c Nemate potreban čin da biste to učinili."
+    no-rank: "<red>Nemate potreban čin da biste to učinili.</red>"
     notyours: "Ovo nije vaš staklenik!"
-    not-inside: "&c Niste unutar staklenika!"
+    not-inside: "<red>Niste unutar staklenika!</red>"
     tooexpensive: "Ne možete si to priuštiti [price]" 
     alreadyexists: "Staklenik već postoji!"
     norecipe: "Ne mogu napraviti staklenik!"
     
   event:
    broke: "Razbili ste ovaj staklenik! Vraćanje bioma na [biome]!"
-   entering: "Ulazak u [biome]&f staklenik"
-   leaving: "Izlazak iz [biome]&f staklenika"
+   entering: "Ulazak u [biome]<white> staklenik</white>"
+   leaving: "Izlazak iz [biome]<white> staklenika</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] recept]"
    watermustbe: "Voda > [coverage]% površine poda."
    icemustbe: "Ledeni blokovi > [coverage]% površine poda."
    lavamustbe: "Lava > [coverage]% površine poda."
@@ -48,43 +46,43 @@ greenhouses:
         description: "Pokušaj napraviti staklenik"
         parameters: "<recept>"
         error:
-          already: "&cOvdje već postoji staklenik!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Krov sadrži nedopuštene blokove!"
-          FAIL_BAD_WALL_BLOCKS: "&c Zid sadrži nedopuštene blokove!"
-          FAIL_BELOW: "&c Morate biti unutar staklenika kako biste ga pokušali napraviti"
-          FAIL_BLOCKS_ABOVE: "&c Iznad staklenika ne smije biti blokova! Crveni stakleni blokovi trebali bi pokazati problematične blokove."
+          already: "<red>Ovdje već postoji staklenik!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Krov sadrži nedopuštene blokove!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Zid sadrži nedopuštene blokove!</red>"
+          FAIL_BELOW: "<red>Morate biti unutar staklenika kako biste ga pokušali napraviti</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Iznad staklenika ne smije biti blokova! Crveni stakleni blokovi trebali bi pokazati problematične blokove.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Postoji rupa u krovu ili krov nije ravan!
-            &c Crveni stakleni blokovi trebali bi pokazati problem.
-            &c Provjerite jeste li unutar staklenika prilikom izrade.
-          FAIL_HOLE_IN_WALL: "&c Postoji rupa u zidu!"
-          FAIL_NO_ROOF: "&c Čini se da nema krova! Provjerite jeste li unutar staklenika."
-          FAIL_TOO_MANY_DOORS: "&c U stakleniku ne možete imati više od 4 vrata!"
-          FAIL_TOO_MANY_HOPPERS: "&c Dopušten je samo jedan lijevak (hopper) u zidovima ili krovu."
-          FAIL_UNEVEN_WALLS: "&c Zidovi su neravni. Crveni stakleni blokovi trebali bi pokazati problematične blokove."
-          FAIL_INSUFFICIENT_ICE: "&c Nedovoljno leda za ovaj recept"
-          FAIL_INSUFFICIENT_LAVA: "&c Nedovoljno lave za ovaj recept"
-          FAIL_INSUFFICIENT_WATER: "&c Nedovoljno vode za ovaj recept"
-          FAIL_NO_ICE: "&c Led je potreban za ovaj recept"
-          FAIL_NO_LAVA: "&c Lava je potrebna za ovaj recept"
-          FAIL_NO_WATER: "&c Voda je potrebna za ovaj recept"
-          FAIL_NO_RECIPE_FOUND: "&c Nije pronađen recept koji odgovara ovom stakleniku"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Potrebno je više blokova za izradu ovog recepta!"
-          FAIL_OVERLAPPING: "&c Žao nam je, staklenici ne mogu dijeliti zidove."
-        success: "&2 Uspješno ste stvorili staklenik bioma [biome]! Biom će se sinkronizirati pri sljedećoj teleportaciji ili prijavi."
-        missing-blocks: "&c Nedostaje [material] x [number]"
-        unknown-recipe: "&c Nepoznat recept"
-        try-these: "&c Pokušajte jedan od ovih:"
-        recipe-format: "&3[name]"
+            <red>Postoji rupa u krovu ili krov nije ravan!</red>
+            <red>Crveni stakleni blokovi trebali bi pokazati problem.</red>
+            <red>Provjerite jeste li unutar staklenika prilikom izrade.</red>
+          FAIL_HOLE_IN_WALL: "<red>Postoji rupa u zidu!</red>"
+          FAIL_NO_ROOF: "<red>Čini se da nema krova! Provjerite jeste li unutar staklenika.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>U stakleniku ne možete imati više od 4 vrata!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Dopušten je samo jedan lijevak (hopper) u zidovima ili krovu.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Zidovi su neravni. Crveni stakleni blokovi trebali bi pokazati problematične blokove.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Nedovoljno leda za ovaj recept</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Nedovoljno lave za ovaj recept</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Nedovoljno vode za ovaj recept</red>"
+          FAIL_NO_ICE: "<red>Led je potreban za ovaj recept</red>"
+          FAIL_NO_LAVA: "<red>Lava je potrebna za ovaj recept</red>"
+          FAIL_NO_WATER: "<red>Voda je potrebna za ovaj recept</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nije pronađen recept koji odgovara ovom stakleniku</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Potrebno je više blokova za izradu ovog recepta!</red>"
+          FAIL_OVERLAPPING: "<red>Žao nam je, staklenici ne mogu dijeliti zidove.</red>"
+        success: "<dark_green>Uspješno ste stvorili staklenik bioma [biome]! Biom će se sinkronizirati pri sljedećoj teleportaciji ili prijavi.</dark_green>"
+        missing-blocks: "<red>Nedostaje [material] x [number]</red>"
+        unknown-recipe: "<red>Nepoznat recept</red>"
+        try-these: "<red>Pokušajte jedan od ovih:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Kako izgraditi staklenik]"
+        title: "<green>[Kako izgraditi staklenik]</green>"
         instructions: |
-          &e Napravite kutiju od stakla s 4 zida i ravnim staklenim
-          &e krovom te dodajte do &f 4 vrata &e u zidove.
-          &e Postavite &f 1 lijevak (hopper) &e u zid ili krov i dodajte kante
-          &e s vodom kako biste automatski stvarali snijeg i/ili koštanu
-          &e prašinu za rast biljaka. Provjerite recepte bioma kako biste
-          &e saznali koji blokovi moraju biti unutra za uspjeh.
+          <yellow>Napravite kutiju od stakla s 4 zida i ravnim staklenim</yellow>
+          <yellow>krovom te dodajte do </yellow><white>4 vrata </white><yellow>u zidove.</yellow>
+          <yellow>Postavite </yellow><white>1 lijevak (hopper) </white><yellow>u zid ili krov i dodajte kante</yellow>
+          <yellow>s vodom kako biste automatski stvarali snijeg i/ili koštanu</yellow>
+          <yellow>prašinu za rast biljaka. Provjerite recepte bioma kako biste</yellow>
+          <yellow>saznali koji blokovi moraju biti unutra za uspjeh.</yellow>
 
 help:
    help: "pomoć"
@@ -111,35 +109,33 @@ error:
    norecipe: "Ne mogu napraviti staklenik!"
    
 messages:
-   enter: "Ulazak u staklenik igrača [owner], biom: [biome]&f!"
+   enter: "Ulazak u staklenik igrača [owner], biom: [biome]<white>!</white>"
    leave: "Napuštanje staklenika igrača [owner]."
-   youarein: "Trenutno ste u stakleniku igrača [owner], biom: [biome]&f!"
+   youarein: "Trenutno ste u stakleniku igrača [owner], biom: [biome]<white>!</white>"
    removed: "Ovaj staklenik više ne postoji..."
-   removedmessage: "Vaš staklenik ([biome]&f) više ne postoji!"
+   removedmessage: "Vaš staklenik ([biome]<white>) više ne postoji!</white>"
    ecolost: "Vaš staklenik na lokaciji [location] izgubio je ekosustav i uklonjen je."
 
 info:
-   title: "&a [Kako izgraditi staklenik]"
+   title: "<green>[Kako izgraditi staklenik]</green>"
    instructions: |
-     &e Napravite kutiju od stakla s 4 zida i ravnim staklenim
-     &e krovom te dodajte do &f 4 vrata &e u zidove.
-     &e Postavite &f 1 lijevak (hopper) &e u zid ili krov i dodajte kante
-     &e s vodom kako biste automatski stvarali snijeg i/ili koštanu
-     &e prašinu za rast biljaka. Provjerite recepte bioma kako biste
-     &e saznali koji blokovi moraju biti unutra za uspjeh.
+     <yellow>Napravite kutiju od stakla s 4 zida i ravnim staklenim</yellow>
+     <yellow>krovom te dodajte do </yellow><white>4 vrata </white><yellow>u zidove.</yellow>
+     <yellow>Postavite </yellow><white>1 lijevak (hopper) </white><yellow>u zid ili krov i dodajte kante</yellow>
+     <yellow>s vodom kako biste automatski stvarali snijeg i/ili koštanu</yellow>
+     <yellow>prašinu za rast biljaka. Provjerite recepte bioma kako biste</yellow>
+     <yellow>saznali koji blokovi moraju biti unutra za uspjeh.</yellow>
    info: "[Informacije o stakleniku]"
    none: "Nema"
-   nomore: "&4 Ne možete graditi više staklenika!"
-   onemore: "&6 Možete izgraditi još jedan staklenik."
-   youcanbuild: "&a Možete izgraditi još do [number] staklenika!"
-   unlimited: "&a Možete graditi neograničen broj staklenika!"
-   welcome: "&b Dobrodošli! Kliknite ovdje za upute"
+   nomore: "<dark_red>Ne možete graditi više staklenika!</dark_red>"
+   onemore: "<gold>Možete izgraditi još jedan staklenik.</gold>"
+   youcanbuild: "<green>Možete izgraditi još do [number] staklenika!</green>"
+   unlimited: "<green>Možete graditi neograničen broj staklenika!</green>"
+   welcome: "<aqua>Dobrodošli! Kliknite ovdje za upute</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Koristite /greenhouse list da biste vidjeli popis brojeva recepata!"
    wrongnumber: "Broj recepta mora biti između 1 i [size]"
-   title: "[[biome] recept]"
    nowater: "Voda nije dopuštena."
    noice: "Led nije dopušten."
    nolava: "Lava nije dopuštena."
@@ -176,4 +172,4 @@ news:
    headline: "[Vijesti o staklenicima]"
 
 controlpanel:
-   title: "&aStaklenici"
+   title: "<green>Staklenici</green>"
