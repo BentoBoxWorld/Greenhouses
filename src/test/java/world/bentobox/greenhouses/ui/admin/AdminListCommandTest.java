@@ -1,5 +1,6 @@
 package world.bentobox.greenhouses.ui.admin;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +33,7 @@ import org.mockito.quality.Strictness;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
@@ -228,4 +230,23 @@ class AdminListCommandTest {
                 eq("[reason]"), eq("FAIL_OVERLAPPING"), anyString(), anyString(), anyString(), anyString());
     }
 
+
+    /**
+     * Player names complete after /bsbadmin greenhouses list, which BentoBox passes as
+     * "greenhouses", "list", partial name.
+     */
+    @Test
+    void testTabCompletePlayer() {
+        AdminBuildCommandTest.setLevel(cmd, 2);
+        try (var util = org.mockito.Mockito.mockStatic(Util.class)) {
+            util.when(() -> Util.getOnlinePlayerList(any()))
+                    .thenReturn(List.of("tastybento", "poslovitch"));
+            util.when(() -> Util.tabLimit(any(), any())).thenCallRealMethod();
+            assertEquals(List.of("tastybento"),
+                    cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "list", "ta")).orElseThrow());
+            // Nothing after the player
+            assertTrue(cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "list", "tastybento", ""))
+                    .isEmpty());
+        }
+    }
 }

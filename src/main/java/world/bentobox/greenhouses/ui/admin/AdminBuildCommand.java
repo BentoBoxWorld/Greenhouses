@@ -199,8 +199,9 @@ class AdminBuildCommand extends ConfirmableCommand {
 
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> all) {
-        // The first argument is this command's own label
-        List<String> args = all.isEmpty() ? all : all.subList(1, all.size());
+        // BentoBox passes everything after the top-level label, so this command's own arguments
+        // start after its parents' labels and its own: e.g. "greenhouses build <recipe> ..."
+        List<String> args = all.subList(Math.min(getLevel(), all.size()), all.size());
         int n = args.size();
         String last = n == 0 ? "" : args.get(n - 1);
         Greenhouses addon = getAddon();

@@ -147,6 +147,8 @@ class AdminBuildCommandTest {
         when(block.isEmpty()).thenReturn(true);
 
         cmd = new AdminBuildCommand(parent);
+        // /bsbadmin is level 0, greenhouses level 1, so build is level 2
+        setLevel(cmd, 2);
     }
 
     @AfterEach
@@ -275,13 +277,23 @@ class AdminBuildCommandTest {
         verify(gm, never()).tryToMakeGreenhouse(any(), any());
     }
 
+    /**
+     * BentoBox hands a sub-command every argument after the top-level label, so for
+     * /bsbadmin greenhouses build ... the list starts "greenhouses", "build".
+     */
     @Test
     void testTabComplete() {
-        assertEquals(List.of("PLAINS"), cmd.tabComplete(user, "build", List.of("build", "P")).orElseThrow());
-        assertEquals(List.of("~", "100"), cmd.tabComplete(user, "build", List.of("build", "PLAINS", "")).orElseThrow()
+        assertEquals(List.of("PLAINS"),
+                cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "build", "P")).orElseThrow());
+        assertEquals(List.of("PLAINS"),
+                cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "build", "")).orElseThrow());
+        assertEquals(List.of("~", "100"),
+                cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "build", "PLAINS", "")).orElseThrow()
                 .subList(0, 2));
-        assertTrue(cmd.tabComplete(user, "build", List.of("build", "PLAINS", "~", "")).orElseThrow().contains("64"));
-        List<String> after = cmd.tabComplete(user, "build", List.of("build", "PLAINS", "~", "~", "~", ""))
+        assertTrue(cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "build", "PLAINS", "~", ""))
+                .orElseThrow().contains("64"));
+        List<String> after = cmd
+                .tabComplete(user, "bsbadmin", List.of("greenhouses", "build", "PLAINS", "~", "~", "~", ""))
                 .orElseThrow();
         assertTrue(after.containsAll(List.of("keep", "clear", "9x9x5")));
         assertFalse(after.contains("~"));
@@ -314,5 +326,20 @@ class AdminBuildCommandTest {
         assertEquals(BlockFace.NORTH, AdminBuildCommand.doorWall(new Location(world, 0, 0, 0, -180F, 0F)));
         assertEquals(BlockFace.EAST, AdminBuildCommand.doorWall(new Location(world, 0, 0, 0, -90F, 0F)));
         assertEquals(BlockFace.NORTH, AdminBuildCommand.doorWall(null));
+    }
+
+    /**
+     * Sets how deep a command is, as BentoBox does when it is registered under
+     * /bsbadmin greenhouses. getLevel() is protected, so a mocked parent cannot supply it.
+     */
+    static void setLevel(world.bentobox.bentobox.api.commands.CompositeCommand c, int level) {
+        try {
+            java.lang.reflect.Field f = world.bentobox.bentobox.api.commands.CompositeCommand.class
+                    .getDeclaredField("subCommandLevel");
+            f.setAccessible(true);
+            f.setInt(c, level);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

@@ -125,8 +125,9 @@ class AdminListCommand extends CompositeCommand {
 
     @Override
     public Optional<List<String>> tabComplete(User user, String alias, List<String> args) {
-        if (args.size() == 2) {
-            return Optional.of(Util.tabLimit(Util.getOnlinePlayerList(user), args.get(1)));
+        // BentoBox passes everything after the top-level label; the player name follows our own label
+        if (args.size() == getLevel() + 1) {
+            return Optional.of(Util.tabLimit(Util.getOnlinePlayerList(user), args.get(getLevel())));
         }
         return Optional.empty();
     }
