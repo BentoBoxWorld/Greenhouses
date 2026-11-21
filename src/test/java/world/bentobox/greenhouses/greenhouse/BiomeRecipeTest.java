@@ -482,6 +482,63 @@ public class BiomeRecipeTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobPool(EntityType)}.
+     * Issue #8 - a mob uses its own habitat's limit only when the recipe sets one.
+     */
+    @Test
+    public void testGetMobPool() {
+        br.addMobs(EntityType.SQUID, 10, Material.WATER);
+        br.addMobs(EntityType.STRIDER, 10, Material.LAVA);
+        br.addMobs(EntityType.BAT, 10, Material.STONE);
+        br.addMobs(EntityType.COW, 10, Material.GRASS_BLOCK);
+        // No habitat limits set: everything shares the ground, as before
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.SQUID));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.STRIDER));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.BAT));
+        br.setMobLimit(MobHabitat.WATER, 10);
+        br.setMobLimit(MobHabitat.LAVA, 10);
+        br.setMobLimit(MobHabitat.AIR, 27);
+        assertEquals(MobHabitat.WATER, br.getMobPool(EntityType.SQUID));
+        assertEquals(MobHabitat.LAVA, br.getMobPool(EntityType.STRIDER));
+        assertEquals(MobHabitat.AIR, br.getMobPool(EntityType.BAT));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.COW));
+        // Not in the recipe
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.PIG));
+        // Clearing a limit sends the mobs back to the ground
+        br.setMobLimit(MobHabitat.WATER, 0);
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.SQUID));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobLimit(MobHabitat)}.
+     */
+    @Test
+    public void testGetMobLimitHabitat() {
+        assertEquals(9, br.getMobLimit(MobHabitat.GROUND));
+        assertEquals(0, br.getMobLimit(MobHabitat.WATER));
+        br.setMobLimit(MobHabitat.GROUND, 4);
+        assertEquals(4, br.getMobLimit());
+        br.setMobLimit(MobHabitat.WATER, 12);
+        assertEquals(12, br.getMobLimit(MobHabitat.WATER));
+        br.setMobLimit(MobHabitat.WATER, -1);
+        assertEquals(0, br.getMobLimit(MobHabitat.WATER));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(Block, java.util.function.Predicate)}.
+     * When the chosen mob's habitat is full nothing spawns.
+     */
+    @Test
+    public void testSpawnMobNotAllowed() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(block);
+        br.addMobs(EntityType.CAT, 100, Material.GRASS_BLOCK);
+        assertFalse(br.spawnMob(block, m -> false));
+        verify(world, never()).spawnEntity(any(), any());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
     @Test

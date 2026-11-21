@@ -24,6 +24,7 @@ import org.bukkit.entity.*;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.greenhouse.MobHabitat;
 
 public class RecipeManager {
 
@@ -168,6 +169,11 @@ public class RecipeManager {
         b.setLavacoverage(biomeRecipeConfig.getInt("lavacoverage",-1));
         b.setIcecoverage(biomeRecipeConfig.getInt("icecoverage",-1));
         b.setMobLimit(biomeRecipeConfig.getInt("moblimit", 9));
+        for (MobHabitat habitat : MobHabitat.values()) {
+            if (habitat != MobHabitat.GROUND) {
+                b.setMobLimit(habitat, biomeRecipeConfig.getInt(habitat.getConfigKey(), 0));
+            }
+        }
         b.setMaxMob(biomeRecipeConfig.getInt("maxmobs", -1));
         return b;
     }

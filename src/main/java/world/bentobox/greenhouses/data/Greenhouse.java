@@ -47,6 +47,9 @@ public class Greenhouse implements DataObject {
     private boolean broken;
 
     private Map<Material, Integer> missingBlocks;
+    // Not saved: measured whenever the recipe is checked. Null until then.
+    private volatile Integer waterBlocks;
+    private volatile Integer lavaBlocks;
 
     /**
      * Constructor for database
@@ -206,6 +209,43 @@ public class Greenhouse implements DataObject {
      */
     public int getArea() {
         return ((int)boundingBox.getWidthX() - 2) * ((int)boundingBox.getWidthZ() - 2);
+    }
+
+    /**
+     * @return the volume inside the walls, between the floor and the roof
+     */
+    public int getInternalVolume() {
+        return getArea() * Math.max(0, (int) boundingBox.getHeight() - 2);
+    }
+
+    /**
+     * @return number of water blocks inside, or null if not measured since loading
+     */
+    @Nullable
+    public Integer getWaterBlocks() {
+        return waterBlocks;
+    }
+
+    /**
+     * @param waterBlocks number of water blocks inside
+     */
+    public void setWaterBlocks(@Nullable Integer waterBlocks) {
+        this.waterBlocks = waterBlocks;
+    }
+
+    /**
+     * @return number of lava blocks inside, or null if not measured since loading
+     */
+    @Nullable
+    public Integer getLavaBlocks() {
+        return lavaBlocks;
+    }
+
+    /**
+     * @param lavaBlocks number of lava blocks inside
+     */
+    public void setLavaBlocks(@Nullable Integer lavaBlocks) {
+        this.lavaBlocks = lavaBlocks;
     }
 
     /**
