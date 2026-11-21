@@ -74,9 +74,13 @@ class GreenhousePlanTest {
         return recipes.stream().filter(r -> r.getName().equals(name)).findFirst().orElseThrow();
     }
 
-    /** Lays the plan out in a pretend world: last placement at a spot wins */
+    /** Lays the plan out in an empty pretend world: last placement at a spot wins */
     private static Map<List<Integer>, Material> layOut(GreenhousePlan plan) {
-        Map<List<Integer>, Material> world = new HashMap<>();
+        return layOut(plan, new HashMap<>());
+    }
+
+    /** Lays the plan out over what is already in a pretend world */
+    private static Map<List<Integer>, Material> layOut(GreenhousePlan plan, Map<List<Integer>, Material> world) {
         for (Placement p : plan.getPlacements()) {
             List<Integer> key = List.of(p.x(), p.y(), p.z());
             if (p.onlyIfAir() && world.containsKey(key) && !world.get(key).isAir()) {
@@ -111,13 +115,19 @@ class GreenhousePlanTest {
 
     @Test
     void testEveryShippedRecipeIsMetAtItsDefaultSize() throws TooSmallException {
+        for (Mode mode : Mode.values()) {
+            checkEveryRecipe(mode);
+        }
+    }
+
+    private void checkEveryRecipe(Mode mode) throws TooSmallException {
         for (BiomeRecipe r : recipes) {
             Size size = GreenhousePlan.defaultSize(r);
-            GreenhousePlan plan = GreenhousePlan.create(r, AX, AY, AZ, size, BlockFace.NORTH, Mode.CLEAR);
+            GreenhousePlan plan = GreenhousePlan.create(r, AX, AY, AZ, size, BlockFace.NORTH, mode);
             Map<List<Integer>, Material> world = layOut(plan);
             Map<Material, Integer> inside = countInside(plan, world);
             int area = size.area();
-            String n = r.getName() + " at " + size + ": ";
+            String n = r.getName() + " at " + size + " (" + mode + "): ";
             // Required blocks
             r.getRequiredBlocks().forEach((m, q) -> assertTrue(inside.getOrDefault(m, 0) >= q,
                     n + "needs " + q + " " + m + ", has " + inside.getOrDefault(m, 0)));
@@ -219,17 +229,88 @@ class GreenhousePlanTest {
                 () -> GreenhousePlan.create(plains, AX, AY, AZ, size, BlockFace.UP, Mode.CLEAR));
     }
 
+    /**
+     * Keep mode works around a tree already standing inside: it is not touched, nor is the floor
+     * under it, but everything else the recipe needs is still laid.
+     */
     @Test
-    void testKeepModeOnlyFillsHolesInside() throws TooSmallException {
+    void testKeepModeWorksAroundATree() throws TooSmallException {
         BiomeRecipe plains = recipe("PLAINS");
-        GreenhousePlan plan = GreenhousePlan.create(plains, AX, AY, AZ, new Size(5, 5, 4), BlockFace.NORTH, Mode.KEEP);
+        Map<List<Integer>, Material> world = new HashMap<>();
+        int tx = AX + 2;
+        int tz = AZ + 2;
+        world.put(List.of(tx, AY - 1, tz), Material.DIRT);
+        for (int y = AY; y < AY + 4; y++) {
+            world.put(List.of(tx, y, tz), Material.BIRCH_LOG);
+        }
+        GreenhousePlan plan = GreenhousePlan.create(plains, AX, AY, AZ, new Size(9, 9, 5), BlockFace.NORTH,
+                Mode.KEEP, (x, y, z) -> world.getOrDefault(List.of(x, y, z), Material.AIR).isAir());
+        Map<List<Integer>, Material> after = layOut(plan, new HashMap<>(world));
+        // The tree and the dirt under it are untouched
+        for (int y = AY - 1; y < AY + 4; y++) {
+            assertEquals(world.get(List.of(tx, y, tz)), after.get(List.of(tx, y, tz)), "y " + y);
+        }
+        // Nothing inside above the floor is replaced, only filled
         int[] c = plan.getCorners();
-        for (Placement p : plan.getPlacements()) {
-            boolean inside = p.x() > c[0] && p.x() < c[2] && p.z() > c[1] && p.z() < c[3] && p.y() < plan.getRoofY();
-            if (inside) {
-                assertTrue(p.onlyIfAir(), "keep mode replaced " + p);
+        plan.getPlacements().stream()
+                .filter(p -> p.x() > c[0] && p.x() < c[2] && p.z() > c[1] && p.z() < c[3] && p.y() >= AY
+                        && p.y() < plan.getRoofY())
+                .forEach(p -> assertTrue(p.onlyIfAir(), "keep mode replaced " + p));
+        // And the recipe is still met: the floor is grass
+        assertTrue(countInside(plan, after).getOrDefault(Material.GRASS_BLOCK, 0) >= 3);
+    }
+
+    /**
+     * Built where something is already standing, keep mode leaves it and puts what it can elsewhere,
+     * never refusing for lack of room.
+     */
+    @Test
+    void testKeepModeDoesWhatItCan() throws TooSmallException {
+        BiomeRecipe forest = recipe("FOREST");
+        // Every spot is taken except the floor
+        GreenhousePlan plan = GreenhousePlan.create(forest, AX, AY, AZ, new Size(5, 5, 5), BlockFace.NORTH,
+                Mode.KEEP, (x, y, z) -> y < AY);
+        assertTrue(plan.getPlacements().stream().noneMatch(p -> p.material() == Material.OAK_LOG));
+    }
+
+    /**
+     * Issue raised in testing: an ocean greenhouse must be full of water, not a wet floor.
+     */
+    @Test
+    void testOceanIsFlooded() throws TooSmallException {
+        for (Mode mode : Mode.values()) {
+            BiomeRecipe ocean = recipe("OCEAN");
+            GreenhousePlan plan = GreenhousePlan.create(ocean, AX, AY, AZ, GreenhousePlan.defaultSize(ocean),
+                    BlockFace.NORTH, mode);
+            Map<List<Integer>, Material> world = layOut(plan);
+            int[] c = plan.getCorners();
+            for (int x = c[0] + 1; x < c[2]; x++) {
+                for (int z = c[1] + 1; z < c[3]; z++) {
+                    for (int y = AY; y < plan.getRoofY() - 1; y++) {
+                        assertEquals(Material.WATER, world.get(List.of(x, y, z)), mode + " " + x + "," + y + "," + z);
+                    }
+                    // A layer of air under the roof
+                    assertTrue(world.getOrDefault(List.of(x, plan.getRoofY() - 1, z), Material.AIR).isAir());
+                }
             }
         }
+        // Half-water recipes keep their pools on the floor
+        BiomeRecipe beach = recipe("beaches");
+        GreenhousePlan plan = GreenhousePlan.create(beach, AX, AY, AZ, GreenhousePlan.defaultSize(beach),
+                BlockFace.NORTH, Mode.CLEAR);
+        assertTrue(plan.getPlacements().stream().noneMatch(p -> p.material() == Material.WATER && p.y() >= AY));
+    }
+
+    /**
+     * Issue raised in testing: keep mode (the default) must still put down lava for the Nether.
+     */
+    @Test
+    void testNetherGetsLavaInKeepMode() throws TooSmallException {
+        BiomeRecipe nether = recipe("NETHER");
+        GreenhousePlan plan = GreenhousePlan.create(nether, AX, AY, AZ, GreenhousePlan.defaultSize(nether),
+                BlockFace.NORTH, Mode.KEEP);
+        Map<Material, Integer> inside = countInside(plan, layOut(plan));
+        assertTrue(inside.getOrDefault(Material.LAVA, 0) * 100D / plan.getSize().area() >= nether.getLavaCoverage());
     }
 
     @Test

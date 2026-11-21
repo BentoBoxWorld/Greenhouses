@@ -33,9 +33,9 @@ import world.bentobox.greenhouses.ui.GreenhouseResults;
  * <p>
  * The coordinates are the centre of the floor, where a player standing on it has their feet,
  * and take {@code ~} like vanilla commands. The size is the inside, {@code W}, {@code WxD} or
- * {@code WxDxH}; left out, it is sized to fit the recipe. In {@code keep} mode (the default)
- * the glass shell is built around whatever is there; in {@code clear} mode the inside is
- * cleared and furnished to meet the recipe. Either way the greenhouse is then made with the
+ * {@code WxDxH}; left out, it is sized to fit the recipe. Either way the inside is furnished
+ * to meet the recipe; in {@code keep} mode (the default) anything already standing inside, such
+ * as a tree, is left alone and worked around, while {@code clear} mode clears the inside first. Either way the greenhouse is then made with the
  * recipe, just as {@code make} would.
  *
  * @author tastybento
@@ -130,7 +130,9 @@ class AdminBuildCommand extends ConfirmableCommand {
         }
         // Plan
         try {
-            plan = GreenhousePlan.create(recipe, x, y, z, size, doorWall(here), mode);
+            World w = here.getWorld();
+            plan = GreenhousePlan.create(recipe, x, y, z, size, doorWall(here), mode,
+                    (bx, by, bz) -> w == null || w.getBlockAt(bx, by, bz).isEmpty());
         } catch (TooSmallException e) {
             user.sendMessage(KEY + "too-small", "[size]", size.toString(), TextVariables.DESCRIPTION, e.getMessage());
             return false;

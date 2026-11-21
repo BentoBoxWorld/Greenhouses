@@ -49,14 +49,37 @@ public final class GreenhousePlan {
     public static final int MAX_HEIGHT = 15;
     /** How many of each block that plants grow on or mobs spawn on are laid, if the recipe doesn't already need them */
     static final int HABITAT_BLOCKS = 4;
+    /** Recipes needing at least this much water are flooded to just under the roof, like a real ocean */
+    public static final int FLOOD_COVERAGE = 75;
+
+    /**
+     * What is in the world where the greenhouse will go, so keep mode can work around it.
+     */
+    @FunctionalInterface
+    public interface Occupancy {
+        /** Nothing there yet */
+        Occupancy EMPTY = (x, y, z) -> true;
+
+        /**
+         * @param x x
+         * @param y y
+         * @param z z
+         * @return true if the block there is empty (air)
+         */
+        boolean isEmpty(int x, int y, int z);
+    }
 
     /**
      * Whether to clear and furnish the inside, or leave what is there.
      */
     public enum Mode {
-        /** Build the shell around whatever is there and only fill holes in the floor */
+        /**
+         * Keep whatever stands inside, e.g. trees. The floor is still laid to meet the recipe,
+         * except under things standing on it, and anything else the recipe needs only goes
+         * into empty space. Whatever does not fit is left for the recipe check to report.
+         */
         KEEP,
-        /** Clear the inside and lay a floor and contents that meet the recipe */
+        /** Clear the inside first, then lay a floor and contents that meet the recipe */
         CLEAR;
 
         /**
@@ -185,10 +208,14 @@ public final class GreenhousePlan {
     private final Cell doorFront;
     private final Cell centre;
     private @Nullable Cell treeCell;
+    /** Spots the tree takes, which flooding leaves alone */
+    private final Set<List<Integer>> treeBlocks = new java.util.HashSet<>();
+    private final Occupancy world;
 
-    private GreenhousePlan(int ax, int ay, int az, Size size, BlockFace doorWall, Mode mode) {
+    private GreenhousePlan(int ax, int ay, int az, Size size, BlockFace doorWall, Mode mode, Occupancy world) {
         this.size = size;
         this.mode = mode;
+        this.world = mode == Mode.CLEAR ? Occupancy.EMPTY : world;
         this.anchorX = ax;
         this.anchorY = ay;
         this.anchorZ = az;
@@ -237,7 +264,27 @@ public final class GreenhousePlan {
     @NonNull
     public static GreenhousePlan create(@NonNull BiomeRecipe recipe, int ax, int ay, int az, @NonNull Size size,
             @NonNull BlockFace doorWall, @NonNull Mode mode) throws TooSmallException {
-        GreenhousePlan plan = new GreenhousePlan(ax, ay, az, size, doorWall, mode);
+        return create(recipe, ax, ay, az, size, doorWall, mode, Occupancy.EMPTY);
+    }
+
+    /**
+     * Plans a test greenhouse around what is already in the world.
+     *
+     * @param recipe   the recipe to meet
+     * @param ax       anchor x, the centre of the floor
+     * @param ay       anchor y, the first layer of air above the floor
+     * @param az       anchor z
+     * @param size     interior size
+     * @param doorWall the wall to put the door in: NORTH, SOUTH, EAST or WEST
+     * @param mode     clear and furnish, or keep what is there
+     * @param world    what is there now; only keep mode looks
+     * @return the plan
+     * @throws TooSmallException if the recipe's needs do not fit at this size (clear mode only)
+     */
+    @NonNull
+    public static GreenhousePlan create(@NonNull BiomeRecipe recipe, int ax, int ay, int az, @NonNull Size size,
+            @NonNull BlockFace doorWall, @NonNull Mode mode, @NonNull Occupancy world) throws TooSmallException {
+        GreenhousePlan plan = new GreenhousePlan(ax, ay, az, size, doorWall, mode, world);
         plan.plan(recipe);
         return plan;
     }
@@ -283,10 +330,10 @@ public final class GreenhousePlan {
                     }
                 }
             }
-            planFloor(recipe, style, floorY);
-        } else {
-            // Keep what is there; just fill holes in the floor
-            forInterior((x, z) -> placements.add(Placement.fillAir(x, floorY, z, style.getFiller())));
+        }
+        planFloor(recipe, style, floorY);
+        if (recipe.getWaterCoverage() >= FLOOD_COVERAGE) {
+            planFlood();
         }
         // Floor under the walls - must not be glass, or the walls would not start at the floor
         forRing((x, z) -> placements.add(mode == Mode.CLEAR ? Placement.set(x, floorY, z, style.getBase())
@@ -310,22 +357,31 @@ public final class GreenhousePlan {
         int area = size.area();
         // Spots that must stay plain floor: where the admin stands and in front of the door
         Set<Cell> reserved = new java.util.HashSet<>(List.of(centre, doorFront));
+        // Floor under anything already standing on it is left alone (keep mode)
+        Set<Cell> kept = new java.util.HashSet<>();
+        forInterior((x, z) -> {
+            if (!world.isEmpty(x, anchorY, z)) {
+                kept.add(new Cell(x, z));
+            }
+        });
+        reserved.removeAll(kept);
         // Tree
         List<Material> logs = required.keySet().stream().filter(GreenhousePlan::isLog).toList();
         List<Material> leaves = required.keySet().stream().filter(GreenhousePlan::isLeaves).toList();
         int trunk = trunkHeight(recipe);
         if (trunk > 0) {
-            treeCell = pickTreeCell();
-            if (treeCell == null || trunk + 1 > size.height()) {
-                throw new TooSmallException("No room for a tree " + (trunk + 1) + " blocks tall");
+            treeCell = trunk + 1 > size.height() ? null : pickTreeCell(trunk, kept);
+            if (treeCell == null) {
+                failIfStrict("No room for a tree " + (trunk + 1) + " blocks tall");
+            } else {
+                reserved.add(treeCell);
             }
-            reserved.add(treeCell);
         }
         // Floor spots, furthest from the door first, so pools sit at the back
         List<Cell> pool = new ArrayList<>();
         forInterior((x, z) -> {
             Cell c = new Cell(x, z);
-            if (!reserved.contains(c)) {
+            if (!reserved.contains(c) && !kept.contains(c)) {
                 pool.add(c);
             }
         });
@@ -335,6 +391,8 @@ public final class GreenhousePlan {
         Map<Cell, Material> floor = new LinkedHashMap<>();
         Material filler = pickFiller(recipe, style);
         reserved.forEach(c -> floor.put(c, filler));
+        // Kept spots only get a floor if there is a hole in it
+        kept.forEach(c -> placements.add(Placement.fillAir(c.x(), floorY, c.z(), filler)));
         // Liquids and ice
         take(pool, floor, Material.WATER, coverageBlocks(recipe.getWaterCoverage(), area));
         take(pool, floor, Material.ICE, coverageBlocks(recipe.getIceCoverage(), area));
@@ -388,7 +446,8 @@ public final class GreenhousePlan {
             trunkBlocks.add(pad);
         }
         for (int i = 0; i < trunkBlocks.size(); i++) {
-            placements.add(Placement.set(treeCell.x(), anchorY + i, treeCell.z(), trunkBlocks.get(i)));
+            placeInside(treeCell.x(), anchorY + i, treeCell.z(), trunkBlocks.get(i));
+            treeBlocks.add(List.of(treeCell.x(), anchorY + i, treeCell.z()));
         }
         // Canopy: on top of the trunk, then around its top, working outwards and down
         List<Material> canopy = new ArrayList<>();
@@ -398,11 +457,12 @@ public final class GreenhousePlan {
         }
         List<int[]> spots = canopySpots(trunk);
         if (spots.size() < canopy.size()) {
-            throw new TooSmallException("No room for " + canopy.size() + " leaves");
+            failIfStrict("No room for " + canopy.size() + " leaves");
         }
-        for (int i = 0; i < canopy.size(); i++) {
+        for (int i = 0; i < Math.min(canopy.size(), spots.size()); i++) {
             int[] s = spots.get(i);
-            placements.add(Placement.set(s[0], s[1], s[2], canopy.get(i)));
+            placeInside(s[0], s[1], s[2], canopy.get(i));
+            treeBlocks.add(List.of(s[0], s[1], s[2]));
         }
     }
 
@@ -434,7 +494,7 @@ public final class GreenhousePlan {
         boolean inside = x >= x0 && x <= maxX() && z >= z0 && z <= maxZ() && y >= anchorY && y < getRoofY();
         // Keep head room where the admin stands and at the door
         boolean inTheWay = (c.equals(centre) || c.equals(doorFront)) && y <= anchorY + 1;
-        if (inside && !inTheWay && !c.equals(treeCell)) {
+        if (inside && !inTheWay && !c.equals(treeCell) && world.isEmpty(x, y, z)) {
             spots.add(new int[] { x, y, z });
         }
     }
@@ -449,27 +509,30 @@ public final class GreenhousePlan {
         floor.forEach((c, m) -> {
             if (m == Material.WATER) {
                 water.add(c);
-            } else if (m.isSolid() && !c.equals(centre) && !c.equals(doorFront) && !c.equals(treeCell)) {
+            } else if (m.isSolid() && !c.equals(centre) && !c.equals(doorFront) && !c.equals(treeCell)
+                    && world.isEmpty(c.x(), anchorY, c.z())) {
                 solid.add(c);
             }
         });
         for (Map.Entry<Material, Integer> e : onTop.entrySet()) {
             List<Cell> where = e.getKey() == Material.LILY_PAD ? water : solid;
             if (where.size() < e.getValue()) {
-                throw new TooSmallException("No room for " + e.getValue() + " " + e.getKey());
+                failIfStrict("No room for " + e.getValue() + " " + e.getKey());
             }
-            for (int i = 0; i < e.getValue(); i++) {
+            int n = Math.min(e.getValue(), where.size());
+            for (int i = 0; i < n; i++) {
                 Cell c = where.removeFirst();
-                placements.add(Placement.set(c.x(), anchorY, c.z(), e.getKey()));
+                placeInside(c.x(), anchorY, c.z(), e.getKey());
             }
         }
     }
 
-    private static void take(List<Cell> pool, Map<Cell, Material> floor, Material m, int count)
+    private void take(List<Cell> pool, Map<Cell, Material> floor, Material m, int count)
             throws TooSmallException {
         if (count > pool.size()) {
-            throw new TooSmallException("Needs " + count + " " + m.name().toLowerCase(Locale.ENGLISH)
-                    + " but only " + pool.size() + " floor spots are left");
+            failIfStrict("Needs " + count + " " + m.name().toLowerCase(Locale.ENGLISH) + " but only " + pool.size()
+                    + " floor spots are left");
+            count = pool.size();
         }
         for (int i = 0; i < count; i++) {
             floor.put(pool.removeFirst(), m);
@@ -480,13 +543,13 @@ public final class GreenhousePlan {
      * Picks a spot for the tree away from the door and the centre, and in from the walls if
      * there is room.
      */
-    private @Nullable Cell pickTreeCell() {
+    private @Nullable Cell pickTreeCell(int trunk, Set<Cell> kept) {
         Cell best = null;
         int bestScore = Integer.MIN_VALUE;
         for (int x = x0; x <= maxX(); x++) {
             for (int z = z0; z <= maxZ(); z++) {
                 Cell c = new Cell(x, z);
-                if (distance(c, centre) <= 1 || c.equals(doorFront)) {
+                if (distance(c, centre) <= 1 || c.equals(doorFront) || kept.contains(c) || !columnEmpty(x, z, trunk + 1)) {
                     continue;
                 }
                 boolean inFromWalls = x > x0 && x < maxX() && z > z0 && z < maxZ();
@@ -505,6 +568,43 @@ public final class GreenhousePlan {
         return recipe.getPlantGrowOn().stream().filter(GreenhousePlan::isFloorBlock).findFirst()
                 .or(() -> recipe.getMobSpawnOn().stream().filter(GreenhousePlan::isFloorBlock).findFirst())
                 .orElse(style.getFiller());
+    }
+
+    /**
+     * Fills the inside with water up to one layer under the roof, leaving the tree alone.
+     * In keep mode only empty space is flooded.
+     */
+    private void planFlood() {
+        for (int y = anchorY; y < getRoofY() - 1; y++) {
+            for (int x = x0; x <= maxX(); x++) {
+                for (int z = z0; z <= maxZ(); z++) {
+                    if (!treeBlocks.contains(List.of(x, y, z))) {
+                        placeInside(x, y, z, Material.WATER);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Places a block inside the greenhouse; in keep mode only where it is empty */
+    private void placeInside(int x, int y, int z, Material m) {
+        placements.add(mode == Mode.CLEAR ? Placement.set(x, y, z, m) : Placement.fillAir(x, y, z, m));
+    }
+
+    private boolean columnEmpty(int x, int z, int height) {
+        for (int y = anchorY; y < anchorY + height && y < getRoofY(); y++) {
+            if (!world.isEmpty(x, y, z)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Clear mode promises to meet the recipe, so it fails; keep mode does what it can */
+    private void failIfStrict(String message) throws TooSmallException {
+        if (mode == Mode.CLEAR) {
+            throw new TooSmallException(message);
+        }
     }
 
     // ------------------------------------------------------------------------
