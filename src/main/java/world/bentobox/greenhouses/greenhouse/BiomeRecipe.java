@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -68,6 +69,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final List<BlockFace> ADJ_BLOCKS = Arrays.asList( BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST);
     private static final List<BlockFace> SIDE_BLOCKS = Arrays.asList( BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST);
     private static final List<Material> UNDERWATER_PLANTS;
+    /**
+     * Blocks that are always full of water, so count as space for water mobs. Waterlogged
+     * blocks cannot be told apart by material and are not counted.
+     */
+    private static final Set<Material> WATER_BLOCKS = Set.of(Material.WATER, Material.BUBBLE_COLUMN,
+            Material.KELP, Material.KELP_PLANT, Material.SEAGRASS, Material.TALL_SEAGRASS);
     static {
         List<Material> m = new ArrayList<>();
         Arrays.stream(Material.values()).filter(c -> c.name().contains("CORAL")).forEach(m::add);
@@ -100,6 +107,8 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private final Multimap<Material, GreenhouseBlockConversions> conversionBlocks = ArrayListMultimap.create();
 
     private int mobLimit;
+    // Blocks per mob for water, lava and air mobs; 0 or less means they share the ground limit
+    private final Map<MobHabitat, Integer> habitatMobLimits = new EnumMap<>(MobHabitat.class);
     private int waterCoverage;
     private int iceCoverage;
     private int lavaCoverage;
@@ -231,6 +240,9 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
         // Look through the greenhouse and count what is in there
         Map<Material, Integer> blockCount = countBlocks(gh, cache);
+        // Remember how much water and lava there is, for the water and lava mob limits
+        gh.setWaterBlocks(WATER_BLOCKS.stream().mapToInt(m -> blockCount.getOrDefault(m, 0)).sum());
+        gh.setLavaBlocks(blockCount.getOrDefault(Material.LAVA, 0));
 
         // Calculate % water, ice and lava ratios and check them
         Set<GreenhouseResult> result = checkRatios(blockCount, area);
@@ -408,6 +420,18 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      *         or the mob did not fit inside the greenhouse
      */
     public boolean spawnMob(Block b) {
+        return spawnMob(b, m -> true);
+    }
+
+    /**
+     * Spawn a mob on block b if it makes sense and random chance suggests it. The mob is
+     * chosen first; if {@code allowed} rejects it nothing spawns, so a full habitat does not
+     * change the odds of the other mobs.
+     * @param b - block
+     * @param allowed - whether the chosen mob may spawn, e.g. whether its habitat has room
+     * @return true if a mob was spawned
+     */
+    public boolean spawnMob(Block b, Predicate<GreenhouseMob> allowed) {
         if (b.getY() == 0) {
             return false;
         }
@@ -418,6 +442,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
                 .filter(m -> Optional.of(m.mobSpawnOn())
                         .map(getEffectiveBlock(b.getRelative(BlockFace.DOWN))::equals)
                         .orElse(true))
+                .filter(allowed)
 
                 // If spawn occurs, check if it can fit inside greenhouse
                 .map(m -> {
@@ -715,6 +740,46 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public void setMobLimit(int mobLimit) {
         this.mobLimit = mobLimit;
+    }
+
+    /**
+     * Get the mob limit for a habitat: the number of blocks of that habitat's space each mob
+     * needs (floor area, water blocks, lava blocks or internal volume).
+     * @param habitat - habitat
+     * @return blocks per mob; 0 means the habitat has no limit of its own and its mobs share the
+     *         ground limit. {@link MobHabitat#GROUND} returns {@link #getMobLimit()}.
+     */
+    public int getMobLimit(MobHabitat habitat) {
+        return habitat == MobHabitat.GROUND ? mobLimit : habitatMobLimits.getOrDefault(habitat, 0);
+    }
+
+    /**
+     * Set the mob limit for a habitat. See {@link #getMobLimit(MobHabitat)}.
+     * @param habitat - habitat
+     * @param limit - blocks per mob; 0 or less to share the ground limit
+     */
+    public void setMobLimit(MobHabitat habitat, int limit) {
+        if (habitat == MobHabitat.GROUND) {
+            mobLimit = limit;
+        } else if (limit > 0) {
+            startupLog("   " + Util.prettifyText(habitat.name()) + " mobs: 1 per " + limit + " blocks");
+            habitatMobLimits.put(habitat, limit);
+        } else {
+            habitatMobLimits.remove(habitat);
+        }
+    }
+
+    /**
+     * Get the habitat whose limit a mob type counts against. This is the mob's own habitat if
+     * this recipe sets a limit for it, otherwise the ground.
+     * @param mobType - entity type
+     * @return habitat, {@link MobHabitat#GROUND} if the mob is not in this recipe
+     */
+    public MobHabitat getMobPool(EntityType mobType) {
+        return mobTree.values().stream().filter(m -> m.mobType() == mobType).findFirst()
+                .map(MobHabitat::of)
+                .filter(h -> getMobLimit(h) > 0)
+                .orElse(MobHabitat.GROUND);
     }
 
     /**

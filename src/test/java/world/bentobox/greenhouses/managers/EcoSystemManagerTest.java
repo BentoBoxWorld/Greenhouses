@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -14,9 +13,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
@@ -29,6 +28,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
@@ -46,6 +46,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.greenhouse.GreenhouseMob;
+import world.bentobox.greenhouses.greenhouse.MobHabitat;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 
 /**
@@ -297,7 +299,7 @@ public class EcoSystemManagerTest {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(10);
-        when(recipe.spawnMob(any())).thenReturn(true);
+        when(recipe.spawnMob(any(), any())).thenReturn(true);
         assertTrue(eco.addMobs(gh, 1D));
     }
 
@@ -312,11 +314,11 @@ public class EcoSystemManagerTest {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(3);
-        when(recipe.getMobLimit()).thenReturn(1);
-        when(recipe.spawnMob(any())).thenReturn(true);
+        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(1);
+        when(recipe.spawnMob(any(), any())).thenReturn(true);
         assertTrue(eco.addMobs(gh, 1D));
         // Without the fix the loop ignores maxMob and keeps spawning until density stops
-        verify(recipe, times(3)).spawnMob(any());
+        verify(recipe, times(3)).spawnMob(any(), any());
     }
 
     /**
@@ -327,11 +329,11 @@ public class EcoSystemManagerTest {
     public void testAddMobsFractionZeroDoesNothing() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
-        when(recipe.spawnMob(any())).thenReturn(true);
+        when(recipe.spawnMob(any(), any())).thenReturn(true);
         assertFalse(eco.addMobs(gh, 0D));
         verify(world, never()).isChunkLoaded(anyInt(), anyInt());
         verify(world, never()).getNearbyEntities(any(BoundingBox.class), any());
-        verify(recipe, never()).spawnMob(any());
+        verify(recipe, never()).spawnMob(any(), any());
     }
 
     /**
@@ -356,11 +358,11 @@ public class EcoSystemManagerTest {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(2);
-        when(recipe.spawnMob(any())).thenReturn(true);
+        when(recipe.spawnMob(any(), any())).thenReturn(true);
         when(world.getNearbyEntities(any(BoundingBox.class), any(Predicate.class)))
         .thenReturn(List.of(mock(Entity.class), mock(Entity.class)));
         assertFalse(eco.addMobs(gh, 1D));
-        verify(recipe, never()).spawnMob(any());
+        verify(recipe, never()).spawnMob(any(), any());
     }
 
     /**
@@ -374,12 +376,122 @@ public class EcoSystemManagerTest {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(-1);
-        when(recipe.getMobLimit()).thenReturn(9);
-        when(recipe.spawnMob(any())).thenReturn(true);
+        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(9);
+        when(recipe.spawnMob(any(), any())).thenReturn(true);
         when(world.getNearbyEntities(any(BoundingBox.class), any(Predicate.class)))
         .thenReturn(List.of(mock(Entity.class)));
         assertTrue(eco.addMobs(gh, 1D));
-        verify(recipe, times(1)).spawnMob(any());
+        verify(recipe, times(1)).spawnMob(any(), any());
+    }
+
+    /**
+     * Set up an ocean-style recipe: turtles on the ground, squid in the water. The ground
+     * already has its one turtle (area 16, moblimit 17), so only squid have room.
+     * The mock spawn offers a squid to the habitat check and spawns it if allowed.
+     */
+    @SuppressWarnings("unchecked")
+    private void setUpOceanRecipe() {
+        when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
+        when(recipe.noMobs()).thenReturn(false);
+        when(recipe.getMaxMob()).thenReturn(-1);
+        when(recipe.getMobTypes()).thenReturn(Set.of(EntityType.SQUID, EntityType.TURTLE));
+        when(recipe.getMobPool(EntityType.SQUID)).thenReturn(MobHabitat.WATER);
+        when(recipe.getMobPool(EntityType.TURTLE)).thenReturn(MobHabitat.GROUND);
+        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(17);
+        when(recipe.getMobLimit(MobHabitat.WATER)).thenReturn(10);
+        Entity turtle = mock(Entity.class);
+        when(turtle.getType()).thenReturn(EntityType.TURTLE);
+        when(world.getNearbyEntities(any(BoundingBox.class), any(Predicate.class))).thenReturn(List.of(turtle));
+        GreenhouseMob squid = new GreenhouseMob(EntityType.SQUID, Material.WATER);
+        when(recipe.spawnMob(any(), any())).thenAnswer(inv -> inv.<Predicate<GreenhouseMob>>getArgument(1).test(squid));
+    }
+
+    /**
+     * Issue #8 - water mobs are limited by the water blocks, not the floor area, and are not
+     * blocked by a full ground. 40 water blocks at 10 per mob allows 5 squid (the density check
+     * lets the next mob in while space / count >= limit).
+     */
+    @Test
+    public void testAddMobsWaterMobsUseWaterBlocks() {
+        setUpOceanRecipe();
+        gh.setWaterBlocks(40);
+        assertTrue(eco.addMobs(gh, 1D));
+        verify(recipe, times(5)).spawnMob(any(), any());
+    }
+
+    /**
+     * Issue #8 - more water means more water mobs.
+     */
+    @Test
+    public void testAddMobsMoreWaterMoreMobs() {
+        setUpOceanRecipe();
+        gh.setWaterBlocks(10);
+        assertTrue(eco.addMobs(gh, 1D));
+        // 10 / 1 >= 10 lets a second squid in, 10 / 2 < 10 stops the third
+        verify(recipe, times(2)).spawnMob(any(), any());
+    }
+
+    /**
+     * Issue #8 - until the water has been measured, water mobs share the ground limit, which is
+     * full, so nothing spawns.
+     */
+    @Test
+    public void testAddMobsWaterNotMeasuredFallsBackToGround() {
+        setUpOceanRecipe();
+        assertFalse(eco.addMobs(gh, 1D));
+        verify(recipe, never()).spawnMob(any(), any());
+    }
+
+    /**
+     * Issue #8 - a greenhouse with no water has no room for water mobs.
+     */
+    @Test
+    public void testAddMobsNoWaterNoWaterMobs() {
+        setUpOceanRecipe();
+        gh.setWaterBlocks(0);
+        assertFalse(eco.addMobs(gh, 1D));
+    }
+
+    /**
+     * maxmobs still caps the total across all habitats: one turtle plus two squid.
+     */
+    @Test
+    public void testAddMobsMaxMobsCapsAllHabitats() {
+        setUpOceanRecipe();
+        when(recipe.getMaxMob()).thenReturn(3);
+        gh.setWaterBlocks(1000);
+        assertTrue(eco.addMobs(gh, 1D));
+        verify(recipe, times(2)).spawnMob(any(), any());
+    }
+
+    /**
+     * Issue #8 - flying mobs are limited by the internal volume: 4 x 4 x 3 = 48 blocks.
+     */
+    @Test
+    public void testMobCountsAirUsesVolume() {
+        when(recipe.getMobTypes()).thenReturn(Set.of(EntityType.BAT));
+        when(recipe.getMobPool(EntityType.BAT)).thenReturn(MobHabitat.AIR);
+        when(recipe.getMobLimit(MobHabitat.AIR)).thenReturn(12);
+        when(recipe.getMaxMob()).thenReturn(-1);
+        EcoSystemManager.MobCounts counts = new EcoSystemManager.MobCounts(gh, recipe);
+        assertEquals(MobHabitat.AIR, counts.pool(EntityType.BAT));
+        // 48 / n >= 12 for n up to 4, so 5 bats fit
+        for (int i = 0; i < 5; i++) {
+            assertTrue(counts.hasRoom(EntityType.BAT));
+            counts.add(EntityType.BAT);
+        }
+        assertFalse(counts.hasRoom(EntityType.BAT));
+        assertFalse(counts.anyRoom());
+    }
+
+    /**
+     * Mobs the recipe does not know, or a recipe with no habitats set, count against the ground.
+     */
+    @Test
+    public void testMobCountsUnknownTypeIsGround() {
+        EcoSystemManager.MobCounts counts = new EcoSystemManager.MobCounts(gh, recipe);
+        assertEquals(MobHabitat.GROUND, counts.pool(null));
+        assertEquals(MobHabitat.GROUND, counts.pool(EntityType.COW));
     }
 
     /**

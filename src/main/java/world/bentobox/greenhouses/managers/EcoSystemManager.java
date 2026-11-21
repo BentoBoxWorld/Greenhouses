@@ -3,6 +3,10 @@ package world.bentobox.greenhouses.managers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,14 +17,18 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.NumberConversions;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.greenhouse.GreenhouseMob;
+import world.bentobox.greenhouses.greenhouse.MobHabitat;
 
 /**
  * Runs the ecosystem for a greenhouse
@@ -200,27 +208,105 @@ public class EcoSystemManager {
         if (samples == 0 || !chunksLoaded(gh, bb)) {
             return false;
         }
-        // Count the entities in the greenhouse - only look at the greenhouse, not the whole world
-        long sum = gh.getWorld().getNearbyEntities(bb,
-                e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()) && gh.contains(e.getLocation())).size();
+        final BiomeRecipe recipe = gh.getBiomeRecipe();
+        // Count the mobs in the greenhouse, by habitat - only look at the greenhouse, not the whole world
+        MobCounts counts = new MobCounts(gh, recipe);
+        gh.getWorld().getNearbyEntities(bb, e -> recipe.getMobTypes().contains(e.getType()) && gh.contains(e.getLocation()))
+        .forEach(e -> counts.add(e.getType()));
         int spawned = 0;
         ThreadLocalRandom rand = ThreadLocalRandom.current();
-        for (int i = 0; i < samples && hasRoomForMore(gh, sum); i++) {
+        for (int i = 0; i < samples && counts.anyRoom(); i++) {
             List<GrowthBlock> spots = new ArrayList<>();
             getAvailableBlocks(gh, minX + rand.nextInt(sizeX), minZ + rand.nextInt(sizeZ), false, spots);
             Collections.shuffle(spots);
             for (GrowthBlock spot : spots) {
-                if (!hasRoomForMore(gh, sum)) {
+                if (!counts.anyRoom()) {
                     break;
                 }
-                // Spawn something if chance says so
-                if (gh.getBiomeRecipe().spawnMob(spot.block())) {
-                    sum++;
+                // Spawn something if chance says so and its habitat has room
+                GreenhouseMob[] chosen = new GreenhouseMob[1];
+                if (recipe.spawnMob(spot.block(), m -> {
+                    chosen[0] = m;
+                    return counts.hasRoom(m.mobType());
+                })) {
+                    counts.add(chosen[0] == null ? null : chosen[0].mobType());
                     spawned++;
                 }
             }
         }
         return spawned > 0;
+    }
+
+    /**
+     * The mobs in a greenhouse, counted by the habitat whose limit they use (issue #8). Ground
+     * mobs are limited by floor area, water and lava mobs by the number of water or lava blocks,
+     * and flying mobs by the internal volume. The recipe's maxmobs caps the total.
+     */
+    static class MobCounts {
+        private final Greenhouse gh;
+        private final BiomeRecipe recipe;
+        private final Map<MobHabitat, Long> counts = new EnumMap<>(MobHabitat.class);
+        private final Set<MobHabitat> pools = EnumSet.noneOf(MobHabitat.class);
+        private long total;
+
+        MobCounts(Greenhouse gh, BiomeRecipe recipe) {
+            this.gh = gh;
+            this.recipe = recipe;
+            recipe.getMobTypes().forEach(t -> pools.add(pool(t)));
+            if (pools.isEmpty()) {
+                pools.add(MobHabitat.GROUND);
+            }
+        }
+
+        /**
+         * The habitat a mob type counts against. Water and lava fall back to the ground until
+         * the greenhouse's liquid has been measured, which happens at the first recipe check.
+         */
+        MobHabitat pool(@Nullable EntityType type) {
+            MobHabitat h = type == null ? MobHabitat.GROUND : recipe.getMobPool(type);
+            if (h == null || space(h) == null) {
+                return MobHabitat.GROUND;
+            }
+            return h;
+        }
+
+        @Nullable
+        private Integer space(MobHabitat h) {
+            return switch (h) {
+            case WATER -> gh.getWaterBlocks();
+            case LAVA -> gh.getLavaBlocks();
+            case AIR -> gh.getInternalVolume();
+            default -> gh.getArea();
+            };
+        }
+
+        void add(@Nullable EntityType type) {
+            counts.merge(pool(type), 1L, Long::sum);
+            total++;
+        }
+
+        /**
+         * Whether one more mob of this type may spawn. The absolute maxmobs cap is checked on
+         * every spawn, not just once (issue #127), alongside the habitat's density limit.
+         */
+        boolean hasRoom(@Nullable EntityType type) {
+            return underCap() && hasRoom(pool(type));
+        }
+
+        boolean anyRoom() {
+            return underCap() && pools.stream().anyMatch(this::hasRoom);
+        }
+
+        private boolean underCap() {
+            int maxMob = recipe.getMaxMob();
+            return maxMob <= -1 || total < maxMob;
+        }
+
+        private boolean hasRoom(MobHabitat h) {
+            int space = Objects.requireNonNullElse(space(h), 0);
+            long sum = counts.getOrDefault(h, 0L);
+            return space > 0 && (sum == 0 || space / sum >= recipe.getMobLimit(h));
+        }
     }
 
     /**
@@ -245,18 +331,6 @@ public class EcoSystemManager {
             }
         }
         return true;
-    }
-
-    /**
-     * Whether another mob may be spawned. The absolute maxmobs cap is enforced on every
-     * iteration, not just before the loop (issue #127), alongside the per-area mob limit.
-     * @param gh - greenhouse
-     * @param sum - mobs currently in the greenhouse
-     * @return true if there is room for one more
-     */
-    private boolean hasRoomForMore(Greenhouse gh, long sum) {
-        int maxMob = gh.getBiomeRecipe().getMaxMob();
-        return (maxMob <= -1 || sum < maxMob) && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit());
     }
 
     /**

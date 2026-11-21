@@ -251,6 +251,28 @@ public class GreenhouseTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#getInternalVolume()}.
+     */
+    @Test
+    public void testGetInternalVolume() {
+        // Inside the walls, above the floor and below the roof
+        assertEquals(406 * (CEILING - FLOOR - 1), gh.getInternalVolume());
+    }
+
+    /**
+     * Liquid counts are not known until the recipe is checked.
+     */
+    @Test
+    public void testLiquidBlocks() {
+        assertNull(gh.getWaterBlocks());
+        assertNull(gh.getLavaBlocks());
+        gh.setWaterBlocks(12);
+        gh.setLavaBlocks(3);
+        assertEquals(Integer.valueOf(12), gh.getWaterBlocks());
+        assertEquals(Integer.valueOf(3), gh.getLavaBlocks());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.data.Greenhouse#getWorld()}.
      */
     @Test

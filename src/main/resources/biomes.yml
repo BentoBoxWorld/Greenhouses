@@ -37,6 +37,14 @@ biomes:
       SQUID: 10:WATER
       GLOW_SQUID: 5:WATER
       TURTLE: 10:SAND
+    # Water, lava and flying mobs can have their own limits, measured against the
+    # number of water blocks, lava blocks, or the volume inside the greenhouse rather
+    # than the floor area. So a deeper ocean holds more fish. Each is the number of
+    # blocks each mob needs, like moblimit. A mob is a water or lava mob if it spawns
+    # on water or lava; allays, bats, bees, ghasts, parrots, phantoms and vexes fly.
+    # If a limit is not given, those mobs share moblimit with the ground mobs.
+    # Turtles here use moblimit; squid use moblimit-water.
+    moblimit-water: 9
     # The minimum number of blocks each mob requires.
     # Mobs will not spawn if there is more than 1 per this number of
     # blocks in the greenhouse. e.g., in this case only 2 mobs will spawn if the
@@ -82,6 +90,7 @@ biomes:
     mobs:
       SQUID: 10:WATER
       GLOW_SQUID: 10:WATER
+    moblimit-water: 9
   ThreeWolfMoon:
     friendlyname: "Three Wolf Moon Forest"
     # Could do with more wolves, but the magic works with 3.
@@ -196,6 +205,7 @@ biomes:
       PIGLIN: 10:NETHERRACK
       STRIDER: 10:LAVA
       ENDERMAN: 5:NETHERRACK
+    moblimit-lava: 9
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -218,6 +228,7 @@ biomes:
       GHAST: 10:SOUL_SAND
       ENDERMAN: 1:SOUL_SAND
       STRIDER: 20:LAVA
+    moblimit-air: 64
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -267,6 +278,7 @@ biomes:
     mobs:
       STRIDER: 10:LAVA
       ENDERMAN: 20:WARPED_NYLIUM
+    moblimit-lava: 9
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -292,6 +304,7 @@ biomes:
       PARROT: 30:GRASS_BLOCK
       CHICKEN: 20:GRASS_BLOCK
       PANDA: 1:GRASS_BLOCK
+    moblimit-air: 27
   MUSHROOM_FIELDS:
     friendlyname: "Mushroom Fields"
     biome: MUSHROOM_FIELDS
@@ -323,6 +336,7 @@ biomes:
       DOLPHIN: 20:WATER
       SQUID: 20:WATER
       GLOW_SQUID: 10:WATER
+    moblimit-water: 9
     moblimit: 9
     maxmobs: 20
   PLAINS:
@@ -365,6 +379,7 @@ biomes:
       SALMON: 10:WATER
       SQUID: 10:WATER
       GLOW_SQUID: 5:WATER
+    moblimit-water: 1
     moblimit: 1
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -435,6 +450,7 @@ biomes:
       skeleton: 5:STONE
       glow_squid: 5:WATER
       BAT: 10:STONE
+    moblimit-air: 27
     moblimit: 5
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
