@@ -333,7 +333,7 @@ biomes:
       BROWN_MUSHROOM: 10:MYCELIUM
       RED_MUSHROOM: 10:MYCELIUM
     mobs:
-      MUSHROOM_COW: 10:MYCELIUM
+      MOOSHROOM: 10:MYCELIUM
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
