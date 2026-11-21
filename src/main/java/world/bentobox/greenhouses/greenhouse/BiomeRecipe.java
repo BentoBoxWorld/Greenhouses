@@ -46,7 +46,7 @@ import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
-import javax.annotation.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final String CHANCE_FOR = "% chance for ";
