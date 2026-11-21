@@ -35,3 +35,6 @@ permissions:
   '[gamemode].greenhouses.admin.reload':
      description: Allows reloading biomes.yml and the greenhouse database
      default: op
+  '[gamemode].greenhouses.admin.build':
+     description: Allows building test greenhouses
+     default: op

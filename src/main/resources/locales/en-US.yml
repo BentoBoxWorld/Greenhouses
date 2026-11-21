@@ -138,6 +138,17 @@ greenhouses:
         description: "Reloads biomes.yml and re-reads greenhouses from the database"
         success: "<green>Reloaded. [number] greenhouses active.</green>"
         unloaded: "<red>[number] record(s) could not be loaded - use the list command to see them.</red>"
+      build:
+        description: "Builds a test greenhouse for a recipe, around you or at the given floor centre"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Coordinates need all three of x, y and z, as numbers or ~ (e.g. ~ ~ ~ or ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] is not a size (e.g. 9x9 or 9x9x5) or a mode (keep or clear).</red>"
+        too-small: "<red>The recipe does not fit in [size]: [description]. Try a bigger size, or leave it out to size it automatically.</red>"
+        out-of-world: "<red>That would go above or below the world. Pick another height.</red>"
+        not-on-island: "<red>The whole greenhouse must be on one island.</red>"
+        overlapping: "<red>That would overlap greenhouse [id].</red>"
+        confirm-clear: "<red>Everything inside a [size] greenhouse here will be replaced.</red>"
+        built: "<green>Built a [size] [recipe] test greenhouse ([number] blocks). Making it now...</green>"
 
 
 ######### Old locale for reference

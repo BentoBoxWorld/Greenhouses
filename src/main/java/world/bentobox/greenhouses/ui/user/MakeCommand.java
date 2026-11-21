@@ -6,9 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -17,8 +15,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
-import world.bentobox.greenhouses.managers.GreenhouseManager.GhResult;
-import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
+import world.bentobox.greenhouses.ui.GreenhouseResults;
 import world.bentobox.greenhouses.ui.panel.Panel;
 
 /**
@@ -109,26 +106,8 @@ class MakeCommand extends CompositeCommand  {
             return false;
         }
         // Try to make the greenhouse
-        ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br).thenAccept(result -> informUser(user, br, result));
+        ((Greenhouses)this.getAddon()).getManager().tryToMakeGreenhouse(location, br).thenAccept(result -> GreenhouseResults.report(user, br, result, getPlugin()));
         return true;
-    }
-
-    private boolean informUser(User user, BiomeRecipe br, GhResult result) {
-        if (result.getResults().contains(GreenhouseResult.SUCCESS)) {
-            // Success
-            user.sendMessage("greenhouses.commands.user.make.success", "[biome]", result.getFinder().getGh().getBiomeRecipe().getFriendlyName());
-            return true;
-        }
-        result.getResults().forEach(r -> user.sendMessage("greenhouses.commands.user.make.error." + r.name()));
-        if (!result.getFinder().getRedGlass().isEmpty()) {
-            // Show red glass
-            result.getFinder().getRedGlass().forEach(rg -> user.getPlayer().sendBlockChange(rg.toLocation(user.getWorld()), Material.RED_STAINED_GLASS.createBlockData()));
-            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> result.getFinder().getRedGlass().stream().map(v -> v.toLocation(user.getWorld())).forEach(rg -> user.getPlayer().sendBlockChange(rg, rg.getBlock().getBlockData())), 120L);
-        }
-        if (br != null && result.getResults().contains(GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)) {
-            result.getFinder().getGh().getMissingBlocks().forEach((k,v) -> user.sendMessage("greenhouses.commands.user.make.missing-blocks", "[material]", Util.prettifyText(k.toString()), TextVariables.NUMBER, String.valueOf(v)));
-        }
-        return false;
     }
 
     @Override

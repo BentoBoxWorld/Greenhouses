@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -878,6 +879,36 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public Set<EntityType> getMobTypes() {
         return mobTree.values().stream().map(GreenhouseMob::mobType).collect(Collectors.toSet());
+    }
+
+    /**
+     * @return the blocks this recipe needs inside the greenhouse, with the minimum count of each
+     */
+    public Map<Material, Integer> getRequiredBlocks() {
+        return Collections.unmodifiableMap(requiredBlocks);
+    }
+
+    /**
+     * @return true if this recipe grows any plants
+     */
+    public boolean hasPlants() {
+        return !plantTree.isEmpty() || !underwaterPlants.isEmpty();
+    }
+
+    /**
+     * @return the blocks plants in this recipe grow on
+     */
+    public Set<Material> getPlantGrowOn() {
+        return java.util.stream.Stream.concat(plantTree.values().stream(), underwaterPlants.values().stream())
+                .map(GreenhousePlant::plantGrownOn).collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
+    }
+
+    /**
+     * @return the blocks mobs in this recipe spawn on
+     */
+    public Set<Material> getMobSpawnOn() {
+        return mobTree.values().stream().map(GreenhouseMob::mobSpawnOn)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
     }
 
     /**
