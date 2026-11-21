@@ -58,6 +58,7 @@ Admin commands live in `ui/admin/`, registered on the game mode's admin command 
 | `verify [id]` | Re-runs the recipe check against the world for one or all greenhouses |
 | `reload` | Re-reads `biomes.yml` then re-loads greenhouses from the database |
 | `build <recipe> [x y z] [WxDxH] [keep\|clear]` | Builds a test greenhouse (glass, biome-styled door, roof hopper) centred on the floor at `~ ~ ~`, sized to the recipe by default, then makes it. `clear` (confirmed) furnishes the inside to meet the recipe; `keep` builds around what is there. Planning is in `build/GreenhousePlan` |
+| `edit [recipe]` | Recipe editor GUI (`ui/admin/editor/`): BentoBox panels, dialog forms and pickers over a `RecipeDraft` held in the admin's `EditSession`; Save writes `biomes.yml` through `RecipeManager.save` and swaps the live recipe |
 
 IDs may be abbreviated to any unique prefix; an ambiguous prefix is deliberately treated as no match.
 

@@ -42,6 +42,186 @@ greenhouses:
    nootherblocks: "<white>No other blocks needed</white>"
    missing: "Greenhouse is missing"
    
+  # The admin recipe editor: /<gamemode>admin greenhouses edit
+  editor:
+    needs-dialogs: "<red>The recipe editor needs Paper 1.21.7 or later.</red>"
+    unknown-recipe: "<red>There is no recipe called [key].</red>"
+    resuming: "<yellow>Picking up your unsaved changes to [name]<yellow>.</yellow>"
+    saved: "<green>Saved [name]<green>. [number] greenhouse(s) use it and follow the new rules from now on.</green>"
+    save-failed: "<red>biomes.yml could not be written - see the server log. Nothing was saved.</red>"
+    deleted: "<green>Deleted [name]<green>. Its [number] greenhouse(s) are listed as unloaded until deleted or the recipe comes back.</green>"
+    title: "<dark_green>Editing</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(unsaved)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Click to change</yellow>"
+    click-open: "<yellow>Click to open</yellow>"
+    none: "none"
+    entries: "<gray>Entries: <white>[number]</white></gray>"
+    total-chance: "<gray>Chances add up to <white>[value]%</white></gray>"
+    chance: "<gray>Chance: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Back to the recipe</white>"
+    help: "<white>How to use this page</white>"
+    list:
+      title: "<dark_green>Greenhouse recipes</dark_green>"
+      key: "<gray>Key: <white>[key]</white></gray>"
+      biome: "<gray>Biome: <white>[biome]</white></gray>"
+      priority: "<gray>Priority: <white>[number]</white></gray>"
+      used: "<gray>Used by <white>[number]</white> greenhouse(s)</gray>"
+      unsaved: "<gold>You have unsaved changes</gold>"
+      click-edit: "<yellow>Click to edit</yellow>"
+      new:
+        name: "<green>New recipe</green>"
+        description: "<gray>Start a recipe from scratch</gray>"
+    pick:
+      biome: "<dark_green>Choose a biome</dark_green>"
+      icon: "<dark_green>Choose an icon</dark_green>"
+      block: "<dark_green>Choose a block</dark_green>"
+      plant: "<dark_green>Choose a plant</dark_green>"
+      grows-on: "<dark_green>What does it grow on?</dark_green>"
+      mob: "<dark_green>Choose a mob</dark_green>"
+      spawns-on: "<dark_green>What does it spawn on?</dark_green>"
+      convert-from: "<dark_green>Which block changes?</dark_green>"
+      convert-to: "<dark_green>What does it change into?</dark_green>"
+      next-to: "<dark_green>What must it be next to?</dark_green>"
+    icon:
+      name: "<white>Icon</white>"
+    general:
+      name: "<white>Name and description</white>"
+      value-name: "<gray>Name: </gray>[value]"
+      value-priority: "<gray>Priority: <white>[number]</white></gray>"
+      value-permission: "<gray>Permission: <white>[value]</white></gray>"
+      no-description: "<gray>No description</gray>"
+      has-description: "<gray>Has a description</gray>"
+    biome:
+      name: "<white>Biome</white>"
+      value: "<gray>Biome: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Water, lava and ice</white>"
+      water: "<aqua>Water: </aqua>[value]"
+      lava: "<gold>Lava: </gold>[value]"
+      ice: "<aqua>Ice: </aqua>[value]"
+      unchecked: "<gray>not checked</gray>"
+      none: "<red>none allowed</red>"
+      at-least: "<white>at least [number]% of the floor</white>"
+    mob-limits:
+      name: "<white>Mob limits</white>"
+      ground: "<gray>Blocks per mob: <white>[number]</white></gray>"
+      water: "<gray>Water blocks per water mob: <white>[value]</white></gray>"
+      lava: "<gray>Lava blocks per lava mob: <white>[value]</white></gray>"
+      air: "<gray>Air blocks per flying mob: <white>[value]</white></gray>"
+      shared: "same as ground"
+      max: "<gray>Most mobs at once: <white>[value]</white></gray>"
+      no-max: "no limit"
+    blocks:
+      name: "<white>Required blocks</white>"
+      add: "<green>Add a block</green>"
+      help: "<gray>The least of each block the greenhouse must have inside.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Left +1, right -1, shift-click to type a number, Q to remove</yellow>"
+    plants:
+      name: "<white>Plants</white>"
+      add: "<green>Add a plant</green>"
+      help: "<gray>Plants grown with bone meal from the roof hopper.</gray>"
+      grows-on: "<gray>Grows on: <white>[block]</white></gray>"
+      entry-help: "<yellow>Left: chance, right: what it grows on, Q to remove</yellow>"
+    mobs:
+      name: "<white>Mobs</white>"
+      add: "<green>Add a mob</green>"
+      help: "<gray>Mobs that spawn in the greenhouse.</gray>"
+      spawns-on: "<gray>Spawns on: <white>[block]</white></gray>"
+      variant: "<gray>Variant: <white>[value]</white></gray>"
+      entry-help: "<yellow>Left: chance and variant, right: what it spawns on, Q to remove</yellow>"
+    conversions:
+      name: "<white>Block conversions</white>"
+      add: "<green>Add a conversion</green>"
+      help: "<gray>Blocks that slowly change into other blocks.</gray>"
+      to: "<gray>Becomes: <white>[block]</white></gray>"
+      anywhere: "<gray>Anywhere</gray>"
+      next-to: "<gray>Only next to: <white>[block]</white></gray>"
+      entry-help: "<yellow>Left: chance, right: what it becomes, shift-right: next to, shift-left: anywhere, Q to remove</yellow>"
+    back:
+      name: "<white>Back to recipes</white>"
+      description: "<gray>Unsaved changes are kept</gray>"
+    discard:
+      name: "<red>Discard changes</red>"
+      description: "<gray>Forget changes since the last save</gray>"
+    save:
+      name: "<green>Save</green>"
+      nothing: "<gray>No changes to save</gray>"
+      description: "<gray>Writes biomes.yml; [number] greenhouse(s) follow the new rules at once</gray>"
+      problems: "<red>Fix these first:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplicate</white>"
+      description: "<gray>Start a new recipe from this one</gray>"
+    delete:
+      name: "<red>Delete recipe</red>"
+      description: "<gray>[number] greenhouse(s) use this recipe</gray>"
+    dialog:
+      cancel: "Cancel"
+      switch:
+        title: "Unsaved changes"
+        body: "You have unsaved changes to [name]. Discard them to edit this recipe?"
+        discard: "<red>Discard them</red>"
+        keep: "Back to [name]"
+      discard:
+        title: "Discard changes?"
+        body: "Forget your changes to [name]?"
+        yes: "<red>Discard</red>"
+      conflict:
+        title: "Changed by someone else"
+        body: "[name] was saved by someone else, or reloaded, after you started editing it."
+        overwrite: "<red>Save mine over it</red>"
+        theirs: "Start again from theirs"
+      delete:
+        title: "Delete recipe?"
+        body: "Delete [name]? [number] greenhouse(s) use it. biomes.yml is backed up first."
+        yes: "<red>Delete</red>"
+    form:
+      ok: "<green>Done</green>"
+      cancel: "Cancel"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] is not a chance. Use a percentage above 0 and up to 100, e.g. 5 or 0.5."
+      general:
+        title: "Name and description"
+        name: "Name (MiniMessage colors allowed)"
+        description: "Description shown in the recipe panel"
+        priority: "Priority"
+        permission: "Permission needed to make it (blank for none)"
+        no-name: "The name cannot be blank."
+        bad-permission: "A permission cannot contain spaces."
+      coverage:
+        title: "Water, lava and ice"
+        water: "Water"
+        lava: "Lava"
+        ice: "Ice"
+        percent: "Percent of the floor"
+        unchecked: "Not checked"
+        none: "None allowed"
+        atleast: "At least..."
+        too-much: "Water, lava and ice together cannot need more than the whole floor."
+      mobs:
+        title: "Mob limits"
+        ground: "Blocks per mob"
+        water: "Water blocks per water mob (0 = same)"
+        lava: "Lava blocks per lava mob (0 = same)"
+        air: "Air blocks per flying mob (0 = same)"
+        max: "Most mobs at once (-1 = no limit)"
+      chance:
+        title: "Chance"
+        field: "% chance for [what]"
+      mob:
+        title: "Mob"
+        variant: "Variant"
+        no-variant: "Normal"
+      count:
+        title: "How many?"
+        field: "How many [what]"
+      key:
+        title: "Recipe key"
+        field: "Key: letters, numbers, - and _ (cannot be changed later)"
+        bad: "Use 1 to 32 letters, numbers, - or _."
+        taken: "There is already a recipe called [key]."
   commands:
     user:
       description: "Opens the Greenhouse selection GUI"
@@ -149,6 +329,9 @@ greenhouses:
         overlapping: "<red>That would overlap greenhouse [id].</red>"
         confirm-clear: "<red>Everything inside a [size] greenhouse here will be replaced.</red>"
         built: "<green>Built a [size] [recipe] test greenhouse ([number] blocks). Making it now...</green>"
+      edit:
+        description: "Opens the recipe editor, or a recipe's editor"
+        parameters: "[recipe]"
 
 
 ######### Old locale for reference

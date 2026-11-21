@@ -356,7 +356,7 @@ public class RecipeCodec {
      * @param d a number
      * @return it without a pointless ".0", e.g. 5 rather than 5.0
      */
-    static String number(double d) {
+    public static String number(double d) {
         return BigDecimal.valueOf(d).stripTrailingZeros().toPlainString();
     }
 

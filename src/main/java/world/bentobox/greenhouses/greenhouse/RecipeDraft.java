@@ -102,7 +102,16 @@ public class RecipeDraft {
      * @return a deep copy, so changes to one do not touch the other
      */
     public static RecipeDraft copyOf(RecipeDraft other) {
-        RecipeDraft d = new RecipeDraft(other.key);
+        return copyAs(other, other.key);
+    }
+
+    /**
+     * @param other a draft to copy
+     * @param key   the key for the copy, e.g. to duplicate a recipe under a new name
+     * @return a deep copy with that key
+     */
+    public static RecipeDraft copyAs(RecipeDraft other, String key) {
+        RecipeDraft d = new RecipeDraft(key);
         d.friendlyName = other.friendlyName;
         d.description = other.description;
         d.biome = other.biome;

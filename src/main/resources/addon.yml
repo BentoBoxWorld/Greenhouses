@@ -38,3 +38,6 @@ permissions:
   '[gamemode].greenhouses.admin.build':
      description: Allows building test greenhouses
      default: op
+  '[gamemode].greenhouses.admin.edit':
+     description: Allows editing greenhouse recipes in game
+     default: op

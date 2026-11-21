@@ -97,9 +97,9 @@ class AdminCommandTest {
      */
     @Test
     void testSubCommandsRegistered() {
-        // Seven of our own, plus the help command CompositeCommand registers automatically
-        assertEquals(8, cmd.getSubCommands().size());
-        List.of("list", "info", "delete", "tp", "verify", "reload", "build")
+        // Eight of our own, plus the help command CompositeCommand registers automatically
+        assertEquals(9, cmd.getSubCommands().size());
+        List.of("list", "info", "delete", "tp", "verify", "reload", "build", "edit")
         .forEach(c -> assertTrue(cmd.getSubCommand(c).isPresent(), c + " is not registered"));
     }
 

@@ -35,6 +35,7 @@ public class AdminCommand extends CompositeCommand {
         new AdminVerifyCommand(this);
         new AdminReloadCommand(this);
         new AdminBuildCommand(this);
+        new AdminEditCommand(this);
     }
 
     @Override

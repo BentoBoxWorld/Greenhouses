@@ -79,6 +79,8 @@ public class Greenhouses extends Addon {
         } else {
             // Register greenhouse manager
             this.registerListener(manager);
+            // Unsaved recipe edits end when their admin leaves
+            this.registerListener(new world.bentobox.greenhouses.ui.admin.editor.EditSession.QuitListener());
             // Register protection flag with BentoBox
             getPlugin().getFlagsManager().registerFlag(this, GREENHOUSES);
         }
@@ -89,6 +91,7 @@ public class Greenhouses extends Addon {
      */
     @Override
     public void onDisable() {
+        world.bentobox.greenhouses.ui.admin.editor.EditSession.endAll();
         if (manager != null && manager.getEcoMgr() != null) {
             manager.getEcoMgr().cancel();
         }
