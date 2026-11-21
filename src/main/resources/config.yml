@@ -27,9 +27,17 @@ greenhouses:
   planttick: 1
   # How often should blocks potentially convert, in minutes 
   # Example: dirt-> sand in desert greenhouse
+  # On average every block gets one conversion chance in this time, but blocks are
+  # picked at random a few at a time (see sample-ticks) rather than all at once.
   blocktick: 2
   # How often should mobs be potentially spawned in a greenhouse, in minutes
+  # On average every spawn spot gets one spawn chance in this time, but spots are
+  # picked at random a few at a time (see sample-ticks) so mobs arrive gradually.
   mobtick: 5
+  # How often, in server ticks (20 = 1 second), random spots in each greenhouse are
+  # picked for mob spawning and block conversion. Lower values spread the work more
+  # evenly. This does not change the overall rates, which are set by mobtick and blocktick.
+  sample-ticks: 20
   # 
   # Default settings for greenhouse actions
   # Allow lava or water to flow out of a greenhouse, e.g. through the door, floor
