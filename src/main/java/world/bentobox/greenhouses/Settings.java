@@ -53,11 +53,20 @@ public class Settings implements ConfigObject {
     private int plantTick = 1;
     @ConfigComment("How often should blocks potentially convert, in minutes ")
     @ConfigComment("Example: dirt-> sand in desert greenhouse")
+    @ConfigComment("On average every block gets one conversion chance in this time, but blocks are")
+    @ConfigComment("picked at random a few at a time (see sample-ticks) rather than all at once.")
     @ConfigEntry(path = "greenhouses.blocktick")
     private int blockTick = 2;
     @ConfigComment("How often should mobs be potentially spawned in a greenhouse, in minutes")
+    @ConfigComment("On average every spawn spot gets one spawn chance in this time, but spots are")
+    @ConfigComment("picked at random a few at a time (see sample-ticks) so mobs arrive gradually.")
     @ConfigEntry(path = "greenhouses.mobtick")
     private int mobTick = 5;
+    @ConfigComment("How often, in server ticks (20 = 1 second), random spots in each greenhouse are")
+    @ConfigComment("picked for mob spawning and block conversion. Lower values spread the work more")
+    @ConfigComment("evenly. This does not change the overall rates, which are set by mobtick and blocktick.")
+    @ConfigEntry(path = "greenhouses.sample-ticks")
+    private int sampleTicks = 20;
 
 
     @ConfigComment("")
@@ -197,6 +206,18 @@ public class Settings implements ConfigObject {
      */
     public void setMobTick(int mobTick) {
         this.mobTick = mobTick;
+    }
+    /**
+     * @return how often, in ticks, random spots are sampled for mob spawning and block conversion
+     */
+    public int getSampleTicks() {
+        return sampleTicks;
+    }
+    /**
+     * @param sampleTicks how often, in ticks, random spots are sampled
+     */
+    public void setSampleTicks(int sampleTicks) {
+        this.sampleTicks = sampleTicks;
     }
     /**
      * @param allowFlowOut the allowFlowOut to set
