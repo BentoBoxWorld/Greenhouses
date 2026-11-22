@@ -42,6 +42,76 @@ greenhouses:
    nootherblocks: "<white>No other blocks needed</white>"
    missing: "Greenhouse is missing"
    
+  # The admin hub: /<gamemode>admin greenhouses with no arguments
+  hub:
+    title: "<dark_green>Greenhouses admin</dark_green>"
+    close: "<white>Close</white>"
+    back: "<white>Back</white>"
+    cancel: "Cancel"
+    recipes:
+      name: "<green>Recipes</green>"
+      description: "<gray>Edit, add or delete the [number] greenhouse recipes</gray>"
+    greenhouses:
+      name: "<green>Greenhouses</green>"
+      description: "<gray>[number] greenhouse(s) built. Teleport to, check, inspect or delete them.</gray>"
+      unloaded: "<red>[number] could not be loaded</red>"
+    build:
+      name: "<green>Build a test greenhouse</green>"
+      description: "<gray>Builds a working greenhouse for a recipe where you stand, with its door on the side you face</gray>"
+      pick-title: "<dark_green>Build which recipe?</dark_green>"
+      key: "<gray>Key: <white>[key]</white></gray>"
+      default-size: "<gray>Default size: <white>[size]</white></gray>"
+      click: "<yellow>Click to choose the size</yellow>"
+      title: "Build [name]"
+      body: "The greenhouse is built with its floor centre where you stand and its door on the side you face. Sizes are the inside."
+      width: "Width"
+      depth: "Depth"
+      height: "Height"
+      mode: "What is already there"
+      keep: "Keep it and build around it"
+      clear: "Clear it away first"
+      go: "<green>Build</green>"
+    verify:
+      name: "<green>Check all greenhouses</green>"
+      description: "<gray>Checks every greenhouse against its recipe now and reports in chat</gray>"
+    reload:
+      name: "<green>Reload</green>"
+      description: "<gray>Re-reads biomes.yml and the greenhouses database</gray>"
+      confirm-title: "Reload?"
+      confirm-body: "Re-read biomes.yml and the greenhouses database? Unsaved recipe edits are kept, but will need saving over the reloaded recipes."
+      confirm: "<yellow>Reload</yellow>"
+
+  # The admin greenhouse browser, from the hub
+  browser:
+    title: "<dark_green>Greenhouses</dark_green>"
+    title-owner: "<dark_green>Greenhouses</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>No greenhouses</gray>"
+    back: "<white>Back</white>"
+    cancel: "Cancel"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Owner: <white>[owner]</white></gray>"
+    where: "<gray>At: <white>[xyz]</white> in <white>[world]</white></gray>"
+    ok: "<green>Working</green>"
+    broken: "<red>Broken</red>"
+    unloaded: "<red>Not loaded: [reason]</red>"
+    click:
+      tp: "<yellow>Left-click: teleport there</yellow>"
+      verify: "<yellow>Right-click: check it now</yellow>"
+      info: "<yellow>Shift-click: details in chat</yellow>"
+      delete: "<yellow>Q: delete</yellow>"
+    filter:
+      name: "<white>Filter by owner</white>"
+      all: "<gray>Showing everyone's</gray>"
+      only: "<gray>Showing <white>[owner]</white>'s</gray>"
+      click: "<yellow>Click to change</yellow>"
+      title: "Filter by owner"
+      label: "Owner's name (blank for everyone)"
+      apply: "<green>Show</green>"
+    delete:
+      title: "Delete greenhouse?"
+      body: "Delete greenhouse [id] belonging to [owner] at [xyz]? This cannot be undone."
+      confirm: "<red>Delete</red>"
+
   # The admin recipe editor: /<gamemode>admin greenhouses edit
   editor:
     needs-dialogs: "<red>The recipe editor needs Paper 1.21.7 or later.</red>"
@@ -69,6 +139,7 @@ greenhouses:
       used: "<gray>Used by <white>[number]</white> greenhouse(s)</gray>"
       unsaved: "<gold>You have unsaved changes</gold>"
       click-edit: "<yellow>Click to edit</yellow>"
+      back: "<white>Back</white>"
       new:
         name: "<green>New recipe</green>"
         description: "<gray>Start a recipe from scratch</gray>"

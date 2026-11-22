@@ -51,6 +51,7 @@ Admin commands live in `ui/admin/`, registered on the game mode's admin command 
 
 | Sub-command | Purpose |
 |---|---|
+| *(none, player)* | Opens the admin hub (`AdminHub`): Recipes, Greenhouses (`GreenhouseBrowser`), Build here, Check all, Reload. Buttons show only with the sub-command's permission and run the sub-command through `CompositeCommand.call()`, so checks and messages match typing it. The console gets help. |
 | `list [player] [page]` | Paginated list of loaded greenhouses; always also lists records that failed to load |
 | `info [id]` | Full detail of one greenhouse, or the one you are standing in |
 | `delete <id>` | Deletes a record by ID, loaded or not, after confirmation |

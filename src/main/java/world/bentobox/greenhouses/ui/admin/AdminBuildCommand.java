@@ -190,6 +190,26 @@ class AdminBuildCommand extends ConfirmableCommand {
         return true;
     }
 
+    /**
+     * Builds without asking for confirmation, for the admin hub, whose build dialog is the
+     * confirmation. Checks the permission and arguments just as the command does.
+     *
+     * @param user the admin
+     * @param args the command's arguments
+     * @return true if it was built
+     */
+    boolean buildNow(User user, List<String> args) {
+        if (!user.hasPermission(getPermission())) {
+            user.sendMessage("general.errors.no-permission", TextVariables.PERMISSION, getPermission());
+            return false;
+        }
+        if (!canExecute(user, getLabel(), args)) {
+            return false;
+        }
+        build(user, recipe, plan, world, centre);
+        return true;
+    }
+
     private void build(User user, BiomeRecipe r, GreenhousePlan p, World w, Location c) {
         int changed = GreenhouseBuilder.build(w, p, r.hasPlants());
         user.sendMessage(KEY + "built", "[size]", p.getSize().toString(), TextVariables.NUMBER,

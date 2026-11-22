@@ -1,5 +1,10 @@
 package world.bentobox.greenhouses.ui.admin.editor;
 
+import static world.bentobox.greenhouses.ui.panel.Items.item;
+import static world.bentobox.greenhouses.ui.panel.Items.page;
+import static world.bentobox.greenhouses.ui.panel.Items.run;
+import static world.bentobox.greenhouses.ui.panel.Items.wrap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,6 @@ import world.bentobox.greenhouses.greenhouse.RecipeDraft.PlantSpec;
 import world.bentobox.greenhouses.managers.RecipeCodec;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.managers.RecipeManager.SaveResult;
-import world.bentobox.greenhouses.ui.panel.Lore;
 
 /**
  * The admin recipe editor: a list of recipes, an editor for one recipe, and pages for its
@@ -72,6 +76,8 @@ public class RecipeEditor {
 
     private final Greenhouses addon;
     private final User user;
+    /** What Back on the recipe list does; null for no Back button */
+    private @Nullable Runnable back;
 
     /**
      * @param addon the addon
@@ -82,35 +88,23 @@ public class RecipeEditor {
         this.user = user;
     }
 
+    /**
+     * Gives the recipe list a Back button.
+     *
+     * @param back what Back does, e.g. open the admin hub
+     * @return this editor
+     */
+    public RecipeEditor backTo(Runnable back) {
+        this.back = back;
+        return this;
+    }
+
     private RecipeManager recipes() {
         return addon.getRecipes();
     }
 
     private String t(String key, String... vars) {
         return user.getTranslation(K + key, vars);
-    }
-
-    /**
-     * @param lore translated lines of lore, each possibly long or holding line breaks
-     * @return the lines wrapped so tooltips stay narrow
-     */
-    static List<String> wrap(List<String> lore) {
-        return lore.stream().flatMap(l -> Lore.wrapLegacy(l).stream()).toList();
-    }
-
-    private static PanelItem item(Material icon, String name, List<String> lore, PanelItem.ClickHandler click) {
-        PanelItemBuilder b = new PanelItemBuilder().icon(icon).name(name).description(wrap(lore));
-        if (click != null) {
-            b.clickHandler(click);
-        }
-        return b.build();
-    }
-
-    private static PanelItem.ClickHandler run(Runnable r) {
-        return (panel, u, click, slot) -> {
-            r.run();
-            return true;
-        };
     }
 
     /**
@@ -146,6 +140,9 @@ public class RecipeEditor {
         }
         b.control(LIST_ADD, item(Material.WRITABLE_BOOK, t("list.new.name"), List.of(t("list.new.description")),
                 run(this::newRecipe)));
+        if (back != null) {
+            b.control(LIST_BACK, item(Material.OAK_DOOR, t("list.back"), List.of(), run(back)));
+        }
         b.build();
     }
 
@@ -400,10 +397,6 @@ public class RecipeEditor {
                 .control(LIST_BACK, item(Material.OAK_DOOR, t("back-to-recipe"), List.of(), run(() -> open(s))))
                 .control(LIST_ADD, item(Material.LIME_DYE, t(what + ".add"), List.of(), run(add)))
                 .control(LIST_INFO, item(Material.BOOK, t("help"), info, null));
-    }
-
-    private static int page(Panel panel) {
-        return panel instanceof PagedPanel p ? p.getPage() : 0;
     }
 
     void openBlocks(EditSession s, int page) {
