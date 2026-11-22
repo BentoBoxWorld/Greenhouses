@@ -84,4 +84,28 @@ class LoreTest {
         assertEquals("<red>red words <reset>plain", lines.getFirst());
         assertEquals("words here", lines.get(1));
     }
+
+    @Test
+    void testLegacyCodesTakeNoWidthAndCarry() {
+        assertEquals(List.of("\u00A7eLeft-click: chance", "\u00A7eRight-click: what it", "\u00A7ebecomes"),
+                Lore.wrapLegacy("\u00A7eLeft-click: chance\nRight-click: what it becomes", 20));
+    }
+
+    @Test
+    void testLegacyFormatsAddToColorAndResetClears() {
+        assertEquals(List.of("\u00A7c\u00A7lone two", "\u00A7c\u00A7lthree \u00A7rfour", "five"),
+                Lore.wrapLegacy("\u00A7c\u00A7lone two three \u00A7rfour five", 10));
+    }
+
+    @Test
+    void testLegacyHexColorCarries() {
+        String hex = "\u00A7x\u00A7f\u00A7f\u00A70\u00A70\u00A70\u00A70";
+        assertEquals(List.of(hex + "aaaa", hex + "bbbb"), Lore.wrapLegacy(hex + "aaaa bbbb", 4));
+    }
+
+    @Test
+    void testLegacyEmpty() {
+        assertEquals(List.of(), Lore.wrapLegacy(null));
+        assertEquals(List.of(), Lore.wrapLegacy(" "));
+    }
 }

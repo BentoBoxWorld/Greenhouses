@@ -32,6 +32,7 @@ import world.bentobox.greenhouses.greenhouse.RecipeDraft.PlantSpec;
 import world.bentobox.greenhouses.managers.RecipeCodec;
 import world.bentobox.greenhouses.managers.RecipeManager;
 import world.bentobox.greenhouses.managers.RecipeManager.SaveResult;
+import world.bentobox.greenhouses.ui.panel.Lore;
 
 /**
  * The admin recipe editor: a list of recipes, an editor for one recipe, and pages for its
@@ -89,8 +90,16 @@ public class RecipeEditor {
         return user.getTranslation(K + key, vars);
     }
 
+    /**
+     * @param lore translated lines of lore, each possibly long or holding line breaks
+     * @return the lines wrapped so tooltips stay narrow
+     */
+    static List<String> wrap(List<String> lore) {
+        return lore.stream().flatMap(l -> Lore.wrapLegacy(l).stream()).toList();
+    }
+
     private static PanelItem item(Material icon, String name, List<String> lore, PanelItem.ClickHandler click) {
-        PanelItemBuilder b = new PanelItemBuilder().icon(icon).name(name).description(lore);
+        PanelItemBuilder b = new PanelItemBuilder().icon(icon).name(name).description(wrap(lore));
         if (click != null) {
             b.clickHandler(click);
         }
@@ -348,7 +357,7 @@ public class RecipeEditor {
         }
         new DialogBuilder().title(user, K + "dialog.discard.title")
                 .body(user, K + "dialog.discard.body", "[name]", s.getDraft().getFriendlyName())
-                .confirmation(DialogButton.of(user, K + "dialog.discard.yes", u -> {
+                .confirmation(DialogButton.of(user, K + "dialog.discard.confirm", u -> {
                     EditSession.end(user.getUniqueId());
                     openList();
                 }), DialogButton.of(user, K + "dialog.cancel", u -> open(s))).build().show(user);
@@ -366,7 +375,7 @@ public class RecipeEditor {
         long used = greenhousesUsing(s.getKey());
         new DialogBuilder().title(user, K + "dialog.delete.title")
                 .body(user, K + "dialog.delete.body", "[name]", s.getDraft().getFriendlyName(), NUMBER, String.valueOf(used))
-                .confirmation(DialogButton.of(user, K + "dialog.delete.yes", u -> {
+                .confirmation(DialogButton.of(user, K + "dialog.delete.confirm", u -> {
                     if (recipes().delete(s.getKey())) {
                         EditSession.end(user.getUniqueId());
                         // Greenhouses of this type can no longer load; list them as unloaded
@@ -407,7 +416,7 @@ public class RecipeEditor {
                 }, () -> openBlocks(s, page)));
         req.forEach((m, n) -> b.item(new PanelItemBuilder().icon(Pick.icon(m)).amount(Math.clamp(n, 1, 64))
                 .name(t("blocks.entry", "[block]", Pick.name(m), NUMBER, String.valueOf(n)))
-                .description(t("blocks.entry-help")).clickHandler((panel, u, click, slot) -> {
+                .description(wrap(List.of(t("blocks.entry-help")))).clickHandler((panel, u, click, slot) -> {
                     blockClick(s, m, click, page(panel));
                     return true;
                 }).build()));
@@ -444,8 +453,8 @@ public class RecipeEditor {
             PlantSpec p = plants.get(i);
             int index = i;
             b.item(new PanelItemBuilder().icon(Pick.icon(p.plant())).name(Pick.name(p.plant()))
-                    .description(List.of(t("chance", "[value]", RecipeCodec.number(p.chance())),
-                            t("plants.grows-on", "[block]", Pick.name(p.growOn())), t("plants.entry-help")))
+                    .description(wrap(List.of(t("chance", "[value]", RecipeCodec.number(p.chance())),
+                            t("plants.grows-on", "[block]", Pick.name(p.growOn())), t("plants.entry-help"))))
                     .clickHandler((panel, u, click, slot) -> {
                         plantClick(s, index, click, page(panel));
                         return true;
@@ -498,7 +507,7 @@ public class RecipeEditor {
                 lore.add(t("mobs.variant", "[value]", Util.prettifyText(m.data())));
             }
             lore.add(t("mobs.entry-help"));
-            b.item(new PanelItemBuilder().icon(egg(m.type())).name(Util.prettifyText(m.type().name())).description(lore)
+            b.item(new PanelItemBuilder().icon(egg(m.type())).name(Util.prettifyText(m.type().name())).description(wrap(lore))
                     .clickHandler((panel, u, click, slot) -> {
                         mobClick(s, index, click, page(panel));
                         return true;
@@ -553,7 +562,7 @@ public class RecipeEditor {
             lore.add(c.adjacent() == null ? t("conversions.anywhere")
                     : t("conversions.next-to", "[block]", Pick.name(c.adjacent())));
             lore.add(t("conversions.entry-help"));
-            b.item(new PanelItemBuilder().icon(Pick.icon(c.from())).name(Pick.name(c.from())).description(lore)
+            b.item(new PanelItemBuilder().icon(Pick.icon(c.from())).name(Pick.name(c.from())).description(wrap(lore))
                     .clickHandler((panel, u, click, slot) -> {
                         conversionClick(s, index, click, page(panel));
                         return true;

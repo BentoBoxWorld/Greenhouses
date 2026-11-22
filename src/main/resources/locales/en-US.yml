@@ -117,20 +117,20 @@ greenhouses:
       add: "<green>Add a block</green>"
       help: "<gray>The least of each block the greenhouse must have inside.</gray>"
       entry: "<white>[block] x [number]</white>"
-      entry-help: "<yellow>Left +1, right -1, shift-click to type a number, Q to remove</yellow>"
+      entry-help: "<yellow>Left-click: +1<newline>Right-click: -1<newline>Shift-click: type a number<newline>Q: remove</yellow>"
     plants:
       name: "<white>Plants</white>"
       add: "<green>Add a plant</green>"
       help: "<gray>Plants grown with bone meal from the roof hopper.</gray>"
       grows-on: "<gray>Grows on: <white>[block]</white></gray>"
-      entry-help: "<yellow>Left: chance, right: what it grows on, Q to remove</yellow>"
+      entry-help: "<yellow>Left-click: chance<newline>Right-click: what it grows on<newline>Q: remove</yellow>"
     mobs:
       name: "<white>Mobs</white>"
       add: "<green>Add a mob</green>"
       help: "<gray>Mobs that spawn in the greenhouse.</gray>"
       spawns-on: "<gray>Spawns on: <white>[block]</white></gray>"
       variant: "<gray>Variant: <white>[value]</white></gray>"
-      entry-help: "<yellow>Left: chance and variant, right: what it spawns on, Q to remove</yellow>"
+      entry-help: "<yellow>Left-click: chance and variant<newline>Right-click: what it spawns on<newline>Q: remove</yellow>"
     conversions:
       name: "<white>Block conversions</white>"
       add: "<green>Add a conversion</green>"
@@ -138,7 +138,7 @@ greenhouses:
       to: "<gray>Becomes: <white>[block]</white></gray>"
       anywhere: "<gray>Anywhere</gray>"
       next-to: "<gray>Only next to: <white>[block]</white></gray>"
-      entry-help: "<yellow>Left: chance, right: what it becomes, shift-right: next to, shift-left: anywhere, Q to remove</yellow>"
+      entry-help: "<yellow>Left-click: chance<newline>Right-click: what it becomes<newline>Shift-right: only next to a block<newline>Shift-left: anywhere<newline>Q: remove</yellow>"
     back:
       name: "<white>Back to recipes</white>"
       description: "<gray>Unsaved changes are kept</gray>"
@@ -167,7 +167,7 @@ greenhouses:
       discard:
         title: "Discard changes?"
         body: "Forget your changes to [name]?"
-        yes: "<red>Discard</red>"
+        confirm: "<red>Discard</red>"
       conflict:
         title: "Changed by someone else"
         body: "[name] was saved by someone else, or reloaded, after you started editing it."
@@ -176,7 +176,7 @@ greenhouses:
       delete:
         title: "Delete recipe?"
         body: "Delete [name]? [number] greenhouse(s) use it. biomes.yml is backed up first."
-        yes: "<red>Delete</red>"
+        confirm: "<red>Delete</red>"
     form:
       ok: "<green>Done</green>"
       cancel: "Cancel"
