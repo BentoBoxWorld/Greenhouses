@@ -26,8 +26,8 @@ greenhouses:
     
   event:
    broke: "You broke this greenhouse! Reverting biome to [biome]!"
-   entering: "Entering [biome]  greenhouse"
-   leaving: "Leaving [biome]  greenhouse"
+   entering: "Entering [biome] greenhouse"
+   leaving: "Leaving [biome] greenhouse"
    
   # Recipe tooltips in the greenhouse panel
   recipe:
@@ -435,11 +435,11 @@ error:
    norecipe: "Cannot make a greenhouse!"
    
 messages:
-   enter: "Entering [owner]'s [biome]  greenhouse!"
+   enter: "Entering [owner]'s [biome] greenhouse!"
    leave: "Now leaving [owner]'s greenhouse."
-   youarein: "You are now in [owner]'s [biome]  greenhouse!"
+   youarein: "You are now in [owner]'s [biome] greenhouse!"
    removed: "This greenhouse is no more..."
-   removedmessage: "A [biome]  greenhouse of yours is no more!"
+   removedmessage: "A [biome] greenhouse of yours is no more!"
    ecolost: "Your greenhouse at [location] lost its eco system and was removed."
 
 info:

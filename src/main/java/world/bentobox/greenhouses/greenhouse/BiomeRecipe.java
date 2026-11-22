@@ -570,6 +570,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private boolean plantIt(Block bl, GreenhousePlant p, BoundingBox bb) {
         boolean underwater = bl.getType().equals(Material.WATER);
         BlockData dataBottom = p.plantMaterial().createBlockData();
+        // Only plant where the plant can stay. Mushrooms, for example, pop off grass in bright
+        // light at the next block update. Lichen and cocoa find their own spots.
+        if (!p.plantMaterial().equals(Material.GLOW_LICHEN) && !p.plantMaterial().equals(Material.COCOA)
+                && !dataBottom.isSupported(bl)) {
+            return false;
+        }
         // Check if this is a double-height plant
         if (dataBottom instanceof Bisected bi) {
             // Double-height plant

@@ -390,8 +390,8 @@ class EcoSystemManagerTest {
 
     /**
      * The density limit (moblimit) still applies, counting mobs already in the greenhouse.
-     * Area is 16 and moblimit is 9: with 1 mob already there 16/1 >= 9 allows one more, then
-     * 16/2 < 9 stops it.
+     * Area is 16 and moblimit is 8 blocks per mob: with 1 mob already there, a second fits
+     * (2 x 8 = 16) and a third would not (3 x 8 = 24).
      */
     @SuppressWarnings("unchecked")
     @Test
@@ -399,7 +399,7 @@ class EcoSystemManagerTest {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(-1);
-        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(9);
+        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(8);
         when(recipe.spawnMob(any(), any())).thenReturn(true);
         when(world.getNearbyEntities(any(BoundingBox.class), any(Predicate.class)))
         .thenReturn(List.of(mock(Entity.class)));
@@ -431,15 +431,14 @@ class EcoSystemManagerTest {
 
     /**
      * Issue #8 - water mobs are limited by the water blocks, not the floor area, and are not
-     * blocked by a full ground. 40 water blocks at 10 per mob allows 5 squid (the density check
-     * lets the next mob in while space / count >= limit).
+     * blocked by a full ground. 40 water blocks at 10 per mob allows 4 squid.
      */
     @Test
     void testAddMobsWaterMobsUseWaterBlocks() {
         setUpOceanRecipe();
         gh.setWaterBlocks(40);
         assertTrue(eco.addMobs(gh, 1D));
-        verify(recipe, times(5)).spawnMob(any(), any());
+        verify(recipe, times(4)).spawnMob(any(), any());
     }
 
     /**
@@ -450,8 +449,8 @@ class EcoSystemManagerTest {
         setUpOceanRecipe();
         gh.setWaterBlocks(10);
         assertTrue(eco.addMobs(gh, 1D));
-        // 10 / 1 >= 10 lets a second squid in, 10 / 2 < 10 stops the third
-        verify(recipe, times(2)).spawnMob(any(), any());
+        // 10 blocks is room for one squid at 10 blocks each; a second would need 20
+        verify(recipe, times(1)).spawnMob(any(), any());
     }
 
     /**
@@ -498,8 +497,8 @@ class EcoSystemManagerTest {
         when(recipe.getMaxMob()).thenReturn(-1);
         EcoSystemManager.MobCounts counts = new EcoSystemManager.MobCounts(gh, recipe);
         assertEquals(MobHabitat.AIR, counts.pool(EntityType.BAT));
-        // 48 / n >= 12 for n up to 4, so 5 bats fit
-        for (int i = 0; i < 5; i++) {
+        // 48 blocks at 12 per bat is room for 4
+        for (int i = 0; i < 4; i++) {
             assertTrue(counts.hasRoom(EntityType.BAT));
             counts.add(EntityType.BAT);
         }

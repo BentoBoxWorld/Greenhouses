@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -115,6 +116,8 @@ class BiomeRecipeTest {
         mockedBukkit.when(Bukkit::getUnsafe).thenReturn(unsafe);
 
         mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
+        // Plants can survive where they are put unless a test says otherwise
+        when(bd.isSupported(any(Block.class))).thenReturn(true);
         when(type.name()).thenReturn("BADLANDS");
         // Greenhouse
         when(gh.getArea()).thenReturn(100);
@@ -780,6 +783,24 @@ class BiomeRecipeTest {
     }
 
     /**
+     * A plant that could not stay where it would go, like a mushroom on grass in bright light,
+     * is not planted.
+     */
+    @Test
+    void testGrowPlantNotWhereItCannotSurvive() {
+        when(bd.isSupported(any(Block.class))).thenReturn(false);
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(ob);
+        assertTrue(br.addPlants(Material.RED_MUSHROOM, 100, Material.GRASS_BLOCK));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
+        verify(block, never()).setBlockData(any(BlockData.class), anyBoolean());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
      */
     @Test
@@ -822,6 +843,7 @@ class BiomeRecipeTest {
     public void testGrowPlantPlantsDoublePlant() {
         Bisected bisected = mock(Bisected.class);
         mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        when(bisected.isSupported(any(Block.class))).thenReturn(true);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);

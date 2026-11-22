@@ -305,7 +305,9 @@ public class EcoSystemManager {
         private boolean hasRoom(MobHabitat h) {
             int space = Objects.requireNonNullElse(space(h), 0);
             long sum = counts.getOrDefault(h, 0L);
-            return space > 0 && (sum == 0 || space / sum >= recipe.getMobLimit(h));
+            // The limit is blocks per mob, so one more fits if every mob, the new one included,
+            // still has that many blocks. A habitat with any space always gets its first mob.
+            return space > 0 && (sum == 0 || (sum + 1) * recipe.getMobLimit(h) <= space);
         }
     }
 
