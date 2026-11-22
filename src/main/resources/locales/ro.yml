@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Sere
       description: |
-        &b Schimbă cine poate
-        &b controla serele   
+        <aqua>Schimbă cine poate</aqua>
+        <aqua>controla serele   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Mută-te mai întâi într-o seră care îți aparține."
-    no-rank: "&c Nu ai rangul necesar pentru a face asta."
+    no-rank: "<red>Nu ai rangul necesar pentru a face asta.</red>"
     notyours: "Aceasta nu este sera ta!"
-    not-inside: "&c Nu ești în interiorul unei sere!"
+    not-inside: "<red>Nu ești în interiorul unei sere!</red>"
     tooexpensive: "Nu îți poți permite [price]" 
     alreadyexists: "Sera există deja!"
     norecipe: "Nu s-a putut crea sera!"
     
   event:
    broke: "Ai distrus această seră! Biometul revine la [biome]!"
-   entering: "Intrare în sera [biome]&f"
-   leaving: "Ieșire din sera [biome]&f"
+   entering: "Intrare în sera [biome]<white></white>"
+   leaving: "Ieșire din sera [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Rețetă [biome]]"
    watermustbe: "Apă > [coverage]% din suprafața podelei."
    icemustbe: "Blocuri de gheață > [coverage]% din suprafața podelei."
    lavamustbe: "Lavă > [coverage]% din suprafața podelei."
    minimumblockstitle: "[Blocuri minime necesare]"
    nootherblocks: "Nu sunt necesare alte blocuri."
    missing: "Sera lipsește"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Încearcă să creezi o seră"
         parameters: "<rețetă>"
         error:
-          already: "&cExistă deja o seră aici!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Acoperișul conține blocuri nepermise!"
-          FAIL_BAD_WALL_BLOCKS: "&c Pereții conțin blocuri nepermise!"
-          FAIL_BELOW: "&c Trebuie să fii în interiorul serei pentru a încerca să o creezi"
-          FAIL_BLOCKS_ABOVE: "&c Nu pot exista blocuri deasupra serei! Blocurile de sticlă roșie vor indica blocurile problematice."
+          already: "<red>Există deja o seră aici!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Acoperișul conține blocuri nepermise!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Pereții conțin blocuri nepermise!</red>"
+          FAIL_BELOW: "<red>Trebuie să fii în interiorul serei pentru a încerca să o creezi</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Nu pot exista blocuri deasupra serei! Blocurile de sticlă roșie vor indica blocurile problematice.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Există o gaură în acoperiș sau acesta nu este plat!
-            &c Blocurile de sticlă roșie vor indica problema.
-            &c Asigură-te că ești în interiorul serei pentru a o crea.
-          FAIL_HOLE_IN_WALL: "&c Există o gaură în perete!"
-          FAIL_NO_ROOF: "&c Se pare că nu există acoperiș! Asigură-te că ești în interiorul serei pentru a o crea."
-          FAIL_TOO_MANY_DOORS: "&c Nu poți avea mai mult de 4 uși în seră!"
-          FAIL_TOO_MANY_HOPPERS: "&c Este permisă o singură pâlnie (hopper) în pereți sau acoperiș."
-          FAIL_UNEVEN_WALLS: "&c Pereții sunt inegali. Blocurile de sticlă roșie vor indica blocurile problematice."
-          FAIL_INSUFFICIENT_ICE: "&c Gheață insuficientă pentru această rețetă"
-          FAIL_INSUFFICIENT_LAVA: "&c Lavă insuficientă pentru această rețetă"
-          FAIL_INSUFFICIENT_WATER: "&c Apă insuficientă pentru această rețetă"
-          FAIL_NO_ICE: "&c Gheața este necesară pentru această rețetă"
-          FAIL_NO_LAVA: "&c Lava este necesară pentru această rețetă"
-          FAIL_NO_WATER: "&c Apa este necesară pentru această rețetă"
-          FAIL_NO_RECIPE_FOUND: "&c Nu a fost găsită nicio rețetă corespunzătoare pentru această seră"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Sunt necesare mai multe blocuri pentru această rețetă!"
-          FAIL_OVERLAPPING: "&c Ne pare rău, serele nu pot împărți pereți comuni."
-        success: "&2 Ai creat cu succes o seră cu biometul [biome]! Biometul se va sincroniza la următoarea teleportare sau conectare."
-        missing-blocks: "&c Lipsesc [material] x [number]"
-        unknown-recipe: "&c Rețetă necunoscută"
-        try-these: "&c Încearcă una dintre acestea:"
-        recipe-format: "&3[name]"
+            <red>Există o gaură în acoperiș sau acesta nu este plat!</red>
+            <red>Blocurile de sticlă roșie vor indica problema.</red>
+            <red>Asigură-te că ești în interiorul serei pentru a o crea.</red>
+          FAIL_HOLE_IN_WALL: "<red>Există o gaură în perete!</red>"
+          FAIL_NO_ROOF: "<red>Se pare că nu există acoperiș! Asigură-te că ești în interiorul serei pentru a o crea.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Nu poți avea mai mult de 4 uși în seră!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Este permisă o singură pâlnie (hopper) în pereți sau acoperiș.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Pereții sunt inegali. Blocurile de sticlă roșie vor indica blocurile problematice.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Gheață insuficientă pentru această rețetă</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lavă insuficientă pentru această rețetă</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Apă insuficientă pentru această rețetă</red>"
+          FAIL_NO_ICE: "<red>Gheața este necesară pentru această rețetă</red>"
+          FAIL_NO_LAVA: "<red>Lava este necesară pentru această rețetă</red>"
+          FAIL_NO_WATER: "<red>Apa este necesară pentru această rețetă</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nu a fost găsită nicio rețetă corespunzătoare pentru această seră</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Sunt necesare mai multe blocuri pentru această rețetă!</red>"
+          FAIL_OVERLAPPING: "<red>Ne pare rău, serele nu pot împărți pereți comuni.</red>"
+        success: "<dark_green>Ai creat cu succes o seră cu biometul [biome]! Biometul se va sincroniza la următoarea teleportare sau conectare.</dark_green>"
+        missing-blocks: "<red>Lipsesc [material] x [number]</red>"
+        unknown-recipe: "<red>Rețetă necunoscută</red>"
+        try-these: "<red>Încearcă una dintre acestea:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cum să construiești o seră]"
+        title: "<green>[Cum să construiești o seră]</green>"
         instructions: |
-          &e Construiește o cutie din sticlă cu 4 pereți și un
-          &e acoperiș plat din sticlă, și adaugă până la &f 4 uși &e în pereți.
-          &e Plasează &f 1 pâlnie &e într-un perete sau acoperiș și adaugă
-          &e găleți cu apă pentru a crea zăpadă și/sau făină de oase
-          &e pentru creșterea automată. Verifică rețetele de biomet pentru
-          &e a vedea ce blocuri trebuie să fie în interior.
+          <yellow>Construiește o cutie din sticlă cu 4 pereți și un</yellow>
+          <yellow>acoperiș plat din sticlă, și adaugă până la </yellow><white>4 uși </white><yellow>în pereți.</yellow>
+          <yellow>Plasează </yellow><white>1 pâlnie </white><yellow>într-un perete sau acoperiș și adaugă</yellow>
+          <yellow>găleți cu apă pentru a crea zăpadă și/sau făină de oase</yellow>
+          <yellow>pentru creșterea automată. Verifică rețetele de biomet pentru</yellow>
+          <yellow>a vedea ce blocuri trebuie să fie în interior.</yellow>
+    admin:
+      description: "Comenzi de administrare a serelor"
+      errors:
+        unknown-id: "<red>Nicio seră nu a fost găsită cu ID [id]. Folosește comanda list pentru a vedea ID-urile. Un ID parțial funcționează dacă corespunde doar unei sere.</red>"
+        id-required: "<red>Execută asta în joc în interiorul unei sere, sau dă-mi un ID de seră.</red>"
+        no-location: "<red>Sera [id] nu are o locație validă sau lumea sa nu este încărcată.</red>"
+      list:
+        description: "Listează serele, opțional pentru un jucător"
+        parameters: "[player] [page]"
+        title: "<green>[Sere] </green><gray>([number] total, pagina [page] din [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>la </gray><white>[xyz] </white><gray>în </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(stricată)</red>"
+        more: "<gray>Folosește </gray><white>/[label] greenhouses list [page] </white><gray>pentru mai mult</gray>"
+        none: "<red>Nicio seră nu a fost găsită.</red>"
+        unloaded-title: "<red>[Ne-încărcate: [number]] </red><gray>Aceste înregistrări sunt în baza de date dar nu sunt active:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>la </gray><white>[xyz] </white><gray>în </gray><white>[world]</white>"
+      info:
+        description: "Arată detaliile complete ale unei sere"
+        parameters: "[id]"
+        title: "<green>[Informații Seră]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Rețetă: </gray><white>[recipe]</white>"
+        owner: "<gray>Proprietar: </gray><white>[owner]</white>"
+        world: "<gray>Lume: </gray><white>[world]</white>"
+        location: "<gray>Locație: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Cutie delimitatoare: </gray><white>[min] </white><gray>până la </gray><white>[max]</white>"
+        area: "<gray>Zona internă: </gray><white>[area] blocuri</white>"
+        original-biome: "<gray>Biom original: </gray><white>[biome]</white>"
+        hopper: "<gray>Pâlnie: </gray><white>[hopper]</white>"
+        broken: "<gray>Stricată: </gray><white>[broken]</white>"
+        not-loaded: "<red>Nu încărcată: [reason]</red>"
+      delete:
+        description: "Șterge o înregistrare de seră după ID, încărcată sau nu"
+        parameters: "<id>"
+        confirm: "<red>Șterge sera [id] aparținând lui [owner] la [xyz]? Aceasta nu poate fi anulată.</red>"
+        success: "<green>Sera [id] a fost ștearsă.</green>"
+      tp:
+        description: "Te teleportează la o seră"
+        parameters: "<id>"
+        success: "<green>Teleportat la sera [id]</green>"
+      verify:
+        description: "Revalidează serele împotriva rețetei lor"
+        parameters: "[id]"
+        checking: "<gray>Se verifică [number] seră(e)...</gray>"
+        ok: "<green>[id] la [xyz] respectă rețeta sa</green>"
+        broken: "<red>[id] la [xyz] eșuează: [reasons]</red>"
+      reload:
+        description: "Reîncarcă biomes.yml și recitește serele din baza de date"
+        success: "<green>Reîncărcată. [number] sere active.</green>"
+        unloaded: "<red>[number] înregistrare(i) nu a putut fi încărcată - folosește comanda list pentru a le vedea.</red>"
+      build:
+        description: "Construiește o seră de test pentru o rețetă, în jurul tău sau la locația podea dată"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Coordonatele au nevoie de toți trei x, y și z, ca numere sau ~ (ex. ~ ~ ~ sau ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] nu este o dimensiune (ex. 9x9 sau 9x9x5) sau un mod (keep sau clear).</red>"
+        too-small: "<red>Rețeta nu încape în [size]: [description]. Încearcă o dimensiune mai mare, sau lasă-o goală pentru dimensiune automată.</red>"
+        out-of-world: "<red>Asta ar merge deasupra sau sub lume. Alege o altă înălțime.</red>"
+        not-on-island: "<red>Toată sera trebuie să fie pe o insulă.</red>"
+        overlapping: "<red>Asta s-ar suprapune sera [id].</red>"
+        confirm-clear: "<red>Tot ce se află într-o seră [size] aici va fi înlocuit.</red>"
+        built: "<green>Construită o seră de test [recipe] [size] ([number] blocuri). Se construiește acum...</green>"
+      edit:
+        description: "Deschide editorul de rețete, sau editorul unei rețete"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Admin Sere</dark_green>"
+    close: "<white>Închide</white>"
+    back: "<white>Înapoi</white>"
+    cancel: "Anulează"
+    recipes:
+      name: "<green>Rețete</green>"
+      description: "<gray>Editează, adaugă sau șterge cele [number] rețete de sere</gray>"
+    greenhouses:
+      name: "<green>Sere</green>"
+      description: "<gray>[number] seră(e) construită(e). Teleportează-te, verifică, inspectează sau șterge-le.</gray>"
+      unloaded: "<red>[number] nu a putut fi încărcată(e)</red>"
+    build:
+      name: "<green>Construiește o seră de test</green>"
+      description: "<gray>Construiește o seră funcțională pentru o rețetă unde stai, cu ușa pe latura pe care te uiți</gray>"
+      pick-title: "<dark_green>Care rețetă să construiesc?</dark_green>"
+      key: "<gray>Cheie: <white>[key]</white></gray>"
+      default-size: "<gray>Dimensiune implicită: <white>[size]</white></gray>"
+      click: "<yellow>Apasă pentru a alege dimensiunea</yellow>"
+      title: "Construiește [name]"
+      body: "Sera este construită cu podeaua centrată unde stai și ușa pe latura pe care te uiți. Dimensiunile sunt de interior."
+      width: "Lățime"
+      depth: "Adâncime"
+      height: "Înălțime"
+      mode: "Ce există deja acolo"
+      keep: "Păstrează și construiește în jur"
+      clear: "Șterge mai întâi"
+      go: "<green>Construiește</green>"
+    verify:
+      name: "<green>Verifică toate serele</green>"
+      description: "<gray>Verifică fiecare seră împotriva rețetei sale acum și raportează în chat</gray>"
+    reload:
+      name: "<green>Reîncarcă</green>"
+      description: "<gray>Recitește biomes.yml și baza de date de sere</gray>"
+      confirm-title: "Reîncarcă?"
+      confirm-body: "Recitește biomes.yml și baza de date de sere? Editările rețetelor nesalvate sunt păstrate, dar vor trebui salvate peste rețetele reîncărcate."
+      confirm: "<yellow>Reîncarcă</yellow>"
+  browser:
+    title: "<dark_green>Sere</dark_green>"
+    title-owner: "<dark_green>Sere</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Fără sere</gray>"
+    back: "<white>Înapoi</white>"
+    cancel: "Anulează"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Proprietar: <white>[owner]</white></gray>"
+    where: "<gray>La: <white>[xyz]</white> în <white>[world]</white></gray>"
+    ok: "<green>Funcțională</green>"
+    broken: "<red>Stricată</red>"
+    unloaded: "<red>Nu încărcată: [reason]</red>"
+    click:
+      tp: "<yellow>Clic stânga: teleportează-te acolo</yellow>"
+      verify: "<yellow>Clic dreapta: verifică acum</yellow>"
+      info: "<yellow>Shift+clic: detalii în chat</yellow>"
+      delete: "<yellow>Q: șterge</yellow>"
+    filter:
+      name: "<white>Filtrează după proprietar</white>"
+      all: "<gray>Se arată ale tuturor</gray>"
+      only: "<gray>Se arată ale <white>[owner]</white></gray>"
+      click: "<yellow>Apasă pentru a schimba</yellow>"
+      title: "Filtrează după proprietar"
+      label: "Nume proprietar (gol pentru toți)"
+      apply: "<green>Arată</green>"
+    delete:
+      title: "Șterge sera?"
+      body: "Șterge sera [id] aparținând lui [owner] la [xyz]? Aceasta nu poate fi anulată."
+      confirm: "<red>Șterge</red>"
+  editor:
+    needs-dialogs: "<red>Editorul de rețete necesită Paper 1.21.7 sau mai nou.</red>"
+    unknown-recipe: "<red>Nu există o rețetă numită [key].</red>"
+    resuming: "<yellow>Recuperez modificările nesalvate pentru [name]<yellow>.</yellow>"
+    saved: "<green>Salvat [name]<green>. [number] seră(e) o folosesc și urmează noile reguli de acum înainte.</green>"
+    save-failed: "<red>biomes.yml nu a putut fi scris - vedeți jurnalul serverului. Nimic nu a fost salvat.</red>"
+    deleted: "<green>Ștearsă [name]<green>. Cele [number] seră(e) sunt listate ca neîncărcate până sunt șterse sau rețeta se întoarce.</green>"
+    title: "<dark_green>Editez</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(nesalvat)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Apasă pentru a schimba</yellow>"
+    click-open: "<yellow>Apasă pentru a deschide</yellow>"
+    none: "niciuna"
+    entries: "<gray>Intrări: <white>[number]</white></gray>"
+    total-chance: "<gray>Șansele se adună la <white>[value]%</white></gray>"
+    chance: "<gray>Șansă: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Înapoi la rețetă</white>"
+    help: "<white>Cum să folosești această pagină</white>"
+    list:
+      title: "<dark_green>Rețete de sere</dark_green>"
+      key: "<gray>Cheie: <white>[key]</white></gray>"
+      biome: "<gray>Biom: <white>[biome]</white></gray>"
+      priority: "<gray>Prioritate: <white>[number]</white></gray>"
+      used: "<gray>Folosită de <white>[number]</white> seră(e)</gray>"
+      unsaved: "<gold>Ai modificări nesalvate</gold>"
+      click-edit: "<yellow>Apasă pentru a edita</yellow>"
+      back: "<white>Înapoi</white>"
+      new:
+        name: "<green>Rețetă nouă</green>"
+        description: "<gray>Începe o rețetă de la zero</gray>"
+    pick:
+      biome: "<dark_green>Alege un biom</dark_green>"
+      icon: "<dark_green>Alege o iconiță</dark_green>"
+      block: "<dark_green>Alege un bloc</dark_green>"
+      plant: "<dark_green>Alege o plantă</dark_green>"
+      grows-on: "<dark_green>Pe ce crește?</dark_green>"
+      mob: "<dark_green>Alege o creaturi</dark_green>"
+      spawns-on: "<dark_green>Pe ce apare?</dark_green>"
+      convert-from: "<dark_green>Care bloc se schimbă?</dark_green>"
+      convert-to: "<dark_green>În ce se schimbă?</dark_green>"
+      next-to: "<dark_green>Lângă ce?</dark_green>"
+    icon:
+      name: "<white>Iconiță</white>"
+    general:
+      name: "<white>Nume și descriere</white>"
+      value-name: "<gray>Nume: </gray>[value]"
+      value-priority: "<gray>Prioritate: <white>[number]</white></gray>"
+      value-permission: "<gray>Permisiune: <white>[value]</white></gray>"
+      no-description: "<gray>Fără descriere</gray>"
+      has-description: "<gray>Are descriere</gray>"
+    biome:
+      name: "<white>Biom</white>"
+      value: "<gray>Biom: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Apă, lavă și gheață</white>"
+      water: "<aqua>Apă: </aqua>[value]"
+      lava: "<gold>Lavă: </gold>[value]"
+      ice: "<aqua>Gheață: </aqua>[value]"
+      unchecked: "<gray>ne-verificat</gray>"
+      none: "<red>niciuna permisă</red>"
+      at-least: "<white>cel puțin [number]% din podea</white>"
+    mob-limits:
+      name: "<white>Limite de creaturi</white>"
+      ground: "<gray>Blocuri pe creaturi: <white>[number]</white></gray>"
+      water: "<gray>Blocuri de apă pe creaturi acvatice: <white>[value]</white></gray>"
+      lava: "<gray>Blocuri de lavă pe creaturi de lavă: <white>[value]</white></gray>"
+      air: "<gray>Blocuri de aer pe creaturi zburătoare: <white>[value]</white></gray>"
+      shared: "la fel ca sol"
+      max: "<gray>Cele mai multe creaturi odată: <white>[value]</white></gray>"
+      no-max: "fără limită"
+    blocks:
+      name: "<white>Blocuri necesare</white>"
+      add: "<green>Adaugă un bloc</green>"
+      help: "<gray>Cel puțin din fiecare bloc pe care sera trebuie să-l aibă în interior.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Clic stânga: +1<newline>Clic dreapta: -1<newline>Shift+clic: scrie un număr<newline>Q: șterge</yellow>"
+    plants:
+      name: "<white>Plante</white>"
+      add: "<green>Adaugă o plantă</green>"
+      help: "<gray>Plante crescute cu făină de os din hopperul acoperișului.</gray>"
+      grows-on: "<gray>Crește pe: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic stânga: șansă<newline>Clic dreapta: pe ce crește<newline>Q: șterge</yellow>"
+    mobs:
+      name: "<white>Creaturi</white>"
+      add: "<green>Adaugă o creaturi</green>"
+      help: "<gray>Creaturi care apar în seră.</gray>"
+      spawns-on: "<gray>Apare pe: <white>[block]</white></gray>"
+      variant: "<gray>Variantă: <white>[value]</white></gray>"
+      entry-help: "<yellow>Clic stânga: șansă și variantă<newline>Clic dreapta: pe ce apare<newline>Q: șterge</yellow>"
+    conversions:
+      name: "<white>Conversii de blocuri</white>"
+      add: "<green>Adaugă o conversie</green>"
+      help: "<gray>Blocuri care se schimbă ușor în alte blocuri.</gray>"
+      to: "<gray>Se schimbă în: <white>[block]</white></gray>"
+      anywhere: "<gray>Oriunde</gray>"
+      next-to: "<gray>Doar lângă: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic stânga: șansă<newline>Clic dreapta: în ce se schimbă<newline>Shift+dreapta: doar lângă un bloc<newline>Shift+stânga: oriunde<newline>Q: șterge</yellow>"
+    back:
+      name: "<white>Înapoi la rețete</white>"
+      description: "<gray>Modificările nesalvate sunt păstrate</gray>"
+    discard:
+      name: "<red>Renunță la modificări</red>"
+      description: "<gray>Uită modificările din ultima salvare</gray>"
+    save:
+      name: "<green>Salvează</green>"
+      nothing: "<gray>Nicio modificare de salvat</gray>"
+      description: "<gray>Scrie biomes.yml; [number] seră(e) urmează noile reguli imediat</gray>"
+      problems: "<red>Corectează mai întâi:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplică</white>"
+      description: "<gray>Începe o rețetă nouă din aceasta</gray>"
+    delete:
+      name: "<red>Șterge rețetă</red>"
+      description: "<gray>[number] seră(e) folosesc aceasta rețetă</gray>"
+    dialog:
+      cancel: "Anulează"
+      switch:
+        title: "Modificări nesalvate"
+        body: "Ai modificări nesalvate pentru [name]. Renunță pentru a edita această rețetă?"
+        discard: "<red>Renunță</red>"
+        keep: "Înapoi la [name]"
+      discard:
+        title: "Renunță la modificări?"
+        body: "Uită-ți modificările pentru [name]?"
+        confirm: "<red>Renunță</red>"
+      conflict:
+        title: "Schimbat de altcineva"
+        body: "[name] a fost salvat de altcineva, sau reîncărcat, după ce ai început să editezi."
+        overwrite: "<red>Salvează al meu peste el</red>"
+        theirs: "Începe din nou de la al lor"
+      delete:
+        title: "Șterge rețetă?"
+        body: "Șterge [name]? [number] seră(e) o folosesc. biomes.yml este copiat mai întâi."
+        confirm: "<red>Șterge</red>"
+    form:
+      ok: "<green>Gata</green>"
+      cancel: "Anulează"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] nu este o șansă. Folosește un procent deasupra 0 și până la 100, ex. 5 sau 0,5."
+      general:
+        title: "Nume și descriere"
+        name: "Nume (culorile MiniMessage sunt permise)"
+        description: "Descriere afișată în panoul de rețete"
+        priority: "Prioritate"
+        permission: "Permisiune necesară pentru a face aceasta (gol pentru niciuna)"
+        no-name: "Numele nu poate fi gol."
+        bad-permission: "O permisiune nu poate conține spații."
+      coverage:
+        title: "Apă, lavă și gheață"
+        water: "Apă"
+        lava: "Lavă"
+        ice: "Gheață"
+        percent: "Procent din podea"
+        unchecked: "Ne-verificat"
+        none: "Niciuna permisă"
+        atleast: "Cel puțin..."
+        too-much: "Apă, lavă și gheață împreună nu pot necesita mai mult decât podeaua întreagă."
+      mobs:
+        title: "Limite de creaturi"
+        ground: "Blocuri pe creaturi"
+        water: "Blocuri de apă pe creaturi acvatice (0 = la fel)"
+        lava: "Blocuri de lavă pe creaturi de lavă (0 = la fel)"
+        air: "Blocuri de aer pe creaturi zburătoare (0 = la fel)"
+        max: "Cele mai multe creaturi odată (-1 = fără limită)"
+      chance:
+        title: "Șansă"
+        field: "% șansă pentru [what]"
+      mob:
+        title: "Creaturi"
+        variant: "Variantă"
+        no-variant: "Normală"
+      count:
+        title: "Câți?"
+        field: "Câți [what]"
+      key:
+        title: "Cheie rețetă"
+        field: "Cheie: litere, numere, - și _ (nu poate fi schimbată mai târziu)"
+        bad: "Folosește 1 până la 32 de litere, numere, - sau _."
+        taken: "Există deja o rețetă numită [key]."
 
 help:
    help: "ajutor"
@@ -111,35 +421,33 @@ error:
    norecipe: "Nu s-a putut crea sera!"
    
 messages:
-   enter: "Ai intrat în sera lui [owner] ([biome]&f)!"
+   enter: "Ai intrat în sera lui [owner] ([biome]<white>)!</white>"
    leave: "Ai părăsit sera lui [owner]."
-   youarein: "Ești acum în sera lui [owner] ([biome]&f)!"
+   youarein: "Ești acum în sera lui [owner] ([biome]<white>)!</white>"
    removed: "Această seră nu mai există..."
-   removedmessage: "Sera ta ([biome]&f) a fost ștearsă!"
+   removedmessage: "Sera ta ([biome]<white>) a fost ștearsă!</white>"
    ecolost: "Sera ta din [location] și-a pierdut ecosistemul și a fost ștearsă."
 
 info:
-   title: "&A[Cum să construiești o seră]"
+   title: "<green>[Cum să construiești o seră]</green>"
    instructions: |
-     &E Construiește o cutie din sticlă cu 4 pereți și un
-     &E acoperiș plat din sticlă, și adaugă până la &F 4 uși &E în pereți.
-     &E Plasează &F 1 pâlnie &E într-un perete sau acoperiș și adaugă
-     &E găleți cu apă pentru a crea zăpadă și/sau făină de oase
-     &E pentru creșterea automată. Verifică rețetele de biomet pentru
-     &E a vedea ce blocuri trebuie să fie în interior. 
+     <yellow>Construiește o cutie din sticlă cu 4 pereți și un</yellow>
+     <yellow>acoperiș plat din sticlă, și adaugă până la </yellow><white>4 uși </white><yellow>în pereți.</yellow>
+     <yellow>Plasează </yellow><white>1 pâlnie </white><yellow>într-un perete sau acoperiș și adaugă</yellow>
+     <yellow>găleți cu apă pentru a crea zăpadă și/sau făină de oase</yellow>
+     <yellow>pentru creșterea automată. Verifică rețetele de biomet pentru</yellow>
+     <yellow>a vedea ce blocuri trebuie să fie în interior. </yellow>
    info: "[Info Seră]"
    none: "niciunul"
-   nomore: "&4 Nu mai poți construi alte sere!"
-   onemore: "&6 Mai poți construi încă o seră."
-   youcanbuild: "&A Mai poți construi până la [number] sere!"
-   unlimited: "&A Poți construi un număr nelimitat de sere!"
-   welcome: "&B Bine ai venit! Click aici pentru instrucțiuni"
+   nomore: "<dark_red>Nu mai poți construi alte sere!</dark_red>"
+   onemore: "<gold>Mai poți construi încă o seră.</gold>"
+   youcanbuild: "<green>Mai poți construi până la [number] sere!</green>"
+   unlimited: "<green>Poți construi un număr nelimitat de sere!</green>"
+   welcome: "<aqua>Bine ai venit! Click aici pentru instrucțiuni</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Folosește /greenhouse list pentru a vedea lista numerelor de rețete!"
    wrongnumber: "Numărul rețetei trebuie să fie între 1 și [size]"
-   title: "[Rețetă [biome]]"
    nowater: "Apa nu este permisă."
    noice: "Gheața nu este permisă."
    nolava: "Lava nu este permisă."
@@ -176,4 +484,4 @@ news:
    headline: "[Știri Sere]"
 
 controlpanel:
-   title: "&ASere"
+   title: "<green>Sere</green>"

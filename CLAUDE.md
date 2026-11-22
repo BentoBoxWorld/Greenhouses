@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Greenhouses is a BentoBox addon for Minecraft that lets players build glass structures to create custom biome greenhouses. Features include biome-specific plant growth, mob spawning, weather/snow simulation, and block erosion/conversion. Targets Spigot 1.21.5 and BentoBox 2.7.1+.
+Greenhouses is a BentoBox addon for Minecraft that lets players build glass structures to create custom biome greenhouses. Features include biome-specific plant growth, mob spawning, weather/snow simulation, and block erosion/conversion. Compiles against Paper 26.3 and BentoBox 3.23.7 (Java 25); the minimum supported server is Paper 1.21.11.
 
 ## Build Commands
 
@@ -16,7 +16,7 @@ mvn test -Dtest=Class#method   # Run single test method
 mvn clean verify               # Full build + analysis (used in CI)
 ```
 
-**Requirements:** Java 21, Maven 3.x+
+**Requirements:** Java 25 (`JAVA_HOME=$(/usr/libexec/java_home -v 25)`), Maven 3.x+
 
 ## Architecture
 
@@ -51,12 +51,15 @@ Admin commands live in `ui/admin/`, registered on the game mode's admin command 
 
 | Sub-command | Purpose |
 |---|---|
+| *(none, player)* | Opens the admin hub (`AdminHub`): Recipes, Greenhouses (`GreenhouseBrowser`), Build here, Check all, Reload. Buttons show only with the sub-command's permission and run the sub-command through `CompositeCommand.call()`, so checks and messages match typing it. The console gets help. |
 | `list [player] [page]` | Paginated list of loaded greenhouses; always also lists records that failed to load |
 | `info [id]` | Full detail of one greenhouse, or the one you are standing in |
 | `delete <id>` | Deletes a record by ID, loaded or not, after confirmation |
 | `tp <id>` | Teleports to the centre of a greenhouse floor |
 | `verify [id]` | Re-runs the recipe check against the world for one or all greenhouses |
 | `reload` | Re-reads `biomes.yml` then re-loads greenhouses from the database |
+| `build <recipe> [x y z] [WxDxH] [keep\|clear]` | Builds a test greenhouse (glass, biome-styled door, roof hopper) centred on the floor at `~ ~ ~`, sized to the recipe by default, then makes it. `clear` (confirmed) furnishes the inside to meet the recipe; `keep` builds around what is there. Planning is in `build/GreenhousePlan` |
+| `edit [recipe]` | Recipe editor GUI (`ui/admin/editor/`): BentoBox panels, dialog forms and pickers over a `RecipeDraft` held in the admin's `EditSession`; Save writes `biomes.yml` through `RecipeManager.save` and swaps the live recipe |
 
 IDs may be abbreviated to any unique prefix; an ambiguous prefix is deliberately treated as no match.
 
@@ -77,8 +80,9 @@ Records that fail to load (overlapping, unknown recipe, no world, null location)
 
 ## Testing
 
-- **JUnit 4** with **PowerMock** (for Bukkit static mocking) and **Mockito**
-- `ServerMocks.java` provides shared Bukkit server/registry mock setup
+- **JUnit 5** with **MockBukkit** (real registries and tags) and **Mockito 5** (`mockStatic` for Bukkit/BentoBox statics)
+- Most tests extend `CommonTestSetup`, which starts MockBukkit, mocks `Bukkit`/`Util` statics and wires the BentoBox plugin mocks. Use `WhiteBox.setInternalState` for singletons. Do not use `@ExtendWith(MockitoExtension.class)`; it clashes with MockBukkit's inline mocks.
+- Tags such as `Tag.ICE` are real under MockBukkit: use real materials rather than stubbing `isTagged`.
 - Tests live in `src/test/java/world/bentobox/greenhouses/`
 - Coverage via JaCoCo (excludes Material enum and synthetic fields)
 
@@ -212,7 +216,7 @@ Work through the stages below **in order**. Each stage should be a separate comm
 
 ### Stage 4 — Test Framework Upgrade
 
-#### 4a. Migrate from JUnit 4 + PowerMock to JUnit 5 + Mockito
+#### 4a. Migrate from JUnit 4 + PowerMock to JUnit 5 + Mockito — **DONE** (JUnit 5 + MockBukkit, branch `feature/admin-gui-100-102`)
 
 - **Why:** PowerMock is effectively unmaintained and has known incompatibilities with the Java 21 module system. Mockito 5.x provides `mockStatic()` as a first-class replacement.
 - **pom.xml changes:**
@@ -275,7 +279,7 @@ Priority order:
 | `RecipeManager` | Happy-path YAML load, unknown material (warns + skips), unknown entity (warns + skips), >49 recipes (truncated) |
 | `UserCommand` | Sub-command registration, default (no-arg) opens panel |
 
-Use `ServerMocks.java` as the shared setup base (it already handles Registry and Tag mocking).
+Use `CommonTestSetup` as the shared setup base (MockBukkit supplies real registries and tags).
 
 ---
 

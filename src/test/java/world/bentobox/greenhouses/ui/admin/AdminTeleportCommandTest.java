@@ -1,8 +1,8 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,16 +19,16 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -36,16 +36,14 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.WhiteBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class, Util.class })
-public class AdminTeleportCommandTest {
+class AdminTeleportCommandTest {
 
     private static final String ID = "aaaaaaaa-1111-1111-1111-111111111111";
 
@@ -69,16 +67,26 @@ public class AdminTeleportCommandTest {
 
     private AdminTeleportCommand cmd;
     private Greenhouse gh;
+    private MockitoSession mockSession;
+    private MockedStatic<Util> mockedUtil;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        mockedUtil = Mockito.mockStatic(Util.class);
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
-        PowerMockito.mockStatic(Util.class);
-        when(Util.teleportAsync(any(), any())).thenReturn(CompletableFuture.completedFuture(true));
+        mockedUtil.when(() -> Util.teleportAsync(any(), any())).thenReturn(CompletableFuture.completedFuture(true));
         when(parent.getAddon()).thenReturn(addon);
         when(parent.getPermissionPrefix()).thenReturn("bskyblock.");
         when(parent.getLabel()).thenReturn("greenhouses");
@@ -94,16 +102,24 @@ public class AdminTeleportCommandTest {
         cmd = new AdminTeleportCommand(parent);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockedUtil != null) {
+            mockedUtil.closeOnDemand();
+        }
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link AdminTeleportCommand#setup()}.
      */
     @Test
-    public void testSetupIsPlayerOnly() {
+    void testSetupIsPlayerOnly() {
         assertTrue(cmd.isOnlyPlayer());
     }
 
@@ -111,7 +127,7 @@ public class AdminTeleportCommandTest {
      * Test method for {@link AdminTeleportCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoArgs() {
+    void testCanExecuteNoArgs() {
         assertFalse(cmd.canExecute(user, "tp", Collections.emptyList()));
     }
 
@@ -119,7 +135,7 @@ public class AdminTeleportCommandTest {
      * Test method for {@link AdminTeleportCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteUnknownId() {
+    void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "tp", List.of("nope")));
         verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
@@ -129,7 +145,7 @@ public class AdminTeleportCommandTest {
      * Test method for {@link AdminTeleportCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteRecordWithNoWorld() {
+    void testCanExecuteRecordWithNoWorld() {
         // Records with an unloaded world are exactly the ones that fail to load
         when(gh.getLocation()).thenReturn(null);
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
@@ -141,14 +157,13 @@ public class AdminTeleportCommandTest {
      * Test method for {@link AdminTeleportCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteTeleportsToFloorCentre() {
+    void testExecuteTeleportsToFloorCentre() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         assertTrue(cmd.canExecute(user, "tp", List.of(ID)));
         assertTrue(cmd.execute(user, "tp", List.of(ID)));
 
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
-        PowerMockito.verifyStatic(Util.class);
-        Util.teleportAsync(eq(player), captor.capture());
+        mockedUtil.verify(() -> Util.teleportAsync(eq(player), captor.capture()));
         Location target = captor.getValue();
         // Centre of the box in x/z, standing on the floor rather than in it
         assertEquals(5D, target.getX(), 0D);

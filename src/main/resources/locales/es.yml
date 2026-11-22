@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Invernaderos
       description: |
-        &b Alterna quién puede
-        &b controlar los invernaderos   
+        <aqua>Alterna quién puede</aqua>
+        <aqua>controlar los invernaderos   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Primero muévete a un invernadero que te pertenezca."
-    no-rank: "&c No tienes el rango necesario para hacer eso."
+    no-rank: "<red>No tienes el rango necesario para hacer eso.</red>"
     notyours: "¡Este no es tu invernadero!"
-    not-inside: "&c ¡No estás dentro de un invernadero!"
+    not-inside: "<red>¡No estás dentro de un invernadero!</red>"
     tooexpensive: "No puedes permitirte [price]" 
     alreadyexists: "¡El invernadero ya existe!"
     norecipe: "¡No se puede crear el invernadero!"
     
   event:
    broke: "¡Has roto este invernadero! Revirtiendo el bioma a [biome]!"
-   entering: "Entrando al invernadero [biome]&f"
-   leaving: "Saliendo del invernadero [biome]&f"
+   entering: "Entrando al invernadero [biome]<white></white>"
+   leaving: "Saliendo del invernadero [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receta de [biome]]"
    watermustbe: "Agua > [coverage]% del área del suelo."
    icemustbe: "Bloques de hielo > [coverage]% del área del suelo."
    lavamustbe: "Lava > [coverage]% del área del suelo."
    minimumblockstitle: "[Bloques mínimos requeridos]"
    nootherblocks: "No se requieren otros bloques."
    missing: "Falta el invernadero"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Intenta crear un invernadero"
         parameters: "<receta>"
         error:
-          already: "&c¡Ya hay un invernadero aquí!"
-          FAIL_BAD_ROOF_BLOCKS: "&c ¡El techo contiene bloques no permitidos!"
-          FAIL_BAD_WALL_BLOCKS: "&c ¡La pared contiene bloques no permitidos!"
-          FAIL_BELOW: "&c Debes estar dentro del invernadero para intentar crearlo"
-          FAIL_BLOCKS_ABOVE: "&c ¡No puede haber bloques sobre el invernadero! Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
+          already: "<red>¡Ya hay un invernadero aquí!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>¡El techo contiene bloques no permitidos!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>¡La pared contiene bloques no permitidos!</red>"
+          FAIL_BELOW: "<red>Debes estar dentro del invernadero para intentar crearlo</red>"
+          FAIL_BLOCKS_ABOVE: "<red>¡No puede haber bloques sobre el invernadero! Los bloques de cristal rojo deberían mostrar los bloques problemáticos.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c ¡Hay un agujero en el techo o no es plano!
-            &c Los bloques de cristal rojo deberían mostrar el problema.
-            &c Asegúrate de estar dentro de tu invernadero para crearlo.
-          FAIL_HOLE_IN_WALL: "&c ¡Hay un agujero en la pared!"
-          FAIL_NO_ROOF: "&c ¡Parece que no hay techo! Asegúrate de estar dentro del invernadero para crearlo."
-          FAIL_TOO_MANY_DOORS: "&c ¡No puedes tener más de 4 puertas en el invernadero!"
-          FAIL_TOO_MANY_HOPPERS: "&c Solo se permite una tolva en las paredes o el techo."
-          FAIL_UNEVEN_WALLS: "&c Las paredes están desiguales. Los bloques de cristal rojo deberían mostrar los bloques problemáticos."
-          FAIL_INSUFFICIENT_ICE: "&c Hielo insuficiente para crear esta receta"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para crear esta receta"
-          FAIL_INSUFFICIENT_WATER: "&c Agua insuficiente para crear esta receta"
-          FAIL_NO_ICE: "&c Se requiere hielo para crear esta receta"
-          FAIL_NO_LAVA: "&c Se requiere lava para crear esta receta"
-          FAIL_NO_WATER: "&c Se requiere agua para crear esta receta"
-          FAIL_NO_RECIPE_FOUND: "&c No se encontró ninguna receta que coincida con este invernadero"
-          FAIL_INSUFFICIENT_BLOCKS: "&c ¡Se requieren más bloques para crear esta receta!"
-          FAIL_OVERLAPPING: "&c Lo sentimos, los invernaderos no pueden compartir paredes."
-        success: "&2 ¡Has creado con éxito un invernadero de bioma [biome]! El bioma se sincronizará en el próximo teletransporte o inicio de sesión."
-        missing-blocks: "&c Falta [material] x [number]"
-        unknown-recipe: "&c Receta desconocida"
-        try-these: "&c Prueba una de estas:"
-        recipe-format: "&3[name]"
+            <red>¡Hay un agujero en el techo o no es plano!</red>
+            <red>Los bloques de cristal rojo deberían mostrar el problema.</red>
+            <red>Asegúrate de estar dentro de tu invernadero para crearlo.</red>
+          FAIL_HOLE_IN_WALL: "<red>¡Hay un agujero en la pared!</red>"
+          FAIL_NO_ROOF: "<red>¡Parece que no hay techo! Asegúrate de estar dentro del invernadero para crearlo.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>¡No puedes tener más de 4 puertas en el invernadero!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Solo se permite una tolva en las paredes o el techo.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Las paredes están desiguales. Los bloques de cristal rojo deberían mostrar los bloques problemáticos.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Hielo insuficiente para crear esta receta</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava insuficiente para crear esta receta</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Agua insuficiente para crear esta receta</red>"
+          FAIL_NO_ICE: "<red>Se requiere hielo para crear esta receta</red>"
+          FAIL_NO_LAVA: "<red>Se requiere lava para crear esta receta</red>"
+          FAIL_NO_WATER: "<red>Se requiere agua para crear esta receta</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>No se encontró ninguna receta que coincida con este invernadero</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>¡Se requieren más bloques para crear esta receta!</red>"
+          FAIL_OVERLAPPING: "<red>Lo sentimos, los invernaderos no pueden compartir paredes.</red>"
+        success: "<dark_green>¡Has creado con éxito un invernadero de bioma [biome]! El bioma se sincronizará en el próximo teletransporte o inicio de sesión.</dark_green>"
+        missing-blocks: "<red>Falta [material] x [number]</red>"
+        unknown-recipe: "<red>Receta desconocida</red>"
+        try-these: "<red>Prueba una de estas:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cómo construir un invernadero]"
+        title: "<green>[Cómo construir un invernadero]</green>"
         instructions: |
-          &e Crea una caja de cristal con 4 paredes y un techo de cristal
-          &e plano, y añade hasta &f 4 puertas &e en las paredes.
-          &e Coloca &f 1 tolva &e en una pared o techo y añade cubos de agua.
-          &e para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
-          &e Consulta las recetas de biomas para ver qué bloques deben estar dentro
-          &e de un invernadero para crearlo con éxito.
+          <yellow>Crea una caja de cristal con 4 paredes y un techo de cristal</yellow>
+          <yellow>plano, y añade hasta </yellow><white>4 puertas </white><yellow>en las paredes.</yellow>
+          <yellow>Coloca </yellow><white>1 tolva </white><yellow>en una pared o techo y añade cubos de agua.</yellow>
+          <yellow>para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.</yellow>
+          <yellow>Consulta las recetas de biomas para ver qué bloques deben estar dentro</yellow>
+          <yellow>de un invernadero para crearlo con éxito.</yellow>
+    admin:
+      description: "Comandos de admin de invernaderos"
+      errors:
+        unknown-id: "<red>No se encontró invernadero con ID [id]. Usa el comando list para ver los IDs. Una ID parcial funciona si solo coincide con un invernadero.</red>"
+        id-required: "<red>Ejecuta esto en el juego dentro de un invernadero o proporciona una ID de invernadero.</red>"
+        no-location: "<red>El invernadero [id] no tiene una ubicación válida o su mundo no está cargado.</red>"
+      list:
+        description: "Lista invernaderos, opcionalmente para un jugador"
+        parameters: "[player] [page]"
+        title: "<green>[Invernaderos] </green><gray>([number] total, página [page] de [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>en </gray><white>[xyz] </white><gray>en </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(roto)</red>"
+        more: "<gray>Usa </gray><white>/[label] greenhouses list [page] </white><gray>para más</gray>"
+        none: "<red>No se encontraron invernaderos.</red>"
+        unloaded-title: "<red>[No cargado: [number]] </red><gray>Estos registros están en la base de datos pero no están activos:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>en </gray><white>[xyz] </white><gray>en </gray><white>[world]</white>"
+      info:
+        description: "Muestra detalles completos de un invernadero"
+        parameters: "[id]"
+        title: "<green>[Información del Invernadero]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Receta: </gray><white>[recipe]</white>"
+        owner: "<gray>Propietario: </gray><white>[owner]</white>"
+        world: "<gray>Mundo: </gray><white>[world]</white>"
+        location: "<gray>Ubicación: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Caja delimitadora: </gray><white>[min] </white><gray>a </gray><white>[max]</white>"
+        area: "<gray>Área interna: </gray><white>[area] bloques</white>"
+        original-biome: "<gray>Bioma original: </gray><white>[biome]</white>"
+        hopper: "<gray>Tolva: </gray><white>[hopper]</white>"
+        broken: "<gray>Roto: </gray><white>[broken]</white>"
+        not-loaded: "<red>No cargado: [reason]</red>"
+      delete:
+        description: "Elimina un registro de invernadero por ID, cargado o no"
+        parameters: "<id>"
+        confirm: "<red>¿Eliminar invernadero [id] perteneciente a [owner] en [xyz]? Esto no se puede deshacer.</red>"
+        success: "<green>Invernadero [id] eliminado.</green>"
+      tp:
+        description: "Te teletransporta a un invernadero"
+        parameters: "<id>"
+        success: "<green>Teletransportado al invernadero [id]</green>"
+      verify:
+        description: "Recomprueba invernaderos contra su receta"
+        parameters: "[id]"
+        checking: "<gray>Comprobando [number] invernadero(s)...</gray>"
+        ok: "<green>[id] en [xyz] cumple su receta</green>"
+        broken: "<red>[id] en [xyz] falla: [reasons]</red>"
+      reload:
+        description: "Recarga biomes.yml y vuelve a leer invernaderos de la base de datos"
+        success: "<green>Recargado. [number] invernaderos activos.</green>"
+        unloaded: "<red>[number] registro(s) no pudieron cargarse - usa el comando list para verlos.</red>"
+      build:
+        description: "Construye un invernadero de prueba para una receta, alrededor de ti o en el centro del suelo dado"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Las coordenadas necesitan los tres x, y y z, como números o ~ (por ejemplo ~ ~ ~ o ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] no es un tamaño (por ejemplo 9x9 o 9x9x5) o un modo (keep o clear).</red>"
+        too-small: "<red>La receta no cabe en [size]: [description]. Intenta un tamaño más grande, o déjalo para ajustarlo automáticamente.</red>"
+        out-of-world: "<red>Eso iría por encima o por debajo del mundo. Elige otra altura.</red>"
+        not-on-island: "<red>El invernadero entero debe estar en una isla.</red>"
+        overlapping: "<red>Eso se superpondría con el invernadero [id].</red>"
+        confirm-clear: "<red>Todo adentro de un invernadero [size] aquí será reemplazado.</red>"
+        built: "<green>Construido un invernadero de prueba [recipe] [size] ([number] bloques). Construyéndolo ahora...</green>"
+      edit:
+        description: "Abre el editor de recetas, o el editor de una receta"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Admin de invernaderos</dark_green>"
+    close: "<white>Cerrar</white>"
+    back: "<white>Atrás</white>"
+    cancel: "Cancelar"
+    recipes:
+      name: "<green>Recetas</green>"
+      description: "<gray>Editar, añadir o eliminar las [number] recetas de invernaderos</gray>"
+    greenhouses:
+      name: "<green>Invernaderos</green>"
+      description: "<gray>[number] invernadero(s) construido(s). Teletransportarse, comprobar, inspeccionar o eliminar.</gray>"
+      unloaded: "<red>[number] no pudieron cargarse</red>"
+    build:
+      name: "<green>Construir un invernadero de prueba</green>"
+      description: "<gray>Construye un invernadero funcional para una receta donde estás, con la puerta en el lado hacia donde miras</gray>"
+      pick-title: "<dark_green>¿Qué receta construir?</dark_green>"
+      key: "<gray>Clave: <white>[key]</white></gray>"
+      default-size: "<gray>Tamaño predeterminado: <white>[size]</white></gray>"
+      click: "<yellow>Haz clic para elegir el tamaño</yellow>"
+      title: "Construir [name]"
+      body: "El invernadero se construye con el suelo centrado donde estás y la puerta en el lado hacia donde miras. Los tamaños son el interior."
+      width: "Ancho"
+      depth: "Profundidad"
+      height: "Altura"
+      mode: "¿Qué hay allí ahora"
+      keep: "Mantenerlo y construir alrededor"
+      clear: "Limpiarlo primero"
+      go: "<green>Construir</green>"
+    verify:
+      name: "<green>Comprobar todos los invernaderos</green>"
+      description: "<gray>Comprueba cada invernadero contra su receta ahora e informa en el chat</gray>"
+    reload:
+      name: "<green>Recargar</green>"
+      description: "<gray>Vuelve a leer biomes.yml y la base de datos de invernaderos</gray>"
+      confirm-title: "¿Recargar?"
+      confirm-body: "¿Volver a leer biomes.yml y la base de datos de invernaderos? Los cambios de receta sin guardar se mantienen, pero necesitarán guardarse sobre las recetas recargadas."
+      confirm: "<yellow>Recargar</yellow>"
+  browser:
+    title: "<dark_green>Invernaderos</dark_green>"
+    title-owner: "<dark_green>Invernaderos</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Sin invernaderos</gray>"
+    back: "<white>Atrás</white>"
+    cancel: "Cancelar"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Propietario: <white>[owner]</white></gray>"
+    where: "<gray>En: <white>[xyz]</white> en <white>[world]</white></gray>"
+    ok: "<green>Funcional</green>"
+    broken: "<red>Roto</red>"
+    unloaded: "<red>No cargado: [reason]</red>"
+    click:
+      tp: "<yellow>Clic izquierdo: teletransportarse allí</yellow>"
+      verify: "<yellow>Clic derecho: comprobar ahora</yellow>"
+      info: "<yellow>Shift-clic: detalles en el chat</yellow>"
+      delete: "<yellow>Q: eliminar</yellow>"
+    filter:
+      name: "<white>Filtrar por propietario</white>"
+      all: "<gray>Mostrando de todos</gray>"
+      only: "<gray>Mostrando de <white>[owner]</white></gray>"
+      click: "<yellow>Haz clic para cambiar</yellow>"
+      title: "Filtrar por propietario"
+      label: "Nombre del propietario (en blanco para todos)"
+      apply: "<green>Mostrar</green>"
+    delete:
+      title: "¿Eliminar invernadero?"
+      body: "¿Eliminar invernadero [id] perteneciente a [owner] en [xyz]? Esto no se puede deshacer."
+      confirm: "<red>Eliminar</red>"
+  editor:
+    needs-dialogs: "<red>El editor de recetas necesita Paper 1.21.7 o posterior.</red>"
+    unknown-recipe: "<red>No hay receta llamada [key].</red>"
+    resuming: "<yellow>Recogiendo los cambios sin guardar de [name]<yellow>.</yellow>"
+    saved: "<green>Guardada [name]<green>. [number] invernadero(s) la utilizan y siguen las nuevas reglas de ahora en adelante.</green>"
+    save-failed: "<red>No se pudo escribir biomes.yml - mira el registro del servidor. Nada se guardó.</red>"
+    deleted: "<green>Eliminada [name]<green>. Sus [number] invernadero(s) se enumeran como no cargados hasta ser eliminados o la receta vuelve.</green>"
+    title: "<dark_green>Editando</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(sin guardar)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Haz clic para cambiar</yellow>"
+    click-open: "<yellow>Haz clic para abrir</yellow>"
+    none: "ninguno"
+    entries: "<gray>Entradas: <white>[number]</white></gray>"
+    total-chance: "<gray>Las probabilidades suman <white>[value]%</white></gray>"
+    chance: "<gray>Probabilidad: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Volver a la receta</white>"
+    help: "<white>Cómo usar esta página</white>"
+    list:
+      title: "<dark_green>Recetas de invernadero</dark_green>"
+      key: "<gray>Clave: <white>[key]</white></gray>"
+      biome: "<gray>Bioma: <white>[biome]</white></gray>"
+      priority: "<gray>Prioridad: <white>[number]</white></gray>"
+      used: "<gray>Utilizado por <white>[number]</white> invernadero(s)</gray>"
+      unsaved: "<gold>Tienes cambios sin guardar</gold>"
+      click-edit: "<yellow>Haz clic para editar</yellow>"
+      back: "<white>Atrás</white>"
+      new:
+        name: "<green>Nueva receta</green>"
+        description: "<gray>Comenzar una receta desde cero</gray>"
+    pick:
+      biome: "<dark_green>Elegir un bioma</dark_green>"
+      icon: "<dark_green>Elegir un icono</dark_green>"
+      block: "<dark_green>Elegir un bloque</dark_green>"
+      plant: "<dark_green>Elegir una planta</dark_green>"
+      grows-on: "<dark_green>¿En qué crece?</dark_green>"
+      mob: "<dark_green>Elegir un mob</dark_green>"
+      spawns-on: "<dark_green>¿En qué aparece?</dark_green>"
+      convert-from: "<dark_green>¿Qué bloque cambia?</dark_green>"
+      convert-to: "<dark_green>¿En qué cambia?</dark_green>"
+      next-to: "<dark_green>¿Qué debe estar al lado?</dark_green>"
+    icon:
+      name: "<white>Icono</white>"
+    general:
+      name: "<white>Nombre y descripción</white>"
+      value-name: "<gray>Nombre: </gray>[value]"
+      value-priority: "<gray>Prioridad: <white>[number]</white></gray>"
+      value-permission: "<gray>Permiso: <white>[value]</white></gray>"
+      no-description: "<gray>Sin descripción</gray>"
+      has-description: "<gray>Tiene descripción</gray>"
+    biome:
+      name: "<white>Bioma</white>"
+      value: "<gray>Bioma: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Agua, lava e hielo</white>"
+      water: "<aqua>Agua: </aqua>[value]"
+      lava: "<gold>Lava: </gold>[value]"
+      ice: "<aqua>Hielo: </aqua>[value]"
+      unchecked: "<gray>no comprobado</gray>"
+      none: "<red>ninguno permitido</red>"
+      at-least: "<white>al menos [number]% del suelo</white>"
+    mob-limits:
+      name: "<white>Límites de mobs</white>"
+      ground: "<gray>Bloques por mob: <white>[number]</white></gray>"
+      water: "<gray>Bloques de agua por mob acuático: <white>[value]</white></gray>"
+      lava: "<gray>Bloques de lava por mob de lava: <white>[value]</white></gray>"
+      air: "<gray>Bloques de aire por mob volador: <white>[value]</white></gray>"
+      shared: "igual que tierra"
+      max: "<gray>Máximo de mobs a la vez: <white>[value]</white></gray>"
+      no-max: "sin límite"
+    blocks:
+      name: "<white>Bloques requeridos</white>"
+      add: "<green>Añadir un bloque</green>"
+      help: "<gray>El mínimo de cada bloque que el invernadero debe tener adentro.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Clic izquierdo: +1<newline>Clic derecho: -1<newline>Shift-clic: escribir un número<newline>Q: eliminar</yellow>"
+    plants:
+      name: "<white>Plantas</white>"
+      add: "<green>Añadir una planta</green>"
+      help: "<gray>Plantas cultivadas con harina de hueso de la tolva del techo.</gray>"
+      grows-on: "<gray>Crece en: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic izquierdo: probabilidad<newline>Clic derecho: en qué crece<newline>Q: eliminar</yellow>"
+    mobs:
+      name: "<white>Mobs</white>"
+      add: "<green>Añadir un mob</green>"
+      help: "<gray>Mobs que aparecen en el invernadero.</gray>"
+      spawns-on: "<gray>Aparece en: <white>[block]</white></gray>"
+      variant: "<gray>Variante: <white>[value]</white></gray>"
+      entry-help: "<yellow>Clic izquierdo: probabilidad y variante<newline>Clic derecho: en qué aparece<newline>Q: eliminar</yellow>"
+    conversions:
+      name: "<white>Conversiones de bloques</white>"
+      add: "<green>Añadir una conversión</green>"
+      help: "<gray>Bloques que cambian lentamente a otros bloques.</gray>"
+      to: "<gray>Se convierte en: <white>[block]</white></gray>"
+      anywhere: "<gray>En cualquier lugar</gray>"
+      next-to: "<gray>Solo al lado de: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic izquierdo: probabilidad<newline>Clic derecho: en qué se convierte<newline>Shift-derecha: solo al lado de un bloque<newline>Shift-izquierda: en cualquier lugar<newline>Q: eliminar</yellow>"
+    back:
+      name: "<white>Volver a recetas</white>"
+      description: "<gray>Los cambios sin guardar se mantienen</gray>"
+    discard:
+      name: "<red>Descartar cambios</red>"
+      description: "<gray>Olvidar los cambios desde el último guardado</gray>"
+    save:
+      name: "<green>Guardar</green>"
+      nothing: "<gray>Sin cambios para guardar</gray>"
+      description: "<gray>Escribe biomes.yml; [number] invernadero(s) siguen las nuevas reglas inmediatamente</gray>"
+      problems: "<red>Arregla estos primero:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplicar</white>"
+      description: "<gray>Comenzar una nueva receta basada en esta</gray>"
+    delete:
+      name: "<red>Eliminar receta</red>"
+      description: "<gray>[number] invernadero(s) utilizan esta receta</gray>"
+    dialog:
+      cancel: "Cancelar"
+      switch:
+        title: "Cambios sin guardar"
+        body: "Tienes cambios sin guardar en [name]. ¿Descartarlos para editar esta receta?"
+        discard: "<red>Descartarlos</red>"
+        keep: "Volver a [name]"
+      discard:
+        title: "¿Descartar cambios?"
+        body: "¿Olvidar tus cambios en [name]?"
+        confirm: "<red>Descartar</red>"
+      conflict:
+        title: "Cambio por otro"
+        body: "[name] fue guardada por otro o recargada después de que comenzaras a editarla."
+        overwrite: "<red>Guardar la mía encima</red>"
+        theirs: "Comenzar de nuevo desde la suya"
+      delete:
+        title: "¿Eliminar receta?"
+        body: "¿Eliminar [name]? [number] invernadero(s) la utilizan. biomes.yml se respalda primero."
+        confirm: "<red>Eliminar</red>"
+    form:
+      ok: "<green>Listo</green>"
+      cancel: "Cancelar"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] no es una probabilidad. Usa un porcentaje mayor que 0 y hasta 100, por ejemplo 5 o 0.5."
+      general:
+        title: "Nombre y descripción"
+        name: "Nombre (colores MiniMessage permitidos)"
+        description: "Descripción mostrada en el panel de recetas"
+        priority: "Prioridad"
+        permission: "Permiso necesario para crearlo (en blanco para ninguno)"
+        no-name: "El nombre no puede estar en blanco."
+        bad-permission: "Un permiso no puede contener espacios."
+      coverage:
+        title: "Agua, lava e hielo"
+        water: "Agua"
+        lava: "Lava"
+        ice: "Hielo"
+        percent: "Porcentaje del suelo"
+        unchecked: "No comprobado"
+        none: "Ninguno permitido"
+        atleast: "Al menos..."
+        too-much: "Agua, lava e hielo juntos no pueden necesitar más que el suelo entero."
+      mobs:
+        title: "Límites de mobs"
+        ground: "Bloques por mob"
+        water: "Bloques de agua por mob acuático (0 = igual)"
+        lava: "Bloques de lava por mob de lava (0 = igual)"
+        air: "Bloques de aire por mob volador (0 = igual)"
+        max: "Máximo de mobs a la vez (-1 = sin límite)"
+      chance:
+        title: "Probabilidad"
+        field: "% de probabilidad para [what]"
+      mob:
+        title: "Mob"
+        variant: "Variante"
+        no-variant: "Normal"
+      count:
+        title: "¿Cuántos?"
+        field: "¿Cuántos [what]"
+      key:
+        title: "Clave de receta"
+        field: "Clave: letras, números, - y _ (no se puede cambiar después)"
+        bad: "Usa 1 a 32 letras, números, - o _."
+        taken: "Ya hay una receta llamada [key]."
 
 help:
    help: "ayuda"
@@ -111,35 +421,33 @@ error:
    norecipe: "¡No se puede crear el invernadero!"
    
 messages:
-   enter: "¡Entrando al invernadero de [owner] ([biome]&f)!"
+   enter: "¡Entrando al invernadero de [owner] ([biome]<white>)!</white>"
    leave: "Saliendo del invernadero de [owner]."
-   youarein: "¡Ahora estás en el invernadero de [owner] ([biome]&f)!"
+   youarein: "¡Ahora estás en el invernadero de [owner] ([biome]<white>)!</white>"
    removed: "Este invernadero ya no existe..."
-   removedmessage: "¡Tu invernadero de [biome]&f ya no existe!"
+   removedmessage: "¡Tu invernadero de [biome]<white> ya no existe!</white>"
    ecolost: "Tu invernadero en [location] perdió su ecosistema y fue eliminado."
 
 info:
-   title: "&A[Cómo construir un invernadero]"
+   title: "<green>[Cómo construir un invernadero]</green>"
    instructions: |
-     &E Crea una caja de cristal con 4 paredes y un techo de cristal
-     &E plano, y añade hasta &F 4 puertas &E en las paredes.
-     &E Coloca &F 1 tolva &E en una pared o techo y añade cubos de agua.
-     &E para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.
-     &E Consulta las recetas de biomas para ver qué bloques deben estar dentro
-     &E de un invernadero para crearlo con éxito. 
+     <yellow>Crea una caja de cristal con 4 paredes y un techo de cristal</yellow>
+     <yellow>plano, y añade hasta </yellow><white>4 puertas </white><yellow>en las paredes.</yellow>
+     <yellow>Coloca </yellow><white>1 tolva </white><yellow>en una pared o techo y añade cubos de agua.</yellow>
+     <yellow>para crear nieve y/o polvo de hueso para cultivar plantas automáticamente.</yellow>
+     <yellow>Consulta las recetas de biomas para ver qué bloques deben estar dentro</yellow>
+     <yellow>de un invernadero para crearlo con éxito. </yellow>
    info: "[Información del Invernadero]"
    none: "Ninguno"
-   nomore: "&4 ¡No puedes construir más invernaderos!"
-   onemore: "&6 Puedes construir un invernadero más."
-   youcanbuild: "&A ¡Puedes construir hasta [number] invernaderos más!"
-   unlimited: "&A ¡Puedes construir un número ilimitado de invernaderos!"
-   welcome: "&B ¡Bienvenido! Haz clic aquí para ver las instrucciones"
+   nomore: "<dark_red>¡No puedes construir más invernaderos!</dark_red>"
+   onemore: "<gold>Puedes construir un invernadero más.</gold>"
+   youcanbuild: "<green>¡Puedes construir hasta [number] invernaderos más!</green>"
+   unlimited: "<green>¡Puedes construir un número ilimitado de invernaderos!</green>"
+   welcome: "<aqua>¡Bienvenido! Haz clic aquí para ver las instrucciones</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "¡Usa /greenhouse list para ver una lista de números de recetas!"
    wrongnumber: "El número de receta debe estar entre 1 y [size]"
-   title: "[Receta de [biome]]"
    nowater: "No se permite agua."
    noice: "No se permite hielo."
    nolava: "No se permite lava."
@@ -176,4 +484,4 @@ news:
    headline: "[Noticias de Invernaderos]"
 
 controlpanel:
-   title: "&AInvernaderos"
+   title: "<green>Invernaderos</green>"

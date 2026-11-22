@@ -91,11 +91,23 @@ public class GreenhouseGuard implements Listener {
         if (CreatureSpawnEvent.SpawnReason.NATURAL == spawnEvent.getSpawnReason())
         {
             // Natural spawn events should be cancelled. Greenhouse spawns its own mobs.
-            spawnEvent.setCancelled(this.inGreenhouse(spawnEvent.getLocation()));
+            spawnEvent.setCancelled(this.isInside(spawnEvent.getLocation()));
         }
     }
 
+    /**
+     * @param l a location
+     * @return true if it is anywhere in a greenhouse, inside or in its walls or roof
+     */
+    private boolean isInside(Location l) {
+        return addon.getManager().getMap().getGreenhouse(l).isPresent();
+    }
 
+
+    /**
+     * @param l a location
+     * @return true if it is a greenhouse wall or roof block
+     */
     private boolean inGreenhouse(Location l) {
         return addon.getManager().getMap().getGreenhouse(l).map(g -> g.isRoofOrWallBlock(l)).orElse(false);
     }

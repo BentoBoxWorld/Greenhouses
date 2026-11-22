@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,16 +47,23 @@ import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.world.AsyncWorldCache;
 
-import javax.annotation.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final String CHANCE_FOR = "% chance for ";
+    /**
+     * Chances are added up as fractions, which do not add exactly: 18% + 2% + 20% + 20% + 20%
+     * comes to a hair over 80%, so a final 20% would look like it went over 100%. Totals this
+     * close to 100% are taken as 100%.
+     */
+    private static final double ROUNDING = 1e-9;
     private Greenhouses addon;
     private Biome type;
     private Material icon; // Biome icon for control panel
     private int priority;
     private String name;
     private String friendlyName;
+    private String description = "";
 
     private static final List<Material> CEILING_PLANTS = new ArrayList<>();
     static {
@@ -162,7 +170,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         double probability = mobProbability/100;
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
-        if ((1D - lastProb) >= probability) {
+        if (fitsIn100Percent(lastProb, probability)) {
             // Add to probability tree
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn, customizer));
             return true;
@@ -174,6 +182,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn) {
         return addMobs(mobType, mobProbability, mobSpawnOn, null);
+    }
+
+    /**
+     * @param total       the chances added so far, as a fraction
+     * @param probability the next chance, as a fraction
+     * @return true if adding it keeps the total at or under 100%, allowing for rounding
+     */
+    static boolean fitsIn100Percent(double total, double probability) {
+        return total + probability <= 1D + ROUNDING;
     }
 
     /**
@@ -189,7 +206,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         TreeMap<Double, GreenhousePlant> map = UNDERWATER_PLANTS.contains(plantMaterial) ? underwaterPlants : plantTree;
         // Add up all the probabilities in the list so far
         double lastProb = map.isEmpty() ? 0D : map.lastKey();
-        if ((1D - lastProb) >= probability) {
+        if (fitsIn100Percent(lastProb, probability)) {
             // Add to probability tree
             map.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {
@@ -568,6 +585,12 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private boolean plantIt(Block bl, GreenhousePlant p, BoundingBox bb) {
         boolean underwater = bl.getType().equals(Material.WATER);
         BlockData dataBottom = p.plantMaterial().createBlockData();
+        // Only plant where the plant can stay. Mushrooms, for example, pop off grass in bright
+        // light at the next block update. Lichen and cocoa find their own spots.
+        if (!p.plantMaterial().equals(Material.GLOW_LICHEN) && !p.plantMaterial().equals(Material.COCOA)
+                && !dataBottom.isSupported(bl)) {
+            return false;
+        }
         // Check if this is a double-height plant
         if (dataBottom instanceof Bisected bi) {
             // Double-height plant
@@ -701,6 +724,20 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
     /**
      * @param friendlyName - set the friendly name
      */
+    /**
+     * @return the description shown in the recipe panel: plain text or MiniMessage, empty for none
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description shown in the recipe panel, or null for none
+     */
+    public void setDescription(String description) {
+        this.description = description == null ? "" : description;
+    }
+
     public void setFriendlyName(String friendlyName) {
         this.friendlyName = friendlyName;
     }
@@ -863,6 +900,36 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
      */
     public Set<EntityType> getMobTypes() {
         return mobTree.values().stream().map(GreenhouseMob::mobType).collect(Collectors.toSet());
+    }
+
+    /**
+     * @return the blocks this recipe needs inside the greenhouse, with the minimum count of each
+     */
+    public Map<Material, Integer> getRequiredBlocks() {
+        return Collections.unmodifiableMap(requiredBlocks);
+    }
+
+    /**
+     * @return true if this recipe grows any plants
+     */
+    public boolean hasPlants() {
+        return !plantTree.isEmpty() || !underwaterPlants.isEmpty();
+    }
+
+    /**
+     * @return the blocks plants in this recipe grow on
+     */
+    public Set<Material> getPlantGrowOn() {
+        return java.util.stream.Stream.concat(plantTree.values().stream(), underwaterPlants.values().stream())
+                .map(GreenhousePlant::plantGrownOn).collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
+    }
+
+    /**
+     * @return the blocks mobs in this recipe spawn on
+     */
+    public Set<Material> getMobSpawnOn() {
+        return mobTree.values().stream().map(GreenhouseMob::mobSpawnOn)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
     }
 
     /**

@@ -1,7 +1,8 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,36 +20,36 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.util.Util;
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.WhiteBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseManager.UnloadedGreenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class })
-public class AdminListCommandTest {
+class AdminListCommandTest {
 
     @Mock
     private CompositeCommand parent;
@@ -75,11 +76,20 @@ public class AdminListCommandTest {
     private IslandWorldManager iwm;
 
     private AdminListCommand cmd;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
@@ -102,9 +112,14 @@ public class AdminListCommandTest {
         cmd = new AdminListCommand(parent);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     private Greenhouse gh(int x) {
@@ -127,7 +142,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteNothingAtAll() {
+    void testExecuteNothingAtAll() {
         when(map.getGreenhouses()).thenReturn(Collections.emptyList());
         assertTrue(cmd.canExecute(user, "list", Collections.emptyList()));
         assertTrue(cmd.execute(user, "list", Collections.emptyList()));
@@ -138,7 +153,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteFirstPageIsCapped() {
+    void testExecuteFirstPageIsCapped() {
         List<Greenhouse> list = ghs(12);
         when(map.getGreenhouses()).thenReturn(list);
         assertTrue(cmd.canExecute(user, "list", Collections.emptyList()));
@@ -157,7 +172,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteSecondPage() {
+    void testExecuteSecondPage() {
         List<Greenhouse> list = ghs(12);
         when(map.getGreenhouses()).thenReturn(list);
         assertTrue(cmd.canExecute(user, "list", List.of("2")));
@@ -174,7 +189,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteUnknownPlayer() {
+    void testCanExecuteUnknownPlayer() {
         when(pm.getUUID(anyString())).thenReturn(null);
         assertFalse(cmd.canExecute(user, "list", List.of("nobody")));
         verify(user).sendMessage("general.errors.unknown-player", "[name]", "nobody");
@@ -184,7 +199,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteKnownPlayerUsesTheirIslands() {
+    void testCanExecuteKnownPlayerUsesTheirIslands() {
         UUID uuid = UUID.randomUUID();
         when(pm.getUUID("tastybento")).thenReturn(uuid);
         when(im.getIslands(world, uuid)).thenReturn(List.of(island));
@@ -202,7 +217,7 @@ public class AdminListCommandTest {
      * Test method for {@link AdminListCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteAlwaysShowsUnloadedRecords() {
+    void testExecuteAlwaysShowsUnloadedRecords() {
         when(map.getGreenhouses()).thenReturn(Collections.emptyList());
         Greenhouse bad = gh(0);
         when(gm.getUnloaded()).thenReturn(List.of(new UnloadedGreenhouse(bad, GreenhouseResult.FAIL_OVERLAPPING)));
@@ -215,4 +230,23 @@ public class AdminListCommandTest {
                 eq("[reason]"), eq("FAIL_OVERLAPPING"), anyString(), anyString(), anyString(), anyString());
     }
 
+
+    /**
+     * Player names complete after /bsbadmin greenhouses list, which BentoBox passes as
+     * "greenhouses", "list", partial name.
+     */
+    @Test
+    void testTabCompletePlayer() {
+        AdminBuildCommandTest.setLevel(cmd, 2);
+        try (var util = org.mockito.Mockito.mockStatic(Util.class)) {
+            util.when(() -> Util.getOnlinePlayerList(any()))
+                    .thenReturn(List.of("tastybento", "poslovitch"));
+            util.when(() -> Util.tabLimit(any(), any())).thenCallRealMethod();
+            assertEquals(List.of("tastybento"),
+                    cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "list", "ta")).orElseThrow());
+            // Nothing after the player
+            assertTrue(cmd.tabComplete(user, "bsbadmin", List.of("greenhouses", "list", "tastybento", ""))
+                    .isEmpty());
+        }
+    }
 }

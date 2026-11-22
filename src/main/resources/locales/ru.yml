@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Теплицы
       description: |
-        &b Переключить, кто может
-        &b управлять теплицами   
+        <aqua>Переключить, кто может</aqua>
+        <aqua>управлять теплицами   </aqua>
 
 greenhouses:
   general:
@@ -17,9 +17,9 @@ greenhouses:
    
   errors:
     move: "Сначала перейдите в теплицу, которой вы владеете."
-    no-rank: "&c У вас недостаточно прав для этого."
+    no-rank: "<red>У вас недостаточно прав для этого.</red>"
     notyours: "Это не ваша теплица!"
-    not-inside: "&c Вы не в теплице!"
+    not-inside: "<red>Вы не в теплице!</red>"
     tooexpensive: "Вы не можете себе это позволить [price]" 
     alreadyexists: "Теплица уже существует!"
     norecipe: "Невозможно создать теплицу!"
@@ -30,14 +30,14 @@ greenhouses:
    leaving: "Выход из теплицы: [biome]"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Рецепт: [biome]]"
    watermustbe: "Вода > [coverage]% площади пола."
    icemustbe: "Блоки льда > [coverage]% площади пола."
    lavamustbe: "Лава > [coverage]% площади пола."
    minimumblockstitle: "[Минимум необходимых блоков]"
    nootherblocks: "Другие блоки не требуются."
    missing: "Теплица отсутствует"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Попробовать создать теплицу"
         parameters: "<рецепт>"
         error:
-          already: "&cЗдесь уже есть теплица!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Крыша содержит недопустимые блоки!"
-          FAIL_BAD_WALL_BLOCKS: "&c Стены содержат недопустимые блоки!"
-          FAIL_BELOW: "&c Вы должны находиться внутри теплицы, чтобы создать её"
-          FAIL_BLOCKS_ABOVE: "&c Над теплицей не должно быть блоков! Красные стеклянные блоки покажут проблемные места."
+          already: "<red>Здесь уже есть теплица!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Крыша содержит недопустимые блоки!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Стены содержат недопустимые блоки!</red>"
+          FAIL_BELOW: "<red>Вы должны находиться внутри теплицы, чтобы создать её</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Над теплицей не должно быть блоков! Красные стеклянные блоки покажут проблемные места.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c В крыше дыра или она не плоская!
-            &c Красные стеклянные блоки покажут проблему.
-            &c Убедитесь, что вы находитесь внутри теплицы при создании.
-          FAIL_HOLE_IN_WALL: "&c В стене дыра!"
-          FAIL_NO_ROOF: "&c Похоже, крыша отсутствует! Убедитесь, что вы находитесь внутри теплицы."
-          FAIL_TOO_MANY_DOORS: "&c В теплице не может быть более 4 дверей!"
-          FAIL_TOO_MANY_HOPPERS: "&c В стенах или крыше разрешена только одна воронка."
-          FAIL_UNEVEN_WALLS: "&c Стены неровные. Красные стеклянные блоки покажут проблемные места."
-          FAIL_INSUFFICIENT_ICE: "&c Недостаточно льда для этого рецепта"
-          FAIL_INSUFFICIENT_LAVA: "&c Недостаточно лавы для этого рецепта"
-          FAIL_INSUFFICIENT_WATER: "&c Недостаточно воды для этого рецепта"
-          FAIL_NO_ICE: "&c Для этого рецепта требуется лед"
-          FAIL_NO_LAVA: "&c Для этого рецепта требуется лава"
-          FAIL_NO_WATER: "&c Для этого рецепта требуется вода"
-          FAIL_NO_RECIPE_FOUND: "&c Не найдено подходящего рецепта для этой теплицы"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Для этого рецепта требуется больше блоков!"
-          FAIL_OVERLAPPING: "&c Извините, теплицы не могут иметь общие стены."
-        success: "&2 Вы успешно создали теплицу биома [biome]! Биом обновится при следующей телепортации или входе."
-        missing-blocks: "&c Отсутствует [material] x [number]"
-        unknown-recipe: "&c Неизвестный рецепт"
-        try-these: "&c Попробуйте один из этих:"
-        recipe-format: "&3[name]"
+            <red>В крыше дыра или она не плоская!</red>
+            <red>Красные стеклянные блоки покажут проблему.</red>
+            <red>Убедитесь, что вы находитесь внутри теплицы при создании.</red>
+          FAIL_HOLE_IN_WALL: "<red>В стене дыра!</red>"
+          FAIL_NO_ROOF: "<red>Похоже, крыша отсутствует! Убедитесь, что вы находитесь внутри теплицы.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>В теплице не может быть более 4 дверей!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>В стенах или крыше разрешена только одна воронка.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Стены неровные. Красные стеклянные блоки покажут проблемные места.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Недостаточно льда для этого рецепта</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Недостаточно лавы для этого рецепта</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Недостаточно воды для этого рецепта</red>"
+          FAIL_NO_ICE: "<red>Для этого рецепта требуется лед</red>"
+          FAIL_NO_LAVA: "<red>Для этого рецепта требуется лава</red>"
+          FAIL_NO_WATER: "<red>Для этого рецепта требуется вода</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Не найдено подходящего рецепта для этой теплицы</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Для этого рецепта требуется больше блоков!</red>"
+          FAIL_OVERLAPPING: "<red>Извините, теплицы не могут иметь общие стены.</red>"
+        success: "<dark_green>Вы успешно создали теплицу биома [biome]! Биом обновится при следующей телепортации или входе.</dark_green>"
+        missing-blocks: "<red>Отсутствует [material] x [number]</red>"
+        unknown-recipe: "<red>Неизвестный рецепт</red>"
+        try-these: "<red>Попробуйте один из этих:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Как построить теплицу]"
+        title: "<green>[Как построить теплицу]</green>"
         instructions: |
-          &e Сделайте коробку из стекла с 4 стенами и плоской
-          &e стеклянной крышей, добавьте до &f 4 дверей &e в стены.
-          &e Установите &f 1 воронку &e в стену или крышу и добавьте ведра
-          &e с водой, чтобы автоматически создавать снег и/или костную
-          &e муку для роста растений. Проверьте рецепты биомов, чтобы
-          &e узнать, какие блоки должны быть внутри для успеха.
+          <yellow>Сделайте коробку из стекла с 4 стенами и плоской</yellow>
+          <yellow>стеклянной крышей, добавьте до </yellow><white>4 дверей </white><yellow>в стены.</yellow>
+          <yellow>Установите </yellow><white>1 воронку </white><yellow>в стену или крышу и добавьте ведра</yellow>
+          <yellow>с водой, чтобы автоматически создавать снег и/или костную</yellow>
+          <yellow>муку для роста растений. Проверьте рецепты биомов, чтобы</yellow>
+          <yellow>узнать, какие блоки должны быть внутри для успеха.</yellow>
+    admin:
+      description: "Команды администратора теплиц"
+      errors:
+        unknown-id: "<red>Теплица с ID [id] не найдена. Используйте команду list, чтобы увидеть ID. Частичный ID работает, если совпадает только с одной теплицей.</red>"
+        id-required: "<red>Запустите это внутри теплицы в игре или укажите ID теплицы.</red>"
+        no-location: "<red>Теплица [id] не имеет действительного местоположения или её мир не загружен.</red>"
+      list:
+        description: "Списки теплиц, дополнительно для одного игрока"
+        parameters: "[player] [page]"
+        title: "<green>[Greenhouses] </green><gray>([number] всего, страница [page] из [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>в </gray><white>[xyz] </white><gray>в </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(сломана)</red>"
+        more: "<gray>Используйте </gray><white>/[label] greenhouses list [page] </white><gray>для продолжения</gray>"
+        none: "<red>Теплицы не найдены.</red>"
+        unloaded-title: "<red>[Not loaded: [number]] </red><gray>Эти записи в базе данных, но не активны:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>в </gray><white>[xyz] </white><gray>в </gray><white>[world]</white>"
+      info:
+        description: "Показывает полную информацию о теплице"
+        parameters: "[id]"
+        title: "<green>[Информация о теплице]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Рецепт: </gray><white>[recipe]</white>"
+        owner: "<gray>Владелец: </gray><white>[owner]</white>"
+        world: "<gray>Мир: </gray><white>[world]</white>"
+        location: "<gray>Местоположение: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Ограничивающий прямоугольник: </gray><white>[min] </white><gray>до </gray><white>[max]</white>"
+        area: "<gray>Внутренняя площадь: </gray><white>[area] блоков</white>"
+        original-biome: "<gray>Оригинальный биом: </gray><white>[biome]</white>"
+        hopper: "<gray>Воронка: </gray><white>[hopper]</white>"
+        broken: "<gray>Сломана: </gray><white>[broken]</white>"
+        not-loaded: "<red>Не загружена: [reason]</red>"
+      delete:
+        description: "Удаляет запись теплицы по ID, загружена или нет"
+        parameters: "<id>"
+        confirm: "<red>Удалить теплицу [id], принадлежащую [owner] в [xyz]? Это невозможно отменить.</red>"
+        success: "<green>Теплица [id] удалена.</green>"
+      tp:
+        description: "Телепортирует вас в теплицу"
+        parameters: "<id>"
+        success: "<green>Телепортированы в теплицу [id]</green>"
+      verify:
+        description: "Переконтролирует теплицы на соответствие их рецепту"
+        parameters: "[id]"
+        checking: "<gray>Проверка [number] теплиц(ы)...</gray>"
+        ok: "<green>[id] в [xyz] соответствует её рецепту</green>"
+        broken: "<red>[id] в [xyz] не соответствует: [reasons]</red>"
+      reload:
+        description: "Перезагружает biomes.yml и переотчитывает теплицы из базы данных"
+        success: "<green>Перезагружено. [number] теплиц активны.</green>"
+        unloaded: "<red>[number] запись(и) не удалось загрузить - используйте команду list, чтобы их увидеть.</red>"
+      build:
+        description: "Строит тестовую теплицу для рецепта вокруг вас или в центре пола"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Координаты нужны все три: x, y и z, как числа или ~ (например ~ ~ ~ или ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] не является размером (например 9x9 или 9x9x5) или режимом (keep или clear).</red>"
+        too-small: "<red>Рецепт не подходит в [size]: [description]. Попробуйте больший размер или оставьте его для автоматического размера.</red>"
+        out-of-world: "<red>Это выходит выше или ниже мира. Выберите другую высоту.</red>"
+        not-on-island: "<red>Вся теплица должна быть на одном острове.</red>"
+        overlapping: "<red>Это перекроется с теплицей [id].</red>"
+        confirm-clear: "<red>Всё внутри [size] теплицы здесь будет заменено.</red>"
+        built: "<green>Построена [size] [recipe] тестовая теплица ([number] блоков). Создание сейчас...</green>"
+      edit:
+        description: "Открывает редактор рецептов или редактор рецепта"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Администратор теплиц</dark_green>"
+    close: "<white>Закрыть</white>"
+    back: "<white>Назад</white>"
+    cancel: "Отмена"
+    recipes:
+      name: "<green>Рецепты</green>"
+      description: "<gray>Редактировать, добавить или удалить [number] рецептов теплиц</gray>"
+    greenhouses:
+      name: "<green>Теплицы</green>"
+      description: "<gray>[number] теплиц(ы) построено(а). Телепортируйтесь, проверьте, осмотрите или удалите их.</gray>"
+      unloaded: "<red>[number] не удалось загрузить</red>"
+    build:
+      name: "<green>Построить тестовую теплицу</green>"
+      description: "<gray>Строит рабочую теплицу для рецепта там, где вы стоите, с дверью на той стороне, куда вы смотрите</gray>"
+      pick-title: "<dark_green>Какой рецепт построить?</dark_green>"
+      key: "<gray>Ключ: <white>[key]</white></gray>"
+      default-size: "<gray>Размер по умолчанию: <white>[size]</white></gray>"
+      click: "<yellow>Нажмите, чтобы выбрать размер</yellow>"
+      title: "Построить [name]"
+      body: "Теплица строится с центром пола там, где вы стоите, и дверью на той стороне, куда вы смотрите. Размеры указаны внутренние."
+      width: "Ширина"
+      depth: "Глубина"
+      height: "Высота"
+      mode: "Что здесь уже есть"
+      keep: "Оставить и строить вокруг"
+      clear: "Сначала очистить"
+      go: "<green>Построить</green>"
+    verify:
+      name: "<green>Проверить все теплицы</green>"
+      description: "<gray>Проверяет каждую теплицу на соответствие её рецепту сейчас и докладывает в чат</gray>"
+    reload:
+      name: "<green>Перезагрузить</green>"
+      description: "<gray>Перечитывает biomes.yml и базу данных теплиц</gray>"
+      confirm-title: "Перезагрузить?"
+      confirm-body: "Перечитать biomes.yml и базу данных теплиц? Несохранённые изменения рецептов сохраняются, но их нужно будет сохранить над перезагруженными рецептами."
+      confirm: "<yellow>Перезагрузить</yellow>"
+  browser:
+    title: "<dark_green>Теплицы</dark_green>"
+    title-owner: "<dark_green>Теплицы</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Нет теплиц</gray>"
+    back: "<white>Назад</white>"
+    cancel: "Отмена"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Владелец: <white>[owner]</white></gray>"
+    where: "<gray>В: <white>[xyz]</white> в <white>[world]</white></gray>"
+    ok: "<green>Работает</green>"
+    broken: "<red>Сломана</red>"
+    unloaded: "<red>Не загружена: [reason]</red>"
+    click:
+      tp: "<yellow>Левый клик: телепортироваться туда</yellow>"
+      verify: "<yellow>Правый клик: проверить сейчас</yellow>"
+      info: "<yellow>Shift+клик: детали в чате</yellow>"
+      delete: "<yellow>Q: удалить</yellow>"
+    filter:
+      name: "<white>Фильтр по владельцу</white>"
+      all: "<gray>Показываются все</gray>"
+      only: "<gray>Показываются <white>[owner]</white></gray>"
+      click: "<yellow>Нажмите, чтобы изменить</yellow>"
+      title: "Фильтр по владельцу"
+      label: "Имя владельца (пусто для всех)"
+      apply: "<green>Показать</green>"
+    delete:
+      title: "Удалить теплицу?"
+      body: "Удалить теплицу [id], принадлежащую [owner] в [xyz]? Это невозможно отменить."
+      confirm: "<red>Удалить</red>"
+  editor:
+    needs-dialogs: "<red>Редактор рецептов требует Paper 1.21.7 или более позднюю версию.</red>"
+    unknown-recipe: "<red>Нет рецепта с именем [key].</red>"
+    resuming: "<yellow>Восстанавливаю ваши несохранённые изменения [name]<yellow>.</yellow>"
+    saved: "<green>Сохранено [name]<green>. [number] теплиц(ы) использует(ют) её и следует(ют) новым правилам с сейчас.</green>"
+    save-failed: "<red>biomes.yml не удалось записать - см. журнал сервера. Ничего не было сохранено.</red>"
+    deleted: "<green>Удалено [name]<green>. Его [number] теплиц(ы) указана(ны) как незагруженная(ые) до удаления или возврата рецепта.</green>"
+    title: "<dark_green>Редактирование</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(не сохранено)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Нажмите, чтобы изменить</yellow>"
+    click-open: "<yellow>Нажмите, чтобы открыть</yellow>"
+    none: "нет"
+    entries: "<gray>Записи: <white>[number]</white></gray>"
+    total-chance: "<gray>Шансы составляют <white>[value]%</white></gray>"
+    chance: "<gray>Шанс: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Назад к рецепту</white>"
+    help: "<white>Как использовать эту страницу</white>"
+    list:
+      title: "<dark_green>Рецепты теплиц</dark_green>"
+      key: "<gray>Ключ: <white>[key]</white></gray>"
+      biome: "<gray>Биом: <white>[biome]</white></gray>"
+      priority: "<gray>Приоритет: <white>[number]</white></gray>"
+      used: "<gray>Используется <white>[number]</white> теплиц(ей)</gray>"
+      unsaved: "<gold>У вас есть несохранённые изменения</gold>"
+      click-edit: "<yellow>Нажмите, чтобы редактировать</yellow>"
+      back: "<white>Назад</white>"
+      new:
+        name: "<green>Новый рецепт</green>"
+        description: "<gray>Начать рецепт с нуля</gray>"
+    pick:
+      biome: "<dark_green>Выберите биом</dark_green>"
+      icon: "<dark_green>Выберите иконку</dark_green>"
+      block: "<dark_green>Выберите блок</dark_green>"
+      plant: "<dark_green>Выберите растение</dark_green>"
+      grows-on: "<dark_green>На чём оно растёт?</dark_green>"
+      mob: "<dark_green>Выберите моба</dark_green>"
+      spawns-on: "<dark_green>На чём оно спавнится?</dark_green>"
+      convert-from: "<dark_green>Какой блок меняется?</dark_green>"
+      convert-to: "<dark_green>На что оно меняется?</dark_green>"
+      next-to: "<dark_green>На чём оно должно быть?</dark_green>"
+    icon:
+      name: "<white>Иконка</white>"
+    general:
+      name: "<white>Имя и описание</white>"
+      value-name: "<gray>Имя: </gray>[value]"
+      value-priority: "<gray>Приоритет: <white>[number]</white></gray>"
+      value-permission: "<gray>Разрешение: <white>[value]</white></gray>"
+      no-description: "<gray>Нет описания</gray>"
+      has-description: "<gray>Есть описание</gray>"
+    biome:
+      name: "<white>Биом</white>"
+      value: "<gray>Биом: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Вода, лава и лёд</white>"
+      water: "<aqua>Вода: </aqua>[value]"
+      lava: "<gold>Лава: </gold>[value]"
+      ice: "<aqua>Лёд: </aqua>[value]"
+      unchecked: "<gray>не проверено</gray>"
+      none: "<red>ничего не разрешено</red>"
+      at-least: "<white>по крайней мере [number]% пола</white>"
+    mob-limits:
+      name: "<white>Пределы мобов</white>"
+      ground: "<gray>Блоков на моба: <white>[number]</white></gray>"
+      water: "<gray>Водяных блоков на водяного моба: <white>[value]</white></gray>"
+      lava: "<gray>Лавовых блоков на лавового моба: <white>[value]</white></gray>"
+      air: "<gray>Воздушных блоков на летающего моба: <white>[value]</white></gray>"
+      shared: "как для наземных"
+      max: "<gray>Максимум мобов одновременно: <white>[value]</white></gray>"
+      no-max: "без ограничений"
+    blocks:
+      name: "<white>Требуемые блоки</white>"
+      add: "<green>Добавить блок</green>"
+      help: "<gray>Минимум каждого блока, который должен быть внутри теплицы.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Левый клик: +1<newline>Правый клик: -1<newline>Shift+клик: введите число<newline>Q: удалить</yellow>"
+    plants:
+      name: "<white>Растения</white>"
+      add: "<green>Добавить растение</green>"
+      help: "<gray>Растения, выращенные костной мукой из воронки крыши.</gray>"
+      grows-on: "<gray>Растёт на: <white>[block]</white></gray>"
+      entry-help: "<yellow>Левый клик: шанс<newline>Правый клик: на чём растёт<newline>Q: удалить</yellow>"
+    mobs:
+      name: "<white>Мобы</white>"
+      add: "<green>Добавить моба</green>"
+      help: "<gray>Мобы, которые спавнятся в теплице.</gray>"
+      spawns-on: "<gray>Спавнится на: <white>[block]</white></gray>"
+      variant: "<gray>Вариант: <white>[value]</white></gray>"
+      entry-help: "<yellow>Левый клик: шанс и вариант<newline>Правый клик: на чём спавнится<newline>Q: удалить</yellow>"
+    conversions:
+      name: "<white>Преобразования блоков</white>"
+      add: "<green>Добавить преобразование</green>"
+      help: "<gray>Блоки, которые медленно меняются на другие блоки.</gray>"
+      to: "<gray>Становится: <white>[block]</white></gray>"
+      anywhere: "<gray>Везде</gray>"
+      next-to: "<gray>Только рядом с: <white>[block]</white></gray>"
+      entry-help: "<yellow>Левый клик: шанс<newline>Правый клик: во что оно становится<newline>Shift+Правый: только рядом с блоком<newline>Shift+Левый: везде<newline>Q: удалить</yellow>"
+    back:
+      name: "<white>Назад к рецептам</white>"
+      description: "<gray>Несохранённые изменения сохраняются</gray>"
+    discard:
+      name: "<red>Отменить изменения</red>"
+      description: "<gray>Забыть изменения с момента последнего сохранения</gray>"
+    save:
+      name: "<green>Сохранить</green>"
+      nothing: "<gray>Нет изменений для сохранения</gray>"
+      description: "<gray>Записывает biomes.yml; [number] теплиц(ы) следует(ют) новым правилам сразу</gray>"
+      problems: "<red>Сначала исправьте эти:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Дублировать</white>"
+      description: "<gray>Начать новый рецепт из этого</gray>"
+    delete:
+      name: "<red>Удалить рецепт</red>"
+      description: "<gray>[number] теплиц(ы) использует(ют) этот рецепт</gray>"
+    dialog:
+      cancel: "Отмена"
+      switch:
+        title: "Несохранённые изменения"
+        body: "У вас есть несохранённые изменения [name]. Отменить их, чтобы отредактировать этот рецепт?"
+        discard: "<red>Отменить их</red>"
+        keep: "Назад к [name]"
+      discard:
+        title: "Отменить изменения?"
+        body: "Забыть ваши изменения [name]?"
+        confirm: "<red>Отменить</red>"
+      conflict:
+        title: "Изменено кем-то другим"
+        body: "[name] был сохранён кем-то другим или перезагружен после того, как вы начали его редактировать."
+        overwrite: "<red>Сохранить мой над ним</red>"
+        theirs: "Начать заново с его версии"
+      delete:
+        title: "Удалить рецепт?"
+        body: "Удалить [name]? [number] теплиц(ы) использует(ют) его. biomes.yml предварительно создаётся резервная копия."
+        confirm: "<red>Удалить</red>"
+    form:
+      ok: "<green>Готово</green>"
+      cancel: "Отмена"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] не является шансом. Используйте процент выше 0 и до 100, например 5 или 0,5."
+      general:
+        title: "Имя и описание"
+        name: "Имя (MiniMessage цвета разрешены)"
+        description: "Описание, показанное в панели рецепта"
+        priority: "Приоритет"
+        permission: "Разрешение, необходимое для создания (пусто для отсутствия)"
+        no-name: "Имя не может быть пустым."
+        bad-permission: "Разрешение не может содержать пробелы."
+      coverage:
+        title: "Вода, лава и лёд"
+        water: "Вода"
+        lava: "Лава"
+        ice: "Лёд"
+        percent: "Процент пола"
+        unchecked: "Не проверено"
+        none: "Ничего не разрешено"
+        atleast: "По крайней мере..."
+        too-much: "Вода, лава и лёд вместе не могут требовать больше, чем весь пол."
+      mobs:
+        title: "Пределы мобов"
+        ground: "Блоков на моба"
+        water: "Водяных блоков на водяного моба (0 = то же самое)"
+        lava: "Лавовых блоков на лавового моба (0 = то же самое)"
+        air: "Воздушных блоков на летающего моба (0 = то же самое)"
+        max: "Максимум мобов одновременно (-1 = без ограничений)"
+      chance:
+        title: "Шанс"
+        field: "% шанс для [what]"
+      mob:
+        title: "Моб"
+        variant: "Вариант"
+        no-variant: "Нормальный"
+      count:
+        title: "Сколько?"
+        field: "Сколько [what]"
+      key:
+        title: "Ключ рецепта"
+        field: "Ключ: буквы, числа, - и _ (не может быть изменён позже)"
+        bad: "Используйте от 1 до 32 букв, цифр, - или _."
+        taken: "Уже существует рецепт с именем [key]."
 
 ######### Старая локализация для справки
 help:
@@ -115,35 +425,33 @@ error:
    norecipe: "Невозможно создать теплицу!"
    
 messages:
-   enter: "Вход в теплицу [owner], биом: [biome]&f!"
+   enter: "Вход в теплицу [owner], биом: [biome]<white>!</white>"
    leave: "Выход из теплицы [owner]."
-   youarein: "Вы находитесь в теплице [owner], биом: [biome]&f!"
+   youarein: "Вы находитесь в теплице [owner], биом: [biome]<white>!</white>"
    removed: "Этой теплицы больше нет..."
-   removedmessage: "Ваша теплица ([biome]&f) была удалена!"
+   removedmessage: "Ваша теплица ([biome]<white>) была удалена!</white>"
    ecolost: "Ваша теплица в [location] потеряла экосистему и была удалена."
 
 info:
-   title: "&A[Как построить теплицу]"
+   title: "<green>[Как построить теплицу]</green>"
    instructions: |
-     &E Сделайте коробку из стекла с 4 стенами и плоской
-     &E стеклянной крышей, добавьте до &F 4 дверей &E в стены.
-     &E Установите &F 1 воронку &E в стену или крышу и добавьте ведра
-     &E с водой, чтобы автоматически создавать снег и/или костную
-     &E муку для роста растений. Проверьте рецепты биомов, чтобы
-     &E узнать, какие блоки должны быть внутри для успеха.
+     <yellow>Сделайте коробку из стекла с 4 стенами и плоской</yellow>
+     <yellow>стеклянной крышей, добавьте до </yellow><white>4 дверей </white><yellow>в стены.</yellow>
+     <yellow>Установите </yellow><white>1 воронку </white><yellow>в стену или крышу и добавьте ведра</yellow>
+     <yellow>с водой, чтобы автоматически создавать снег и/или костную</yellow>
+     <yellow>муку для роста растений. Проверьте рецепты биомов, чтобы</yellow>
+     <yellow>узнать, какие блоки должны быть внутри для успеха.</yellow>
    info: "[Информация о теплице]"
    none: "Нет"
-   nomore: "&4 Вы не можете строить больше теплиц!"
-   onemore: "&6 Вы можете построить еще одну теплицу."
-   youcanbuild: "&A Вы можете построить еще [number] теплиц!"
-   unlimited: "&A Вы можете строить неограниченное количество теплиц!"
-   welcome: "&B Добро пожаловать! Нажмите здесь для инструкций"
+   nomore: "<dark_red>Вы не можете строить больше теплиц!</dark_red>"
+   onemore: "<gold>Вы можете построить еще одну теплицу.</gold>"
+   youcanbuild: "<green>Вы можете построить еще [number] теплиц!</green>"
+   unlimited: "<green>Вы можете строить неограниченное количество теплиц!</green>"
+   welcome: "<aqua>Добро пожаловать! Нажмите здесь для инструкций</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Используйте /greenhouse list, чтобы увидеть список номеров рецептов!"
    wrongnumber: "Номер рецепта должен быть от 1 до [size]"
-   title: "[Рецепт: [biome]]"
    nowater: "Вода не разрешена."
    noice: "Лед не разрешен."
    nolava: "Лава не разрешена."
@@ -186,4 +494,4 @@ news:
    headline: "[Новости теплиц]"
 
 controlpanel:
-   title: "&AТеплицы"
+   title: "<green>Теплицы</green>"

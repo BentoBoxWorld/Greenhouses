@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Seralar
       description: |
-        &b Seraları kimlerin kontrol
-        &b edebileceğini belirle   
+        <aqua>Seraları kimlerin kontrol</aqua>
+        <aqua>edebileceğini belirle   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Önce sahibi olduğunuz bir seraya gidin."
-    no-rank: "&c Bunu yapmak için gerekli rütbeniz yok."
+    no-rank: "<red>Bunu yapmak için gerekli rütbeniz yok.</red>"
     notyours: "Bu sera size ait değil!"
-    not-inside: "&c Bir seranın içinde değilsiniz!"
+    not-inside: "<red>Bir seranın içinde değilsiniz!</red>"
     tooexpensive: "Bunu karşılayacak paranız yok: [price]" 
     alreadyexists: "Sera zaten mevcut!"
     norecipe: "Sera oluşturulamadı!"
     
   event:
    broke: "Bu serayı bozdunuz! Biyom [biome] olarak geri döndürülüyor!"
-   entering: "[biome]&f serasına giriliyor"
-   leaving: "[biome]&f serasından çıkılıyor"
+   entering: "[biome]<white> serasına giriliyor</white>"
+   leaving: "[biome]<white> serasından çıkılıyor</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] Tarifi]"
    watermustbe: "Su > Zemin alanının %[coverage] kadarı olmalı."
    icemustbe: "Buz blokları > Zemin alanının %[coverage] kadarı olmalı."
    lavamustbe: "Lav > Zemin alanının %[coverage] kadarı olmalı."
    minimumblockstitle: "[Gerekli Minimum Bloklar]"
    nootherblocks: "Başka blok gerekli değil."
    missing: "Sera eksik"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Bir sera oluşturmayı dener"
         parameters: "<tarif>"
         error:
-          already: "&cBurada zaten bir sera var!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Çatıda izin verilmeyen bloklar var!"
-          FAIL_BAD_WALL_BLOCKS: "&c Duvarlarda izin verilmeyen bloklar var!"
-          FAIL_BELOW: "&c Oluşturmayı denemek için seranın içinde olmalısınız"
-          FAIL_BLOCKS_ABOVE: "&c Seranın üzerinde hiçbir blok olmamalı! Kırmızı cam bloklar sorunlu yerleri gösterecektir."
+          already: "<red>Burada zaten bir sera var!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Çatıda izin verilmeyen bloklar var!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Duvarlarda izin verilmeyen bloklar var!</red>"
+          FAIL_BELOW: "<red>Oluşturmayı denemek için seranın içinde olmalısınız</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Seranın üzerinde hiçbir blok olmamalı! Kırmızı cam bloklar sorunlu yerleri gösterecektir.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Çatıda delik var veya çatı düz değil!
-            &c Kırmızı cam bloklar sorunu gösterecektir.
-            &c Oluştururken seranın içinde olduğunuzdan emin olun.
-          FAIL_HOLE_IN_WALL: "&c Duvarda delik var!"
-          FAIL_NO_ROOF: "&c Çatı bulunamadı! Seranın içinde olduğunuzdan emin olun."
-          FAIL_TOO_MANY_DOORS: "&c Bir serada 4'ten fazla kapı olamaz!"
-          FAIL_TOO_MANY_HOPPERS: "&c Duvarlarda veya çatıda sadece bir huniye izin verilir."
-          FAIL_UNEVEN_WALLS: "&c Duvarlar düzgün değil. Kırmızı cam bloklar sorunlu yerleri gösterecektir."
-          FAIL_INSUFFICIENT_ICE: "&c Bu tarif için yeterli buz yok"
-          FAIL_INSUFFICIENT_LAVA: "&c Bu tarif için yeterli lav yok"
-          FAIL_INSUFFICIENT_WATER: "&c Bu tarif için yeterli su yok"
-          FAIL_NO_ICE: "&c Bu tarif için buz gereklidir"
-          FAIL_NO_LAVA: "&c Bu tarif için lav gereklidir"
-          FAIL_NO_WATER: "&c Bu tarif için su gereklidir"
-          FAIL_NO_RECIPE_FOUND: "&c Bu seraya uygun bir tarif bulunamadı"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Bu tarifi oluşturmak için daha fazla blok gerekiyor!"
-          FAIL_OVERLAPPING: "&c Üzgünüz, seralar ortak duvar kullanamaz."
-        success: "&2 Başarıyla bir [biome] biyomu serası oluşturdunuz! Biyom bir sonraki ışınlanmada veya girişte senkronize edilecektir."
-        missing-blocks: "&c Eksik: [material] x [number]"
-        unknown-recipe: "&c Bilinmeyen tarif"
-        try-these: "&c Bunlardan birini deneyin:"
-        recipe-format: "&3[name]"
+            <red>Çatıda delik var veya çatı düz değil!</red>
+            <red>Kırmızı cam bloklar sorunu gösterecektir.</red>
+            <red>Oluştururken seranın içinde olduğunuzdan emin olun.</red>
+          FAIL_HOLE_IN_WALL: "<red>Duvarda delik var!</red>"
+          FAIL_NO_ROOF: "<red>Çatı bulunamadı! Seranın içinde olduğunuzdan emin olun.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Bir serada 4'ten fazla kapı olamaz!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Duvarlarda veya çatıda sadece bir huniye izin verilir.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Duvarlar düzgün değil. Kırmızı cam bloklar sorunlu yerleri gösterecektir.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Bu tarif için yeterli buz yok</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Bu tarif için yeterli lav yok</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Bu tarif için yeterli su yok</red>"
+          FAIL_NO_ICE: "<red>Bu tarif için buz gereklidir</red>"
+          FAIL_NO_LAVA: "<red>Bu tarif için lav gereklidir</red>"
+          FAIL_NO_WATER: "<red>Bu tarif için su gereklidir</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Bu seraya uygun bir tarif bulunamadı</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Bu tarifi oluşturmak için daha fazla blok gerekiyor!</red>"
+          FAIL_OVERLAPPING: "<red>Üzgünüz, seralar ortak duvar kullanamaz.</red>"
+        success: "<dark_green>Başarıyla bir [biome] biyomu serası oluşturdunuz! Biyom bir sonraki ışınlanmada veya girişte senkronize edilecektir.</dark_green>"
+        missing-blocks: "<red>Eksik: [material] x [number]</red>"
+        unknown-recipe: "<red>Bilinmeyen tarif</red>"
+        try-these: "<red>Bunlardan birini deneyin:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Nasıl Sera İnşa Edilir]"
+        title: "<green>[Nasıl Sera İnşa Edilir]</green>"
         instructions: |
-          &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
-          &e duvarlara en fazla &f 4 kapı &e ekleyin.
-          &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
-          &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
-          &e Başarılı bir kurulum için hangi blokların içeride olması
-          &e gerektiğini biyom tariflerinden kontrol edin.
+          <yellow>4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,</yellow>
+          <yellow>duvarlara en fazla </yellow><white>4 kapı </white><yellow>ekleyin.</yellow>
+          <yellow>Duvara veya çatıya </yellow><white>1 huni </white><yellow>yerleştirin ve otomatik</yellow>
+          <yellow>kar ve/veya kemik tozu üretimi için su kovaları ekleyin.</yellow>
+          <yellow>Başarılı bir kurulum için hangi blokların içeride olması</yellow>
+          <yellow>gerektiğini biyom tariflerinden kontrol edin.</yellow>
+    admin:
+      description: "Sera Yönetici Komutları"
+      errors:
+        unknown-id: "<red>Kimlik [id] serasını bulamıyorum. Kimlik görmek için list komutunu kullanın. Kısmi kimlik sadece bir eşleşmeyle çalışır.</red>"
+        id-required: "<red>Oyun içinde seranın içinden çalıştır veya sera kimliğini ver.</red>"
+        no-location: "<red>Sera [id]'in geçerli bir konumu yok veya dünyası yüklenmedi.</red>"
+      list:
+        description: "Seraları listele, isteğe bağlı olarak bir oyuncu için"
+        parameters: "[player] [page]"
+        title: "<green>[Seralar] </green><gray>([number] toplam, sayfa [page]/[pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>konumu: </gray><white>[xyz] </white><gray>dünya: </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(bozuk)</red>"
+        more: "<gray>Daha fazla:</gray><white>/[label] greenhouses list [page] </white><gray>-</gray>"
+        none: "<red>Sera bulunamadı.</red>"
+        unloaded-title: "<red>[Yükleme Başarısız: [number]] </red><gray>Bu kayıtlar veritabanında ama aktif değil:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>konumu: </gray><white>[xyz] </white><gray>dünya: </gray><white>[world]</white>"
+      info:
+        description: "Seranın tam ayrıntılarını göster"
+        parameters: "[id]"
+        title: "<green>[Sera Bilgisi]</green>"
+        id: "<gray>Kimlik: </gray><white>[id]</white>"
+        recipe: "<gray>Reçete: </gray><white>[recipe]</white>"
+        owner: "<gray>Sahip: </gray><white>[owner]</white>"
+        world: "<gray>Dünya: </gray><white>[world]</white>"
+        location: "<gray>Konum: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Sınır: </gray><white>[min] </white><gray>~</gray><white>[max]</white>"
+        area: "<gray>İç Alan: </gray><white>[area] blok</white>"
+        original-biome: "<gray>Orijinal Biyom: </gray><white>[biome]</white>"
+        hopper: "<gray>Hıppa: </gray><white>[hopper]</white>"
+        broken: "<gray>Bozuk: </gray><white>[broken]</white>"
+        not-loaded: "<red>Yükleme Başarısız: [reason]</red>"
+      delete:
+        description: "Sera kaydını Kimliğe göre sil"
+        parameters: "<id>"
+        confirm: "<red>Sera [id] ([owner] sahibi, [xyz] konumunda) silinsin mi? Geri alınamaz.</red>"
+        success: "<green>Sera [id] silindi.</green>"
+      tp:
+        description: "Serayı ışınla"
+        parameters: "<id>"
+        success: "<green>Sera [id]'e ışınlandı</green>"
+      verify:
+        description: "Seraları reçeteye karşı yeniden kontrol et"
+        parameters: "[id]"
+        checking: "<gray>[number] sera kontrol ediliyor...</gray>"
+        ok: "<green>[id] ([xyz] konumunda) reçeteyi karşılıyor</green>"
+        broken: "<red>[id] ([xyz] konumunda) başarısız: [reasons]</red>"
+      reload:
+        description: "biomes.yml yeniden oku ve sera veritabanını yeniden yükle"
+        success: "<green>Yeniden Yükleme Tamamlandı. [number] sera aktif.</green>"
+        unloaded: "<red>[number] kayıt yüklenemedi - list komutu ile kontrol et.</red>"
+      build:
+        description: "Reçete test serasını inşa et, etrafında veya verilen konumda"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Koordinatlar x, y, z'nin hepsine ihtiyaç duyar (sayı veya ~ kullan, örn. ~ ~ ~ veya ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] boyut (örn. 9x9 veya 9x9x5) veya mod (keep veya clear) değildir.</red>"
+        too-small: "<red>Reçete [size]'a sığmaz: [description]. Daha büyük boyut dene veya belirtmeyi bırak.</red>"
+        out-of-world: "<red>Dünyanın üstüne veya altına gider. Başka bir yükseklik seç.</red>"
+        not-on-island: "<red>Tüm sera tek bir adada olmalı.</red>"
+        overlapping: "<red>Sera [id] ile örtüşüyor.</red>"
+        confirm-clear: "<red>Burada [size] seranın içindeki her şey değiştirilecek.</red>"
+        built: "<green>[size] [recipe] test serasını inşa ettim ([number] blok). İnşa ediliyor...</green>"
+      edit:
+        description: "Reçete editörünü aç, veya reçetenin editörünü aç"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Sera Yönetim Paneli</dark_green>"
+    close: "<white>Kapat</white>"
+    back: "<white>Geri</white>"
+    cancel: "İptal"
+    recipes:
+      name: "<green>Reçeteler</green>"
+      description: "<gray>[number] sera reçetesini düzenle, ekle veya sil</gray>"
+    greenhouses:
+      name: "<green>Seralar</green>"
+      description: "<gray>[number] sera inşa edildi. Işınla, kontrol et, incele veya sil.</gray>"
+      unloaded: "<red>[number] yüklenemedi</red>"
+    build:
+      name: "<green>Test Serası İnşa Et</green>"
+      description: "<gray>Bulunduğun yerde reçete serasını inşa eder. Kapı baktığın yöne konur</gray>"
+      pick-title: "<dark_green>Hangi reçeteyi inşa etmek istiyorsunuz?</dark_green>"
+      key: "<gray>Anahtar: <white>[key]</white></gray>"
+      default-size: "<gray>Varsayılan boyut: <white>[size]</white></gray>"
+      click: "<yellow>Boyutu seçmek için tıkla</yellow>"
+      title: "[name] İnşa Et"
+      body: "Sera, bulunduğun yer taban merkezi olacak şekilde ve kapı baktığın tarafa konacak şekilde inşa edilir. Boyutlar iç boyutlardır."
+      width: "Genişlik"
+      depth: "Derinlik"
+      height: "Yükseklik"
+      mode: "Şu anda orada olan"
+      keep: "Tutarak inşa et"
+      clear: "Önce temizle"
+      go: "<green>İnşa Et</green>"
+    verify:
+      name: "<green>Tüm Seraları Kontrol Et</green>"
+      description: "<gray>Her seranın reçetesini kontrol eder ve sohbette bildirir</gray>"
+    reload:
+      name: "<green>Yeniden Yükle</green>"
+      description: "<gray>biomes.yml ve sera veritabanını yeniden oku</gray>"
+      confirm-title: "Yeniden yükle?"
+      confirm-body: "biomes.yml ve sera veritabanını yeniden yükle? Kaydedilmemiş reçete düzenlemeleri tutulur, ancak yeniden yüklenen reçeteler üzerine kaydedilmesi gerekir."
+      confirm: "<yellow>Yeniden Yükle</yellow>"
+  browser:
+    title: "<dark_green>Seralar</dark_green>"
+    title-owner: "<dark_green>Seralar</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Sera yok</gray>"
+    back: "<white>Geri</white>"
+    cancel: "İptal"
+    id: "<gray>Kimlik: <white>[id]</white></gray>"
+    owner: "<gray>Sahip: <white>[owner]</white></gray>"
+    where: "<gray>Konum: <white>[xyz]</white> (Dünya: <white>[world]</white>)</gray>"
+    ok: "<green>Çalışıyor</green>"
+    broken: "<red>Bozuk</red>"
+    unloaded: "<red>Yükleme Başarısız: [reason]</red>"
+    click:
+      tp: "<yellow>Sol Tıkla: Işınla</yellow>"
+      verify: "<yellow>Sağ Tıkla: Kontrol Et</yellow>"
+      info: "<yellow>Shift Tıkla: Sohbette Detaylar</yellow>"
+      delete: "<yellow>Q: Sil</yellow>"
+    filter:
+      name: "<white>Sahibe Göre Filtrele</white>"
+      all: "<gray>Herkesinkini Göster</gray>"
+      only: "<gray>Sadece <white>[owner]</white>'in serasını göster</gray>"
+      click: "<yellow>Değiştirmek için tıkla</yellow>"
+      title: "Sahibe Göre Filtrele"
+      label: "Sahip adı (hepsi için boş bırak)"
+      apply: "<green>Göster</green>"
+    delete:
+      title: "Sera silinsin mi?"
+      body: "Sera [id] ([owner] sahibi, [xyz]'de konumlanan) silinsin mi? Bu geri alınamaz."
+      confirm: "<red>Sil</red>"
+  editor:
+    needs-dialogs: "<red>Reçete editörü Paper 1.21.7 veya üzeri gerektirir.</red>"
+    unknown-recipe: "<red>[key] adında reçete yok.</red>"
+    resuming: "<yellow>[name]'a yapılan kaydedilmemiş değişiklikleri devam ettir<yellow>.</yellow>"
+    saved: "<green>[name] kaydedildi<green>. [number] sera hemen yeni kuralları takip eder.</green>"
+    save-failed: "<red>biomes.yml yazılamıyor - sunucu günlüğüne bakın. Hiçbir şey kaydedilmedi.</red>"
+    deleted: "<green>[name] silindi<green>. [number] sera silinene veya reçete geri gelene kadar yüklenmemiş olarak listelenir.</green>"
+    title: "<dark_green>Düzenleniyor</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(kaydedilmedi)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Değiştirmek için tıkla</yellow>"
+    click-open: "<yellow>Açmak için tıkla</yellow>"
+    none: "yok"
+    entries: "<gray>Girdiler: <white>[number]</white></gray>"
+    total-chance: "<gray>Toplam Olasılık: <white>[value]%</white></gray>"
+    chance: "<gray>Olasılık: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Reçeteye Geri Dön</white>"
+    help: "<white>Bu Sayfayı Kullanma</white>"
+    list:
+      title: "<dark_green>Sera Reçeteleri</dark_green>"
+      key: "<gray>Anahtar: <white>[key]</white></gray>"
+      biome: "<gray>Biyom: <white>[biome]</white></gray>"
+      priority: "<gray>Öncelik: <white>[number]</white></gray>"
+      used: "<gray><white>[number]</white> sera tarafından kullanılıyor</gray>"
+      unsaved: "<gold>Kaydedilmemiş değişiklikler var</gold>"
+      click-edit: "<yellow>Düzenlemek için tıkla</yellow>"
+      back: "<white>Geri</white>"
+      new:
+        name: "<green>Yeni Reçete</green>"
+        description: "<gray>Reçeteyi sıfırdan oluştur</gray>"
+    pick:
+      biome: "<dark_green>Biyom Seç</dark_green>"
+      icon: "<dark_green>İkon Seç</dark_green>"
+      block: "<dark_green>Blok Seç</dark_green>"
+      plant: "<dark_green>Bitki Seç</dark_green>"
+      grows-on: "<dark_green>Neye büyür?</dark_green>"
+      mob: "<dark_green>Canavar Seç</dark_green>"
+      spawns-on: "<dark_green>Neye çıkar?</dark_green>"
+      convert-from: "<dark_green>Hangi blok değişir?</dark_green>"
+      convert-to: "<dark_green>Neye değişir?</dark_green>"
+      next-to: "<dark_green>Neyin yanında olmalı?</dark_green>"
+    icon:
+      name: "<white>İkon</white>"
+    general:
+      name: "<white>Ad ve Açıklama</white>"
+      value-name: "<gray>Ad: </gray>[value]"
+      value-priority: "<gray>Öncelik: <white>[number]</white></gray>"
+      value-permission: "<gray>İzin: <white>[value]</white></gray>"
+      no-description: "<gray>Açıklama yok</gray>"
+      has-description: "<gray>Açıklama var</gray>"
+    biome:
+      name: "<white>Biyom</white>"
+      value: "<gray>Biyom: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Su, Lav ve Buz</white>"
+      water: "<aqua>Su: </aqua>[value]"
+      lava: "<gold>Lav: </gold>[value]"
+      ice: "<aqua>Buz: </aqua>[value]"
+      unchecked: "<gray>Kontrol Edilmedi</gray>"
+      none: "<red>İzin Verilmiyor</red>"
+      at-least: "<white>Tabanın en az [number]%'i</white>"
+    mob-limits:
+      name: "<white>Canavar Sınırları</white>"
+      ground: "<gray>Canavar başına bloklar: <white>[number]</white></gray>"
+      water: "<gray>Su canavara karşı su blokları: <white>[value]</white></gray>"
+      lava: "<gray>Lav canavara karşı lav blokları: <white>[value]</white></gray>"
+      air: "<gray>Uçan canavara karşı hava blokları: <white>[value]</white></gray>"
+      shared: "karaya aynı"
+      max: "<gray>En Fazla Canavar: <white>[value]</white></gray>"
+      no-max: "Sınır Yok"
+    blocks:
+      name: "<white>Gerekli Bloklar</white>"
+      add: "<green>Blok Ekle</green>"
+      help: "<gray>Sera içinde olması gereken her bloğun minimum miktarı.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Sol Tıkla: +1<newline>Sağ Tıkla: -1<newline>Shift Tıkla: Sayı Yaz<newline>Q: Sil</yellow>"
+    plants:
+      name: "<white>Bitkiler</white>"
+      add: "<green>Bitki Ekle</green>"
+      help: "<gray>Çatı hoppingerinden kemik unu ile büyüyen bitkiler.</gray>"
+      grows-on: "<gray>Neye Büyür: <white>[block]</white></gray>"
+      entry-help: "<yellow>Sol Tıkla: Olasılık<newline>Sağ Tıkla: Neye Büyür<newline>Q: Sil</yellow>"
+    mobs:
+      name: "<white>Canavalar</white>"
+      add: "<green>Canavar Ekle</green>"
+      help: "<gray>Serada çıkan canavalar.</gray>"
+      spawns-on: "<gray>Neye Çıkar: <white>[block]</white></gray>"
+      variant: "<gray>Varyant: <white>[value]</white></gray>"
+      entry-help: "<yellow>Sol Tıkla: Olasılık ve Varyant<newline>Sağ Tıkla: Neye Çıkar<newline>Q: Sil</yellow>"
+    conversions:
+      name: "<white>Blok Dönüşümleri</white>"
+      add: "<green>Dönüşüm Ekle</green>"
+      help: "<gray>Yavaş yavaş başka bloklara dönüşen bloklar.</gray>"
+      to: "<gray>Dönüştürüldüğü Yer: <white>[block]</white></gray>"
+      anywhere: "<gray>Herhangi Yerde</gray>"
+      next-to: "<gray>Yalnızca Yanında: <white>[block]</white></gray>"
+      entry-help: "<yellow>Sol Tıkla: Olasılık<newline>Sağ Tıkla: Dönüştürüldüğü Yer<newline>Shift Sağ: Yalnızca Blok Yanında<newline>Shift Sol: Herhangi Yerde<newline>Q: Sil</yellow>"
+    back:
+      name: "<white>Reçetelere Geri</white>"
+      description: "<gray>Kaydedilmemiş değişiklikler tutulur</gray>"
+    discard:
+      name: "<red>Değişiklikleri At</red>"
+      description: "<gray>Son kayıttan beri olan değişiklikleri unut</gray>"
+    save:
+      name: "<green>Kaydet</green>"
+      nothing: "<gray>Kaydedilecek Değişiklik Yok</gray>"
+      description: "<gray>biomes.yml'e yaz; [number] sera hemen yeni kuralları takip eder</gray>"
+      problems: "<red>Önce Bunları Düzelt:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Çoğalt</white>"
+      description: "<gray>Bu reçeteden yeni reçete oluştur</gray>"
+    delete:
+      name: "<red>Reçeteyi Sil</red>"
+      description: "<gray>[number] sera bu reçeteyi kullanıyor</gray>"
+    dialog:
+      cancel: "İptal"
+      switch:
+        title: "Kaydedilmemiş Değişiklikler"
+        body: "[name]'e kaydedilmemiş değişikliklerin var. Bu reçeteyi düzenlemek için atıl mı?"
+        discard: "<red>Atılsın</red>"
+        keep: "[name]'e Geri Dön"
+      discard:
+        title: "Değişiklikler Atılsın mı?"
+        body: "[name]'e olan değişiklikleri unut mu?"
+        confirm: "<red>At</red>"
+      conflict:
+        title: "Başkası Tarafından Değiştirildi"
+        body: "[name] düzenlemeye başladıktan sonra başka biri tarafından kaydedildi veya yeniden yüklendi."
+        overwrite: "<red>Benimkini Üzerine Yaz</red>"
+        theirs: "Onlarınkinden Yeniden Başla"
+      delete:
+        title: "Reçeteyi Sil?"
+        body: "[name] silinsin? [number] sera bu reçeteyi kullanıyor. biomes.yml önce yedeklenir."
+        confirm: "<red>Sil</red>"
+    form:
+      ok: "<green>Bitti</green>"
+      cancel: "İptal"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] bir olasılık değildir. 0'dan büyük ve 100'e kadar bir yüzde kullanın, örn. 5 veya 0.5."
+      general:
+        title: "Ad ve Açıklama"
+        name: "Ad (MiniMessage renkleri izin veriliyor)"
+        description: "Reçete panelinde gösterilen açıklama"
+        priority: "Öncelik"
+        permission: "Yapmak için gereken izin (yoksa boş bırak)"
+        no-name: "Ad boş olamaz."
+        bad-permission: "İzin boşluk içeremez."
+      coverage:
+        title: "Su, Lav ve Buz"
+        water: "Su"
+        lava: "Lav"
+        ice: "Buz"
+        percent: "Tabanın Yüzdesi"
+        unchecked: "Kontrol Edilmedi"
+        none: "İzin Verilmiyor"
+        atleast: "En Az..."
+        too-much: "Su, lav ve buz birlikte tüm tabanı aşamaz."
+      mobs:
+        title: "Canavar Sınırları"
+        ground: "Canavar başına blok"
+        water: "Su canavara karşı su blokları (0 = aynı)"
+        lava: "Lav canavara karşı lav blokları (0 = aynı)"
+        air: "Uçan canavara karşı hava blokları (0 = aynı)"
+        max: "En Fazla Canavar (-1 = Sınır Yok)"
+      chance:
+        title: "Olasılık"
+        field: "[what] için %Olasılık"
+      mob:
+        title: "Canavar"
+        variant: "Varyant"
+        no-variant: "Standart"
+      count:
+        title: "Kaç Tane?"
+        field: "Kaç Tane [what]"
+      key:
+        title: "Reçete Anahtarı"
+        field: "Anahtar: Harf, Sayı, - ve _ (Daha Sonra Değiştirilemez)"
+        bad: "1 ile 32 harf, sayı, - veya _ kullanın."
+        taken: "[key] adında bir reçete zaten var."
 
 help:
    help: "yardım"
@@ -111,35 +421,33 @@ error:
    norecipe: "Sera oluşturulamadı!"
    
 messages:
-   enter: "[owner] adlı oyuncunun serasına giriyorsunuz, biyom: [biome]&f!"
+   enter: "[owner] adlı oyuncunun serasına giriyorsunuz, biyom: [biome]<white>!</white>"
    leave: "[owner] adlı oyuncunun serasından çıkıyorsunuz."
-   youarein: "Şu anda [owner] adlı oyuncunun serasındasınız, biyom: [biome]&f!"
+   youarein: "Şu anda [owner] adlı oyuncunun serasındasınız, biyom: [biome]<white>!</white>"
    removed: "Bu sera artık mevcut değil..."
-   removedmessage: "[biome]&f seranız kaldırıldı!"
+   removedmessage: "[biome]<white> seranız kaldırıldı!</white>"
    ecolost: "[location] konumundaki seranız ekosistemini kaybetti ve kaldırıldı."
 
 info:
-   title: "&a [Nasıl Sera İnşa Edilir]"
+   title: "<green>[Nasıl Sera İnşa Edilir]</green>"
    instructions: |
-     &e 4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,
-     &e duvarlara en fazla &f 4 kapı &e ekleyin.
-     &e Duvara veya çatıya &f 1 huni &e yerleştirin ve otomatik
-     &e kar ve/veya kemik tozu üretimi için su kovaları ekleyin.
-     &e Başarılı bir kurulum için hangi blokların içeride olması
-     &e gerektiğini biyom tariflerinden kontrol edin.
+     <yellow>4 duvarı ve düz cam çatısı olan camdan bir kutu yapın,</yellow>
+     <yellow>duvarlara en fazla </yellow><white>4 kapı </white><yellow>ekleyin.</yellow>
+     <yellow>Duvara veya çatıya </yellow><white>1 huni </white><yellow>yerleştirin ve otomatik</yellow>
+     <yellow>kar ve/veya kemik tozu üretimi için su kovaları ekleyin.</yellow>
+     <yellow>Başarılı bir kurulum için hangi blokların içeride olması</yellow>
+     <yellow>gerektiğini biyom tariflerinden kontrol edin.</yellow>
    info: "[Sera Bilgisi]"
    none: "Yok"
-   nomore: "&4 Daha fazla sera inşa edemezsiniz!"
-   onemore: "&6 Bir tane daha sera inşa edebilirsiniz."
-   youcanbuild: "&a [number] adet daha sera inşa edebilirsiniz!"
-   unlimited: "&a Sınırsız sayıda sera inşa edebilirsiniz!"
-   welcome: "&b Hoş geldiniz! Talimatlar için buraya tıklayın"
+   nomore: "<dark_red>Daha fazla sera inşa edemezsiniz!</dark_red>"
+   onemore: "<gold>Bir tane daha sera inşa edebilirsiniz.</gold>"
+   youcanbuild: "<green>[number] adet daha sera inşa edebilirsiniz!</green>"
+   unlimited: "<green>Sınırsız sayıda sera inşa edebilirsiniz!</green>"
+   welcome: "<aqua>Hoş geldiniz! Talimatlar için buraya tıklayın</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Tarif numaralarının listesini görmek için /greenhouse list kullanın!"
    wrongnumber: "Tarif numarası 1 ile [size] arasında olmalıdır"
-   title: "[[biome] Tarifi]"
    nowater: "Suya izin verilmiyor."
    noice: "Buza izin verilmiyor."
    nolava: "Lava izin verilmiyor."
@@ -176,4 +484,4 @@ news:
    headline: "[Sera Haberleri]"
 
 controlpanel:
-   title: "&aSeralar"
+   title: "<green>Seralar</green>"

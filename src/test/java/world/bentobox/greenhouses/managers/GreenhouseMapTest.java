@@ -1,8 +1,8 @@
 package world.bentobox.greenhouses.managers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,13 +13,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.database.objects.Island;
 import world.bentobox.bentobox.managers.IslandsManager;
@@ -27,7 +28,6 @@ import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * Tests for {@link GreenhouseMap}, in particular the overlap detection used when loading
@@ -35,8 +35,7 @@ import world.bentobox.greenhouses.mocks.ServerMocks;
  *
  * @author tastybento
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class GreenhouseMapTest {
+class GreenhouseMapTest {
 
     @Mock
     private Greenhouses addon;
@@ -47,23 +46,35 @@ public class GreenhouseMapTest {
     @Mock
     private World world;
 
-    @InjectMocks
     private GreenhouseMap map;
-
     private BiomeRecipe br;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
         when(addon.getIslands()).thenReturn(im);
         when(im.getIslandAt(any(Location.class))).thenReturn(Optional.of(island));
         br = mock(BiomeRecipe.class);
         when(br.getBiome()).thenReturn(mock(Biome.class));
+
+        map = new GreenhouseMap(addon);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
@@ -83,7 +94,7 @@ public class GreenhouseMapTest {
      * Test method for {@link GreenhouseMap#getOverlappingGreenhouse(Greenhouse)}.
      */
     @Test
-    public void testGetOverlappingGreenhouseNoOverlap() {
+    void testGetOverlappingGreenhouseNoOverlap() {
         Greenhouse first = gh(0, 0, 10, 10);
         assertEquals(GreenhouseResult.SUCCESS, map.addGreenhouse(first));
         // Sits alongside the first one, sharing no volume
@@ -97,7 +108,7 @@ public class GreenhouseMapTest {
      * Test method for {@link GreenhouseMap#getOverlappingGreenhouse(Greenhouse)}.
      */
     @Test
-    public void testGetOverlappingGreenhouseReportsConflict() {
+    void testGetOverlappingGreenhouseReportsConflict() {
         Greenhouse first = gh(0, 0, 10, 10);
         assertEquals(GreenhouseResult.SUCCESS, map.addGreenhouse(first));
         Greenhouse overlapper = gh(5, 5, 15, 15);
@@ -114,7 +125,7 @@ public class GreenhouseMapTest {
      * Test method for {@link GreenhouseMap#getOverlappingGreenhouse(Greenhouse)}.
      */
     @Test
-    public void testGetOverlappingGreenhouseDifferentWorld() {
+    void testGetOverlappingGreenhouseDifferentWorld() {
         Greenhouse first = gh(0, 0, 10, 10);
         assertEquals(GreenhouseResult.SUCCESS, map.addGreenhouse(first));
         // Same coords, different world
@@ -132,7 +143,7 @@ public class GreenhouseMapTest {
      * Test method for {@link GreenhouseMap#getOverlappingGreenhouse(Greenhouse)}.
      */
     @Test
-    public void testGetOverlappingGreenhouseNullLocation() {
+    void testGetOverlappingGreenhouseNullLocation() {
         Greenhouse gh = mock(Greenhouse.class);
         when(gh.getLocation()).thenReturn(null);
         assertTrue(map.getOverlappingGreenhouse(gh).isEmpty());
@@ -142,7 +153,7 @@ public class GreenhouseMapTest {
      * Test method for {@link GreenhouseMap#getOverlappingGreenhouse(Greenhouse)}.
      */
     @Test
-    public void testGetOverlappingGreenhouseEmptyMap() {
+    void testGetOverlappingGreenhouseEmptyMap() {
         Greenhouse gh = gh(0, 0, 10, 10);
         // Nothing loaded yet, so nothing to overlap with
         assertFalse(map.getOverlappingGreenhouse(gh).isPresent());

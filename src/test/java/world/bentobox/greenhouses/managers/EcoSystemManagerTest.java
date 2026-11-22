@@ -1,9 +1,19 @@
 package world.bentobox.greenhouses.managers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.Set;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.greenhouses.greenhouse.GreenhouseMob;
+import world.bentobox.greenhouses.greenhouse.MobHabitat;
+
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,12 +23,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,35 +37,30 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.MockitoSession;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.quality.Strictness;
 
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
-import world.bentobox.greenhouses.greenhouse.GreenhouseMob;
-import world.bentobox.greenhouses.greenhouse.MobHabitat;
 import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class, Tag.class, RecipeManager.class})
-public class EcoSystemManagerTest {
+class EcoSystemManagerTest {
 
     private Greenhouse gh;
     @Mock
@@ -74,15 +78,25 @@ public class EcoSystemManagerTest {
 
     // CUT
     private EcoSystemManager eco;
+
+    private MockitoSession mockSession;
+    private MockedStatic<RecipeManager> mockedRecipeManager;
+
     /**
      */
-    @Before
-    public void setUp() {
-        PowerMockito.mockStatic(Tag.class, Mockito.RETURNS_MOCKS);
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
-        @SuppressWarnings("unchecked")
-        Tag<Keyed> tag = mock(Tag.class);
-        when(Bukkit.getTag(anyString(), any(), any())).thenReturn(tag);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        // Mock RecipeManager static
+        mockedRecipeManager = Mockito.mockStatic(RecipeManager.class);
+        when(RecipeManager.getBiomeRecipies(any())).thenReturn(Optional.of(recipe));
 
         gh = new Greenhouse();
         // 4x4x4 greenhouse
@@ -116,18 +130,27 @@ public class EcoSystemManagerTest {
 
         // Recipe
         when(recipe.noMobs()).thenReturn(true);
-        PowerMockito.mockStatic(RecipeManager.class, Mockito.RETURNS_MOCKS);
-        when(RecipeManager.getBiomeRecipies(any())).thenReturn(Optional.of(recipe));
-
 
         eco = new EcoSystemManager(null, null);
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (mockedRecipeManager != null) {
+            mockedRecipeManager.closeOnDemand();
+        }
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAirAboveBlock() {
+    void testGetAvailableBlocksAirAboveBlock() {
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(64, result.size());
         assertEquals(air, result.get(0).block());
@@ -137,7 +160,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksPlantAboveBlock() {
+    void testGetAvailableBlocksPlantAboveBlock() {
         when(block.getRelative(BlockFace.UP)).thenReturn(plant);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(64, result.size());
@@ -148,7 +171,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAllAir() {
+    void testGetAvailableBlocksAllAir() {
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(air);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
         assertEquals(0, result.size());
@@ -158,7 +181,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAllLiquid() {
+    void testGetAvailableBlocksAllLiquid() {
         when(liquid.getRelative(BlockFace.UP)).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
@@ -169,7 +192,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAllLiquid2() {
+    void testGetAvailableBlocksAllLiquid2() {
         when(liquid.getRelative(BlockFace.UP)).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
@@ -180,7 +203,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAllPlant() {
+    void testGetAvailableBlocksAllPlant() {
         when(plant.getRelative(BlockFace.UP)).thenReturn(plant);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(plant);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, false);
@@ -192,7 +215,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksLiquidAboveBlockIgnoreLiquids() {
+    void testGetAvailableBlocksLiquidAboveBlockIgnoreLiquids() {
         when(block.getRelative(BlockFace.UP)).thenReturn(liquid);
         List<GrowthBlock> result = eco.getAvailableBlocks(gh, true);
         assertEquals(64, result.size());
@@ -203,7 +226,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAirAboveLiquidNotIgnoreLiquids() {
+    void testGetAvailableBlocksAirAboveLiquidNotIgnoreLiquids() {
         when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
         when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
@@ -237,7 +260,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#getAvailableBlocks(Greenhouse, boolean)}.
      */
     @Test
-    public void testGetAvailableBlocksAirAboveLiquidIgnoreLiquids() {
+    void testGetAvailableBlocksAirAboveLiquidIgnoreLiquids() {
         when(world.getBlockAt(anyInt(), eq(3), anyInt())).thenReturn(air);
         when(world.getBlockAt(anyInt(), eq(2), anyInt())).thenReturn(liquid);
         when(world.getBlockAt(anyInt(), eq(1), anyInt())).thenReturn(block);
@@ -255,7 +278,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse, double)}.
      */
     @Test
-    public void testAddMobsChunkNotLoaded() {
+    void testAddMobsChunkNotLoaded() {
         assertFalse(eco.addMobs(gh, 1D));
     }
 
@@ -263,7 +286,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse, double)}.
      */
     @Test
-    public void testAddMobsChunkLoadedNoMobs() {
+    void testAddMobsChunkLoadedNoMobs() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         assertFalse(eco.addMobs(gh, 1D));
     }
@@ -272,7 +295,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse, double)}.
      */
     @Test
-    public void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsZero() {
+    void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsZero() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         assertFalse(eco.addMobs(gh, 1D));
@@ -282,7 +305,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse, double)}.
      */
     @Test
-    public void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsNotZero() {
+    void testAddMobsChunkLoadedWithMobsInRecipeMaxMobsNotZero() {
         // Nothing spawned here
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
@@ -294,7 +317,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#addMobs(Greenhouse, double)}.
      */
     @Test
-    public void testAddMobsSpawnMob() {
+    void testAddMobsSpawnMob() {
         // Nothing spawned here
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
@@ -310,7 +333,7 @@ public class EcoSystemManagerTest {
      * alone would allow up to 16 mobs. maxmobs is 3, so exactly 3 mobs should spawn.
      */
     @Test
-    public void testAddMobsRespectsMaxMobLimit() {
+    void testAddMobsRespectsMaxMobLimit() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(3);
@@ -326,7 +349,7 @@ public class EcoSystemManagerTest {
      * calls that sample nothing stay cheap.
      */
     @Test
-    public void testAddMobsFractionZeroDoesNothing() {
+    void testAddMobsFractionZeroDoesNothing() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.spawnMob(any(), any())).thenReturn(true);
@@ -341,7 +364,7 @@ public class EcoSystemManagerTest {
      * the world.
      */
     @Test
-    public void testAddMobsCountsOnlyNearbyEntities() {
+    void testAddMobsCountsOnlyNearbyEntities() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         eco.addMobs(gh, 1D);
@@ -354,7 +377,7 @@ public class EcoSystemManagerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void testAddMobsAtCapSpawnsNothing() {
+    void testAddMobsAtCapSpawnsNothing() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(2);
@@ -367,16 +390,16 @@ public class EcoSystemManagerTest {
 
     /**
      * The density limit (moblimit) still applies, counting mobs already in the greenhouse.
-     * Area is 16 and moblimit is 9: with 1 mob already there 16/1 >= 9 allows one more, then
-     * 16/2 < 9 stops it.
+     * Area is 16 and moblimit is 8 blocks per mob: with 1 mob already there, a second fits
+     * (2 x 8 = 16) and a third would not (3 x 8 = 24).
      */
     @SuppressWarnings("unchecked")
     @Test
-    public void testAddMobsRespectsDensityWithExistingMobs() {
+    void testAddMobsRespectsDensityWithExistingMobs() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.noMobs()).thenReturn(false);
         when(recipe.getMaxMob()).thenReturn(-1);
-        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(9);
+        when(recipe.getMobLimit(MobHabitat.GROUND)).thenReturn(8);
         when(recipe.spawnMob(any(), any())).thenReturn(true);
         when(world.getNearbyEntities(any(BoundingBox.class), any(Predicate.class)))
         .thenReturn(List.of(mock(Entity.class)));
@@ -408,27 +431,26 @@ public class EcoSystemManagerTest {
 
     /**
      * Issue #8 - water mobs are limited by the water blocks, not the floor area, and are not
-     * blocked by a full ground. 40 water blocks at 10 per mob allows 5 squid (the density check
-     * lets the next mob in while space / count >= limit).
+     * blocked by a full ground. 40 water blocks at 10 per mob allows 4 squid.
      */
     @Test
-    public void testAddMobsWaterMobsUseWaterBlocks() {
+    void testAddMobsWaterMobsUseWaterBlocks() {
         setUpOceanRecipe();
         gh.setWaterBlocks(40);
         assertTrue(eco.addMobs(gh, 1D));
-        verify(recipe, times(5)).spawnMob(any(), any());
+        verify(recipe, times(4)).spawnMob(any(), any());
     }
 
     /**
      * Issue #8 - more water means more water mobs.
      */
     @Test
-    public void testAddMobsMoreWaterMoreMobs() {
+    void testAddMobsMoreWaterMoreMobs() {
         setUpOceanRecipe();
         gh.setWaterBlocks(10);
         assertTrue(eco.addMobs(gh, 1D));
-        // 10 / 1 >= 10 lets a second squid in, 10 / 2 < 10 stops the third
-        verify(recipe, times(2)).spawnMob(any(), any());
+        // 10 blocks is room for one squid at 10 blocks each; a second would need 20
+        verify(recipe, times(1)).spawnMob(any(), any());
     }
 
     /**
@@ -436,7 +458,7 @@ public class EcoSystemManagerTest {
      * full, so nothing spawns.
      */
     @Test
-    public void testAddMobsWaterNotMeasuredFallsBackToGround() {
+    void testAddMobsWaterNotMeasuredFallsBackToGround() {
         setUpOceanRecipe();
         assertFalse(eco.addMobs(gh, 1D));
         verify(recipe, never()).spawnMob(any(), any());
@@ -446,7 +468,7 @@ public class EcoSystemManagerTest {
      * Issue #8 - a greenhouse with no water has no room for water mobs.
      */
     @Test
-    public void testAddMobsNoWaterNoWaterMobs() {
+    void testAddMobsNoWaterNoWaterMobs() {
         setUpOceanRecipe();
         gh.setWaterBlocks(0);
         assertFalse(eco.addMobs(gh, 1D));
@@ -456,7 +478,7 @@ public class EcoSystemManagerTest {
      * maxmobs still caps the total across all habitats: one turtle plus two squid.
      */
     @Test
-    public void testAddMobsMaxMobsCapsAllHabitats() {
+    void testAddMobsMaxMobsCapsAllHabitats() {
         setUpOceanRecipe();
         when(recipe.getMaxMob()).thenReturn(3);
         gh.setWaterBlocks(1000);
@@ -468,15 +490,15 @@ public class EcoSystemManagerTest {
      * Issue #8 - flying mobs are limited by the internal volume: 4 x 4 x 3 = 48 blocks.
      */
     @Test
-    public void testMobCountsAirUsesVolume() {
+    void testMobCountsAirUsesVolume() {
         when(recipe.getMobTypes()).thenReturn(Set.of(EntityType.BAT));
         when(recipe.getMobPool(EntityType.BAT)).thenReturn(MobHabitat.AIR);
         when(recipe.getMobLimit(MobHabitat.AIR)).thenReturn(12);
         when(recipe.getMaxMob()).thenReturn(-1);
         EcoSystemManager.MobCounts counts = new EcoSystemManager.MobCounts(gh, recipe);
         assertEquals(MobHabitat.AIR, counts.pool(EntityType.BAT));
-        // 48 / n >= 12 for n up to 4, so 5 bats fit
-        for (int i = 0; i < 5; i++) {
+        // 48 blocks at 12 per bat is room for 4
+        for (int i = 0; i < 4; i++) {
             assertTrue(counts.hasRoom(EntityType.BAT));
             counts.add(EntityType.BAT);
         }
@@ -488,7 +510,7 @@ public class EcoSystemManagerTest {
      * Mobs the recipe does not know, or a recipe with no habitats set, count against the ground.
      */
     @Test
-    public void testMobCountsUnknownTypeIsGround() {
+    void testMobCountsUnknownTypeIsGround() {
         EcoSystemManager.MobCounts counts = new EcoSystemManager.MobCounts(gh, recipe);
         assertEquals(MobHabitat.GROUND, counts.pool(null));
         assertEquals(MobHabitat.GROUND, counts.pool(EntityType.COW));
@@ -498,7 +520,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#sampleCount(int, double, double)}.
      */
     @Test
-    public void testSampleCount() {
+    void testSampleCount() {
         // Whole numbers are exact
         assertEquals(25, EcoSystemManager.sampleCount(100, 0.25D, 0.99D));
         // Remainder is sampled with that probability: expected 0.5
@@ -520,7 +542,7 @@ public class EcoSystemManagerTest {
      * per-block rates are kept (option (a)).
      */
     @Test
-    public void testSampleCountAverageMatchesFraction() {
+    void testSampleCountAverageMatchesFraction() {
         // 64 columns, 1 second sampling of a 5 minute mobtick
         double fraction = 20D / (5 * 60 * 20);
         int runs = 300_000;
@@ -538,7 +560,7 @@ public class EcoSystemManagerTest {
      * Fraction 1 samples as many blocks as there are in the greenhouse: 4 x 4 x 4.
      */
     @Test
-    public void testConvertBlocksFullFraction() {
+    void testConvertBlocksFullFraction() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.getBlockConvert()).thenReturn(true);
         assertEquals(64, eco.convertBlocks(gh, 1D));
@@ -549,7 +571,7 @@ public class EcoSystemManagerTest {
      * Empty blocks are sampled but never converted.
      */
     @Test
-    public void testConvertBlocksSkipsAir() {
+    void testConvertBlocksSkipsAir() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.getBlockConvert()).thenReturn(true);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(air);
@@ -561,7 +583,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#convertBlocks(Greenhouse, double)}.
      */
     @Test
-    public void testConvertBlocksNoConversionsInRecipe() {
+    void testConvertBlocksNoConversionsInRecipe() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.getBlockConvert()).thenReturn(false);
         assertEquals(0, eco.convertBlocks(gh, 1D));
@@ -572,7 +594,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#convertBlocks(Greenhouse, double)}.
      */
     @Test
-    public void testConvertBlocksChunkNotLoaded() {
+    void testConvertBlocksChunkNotLoaded() {
         when(recipe.getBlockConvert()).thenReturn(true);
         assertEquals(0, eco.convertBlocks(gh, 1D));
         verify(world, never()).getBlockAt(anyInt(), anyInt(), anyInt());
@@ -582,7 +604,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#convertBlocks(Greenhouse, double)}.
      */
     @Test
-    public void testConvertBlocksFractionZero() {
+    void testConvertBlocksFractionZero() {
         when(world.isChunkLoaded(anyInt(), anyInt())).thenReturn(true);
         when(recipe.getBlockConvert()).thenReturn(true);
         assertEquals(0, eco.convertBlocks(gh, 0D));
@@ -594,7 +616,7 @@ public class EcoSystemManagerTest {
      * Tasks are null when their tick is 0 (disabled); cancel must not throw.
      */
     @Test
-    public void testCancelWithDisabledTasks() {
+    void testCancelWithDisabledTasks() {
         eco.cancel();
     }
 
@@ -619,7 +641,7 @@ public class EcoSystemManagerTest {
      * A zero-amount ItemStack is rejected by newer Paper APIs, so the last bone meal must just be removed.
      */
     @Test
-    public void testSetBoneMealZeroRemovesWithoutAdding() {
+    void testSetBoneMealZeroRemovesWithoutAdding() {
         Inventory inv = mockHopper();
         eco.setBoneMeal(gh, 0);
         verify(inv).remove(Material.BONE_MEAL);
@@ -630,7 +652,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
      */
     @Test
-    public void testSetBoneMealNegativeRemovesWithoutAdding() {
+    void testSetBoneMealNegativeRemovesWithoutAdding() {
         Inventory inv = mockHopper();
         eco.setBoneMeal(gh, -1);
         verify(inv).remove(Material.BONE_MEAL);
@@ -641,7 +663,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
      */
     @Test
-    public void testSetBoneMealPositiveReplacesStack() {
+    void testSetBoneMealPositiveReplacesStack() {
         Inventory inv = mockHopper();
         eco.setBoneMeal(gh, 5);
         verify(inv).remove(Material.BONE_MEAL);
@@ -655,7 +677,7 @@ public class EcoSystemManagerTest {
      * Test method for {@link world.bentobox.greenhouses.managers.EcoSystemManager#setBoneMeal(Greenhouse, int)}.
      */
     @Test
-    public void testSetBoneMealNoHopper() {
+    void testSetBoneMealNoHopper() {
         // No hopper location set - nothing to do and no exception
         eco.setBoneMeal(gh, 0);
         eco.setBoneMeal(gh, 5);

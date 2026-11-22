@@ -1,8 +1,8 @@
 package world.bentobox.greenhouses.managers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -17,14 +17,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.BoundingBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.database.Database;
 import world.bentobox.bentobox.database.objects.Island;
@@ -35,7 +35,6 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseManager.UnloadedGreenhouse;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * Tests the admin-facing parts of {@link GreenhouseManager} - retention of records that could
@@ -43,11 +42,7 @@ import world.bentobox.greenhouses.mocks.ServerMocks;
  *
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ GreenhouseManager.class })
-// Database's static initializer calls DatabaseSetup.getDatabase(), which needs a live server
-@SuppressStaticInitializationFor("world.bentobox.bentobox.database.Database")
-public class GreenhouseManagerTest {
+class GreenhouseManagerTest {
 
     private static final String ID_A = "aaaaaaaa-1111-1111-1111-111111111111";
     private static final String ID_B = "bbbbbbbb-2222-2222-2222-222222222222";
@@ -63,14 +58,23 @@ public class GreenhouseManagerTest {
     private Island island;
     @Mock
     private World world;
+
     private Database<Greenhouse> handler;
     private GreenhouseManager manager;
     private BiomeRecipe br;
+    private MockitoSession mockSession;
 
     @SuppressWarnings("unchecked")
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
         handler = mock(Database.class);
         when(addon.getIslands()).thenReturn(im);
         when(addon.getPlayers()).thenReturn(pm);
@@ -84,9 +88,13 @@ public class GreenhouseManagerTest {
         manager = new GreenhouseManager(addon, handler);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        Mockito.framework().clearInlineMocks();
     }
 
     private Greenhouse gh(String id, int minX, int minZ, int maxX, int maxZ) {
@@ -104,7 +112,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#reload()} and {@link GreenhouseManager#getUnloaded()}.
      */
     @Test
-    public void testOverlappingRecordIsRetainedAsUnloaded() {
+    void testOverlappingRecordIsRetainedAsUnloaded() {
         Greenhouse first = gh(ID_A, 0, 0, 10, 10);
         Greenhouse overlapper = gh(ID_B, 5, 5, 15, 15);
         when(handler.loadObjects()).thenReturn(List.of(first, overlapper));
@@ -125,7 +133,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#reload()}.
      */
     @Test
-    public void testReloadClearsPreviousUnloaded() {
+    void testReloadClearsPreviousUnloaded() {
         List<Greenhouse> both = List.of(gh(ID_A, 0, 0, 10, 10), gh(ID_B, 5, 5, 15, 15));
         when(handler.loadObjects()).thenReturn(both);
         manager.reload();
@@ -141,7 +149,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#getGreenhouseById(String)}.
      */
     @Test
-    public void testGetGreenhouseByIdFullId() {
+    void testGetGreenhouseByIdFullId() {
         List<Greenhouse> loaded = List.of(gh(ID_A, 0, 0, 10, 10));
         when(handler.loadObjects()).thenReturn(loaded);
         manager.reload();
@@ -153,7 +161,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#getGreenhouseById(String)}.
      */
     @Test
-    public void testGetGreenhouseByIdPrefixAndCase() {
+    void testGetGreenhouseByIdPrefixAndCase() {
         List<Greenhouse> loaded = List.of(gh(ID_A, 0, 0, 10, 10));
         when(handler.loadObjects()).thenReturn(loaded);
         manager.reload();
@@ -165,7 +173,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#getGreenhouseById(String)}.
      */
     @Test
-    public void testGetGreenhouseByIdFindsUnloadedRecords() {
+    void testGetGreenhouseByIdFindsUnloadedRecords() {
         List<Greenhouse> loaded = List.of(gh(ID_A, 0, 0, 10, 10), gh(ID_B, 5, 5, 15, 15));
         when(handler.loadObjects()).thenReturn(loaded);
         manager.reload();
@@ -178,7 +186,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#getGreenhouseById(String)}.
      */
     @Test
-    public void testGetGreenhouseByIdAmbiguousPrefixIsNotAMatch() {
+    void testGetGreenhouseByIdAmbiguousPrefixIsNotAMatch() {
         // Two IDs sharing the "bbbbbbbb" prefix - one loads, one overlaps
         List<Greenhouse> loaded = List.of(gh(ID_B, 0, 0, 10, 10), gh(ID_B2, 5, 5, 15, 15));
         when(handler.loadObjects()).thenReturn(loaded);
@@ -193,7 +201,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#getGreenhouseById(String)}.
      */
     @Test
-    public void testGetGreenhouseByIdUnknownOrEmpty() {
+    void testGetGreenhouseByIdUnknownOrEmpty() {
         List<Greenhouse> loaded = List.of(gh(ID_A, 0, 0, 10, 10));
         when(handler.loadObjects()).thenReturn(loaded);
         manager.reload();
@@ -206,7 +214,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#deleteById(String)}.
      */
     @Test
-    public void testDeleteByIdLoadedGreenhouse() {
+    void testDeleteByIdLoadedGreenhouse() {
         Greenhouse gh = gh(ID_A, 0, 0, 10, 10);
         when(handler.loadObjects()).thenReturn(List.of(gh));
         manager.reload();
@@ -222,7 +230,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#deleteById(String)}.
      */
     @Test
-    public void testDeleteByIdUnloadedGreenhouse() {
+    void testDeleteByIdUnloadedGreenhouse() {
         Greenhouse first = gh(ID_A, 0, 0, 10, 10);
         Greenhouse overlapper = gh(ID_B, 5, 5, 15, 15);
         when(handler.loadObjects()).thenReturn(List.of(first, overlapper));
@@ -241,7 +249,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#deleteById(String)}.
      */
     @Test
-    public void testDeleteByIdUnknown() {
+    void testDeleteByIdUnknown() {
         List<Greenhouse> loaded = List.of(gh(ID_A, 0, 0, 10, 10));
         when(handler.loadObjects()).thenReturn(loaded);
         manager.reload();
@@ -253,7 +261,7 @@ public class GreenhouseManagerTest {
      * Test method for {@link GreenhouseManager#describe(Greenhouse)}.
      */
     @Test
-    public void testDescribe() {
+    void testDescribe() {
         Greenhouse gh = gh(ID_A, 1, 2, 11, 12);
         String desc = manager.describe(gh);
         assertTrue(desc.contains("id=" + ID_A));

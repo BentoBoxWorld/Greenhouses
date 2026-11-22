@@ -1,36 +1,35 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.bukkit.World;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.greenhouses.Greenhouses;
-import world.bentobox.greenhouses.mocks.ServerMocks;
+import world.bentobox.greenhouses.WhiteBox;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class })
-public class AdminCommandTest {
+class AdminCommandTest {
 
     @Mock
     private CompositeCommand parent;
@@ -47,11 +46,20 @@ public class AdminCommandTest {
     private IslandWorldManager iwm;
 
     private AdminCommand cmd;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
@@ -62,16 +70,21 @@ public class AdminCommandTest {
         cmd = new AdminCommand(addon, parent);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link AdminCommand#setup()}.
      */
     @Test
-    public void testSetup() {
+    void testSetup() {
         assertTrue(cmd.getPermission().contains("greenhouses.admin"));
         // Usable from the console
         assertFalse(cmd.isOnlyPlayer());
@@ -83,12 +96,11 @@ public class AdminCommandTest {
      * Test method for {@link AdminCommand#setup()}.
      */
     @Test
-    public void testSubCommandsRegistered() {
-        // Six of our own, plus the help command CompositeCommand registers automatically
-        assertEquals(7, cmd.getSubCommands().size());
-        List.of("list", "info", "delete", "tp", "verify", "reload")
-        .forEach(c -> assertTrue(c + " is not registered", cmd.getSubCommand(c).isPresent()));
+    void testSubCommandsRegistered() {
+        // Eight of our own, plus the help command CompositeCommand registers automatically
+        assertEquals(9, cmd.getSubCommands().size());
+        List.of("list", "info", "delete", "tp", "verify", "reload", "build", "edit")
+        .forEach(c -> assertTrue(cmd.getSubCommand(c).isPresent(), c + " is not registered"));
     }
-
 
 }

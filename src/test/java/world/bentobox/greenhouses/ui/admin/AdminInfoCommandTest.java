@@ -1,7 +1,7 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -17,14 +17,15 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -34,17 +35,15 @@ import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.WhiteBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class })
-public class AdminInfoCommandTest {
+class AdminInfoCommandTest {
 
     private static final String ID = "aaaaaaaa-1111-1111-1111-111111111111";
 
@@ -74,11 +73,20 @@ public class AdminInfoCommandTest {
 
     private AdminInfoCommand cmd;
     private Greenhouse gh;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
@@ -112,16 +120,21 @@ public class AdminInfoCommandTest {
         cmd = new AdminInfoCommand(parent);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link AdminInfoCommand#setup()}.
      */
     @Test
-    public void testSetup() {
+    void testSetup() {
         assertTrue(cmd.getPermission().contains("greenhouses.admin.info"));
         assertFalse(cmd.isOnlyPlayer());
     }
@@ -130,7 +143,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoArgsInGreenhouse() {
+    void testCanExecuteNoArgsInGreenhouse() {
         when(map.getGreenhouse(any(Location.class))).thenReturn(Optional.of(gh));
         assertTrue(cmd.canExecute(user, "info", Collections.emptyList()));
     }
@@ -139,7 +152,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoArgsNotInGreenhouse() {
+    void testCanExecuteNoArgsNotInGreenhouse() {
         when(map.getGreenhouse(any(Location.class))).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "info", Collections.emptyList()));
         verify(user).sendMessage("greenhouses.errors.not-inside");
@@ -149,7 +162,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoArgsFromConsole() {
+    void testCanExecuteNoArgsFromConsole() {
         when(user.isPlayer()).thenReturn(false);
         assertFalse(cmd.canExecute(user, "info", Collections.emptyList()));
         verify(user).sendMessage("greenhouses.commands.admin.errors.id-required");
@@ -161,7 +174,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteKnownId() {
+    void testCanExecuteKnownId() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         assertTrue(cmd.canExecute(user, "info", List.of(ID)));
     }
@@ -170,7 +183,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteUnknownId() {
+    void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "info", List.of("nope")));
         verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
@@ -180,7 +193,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteShowsDetail() {
+    void testExecuteShowsDetail() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         assertTrue(cmd.canExecute(user, "info", List.of(ID)));
         assertTrue(cmd.execute(user, "info", List.of(ID)));
@@ -195,7 +208,7 @@ public class AdminInfoCommandTest {
      * Test method for {@link AdminInfoCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteReportsWhyRecordIsNotLoaded() {
+    void testExecuteReportsWhyRecordIsNotLoaded() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         when(gm.getUnloaded()).thenReturn(List.of(new GreenhouseManager.UnloadedGreenhouse(gh,
                 GreenhouseManager.GreenhouseResult.FAIL_OVERLAPPING)));

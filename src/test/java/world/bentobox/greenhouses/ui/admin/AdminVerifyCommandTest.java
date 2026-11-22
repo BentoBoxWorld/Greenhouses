@@ -1,7 +1,7 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,33 +19,32 @@ import java.util.concurrent.CompletableFuture;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.WhiteBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class })
-public class AdminVerifyCommandTest {
+class AdminVerifyCommandTest {
 
     private static final String ID = "aaaaaaaa-1111-1111-1111-111111111111";
 
@@ -70,11 +69,20 @@ public class AdminVerifyCommandTest {
     private AdminVerifyCommand cmd;
     private Greenhouse gh;
     private BiomeRecipe br;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
@@ -94,16 +102,21 @@ public class AdminVerifyCommandTest {
         cmd = new AdminVerifyCommand(parent);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link AdminVerifyCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoGreenhouses() {
+    void testCanExecuteNoGreenhouses() {
         when(map.getGreenhouses()).thenReturn(Collections.emptyList());
         assertFalse(cmd.canExecute(user, "verify", Collections.emptyList()));
         verify(user).sendMessage("greenhouses.commands.admin.list.none");
@@ -113,7 +126,7 @@ public class AdminVerifyCommandTest {
      * Test method for {@link AdminVerifyCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteUnknownId() {
+    void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "verify", List.of("nope")));
         verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
@@ -123,7 +136,7 @@ public class AdminVerifyCommandTest {
      * Test method for {@link AdminVerifyCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecutePassingRecipe() {
+    void testExecutePassingRecipe() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         when(br.checkRecipe(gh)).thenReturn(CompletableFuture.completedFuture(Collections.emptySet()));
         assertTrue(cmd.canExecute(user, "verify", List.of(ID)));
@@ -136,7 +149,7 @@ public class AdminVerifyCommandTest {
      * Test method for {@link AdminVerifyCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteFailingRecipeListsReasonsAndMissingBlocks() {
+    void testExecuteFailingRecipeListsReasonsAndMissingBlocks() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         when(br.checkRecipe(gh)).thenReturn(CompletableFuture.completedFuture(
                 Set.of(GreenhouseResult.FAIL_INSUFFICIENT_WATER, GreenhouseResult.FAIL_INSUFFICIENT_BLOCKS)));
@@ -154,7 +167,7 @@ public class AdminVerifyCommandTest {
      * Test method for {@link AdminVerifyCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteAllGreenhouses() {
+    void testExecuteAllGreenhouses() {
         when(map.getGreenhouses()).thenReturn(List.of(gh));
         when(br.checkRecipe(any())).thenReturn(CompletableFuture.completedFuture(Collections.emptySet()));
         assertTrue(cmd.canExecute(user, "verify", Collections.emptyList()));
