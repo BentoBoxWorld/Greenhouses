@@ -23,8 +23,12 @@ public final class Lore {
     /** A sensible lore width in characters: about what fits beside an inventory on a normal screen */
     public static final int WIDTH = 32;
 
-    /** A MiniMessage tag: opening, closing or self-closing, with any arguments */
-    private static final Pattern TAG = Pattern.compile("<(/?)([!?#a-zA-Z0-9_:.\\-]+)([^<>]*)>");
+    /**
+     * A MiniMessage tag: opening, closing or self-closing, with any arguments. The quantifiers
+     * are possessive: the name takes every name character and the rest takes what follows, with
+     * no backtracking between them.
+     */
+    private static final Pattern TAG = Pattern.compile("<(/?+)([!?#a-zA-Z0-9_:.\\-]++)([^<>]*+)>");
     private static final Pattern NEWLINE = Pattern.compile("\\r?\\n|<newline>|<br>");
 
     private Lore() {

@@ -3,6 +3,7 @@ package world.bentobox.greenhouses.build;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
@@ -48,9 +49,10 @@ public final class GreenhouseBuilder {
             if (data instanceof Bisected bisected) {
                 bisected.setHalf(p.upper() ? Bisected.Half.TOP : Bisected.Half.BOTTOM);
             }
-            if (p.facing() != null && data instanceof Directional directional
-                    && directional.getFaces().contains(p.facing())) {
-                directional.setFacing(p.facing());
+            BlockFace facing = p.facing();
+            if (facing != null && data instanceof Directional directional
+                    && directional.getFaces().contains(facing)) {
+                directional.setFacing(facing);
             }
             if (data instanceof Leaves leaves) {
                 // Placed leaves far from a log would decay

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -82,8 +84,8 @@ public class RecipeManager {
     }
 
     public RecipeManager(Greenhouses addon) {
-        this.addon = addon;
-        this.codec = new RecipeCodec(addon, addon::logError);
+        this.addon = Objects.requireNonNull(addon, "addon");
+        this.codec = new RecipeCodec(this.addon, this.addon::logError);
         reload();
     }
 
@@ -290,7 +292,7 @@ public class RecipeManager {
         Path dir = getBackupFolder().toPath();
         Files.createDirectories(dir);
         // Timestamped, with a counter if two land in the same millisecond, so none is overwritten
-        String stamp = "biomes-" + LocalDateTime.now().format(STAMP);
+        String stamp = "biomes-" + LocalDateTime.now(ZoneId.systemDefault()).format(STAMP);
         Path target = dir.resolve(stamp + ".yml");
         for (int n = 1; Files.exists(target); n++) {
             target = dir.resolve(stamp + "-" + n + ".yml");
