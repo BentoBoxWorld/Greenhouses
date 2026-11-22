@@ -1,7 +1,7 @@
 package world.bentobox.greenhouses.listeners;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -11,10 +11,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.World;
@@ -31,16 +29,16 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.greenhouses.Greenhouses;
@@ -48,15 +46,11 @@ import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
- *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, User.class})
-public class GreenhouseEventsTest {
+class GreenhouseEventsTest {
     @Mock
     private User user;
     @Mock
@@ -84,20 +78,29 @@ public class GreenhouseEventsTest {
     @Mock
     private ItemStack waterBucket;
 
-    @Before
-    public void setUp() {
-        Server server = ServerMocks.newServer();
-        PowerMockito.mockStatic(User.class);
-        when(User.getInstance(any(Player.class))).thenReturn(user);
-        PowerMockito.mockStatic(Bukkit.class, Mockito.RETURNS_MOCKS);
-        when(Bukkit.getServer()).thenReturn(server);
+    private MockedStatic<User> mockedUser;
+    private MockitoSession mockSession;
+
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = Tag.LEAVES;
+
+        mockedUser = Mockito.mockStatic(User.class, Mockito.CALLS_REAL_METHODS);
+        mockedUser.when(() -> User.getInstance(any(Player.class))).thenReturn(user);
+
         // Always in greenhouse
         when(addon.getManager()).thenReturn(gm);
         when(gm.getMap()).thenReturn(map);
         when(map.inGreenhouse(any())).thenReturn(true);
         // Get greenhouse
-        when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
-        when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh2));
+        when(map.getGreenhouse(eq(location))).thenReturn(Optional.of(gh1));
+        when(map.getGreenhouse(eq(location2))).thenReturn(Optional.of(gh2));
         BiomeRecipe br = new BiomeRecipe();
         br.setFriendlyName("recipe1");
         br.setType(Biome.PLAINS);
@@ -131,17 +134,25 @@ public class GreenhouseEventsTest {
         ghe = new GreenhouseEvents(addon);
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockedUser != null) {
+            mockedUser.closeOnDemand();
+        }
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    @Ignore("Biomes are nulls")
-    public void testOnPlayerInteractInNetherInGreenhouse() {
+    @Disabled("Biomes are nulls")
+    void testOnPlayerInteractInNetherInGreenhouse() {
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
@@ -158,7 +169,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNetherOutsideOfGreenhouse() {
+    void testOnPlayerInteractInNetherOutsideOfGreenhouse() {
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
@@ -175,7 +186,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNetherGreenhouse() {
+    void testOnPlayerInteractInNetherGreenhouse() {
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location2);
         Block nextBlock = mock(Block.class);
@@ -191,7 +202,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNetherNotInNether() {
+    void testOnPlayerInteractInNetherNotInNether() {
         when(world.getEnvironment()).thenReturn(Environment.NORMAL);
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
@@ -210,7 +221,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNetherNotWaterBucket() {
+    void testOnPlayerInteractInNetherNotWaterBucket() {
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
         Block nextBlock = mock(Block.class);
@@ -226,7 +237,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerInteractInNether(PlayerBucketEmptyEvent)}.
      */
     @Test
-    public void testOnPlayerInteractInNetherNotInGreenhouse() {
+    void testOnPlayerInteractInNetherNotInGreenhouse() {
         when(map.getGreenhouse(location)).thenReturn(Optional.empty());
         Block clickedBlock = mock(Block.class);
         when(clickedBlock.getLocation()).thenReturn(location);
@@ -243,8 +254,8 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    @Ignore("Biomes are nulls")
-    public void testOnIceBreak() {
+    @Disabled("Biomes are nulls")
+    void testOnIceBreak() {
         when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
 
         Block block = mock(Block.class);
@@ -261,9 +272,8 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    public void testOnIceBreakNetherBiomeGreenhouse() {
-        when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
-
+    void testOnIceBreakNetherBiomeGreenhouse() {
+        // Material.ICE is naturally in Tag.ICE, so no need to mock
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ICE);
         when(block.getWorld()).thenReturn(world);
@@ -278,11 +288,10 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    public void testOnIceBreakNotIce() {
-        when(Tag.ICE.isTagged(any(Material.class))).thenReturn(false);
-
+    void testOnIceBreakNotIce() {
+        // Material.STONE is not in Tag.ICE
         Block block = mock(Block.class);
-        when(block.getType()).thenReturn(Material.ACACIA_BOAT);
+        when(block.getType()).thenReturn(Material.STONE);
         when(block.getWorld()).thenReturn(world);
         // Nether gh
         when(block.getLocation()).thenReturn(location2);
@@ -296,8 +305,8 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    @Ignore("Biomes are nulls")
-    public void testOnIceBreakNotNetherNetherGreenhouse() {
+    @Disabled("Biomes are nulls")
+    void testOnIceBreakNotNetherNetherGreenhouse() {
         when(world.getEnvironment()).thenReturn(Environment.THE_END);
         when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
 
@@ -318,10 +327,9 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    public void testOnIceBreakNotNetherNotNetherGreenhouse() {
+    void testOnIceBreakNotNetherNotNetherGreenhouse() {
         when(world.getEnvironment()).thenReturn(Environment.THE_END);
-        when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
-
+        // Material.ICE is naturally in Tag.ICE
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ICE);
         when(block.getWorld()).thenReturn(world);
@@ -329,7 +337,7 @@ public class GreenhouseEventsTest {
         BlockBreakEvent e = new BlockBreakEvent(block, player);
         ghe.onIceBreak(e);
         assertFalse(e.isCancelled());
-        verify(block, never()).setType(any());
+        verify(block, never()).setType(Material.AIR);
     }
 
 
@@ -337,10 +345,9 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onIceBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    public void testOnIceBreakNotInGreenhouse() {
+    void testOnIceBreakNotInGreenhouse() {
         when(map.inGreenhouse(any())).thenReturn(false);
-        when(Tag.ICE.isTagged(any(Material.class))).thenReturn(true);
-
+        // Material.ICE is naturally in Tag.ICE
         Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.ICE);
         when(block.getWorld()).thenReturn(world);
@@ -355,7 +362,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)}.
      */
     @Test
-    public void testOnPlayerMove() {
+    void testOnPlayerMove() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
         ghe.onPlayerMove(e);
         verify(user).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
@@ -366,7 +373,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)}.
      */
     @Test
-    public void testOnPlayerMoveEnteringOnly() {
+    void testOnPlayerMoveEnteringOnly() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
         when(map.getGreenhouse(location)).thenReturn(Optional.empty());
         when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh2));
@@ -379,7 +386,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)}.
      */
     @Test
-    public void testOnPlayerMoveLeavingOnly() {
+    void testOnPlayerMoveLeavingOnly() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
         when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
         when(map.getGreenhouse(location2)).thenReturn(Optional.empty());
@@ -392,7 +399,7 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)}.
      */
     @Test
-    public void testOnPlayerMoveSameGreenhouse() {
+    void testOnPlayerMoveSameGreenhouse() {
         PlayerMoveEvent e = new PlayerMoveEvent(player, location, location2);
         when(map.getGreenhouse(location)).thenReturn(Optional.of(gh1));
         when(map.getGreenhouse(location2)).thenReturn(Optional.of(gh1));
@@ -405,9 +412,9 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerTeleport(org.bukkit.event.player.PlayerTeleportEvent)}.
      */
     @Test
-    public void testOnPlayerTeleport() {
+    void testOnPlayerTeleport() {
         PlayerTeleportEvent e = new PlayerTeleportEvent(player, location, location2, TeleportCause.CHORUS_FRUIT);
-        ghe.onPlayerTeleport(e );
+        ghe.onPlayerTeleport(e);
         verify(user).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
         verify(user).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
 
@@ -417,9 +424,9 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onPlayerTeleport(org.bukkit.event.player.PlayerTeleportEvent)}.
      */
     @Test
-    public void testOnPlayerTeleportNulls() {
+    void testOnPlayerTeleportNulls() {
         PlayerTeleportEvent e = new PlayerTeleportEvent(player, location, null, TeleportCause.CHORUS_FRUIT);
-        ghe.onPlayerTeleport(e );
+        ghe.onPlayerTeleport(e);
         verify(user, never()).sendMessage("greenhouses.event.leaving", "[biome]", "recipe1");
         verify(user, never()).sendMessage("greenhouses.event.entering", "[biome]", "recipe2");
 
@@ -429,8 +436,8 @@ public class GreenhouseEventsTest {
      * Test method for {@link world.bentobox.greenhouses.listeners.GreenhouseEvents#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)}.
      */
     @Test
-    @Ignore("Biomes are nulls")
-    public void testOnBlockBreak() {
+    @Disabled("Biomes are nulls")
+    void testOnBlockBreak() {
         when(gh1.isRoofOrWallBlock(any())).thenReturn(true);
         // Location is a wall block
         Block block = mock(Block.class);

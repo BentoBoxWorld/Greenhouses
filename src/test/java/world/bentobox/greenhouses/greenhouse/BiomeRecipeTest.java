@@ -1,9 +1,11 @@
 package world.bentobox.greenhouses.greenhouse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,7 +15,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.EnumSet;
-import java.util.Set;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.BlockData;
@@ -39,15 +39,15 @@ import org.bukkit.entity.Piglin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoSession;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.user.User;
@@ -58,15 +58,12 @@ import world.bentobox.greenhouses.managers.EcoSystemManager.GrowthBlock;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
 import world.bentobox.greenhouses.managers.GreenhouseManager.GreenhouseResult;
 import world.bentobox.greenhouses.managers.GreenhouseMap;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  *
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Bukkit.class, BentoBox.class})
-public class BiomeRecipeTest {
+class BiomeRecipeTest {
 
     private BiomeRecipe br;
     @Mock
@@ -98,16 +95,30 @@ public class BiomeRecipeTest {
     @Mock
     private Biome type;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
+    private MockitoSession mockSession;
+    private MockedStatic<Bukkit> mockedBukkit;
+    private MockedStatic<BentoBox> mockedBentoBox;
 
-        PowerMockito.mockStatic(Bukkit.class);
+    @BeforeEach
+    public void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        mockedBukkit = Mockito.mockStatic(Bukkit.class, Mockito.RETURNS_DEEP_STUBS);
+        mockedBentoBox = Mockito.mockStatic(BentoBox.class, Mockito.RETURNS_DEEP_STUBS);
+
         @SuppressWarnings("deprecation")
         UnsafeValues unsafe = mock(UnsafeValues.class);
-        when(Bukkit.getUnsafe()).thenReturn(unsafe);
+        mockedBukkit.when(Bukkit::getUnsafe).thenReturn(unsafe);
 
-        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
+        mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bd);
+        // Plants can survive where they are put unless a test says otherwise
+        when(bd.isSupported(any(Block.class))).thenReturn(true);
         when(type.name()).thenReturn("BADLANDS");
         // Greenhouse
         when(gh.getArea()).thenReturn(100);
@@ -141,7 +152,7 @@ public class BiomeRecipeTest {
         Optional<Greenhouse> optionalGh = Optional.of(gh);
         when(map.getGreenhouse(any(Location.class))).thenReturn(optionalGh);
         // Bukkit Scheduler
-        when(Bukkit.getScheduler()).thenReturn(scheduler);
+        mockedBukkit.when(Bukkit::getScheduler).thenReturn(scheduler);
         // Settings
         when(addon.getSettings()).thenReturn(settings);
         when(settings.isStartupLog()).thenReturn(true);
@@ -160,9 +171,18 @@ public class BiomeRecipeTest {
         br.setPermission("perm");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        if (mockedBukkit != null) {
+            mockedBukkit.closeOnDemand();
+        }
+        if (mockedBentoBox != null) {
+            mockedBentoBox.closeOnDemand();
+        }
+        MockBukkit.unmock();
         User.clearUsers();
         Mockito.framework().clearInlineMocks();
     }
@@ -438,6 +458,63 @@ public class BiomeRecipeTest {
     }
 
     /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobPool(EntityType)}.
+     * Issue #8 - a mob uses its own habitat's limit only when the recipe sets one.
+     */
+    @Test
+    void testGetMobPool() {
+        br.addMobs(EntityType.SQUID, 10, Material.WATER);
+        br.addMobs(EntityType.STRIDER, 10, Material.LAVA);
+        br.addMobs(EntityType.BAT, 10, Material.STONE);
+        br.addMobs(EntityType.COW, 10, Material.GRASS_BLOCK);
+        // No habitat limits set: everything shares the ground, as before
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.SQUID));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.STRIDER));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.BAT));
+        br.setMobLimit(MobHabitat.WATER, 10);
+        br.setMobLimit(MobHabitat.LAVA, 10);
+        br.setMobLimit(MobHabitat.AIR, 27);
+        assertEquals(MobHabitat.WATER, br.getMobPool(EntityType.SQUID));
+        assertEquals(MobHabitat.LAVA, br.getMobPool(EntityType.STRIDER));
+        assertEquals(MobHabitat.AIR, br.getMobPool(EntityType.BAT));
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.COW));
+        // Not in the recipe
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.PIG));
+        // Clearing a limit sends the mobs back to the ground
+        br.setMobLimit(MobHabitat.WATER, 0);
+        assertEquals(MobHabitat.GROUND, br.getMobPool(EntityType.SQUID));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#getMobLimit(MobHabitat)}.
+     */
+    @Test
+    void testGetMobLimitHabitat() {
+        assertEquals(9, br.getMobLimit(MobHabitat.GROUND));
+        assertEquals(0, br.getMobLimit(MobHabitat.WATER));
+        br.setMobLimit(MobHabitat.GROUND, 4);
+        assertEquals(4, br.getMobLimit());
+        br.setMobLimit(MobHabitat.WATER, 12);
+        assertEquals(12, br.getMobLimit(MobHabitat.WATER));
+        br.setMobLimit(MobHabitat.WATER, -1);
+        assertEquals(0, br.getMobLimit(MobHabitat.WATER));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(Block, java.util.function.Predicate)}.
+     * When the chosen mob's habitat is full nothing spawns.
+     */
+    @Test
+    void testSpawnMobNotAllowed() {
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(block);
+        br.addMobs(EntityType.CAT, 100, Material.GRASS_BLOCK);
+        assertFalse(br.spawnMob(block, m -> false));
+        verify(world, never()).spawnEntity(any(), any());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#spawnMob(org.bukkit.block.Block)}.
      */
     @Test
@@ -707,6 +784,24 @@ public class BiomeRecipeTest {
     }
 
     /**
+     * A plant that could not stay where it would go, like a mushroom on grass in bright light,
+     * is not planted.
+     */
+    @Test
+    void testGrowPlantNotWhereItCannotSurvive() {
+        when(bd.isSupported(any(Block.class))).thenReturn(false);
+        when(block.getY()).thenReturn(10);
+        when(block.getType()).thenReturn(Material.AIR);
+        when(block.isEmpty()).thenReturn(true);
+        Block ob = mock(Block.class);
+        when(ob.getType()).thenReturn(Material.GRASS_BLOCK);
+        when(block.getRelative(any())).thenReturn(ob);
+        assertTrue(br.addPlants(Material.RED_MUSHROOM, 100, Material.GRASS_BLOCK));
+        assertFalse(br.growPlant(new GrowthBlock(block, true), false, ibb));
+        verify(block, never()).setBlockData(any(BlockData.class), anyBoolean());
+    }
+
+    /**
      * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#growPlant(org.bukkit.block.Block)}.
      */
     @Test
@@ -748,7 +843,8 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantPlantsDoublePlant() {
         Bisected bisected = mock(Bisected.class);
-        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        when(bisected.isSupported(any(Block.class))).thenReturn(true);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
@@ -776,7 +872,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantPlantsDoublePlantNoRoom() {
         Bisected bisected = mock(Bisected.class);
-        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
@@ -794,7 +890,7 @@ public class BiomeRecipeTest {
     @Test
     public void testGrowPlantPlantsDoublePlantOutsideBoundingBox() {
         Bisected bisected = mock(Bisected.class);
-        when(Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
+        mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(bisected);
         when(block.getY()).thenReturn(10);
         when(block.getType()).thenReturn(Material.AIR);
         when(block.isEmpty()).thenReturn(true);
@@ -832,7 +928,7 @@ public class BiomeRecipeTest {
         GlowLichen gl = mock(GlowLichen.class);
         when(gl.getAllowedFaces()).thenReturn(EnumSet.allOf(BlockFace.class));
         when(face.getBlockData()).thenReturn(gl);
-        BlockState state = mock(BlockState.class);
+        var state = mock(org.bukkit.block.BlockState.class);
         when(face.getState()).thenReturn(state);
         when(stone.getRelative(any())).thenReturn(face);
 
@@ -937,9 +1033,60 @@ public class BiomeRecipeTest {
         // Greenhouse#getBiomeRecipe hands out a no-arg BiomeRecipe when the recipe named in the
         // database is missing from biomes.yml. It has no addon, so it must not be dereferenced.
         BiomeRecipe degenerate = new BiomeRecipe();
-        Set<GreenhouseResult> result = degenerate.checkRecipe(gh).get();
+        var result = degenerate.checkRecipe(gh).get();
         assertEquals(1, result.size());
         assertTrue(result.contains(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
     }
 
+
+    /**
+     * Chances that add up to exactly 100% must all load, even though the fractions do not add
+     * up exactly. This is the PLAINS recipe that used to skip SHEEP.
+     */
+    @Test
+    void testAddMobsExactly100Percent() {
+        assertTrue(br.addMobs(EntityType.HORSE, 18, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.DONKEY, 2, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.COW, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.CHICKEN, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.PIG, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.SHEEP, 20, Material.GRASS_BLOCK));
+        verify(addon, never()).logError(anyString());
+        assertTrue(br.getMobTypes().contains(EntityType.SHEEP));
+        // Anything more really is over 100%
+        assertFalse(br.addMobs(EntityType.CAT, 0.1, Material.GRASS_BLOCK));
+    }
+
+    /**
+     * A genuine overrun, however small in the YAML, is still refused.
+     */
+    @Test
+    void testAddMobsJustOver100Percent() {
+        assertTrue(br.addMobs(EntityType.COW, 50, Material.GRASS_BLOCK));
+        assertFalse(br.addMobs(EntityType.PIG, 50.1, Material.GRASS_BLOCK));
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping PIG");
+    }
+
+    /**
+     * Ten plants at 10% each add up to 100%, though 0.1 added ten times is not exactly 1.
+     */
+    @Test
+    void testAddPlantsExactly100Percent() {
+        for (int i = 0; i < 10; i++) {
+            assertTrue(br.addPlants(Material.POPPY, 10, Material.GRASS_BLOCK), "plant " + i);
+        }
+        verify(addon, never()).logError(anyString());
+        assertFalse(br.addPlants(Material.DANDELION, 1, Material.GRASS_BLOCK));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#fitsIn100Percent(double, double)}.
+     */
+    @Test
+    void testFitsIn100Percent() {
+        assertTrue(BiomeRecipe.fitsIn100Percent(0D, 1D));
+        assertTrue(BiomeRecipe.fitsIn100Percent(0.8000000000000002, 0.2));
+        assertFalse(BiomeRecipe.fitsIn100Percent(0.8, 0.201));
+        assertFalse(BiomeRecipe.fitsIn100Percent(1D, 0.001));
+    }
 }

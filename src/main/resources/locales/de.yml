@@ -4,16 +4,16 @@ protection:
     GREENHOUSE:
       name: Gewächshäuser
       description: |-
-        &bUmschalten, wer
-        &bdie Gewächshäuser kontrollieren kann
+        <aqua>Umschalten, wer</aqua>
+        <aqua>die Gewächshäuser kontrollieren kann</aqua>
 greenhouses:
   general:
     greenhouses: Gewächshäuser
   errors:
     move: Gehe zuerst in ein Gewächshaus, das dir gehört.
-    no-rank: "&cDu hast keinen Rang, um das zu tun."
+    no-rank: "<red>Du hast keinen Rang, um das zu tun.</red>"
     notyours: Das ist nicht dein Gewächshaus!
-    not-inside: "&cDu bist nicht in einem Gewächshaus!"
+    not-inside: "<red>Du bist nicht in einem Gewächshaus!</red>"
     tooexpensive: "Du kannst dir das nicht leisten [price]"
     alreadyexists: Gewächshaus existiert bereits!
     norecipe: Kann kein Gewächshaus bauen!
@@ -22,14 +22,14 @@ greenhouses:
     entering: Betreten des Gewächshauses [biome]
     leaving: Das Gewächshaus verlassen [biome]
   recipe:
-    blockscolor: "&f"
-    title: "[[biome] Rezept]"
     watermustbe: Wasser > [coverage]% der Bodenfläche.
     icemustbe: Eisblöcke > [coverage]% der Bodenfläche.
     lavamustbe: Lava > [coverage]% der Bodenfläche.
     minimumblockstitle: "[Erforderliche Mindestblöcke]"
     nootherblocks: Keine weiteren Blöcke erforderlich.
     missing: Gewächshaus fehlt
+    description: "<gray>[text]</gray>"
+    block: "<white> • [block]</white>"
   commands:
     user:
       description: "Öffnet das Gewächshaus-Auswahl-GUI"
@@ -39,43 +39,353 @@ greenhouses:
         description: Versuche ein Gewächshaus zu bauen
         parameters: "<recipe>"
         error:
-          already: "&cEs gibt hier schon ein Gewächshaus!"
-          FAIL_BAD_ROOF_BLOCKS: "&cDach enthält unzulässige Blöcke!"
-          FAIL_BAD_WALL_BLOCKS: "&cWand enthält unzulässige Blöcke!"
-          FAIL_BELOW: "&cDu musst im Gewächshaus sein, um es zu versuchen."
-          FAIL_BLOCKS_ABOVE: "&cEs dürfen keine Blöcke über dem Gewächshaus sein! Rote Glasblöcke sollten die Problemblöcke anzeigen."
+          already: "<red>Es gibt hier schon ein Gewächshaus!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Dach enthält unzulässige Blöcke!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Wand enthält unzulässige Blöcke!</red>"
+          FAIL_BELOW: "<red>Du musst im Gewächshaus sein, um es zu versuchen.</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Es dürfen keine Blöcke über dem Gewächshaus sein! Rote Glasblöcke sollten die Problemblöcke anzeigen.</red>"
           FAIL_HOLE_IN_ROOF: |-
-            &cIn dem Dach ist ein Loch oder es ist nicht flach!
-            &cRote Glasblöcke sollten das Problem anzeigen.
-            &cStellen Sie sicher, dass Sie sich im Gewächshaus befinden.
-          FAIL_HOLE_IN_WALL: "&cIn der Wand ist ein Loch!"
-          FAIL_NO_ROOF: "&cEs scheint kein Dach zu geben! Stellen Sie sicher, dass Sie sich im Gewächshaus befinden."
-          FAIL_TOO_MANY_DOORS: "&cEs dürfen nicht mehr als 4 Türen im Gewächshaus sein!"
-          FAIL_TOO_MANY_HOPPERS: "&cIn den Wänden oder im Dach ist nur ein Trichter zulässig."
-          FAIL_UNEVEN_WALLS: "&cDie Wände sind uneben. Rote Glasblöcke sollten die Problemblöcke anzeigen."
-          FAIL_INSUFFICIENT_ICE: "&cZu wenig Eis für dieses Rezept"
-          FAIL_INSUFFICIENT_LAVA: "&cZu wenig Lava für dieses Rezept"
-          FAIL_INSUFFICIENT_WATER: "&cZu wenig Wasser für dieses Rezept"
-          FAIL_NO_ICE: "&cFür dieses Rezept wird Eis benötigt"
-          FAIL_NO_LAVA: "&cFür dieses Rezept wird Lava benötigt"
-          FAIL_NO_WATER: "&cFür dieses Rezept wird Wasser benötigt"
-          FAIL_NO_RECIPE_FOUND: "&cZu diesem Gewächshaus konnte kein passendes Rezept gefunden werden"
-          FAIL_INSUFFICIENT_BLOCKS: "&cWeitere Blöcke sind erforderlich, um dieses Rezept zu erstellen!"
-          FAIL_OVERLAPPING: "&cGewächshäuser können sich keine Wände teilen, sorry."
-        success: "&2Du hast erfolgreich ein [biome] Biom Gewächshaus gebaut! Beim nächsten Teleport oder Login wird Biom synchronisiert."
-        missing-blocks: "&cMissing [material] x [number]"
-        unknown-recipe: "&cUnbekanntes Rezept"
-        try-these: "&cVersuche einen von diesen:"
-        recipe-format: "&3[name]"
+            <red>In dem Dach ist ein Loch oder es ist nicht flach!</red>
+            <red>Rote Glasblöcke sollten das Problem anzeigen.</red>
+            <red>Stellen Sie sicher, dass Sie sich im Gewächshaus befinden.</red>
+          FAIL_HOLE_IN_WALL: "<red>In der Wand ist ein Loch!</red>"
+          FAIL_NO_ROOF: "<red>Es scheint kein Dach zu geben! Stellen Sie sicher, dass Sie sich im Gewächshaus befinden.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Es dürfen nicht mehr als 4 Türen im Gewächshaus sein!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>In den Wänden oder im Dach ist nur ein Trichter zulässig.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Die Wände sind uneben. Rote Glasblöcke sollten die Problemblöcke anzeigen.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Zu wenig Eis für dieses Rezept</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Zu wenig Lava für dieses Rezept</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Zu wenig Wasser für dieses Rezept</red>"
+          FAIL_NO_ICE: "<red>Für dieses Rezept wird Eis benötigt</red>"
+          FAIL_NO_LAVA: "<red>Für dieses Rezept wird Lava benötigt</red>"
+          FAIL_NO_WATER: "<red>Für dieses Rezept wird Wasser benötigt</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Zu diesem Gewächshaus konnte kein passendes Rezept gefunden werden</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Weitere Blöcke sind erforderlich, um dieses Rezept zu erstellen!</red>"
+          FAIL_OVERLAPPING: "<red>Gewächshäuser können sich keine Wände teilen, sorry.</red>"
+        success: "<dark_green>Du hast erfolgreich ein [biome] Biom Gewächshaus gebaut! Beim nächsten Teleport oder Login wird Biom synchronisiert.</dark_green>"
+        missing-blocks: "<red>Missing [material] x [number]</red>"
+        unknown-recipe: "<red>Unbekanntes Rezept</red>"
+        try-these: "<red>Versuche einen von diesen:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a[Wie man ein Gewächshaus baut]"
+        title: "<green>[Wie man ein Gewächshaus baut]</green>"
         instructions: |-
-          &e Erstelle einen Kasten aus Glas mit 4 Wänden und einem flachen
-          &e Glasdach und füge bis zu &f 4 Türen &e in den Wänden hinzu.
-          &e Platziere &f 1 Trichter &e in einer Wand oder einem Dach und füge Wassereimer hinzu,
-          &e um Schnee und/oder Knochenmehl automatisch wachsen zu lassen.
-          &e Prüfe die Biom-Rezepte, welche Blöcke in einem Gewächshaus sein
-          &e müssen, um ein Gewächshaus erfolgreich zu bauen.
+          <yellow>Erstelle einen Kasten aus Glas mit 4 Wänden und einem flachen</yellow>
+          <yellow>Glasdach und füge bis zu </yellow><white>4 Türen </white><yellow>in den Wänden hinzu.</yellow>
+          <yellow>Platziere </yellow><white>1 Trichter </white><yellow>in einer Wand oder einem Dach und füge Wassereimer hinzu,</yellow>
+          <yellow>um Schnee und/oder Knochenmehl automatisch wachsen zu lassen.</yellow>
+          <yellow>Prüfe die Biom-Rezepte, welche Blöcke in einem Gewächshaus sein</yellow>
+          <yellow>müssen, um ein Gewächshaus erfolgreich zu bauen.</yellow>
+    admin:
+      description: "Greenhouses Admin-Befehle"
+      errors:
+        unknown-id: "<red>Kein Gewächshaus mit ID [id] gefunden. Verwende den List-Befehl, um IDs zu sehen. Eine teilweise ID funktioniert, wenn sie nur ein Gewächshaus passt.</red>"
+        id-required: "<red>Führe das im Spiel innerhalb eines Gewächshauses aus oder gib eine Gewächshaus-ID an.</red>"
+        no-location: "<red>Gewächshaus [id] hat keinen gültigen Standort oder seine Welt ist nicht geladen.</red>"
+      list:
+        description: "Listet Gewächshäuser auf, optional für einen Spieler"
+        parameters: "[player] [page]"
+        title: "<green>[Gewächshäuser] </green><gray>([number] insgesamt, Seite [page] von [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>bei </gray><white>[xyz] </white><gray>in </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(beschädigt)</red>"
+        more: "<gray>Verwende </gray><white>/[label] greenhouses list [page] </white><gray>für mehr</gray>"
+        none: "<red>Keine Gewächshäuser gefunden.</red>"
+        unloaded-title: "<red>[Nicht geladen: [number]] </red><gray>Diese Einträge sind in der Datenbank, aber nicht aktiv:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>bei </gray><white>[xyz] </white><gray>in </gray><white>[world]</white>"
+      info:
+        description: "Zeigt vollständige Details eines Gewächshauses"
+        parameters: "[id]"
+        title: "<green>[Gewächshaus-Info]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Rezept: </gray><white>[recipe]</white>"
+        owner: "<gray>Eigentümer: </gray><white>[owner]</white>"
+        world: "<gray>Welt: </gray><white>[world]</white>"
+        location: "<gray>Standort: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Begrenzungsbox: </gray><white>[min] </white><gray>bis </gray><white>[max]</white>"
+        area: "<gray>Innenfläche: </gray><white>[area] Blöcke</white>"
+        original-biome: "<gray>Original-Biom: </gray><white>[biome]</white>"
+        hopper: "<gray>Trichter: </gray><white>[hopper]</white>"
+        broken: "<gray>Beschädigt: </gray><white>[broken]</white>"
+        not-loaded: "<red>Nicht geladen: [reason]</red>"
+      delete:
+        description: "Löscht eine Gewächshaus-Datensatz nach ID, geladen oder nicht"
+        parameters: "<id>"
+        confirm: "<red>Lösche Gewächshaus [id] von [owner] bei [xyz]? Dies kann nicht rückgängig gemacht werden.</red>"
+        success: "<green>Gewächshaus [id] gelöscht.</green>"
+      tp:
+        description: "Teleportiert dich zu einem Gewächshaus"
+        parameters: "<id>"
+        success: "<green>Teleportiert zu Gewächshaus [id]</green>"
+      verify:
+        description: "Überprüft Gewächshäuser gegen ihre Rezepte"
+        parameters: "[id]"
+        checking: "<gray>Überprüfe [number] Gewächshäuser...</gray>"
+        ok: "<green>[id] bei [xyz] erfüllt sein Rezept</green>"
+        broken: "<red>[id] bei [xyz] fehlgeschlagen: [reasons]</red>"
+      reload:
+        description: "Lädt biomes.yml neu und liest Gewächshäuser aus der Datenbank"
+        success: "<green>Neu geladen. [number] Gewächshäuser aktiv.</green>"
+        unloaded: "<red>[number] Einträge konnten nicht geladen werden - verwende den List-Befehl, um sie zu sehen.</red>"
+      build:
+        description: "Baut ein Testgewächshaus für ein Rezept um dich herum oder am gegebenen Bodenmittelpunkt"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Koordinaten benötigen alle drei x, y und z, als Nummern oder ~ (z.B. ~ ~ ~ oder ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] ist weder eine Größe (z.B. 9x9 oder 9x9x5) noch ein Modus (keep oder clear).</red>"
+        too-small: "<red>Das Rezept passt nicht in [size]: [description]. Versuche eine größere Größe oder lass es weg, um es automatisch zu bemessen.</red>"
+        out-of-world: "<red>Das würde über oder unter die Welt gehen. Wähle eine andere Höhe.</red>"
+        not-on-island: "<red>Das ganze Gewächshaus muss auf einer Insel sein.</red>"
+        overlapping: "<red>Das würde Gewächshaus [id] überlappen.</red>"
+        confirm-clear: "<red>Alles innerhalb eines [size] Gewächshauses hier wird ersetzt.</red>"
+        built: "<green>Baut ein [size] [recipe] Testgewächshaus ([number] Blöcke). Mach es jetzt...</green>"
+      edit:
+        description: "Öffnet den Rezepteditor oder einen Rezepteditor"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Gewächshäuser Admin</dark_green>"
+    close: "<white>Schließen</white>"
+    back: "<white>Zurück</white>"
+    cancel: "Abbrechen"
+    recipes:
+      name: "<green>Rezepte</green>"
+      description: "<gray>Bearbeite, füge hinzu oder lösche die [number] Gewächshausrezepte</gray>"
+    greenhouses:
+      name: "<green>Gewächshäuser</green>"
+      description: "<gray>[number] Gewächshäuser gebaut. Teleportiere dich, überprüfe oder lösche sie.</gray>"
+      unloaded: "<red>[number] konnten nicht geladen werden</red>"
+    build:
+      name: "<green>Testgewächshaus bauen</green>"
+      description: "<gray>Baut ein funktionierendes Gewächshaus für ein Rezept dort, wo du stehst, mit einer Tür an der Seite, in die du schaust</gray>"
+      pick-title: "<dark_green>Welches Rezept bauen?</dark_green>"
+      key: "<gray>Taste: <white>[key]</white></gray>"
+      default-size: "<gray>Standardgröße: <white>[size]</white></gray>"
+      click: "<yellow>Klicke, um die Größe zu wählen</yellow>"
+      title: "Baue [name]"
+      body: "Das Gewächshaus wird mit seinem Boden dort gebaut, wo du stehst, und die Tür ist an der Seite, in die du schaust. Größen sind innen."
+      width: "Breite"
+      depth: "Tiefe"
+      height: "Höhe"
+      mode: "Was bereits dort vorhanden ist"
+      keep: "Behalt es und baue drum herum"
+      clear: "Räum es vorher weg"
+      go: "<green>Baue</green>"
+    verify:
+      name: "<green>Alle Gewächshäuser überprüfen</green>"
+      description: "<gray>Überprüft jedes Gewächshaus jetzt gegen sein Rezept und meldet dich im Chat</gray>"
+    reload:
+      name: "<green>Neu laden</green>"
+      description: "<gray>Liest biomes.yml und die Gewächshausdatenbank neu</gray>"
+      confirm-title: "Neu laden?"
+      confirm-body: "biomes.yml und die Gewächshausdatenbank neu lesen? Nicht gespeicherte Rezeptbearbeitungen werden beibehalten, müssen aber über den neu geladenen Rezepten gespeichert werden."
+      confirm: "<yellow>Neu laden</yellow>"
+  browser:
+    title: "<dark_green>Gewächshäuser</dark_green>"
+    title-owner: "<dark_green>Gewächshäuser</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Keine Gewächshäuser</gray>"
+    back: "<white>Zurück</white>"
+    cancel: "Abbrechen"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Eigentümer: <white>[owner]</white></gray>"
+    where: "<gray>Bei: <white>[xyz]</white> in <white>[world]</white></gray>"
+    ok: "<green>Funktionierend</green>"
+    broken: "<red>Beschädigt</red>"
+    unloaded: "<red>Nicht geladen: [reason]</red>"
+    click:
+      tp: "<yellow>Linksklick: dort hingeben</yellow>"
+      verify: "<yellow>Rechtsklick: überprüfe es jetzt</yellow>"
+      info: "<yellow>Shift-Klick: Details im Chat</yellow>"
+      delete: "<yellow>Q: löschen</yellow>"
+    filter:
+      name: "<white>Nach Eigentümer filtern</white>"
+      all: "<gray>Zeige alle</gray>"
+      only: "<gray>Zeige von <white>[owner]</white></gray>"
+      click: "<yellow>Klicke zum Ändern</yellow>"
+      title: "Nach Eigentümer filtern"
+      label: "Name des Eigentümers (leer für alle)"
+      apply: "<green>Zeigen</green>"
+    delete:
+      title: "Gewächshaus löschen?"
+      body: "Lösche Gewächshaus [id] von [owner] bei [xyz]? Dies kann nicht rückgängig gemacht werden."
+      confirm: "<red>Löschen</red>"
+  editor:
+    needs-dialogs: "<red>Der Rezepteditor benötigt Paper 1.21.7 oder später.</red>"
+    unknown-recipe: "<red>Es gibt kein Rezept namens [key].</red>"
+    resuming: "<yellow>Nehme deine nicht gespeicherten Änderungen an [name]<yellow>.</yellow>"
+    saved: "<green>Gespeichert [name]<green>. [number] Gewächshäuser verwenden es und folgen ab sofort den neuen Regeln.</green>"
+    save-failed: "<red>biomes.yml konnte nicht geschrieben werden - siehe Serverprotokoll. Nichts wurde gespeichert.</red>"
+    deleted: "<green>Gelöscht [name]<green>. Seine [number] Gewächshäuser werden aufgelistet, bis sie gelöscht oder das Rezept zurückkommt.</green>"
+    title: "<dark_green>Bearbeitung</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(nicht gespeichert)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Klicke zum Ändern</yellow>"
+    click-open: "<yellow>Klicke zum Öffnen</yellow>"
+    none: "keine"
+    entries: "<gray>Einträge: <white>[number]</white></gray>"
+    total-chance: "<gray>Chancen addieren sich zu <white>[value]%</white></gray>"
+    chance: "<gray>Chance: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Zurück zum Rezept</white>"
+    help: "<white>Wie benutze ich diese Seite</white>"
+    list:
+      title: "<dark_green>Gewächshausrezepte</dark_green>"
+      key: "<gray>Taste: <white>[key]</white></gray>"
+      biome: "<gray>Biom: <white>[biome]</white></gray>"
+      priority: "<gray>Priorität: <white>[number]</white></gray>"
+      used: "<gray>Verwendet von <white>[number]</white> Gewächshäusern</gray>"
+      unsaved: "<gold>Du hast nicht gespeicherte Änderungen</gold>"
+      click-edit: "<yellow>Klicke zum Bearbeiten</yellow>"
+      back: "<white>Zurück</white>"
+      new:
+        name: "<green>Neues Rezept</green>"
+        description: "<gray>Starten ein Rezept von Grund auf</gray>"
+    pick:
+      biome: "<dark_green>Wähle ein Biom</dark_green>"
+      icon: "<dark_green>Wähle ein Symbol</dark_green>"
+      block: "<dark_green>Wähle einen Block</dark_green>"
+      plant: "<dark_green>Wähle eine Pflanze</dark_green>"
+      grows-on: "<dark_green>Worauf wächst sie?</dark_green>"
+      mob: "<dark_green>Wähle ein Mob</dark_green>"
+      spawns-on: "<dark_green>Worauf erscheint es?</dark_green>"
+      convert-from: "<dark_green>Welcher Block ändert sich?</dark_green>"
+      convert-to: "<dark_green>Worein ändert er sich?</dark_green>"
+      next-to: "<dark_green>Was muss daneben sein?</dark_green>"
+    icon:
+      name: "<white>Symbol</white>"
+    general:
+      name: "<white>Name und Beschreibung</white>"
+      value-name: "<gray>Name: </gray>[value]"
+      value-priority: "<gray>Priorität: <white>[number]</white></gray>"
+      value-permission: "<gray>Berechtigung: <white>[value]</white></gray>"
+      no-description: "<gray>Keine Beschreibung</gray>"
+      has-description: "<gray>Hat eine Beschreibung</gray>"
+    biome:
+      name: "<white>Biom</white>"
+      value: "<gray>Biom: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Wasser, Lava und Eis</white>"
+      water: "<aqua>Wasser: </aqua>[value]"
+      lava: "<gold>Lava: </gold>[value]"
+      ice: "<aqua>Eis: </aqua>[value]"
+      unchecked: "<gray>nicht überprüft</gray>"
+      none: "<red>keine erlaubt</red>"
+      at-least: "<white>mindestens [number]% des Bodens</white>"
+    mob-limits:
+      name: "<white>Mob-Grenzen</white>"
+      ground: "<gray>Blöcke pro Mob: <white>[number]</white></gray>"
+      water: "<gray>Wasserblöcke pro Wasser-Mob: <white>[value]</white></gray>"
+      lava: "<gray>Lavablöcke pro Lava-Mob: <white>[value]</white></gray>"
+      air: "<gray>Luftblöcke pro fliegendem Mob: <white>[value]</white></gray>"
+      shared: "gleich wie Boden"
+      max: "<gray>Meiste Mobs auf einmal: <white>[value]</white></gray>"
+      no-max: "keine Grenze"
+    blocks:
+      name: "<white>Erforderliche Blöcke</white>"
+      add: "<green>Einen Block hinzufügen</green>"
+      help: "<gray>Das Mindestens jeden Block, das das Gewächshaus innen haben muss.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Linksklick: +1<newline>Rechtsklick: -1<newline>Shift-Klick: gib eine Nummer ein<newline>Q: entfernen</yellow>"
+    plants:
+      name: "<white>Pflanzen</white>"
+      add: "<green>Eine Pflanze hinzufügen</green>"
+      help: "<gray>Pflanzen mit Knochenmehl aus dem Dach-Trichter gezüchtet.</gray>"
+      grows-on: "<gray>Wächst auf: <white>[block]</white></gray>"
+      entry-help: "<yellow>Linksklick: Chance<newline>Rechtsklick: worauf es wächst<newline>Q: entfernen</yellow>"
+    mobs:
+      name: "<white>Mobs</white>"
+      add: "<green>Einen Mob hinzufügen</green>"
+      help: "<gray>Mobs, die im Gewächshaus erscheinen.</gray>"
+      spawns-on: "<gray>Erscheint auf: <white>[block]</white></gray>"
+      variant: "<gray>Variante: <white>[value]</white></gray>"
+      entry-help: "<yellow>Linksklick: Chance und Variante<newline>Rechtsklick: worauf es erscheint<newline>Q: entfernen</yellow>"
+    conversions:
+      name: "<white>Blöcke konvertieren</white>"
+      add: "<green>Eine Konvertierung hinzufügen</green>"
+      help: "<gray>Blöcke, die sich langsam in andere Blöcke umwandeln.</gray>"
+      to: "<gray>Wird zu: <white>[block]</white></gray>"
+      anywhere: "<gray>Überall</gray>"
+      next-to: "<gray>Nur daneben: <white>[block]</white></gray>"
+      entry-help: "<yellow>Linksklick: Chance<newline>Rechtsklick: worein es sich ändert<newline>Shift-Rechts: nur daneben ein Block<newline>Shift-Links: überall<newline>Q: entfernen</yellow>"
+    back:
+      name: "<white>Zurück zu den Rezepten</white>"
+      description: "<gray>Nicht gespeicherte Änderungen werden beibehalten</gray>"
+    discard:
+      name: "<red>Änderungen verwerfen</red>"
+      description: "<gray>Vergiss Änderungen seit dem letzten Speichern</gray>"
+    save:
+      name: "<green>Speichern</green>"
+      nothing: "<gray>Keine Änderungen zum Speichern</gray>"
+      description: "<gray>Schreibt biomes.yml; [number] Gewächshäuser folgen sofort den neuen Regeln</gray>"
+      problems: "<red>Behebe diese zuerst:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplizieren</white>"
+      description: "<gray>Starten ein neues Rezept von diesem</gray>"
+    delete:
+      name: "<red>Rezept löschen</red>"
+      description: "<gray>[number] Gewächshäuser verwenden dieses Rezept</gray>"
+    dialog:
+      cancel: "Abbrechen"
+      switch:
+        title: "Nicht gespeicherte Änderungen"
+        body: "Du hast nicht gespeicherte Änderungen an [name]. Verwerfe sie, um dieses Rezept zu bearbeiten?"
+        discard: "<red>Verwerfe sie</red>"
+        keep: "Zurück zu [name]"
+      discard:
+        title: "Änderungen verwerfen?"
+        body: "Vergiss deine Änderungen an [name]?"
+        confirm: "<red>Verwerfen</red>"
+      conflict:
+        title: "Von jemandem anders geändert"
+        body: "[name] wurde von jemandem anders gespeichert oder neu geladen, nachdem du mit der Bearbeitung begonnen hast."
+        overwrite: "<red>Speichere meines drüber</red>"
+        theirs: "Fang wieder von ihrem an"
+      delete:
+        title: "Rezept löschen?"
+        body: "Lösche [name]? [number] Gewächshäuser verwenden es. biomes.yml wird zuerst gesichert."
+        confirm: "<red>Löschen</red>"
+    form:
+      ok: "<green>Erledigt</green>"
+      cancel: "Abbrechen"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] ist keine Chance. Verwende einen Prozentsatz über 0 und bis zu 100, z.B. 5 oder 0,5."
+      general:
+        title: "Name und Beschreibung"
+        name: "Name (MiniMessage-Farben erlaubt)"
+        description: "Beschreibung gezeigt im Rezept-Panel"
+        priority: "Priorität"
+        permission: "Berechtigung zum Erstellen erforderlich (leer für keine)"
+        no-name: "Der Name kann nicht leer sein."
+        bad-permission: "Eine Berechtigung kann keine Leerzeichen enthalten."
+      coverage:
+        title: "Wasser, Lava und Eis"
+        water: "Wasser"
+        lava: "Lava"
+        ice: "Eis"
+        percent: "Prozent des Bodens"
+        unchecked: "Nicht überprüft"
+        none: "Keine erlaubt"
+        atleast: "Mindestens..."
+        too-much: "Wasser, Lava und Eis zusammen können nicht mehr als der ganze Boden brauchen."
+      mobs:
+        title: "Mob-Grenzen"
+        ground: "Blöcke pro Mob"
+        water: "Wasserblöcke pro Wasser-Mob (0 = gleich)"
+        lava: "Lavablöcke pro Lava-Mob (0 = gleich)"
+        air: "Luftblöcke pro fliegendem Mob (0 = gleich)"
+        max: "Meiste Mobs auf einmal (-1 = keine Grenze)"
+      chance:
+        title: "Chance"
+        field: "% Chance für [what]"
+      mob:
+        title: "Mob"
+        variant: "Variante"
+        no-variant: "Normal"
+      count:
+        title: "Wie viele?"
+        field: "Wie viele [what]"
+      key:
+        title: "Rezept-Taste"
+        field: "Taste: Buchstaben, Nummern, - und _ (kann später nicht geändert werden)"
+        bad: "Verwende 1 bis 32 Buchstaben, Nummern, - oder _."
+        taken: "Es gibt bereits ein Rezept namens [key]."
 
 help:
   help: "Hilfe"
@@ -110,27 +420,25 @@ messages:
   ecolost: "Dein Gewächshaus in [location] hat sein Ökosystem verloren und wurde entfernt."
 
 info:
-  title: "&a[Wie man ein Gewächshaus baut]"
+  title: "<green>[Wie man ein Gewächshaus baut]</green>"
   instructions: |-
-    &e Erstelle einen Kasten aus Glas mit 4 Wänden und einem flachen
-    &e Glasdach und füge bis zu &f 4 Türen &e in den Wänden hinzu.
-    &e Platziere &f 1 Trichter &e in einer Wand oder einem Dach und füge Wassereimer hinzu,
-    &e um Schnee und/oder Knochenmehl automatisch wachsen zu lassen.
-    &e Prüfe die Biom-Rezepte, welche Blöcke in einem Gewächshaus sein
-    &e müssen, um ein Gewächshaus erfolgreich zu bauen.
+    <yellow>Erstelle einen Kasten aus Glas mit 4 Wänden und einem flachen</yellow>
+    <yellow>Glasdach und füge bis zu </yellow><white>4 Türen </white><yellow>in den Wänden hinzu.</yellow>
+    <yellow>Platziere </yellow><white>1 Trichter </white><yellow>in einer Wand oder einem Dach und füge Wassereimer hinzu,</yellow>
+    <yellow>um Schnee und/oder Knochenmehl automatisch wachsen zu lassen.</yellow>
+    <yellow>Prüfe die Biom-Rezepte, welche Blöcke in einem Gewächshaus sein</yellow>
+    <yellow>müssen, um ein Gewächshaus erfolgreich zu bauen.</yellow>
   info: "[Gewächshaus Info]"
   none: "Keiner"
-  nomore: "&4Du kannst keine Gewächshäuser mehr bauen!"
-  onemore: "&6Du kannst noch ein weiteres Gewächshaus bauen."
-  youcanbuild: "&aDu kannst bis zu [number] mehr Gewächshäuser bauen!"
-  unlimited: "&aDu kannst eine unbegrenzte Anzahl von Gewächshäusern bauen!"
-  welcome: "&bHerzlich willkommen! Klicken Sie hier für Anweisungen"
+  nomore: "<dark_red>Du kannst keine Gewächshäuser mehr bauen!</dark_red>"
+  onemore: "<gold>Du kannst noch ein weiteres Gewächshaus bauen.</gold>"
+  youcanbuild: "<green>Du kannst bis zu [number] mehr Gewächshäuser bauen!</green>"
+  unlimited: "<green>Du kannst eine unbegrenzte Anzahl von Gewächshäusern bauen!</green>"
+  welcome: "<aqua>Herzlich willkommen! Klicken Sie hier für Anweisungen</aqua>"
 
 recipe:
-  blockscolor: "&f"
   hint: "benutze /greenhouse list, um eine Liste von Rezeptnummern zu sehen!"
   wrongnumber: "Die Rezeptnummer muss zwischen 1 und [size] liegen"
-  title: "[[biome] Rezept]"
   nowater: "Kein Wasser erlaubt."
   noice: "Kein Eis erlaubt."
   nolava: "Keine Lava erlaubt."
@@ -167,4 +475,4 @@ news:
   headline: "[Gewächshaus-News]"
 
 controlpanel:
-  title: "&aGewächshäuser"
+  title: "<green>Gewächshäuser</green>"

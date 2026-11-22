@@ -34,10 +34,17 @@ public class AdminCommand extends CompositeCommand {
         new AdminTeleportCommand(this);
         new AdminVerifyCommand(this);
         new AdminReloadCommand(this);
+        new AdminBuildCommand(this);
+        new AdminEditCommand(this);
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        // Players get the hub; the console, and anyone asking for help, get the help
+        if (user.isPlayer() && args.isEmpty()) {
+            new AdminHub(this, user).open();
+            return true;
+        }
         return showHelp(this, user);
     }
 

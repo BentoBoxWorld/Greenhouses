@@ -3,12 +3,9 @@ package world.bentobox.greenhouses.ui.panel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 import world.bentobox.bentobox.api.panels.builders.PanelBuilder;
 import world.bentobox.bentobox.api.panels.builders.PanelItemBuilder;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.util.Util;
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
 
@@ -35,25 +32,36 @@ public class Panel {
         pb.user(user).build();
     }
 
-    private List<String> getDescription(User user, BiomeRecipe br) {
+    /**
+     * Builds the tooltip for a recipe: its description, word-wrapped, then what it needs.
+     * The recipe name is already the item name, so it is not repeated.
+     * @param user the user, whose locale is used
+     * @param br the recipe
+     * @return lore lines
+     */
+    List<String> getDescription(User user, BiomeRecipe br) {
         List<String> d = new ArrayList<>();
-        // Make description - each line gets a reset prefix to prevent color bleed from item name
-        d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.title", "[biome]", Util.prettifyText(br.getBiome().getKey().getKey())));
+        // A locale can give the recipe its own description, so servers can translate them
+        String text = user.getTranslationOrNothing("greenhouses.recipes." + br.getName() + ".description");
+        if (text.isBlank()) {
+            text = br.getDescription();
+        }
+        Lore.wrap(text).forEach(line -> d.add(user.getTranslation("greenhouses.recipe.description", "[text]", line)));
         if (!br.getRecipeBlocks().isEmpty()) {
-            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.minimumblockstitle"));
-            br.getRecipeBlocks().forEach(b -> d.add(user.getTranslation("greenhouses.recipe.blockscolor") + b));
+            d.add(user.getTranslation("greenhouses.recipe.minimumblockstitle"));
+            br.getRecipeBlocks().forEach(b -> d.add(user.getTranslation("greenhouses.recipe.block", "[block]", b)));
         }
         if (br.getWaterCoverage() > 0) {
-            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.watermustbe", COVERAGE, String.valueOf(br.getWaterCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.watermustbe", COVERAGE, String.valueOf(br.getWaterCoverage())));
         }
         if (br.getLavaCoverage() > 0) {
-            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.lavamustbe", COVERAGE, String.valueOf(br.getLavaCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.lavamustbe", COVERAGE, String.valueOf(br.getLavaCoverage())));
         }
         if (br.getIceCoverage() > 0) {
-            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.icemustbe", COVERAGE, String.valueOf(br.getIceCoverage())));
+            d.add(user.getTranslation("greenhouses.recipe.icemustbe", COVERAGE, String.valueOf(br.getIceCoverage())));
         }
         if (br.getRecipeBlocks().isEmpty()) {
-            d.add(ChatColor.RESET + user.getTranslation("greenhouses.recipe.nootherblocks"));
+            d.add(user.getTranslation("greenhouses.recipe.nootherblocks"));
         }
         return d;
     }

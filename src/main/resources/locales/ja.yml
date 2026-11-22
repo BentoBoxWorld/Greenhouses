@@ -4,32 +4,32 @@ protection:
     GREENHOUSE:
       name: 温室
       description: |-
-        &b誰が温室を制御できるかを
-         &b設定する
+        <aqua>誰が温室を制御できるかを</aqua>
+         <aqua>設定する</aqua>
 greenhouses:
   general:
     greenhouses: 温室
   errors:
     move: 最初に所有する温室に移動します。
-    no-rank: "&cあなたにはそれをするランクがありません。"
+    no-rank: "<red>あなたにはそれをするランクがありません。</red>"
     notyours: これはあなたの温室ではありません！
-    not-inside: "&cあなたは温室の中にいません！"
+    not-inside: "<red>あなたは温室の中にいません！</red>"
     tooexpensive: あなたは余裕がない[price]
     alreadyexists: 温室はすでに存在します！
     norecipe: 温室を作ることができません！
   event:
-    broke: "&c温室を壊しました！バイオームを [biome]に戻しています！"
+    broke: "<red>温室を壊しました！バイオームを [biome]に戻しています！</red>"
     entering: "[biome]の温室に入る"
     leaving: "[biome]の温室を離れる"
   recipe:
-    blockscolor: "&f"
-    title: "[[biome]レシピ]"
     watermustbe: 水>[coverage]床面積の％。
     icemustbe: 氷のブロック>床面積の[coverage]％。
     lavamustbe: 溶岩> [coverage]床面積の％。
     minimumblockstitle: "[必要な最小ブロック]"
     nootherblocks: 他のブロックは必要ありません。
     missing: 温室がありません
+    description: "<gray>[text]</gray>"
+    block: "<white> • [block]</white>"
   commands:
     user:
       description: "温室選択GUIを開きます"
@@ -39,43 +39,353 @@ greenhouses:
         description: 温室を作ってみる
         parameters: "<レシピ>"
         error:
-          already: "&cここには温室がすでにあります！"
-          FAIL_BAD_ROOF_BLOCKS: "&c屋根には許可されていないブロックが含まれています！"
-          FAIL_BAD_WALL_BLOCKS: "&c壁には許可されていないブロックが含まれています！"
-          FAIL_BELOW: "&c温室を作るには、温室内にいる必要があります"
-          FAIL_BLOCKS_ABOVE: "&c温室の上にブロックを置くことはできません！赤いガラスブロックに問題のあるブロックが表示されます。"
+          already: "<red>ここには温室がすでにあります！</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>屋根には許可されていないブロックが含まれています！</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>壁には許可されていないブロックが含まれています！</red>"
+          FAIL_BELOW: "<red>温室を作るには、温室内にいる必要があります</red>"
+          FAIL_BLOCKS_ABOVE: "<red>温室の上にブロックを置くことはできません！赤いガラスブロックに問題のあるブロックが表示されます。</red>"
           FAIL_HOLE_IN_ROOF: |-
-            &c屋根に穴があるか、平らではありません！
-            &c赤いガラスブロックが問題を示しているはずです。
-            &c作成するには、温室の中にいることを確認してください。
-          FAIL_HOLE_IN_WALL: "&c壁に穴が開いています！"
-          FAIL_NO_ROOF: "&c屋根がないようです！作成するには温室の中にいることを確認してください。"
-          FAIL_TOO_MANY_DOORS: "&c温室には4つ以上のドアを置くことはできません！"
-          FAIL_TOO_MANY_HOPPERS: "&c壁または屋根に使用できるホッパーは1つだけです。"
-          FAIL_UNEVEN_WALLS: "&c壁が不均一です。赤いガラスブロックに問題のあるブロックが表示されます。"
-          FAIL_INSUFFICIENT_ICE: "&cこのレシピを作成するには氷が足りません"
-          FAIL_INSUFFICIENT_LAVA: "&cこのレシピを作るには溶岩が足りません"
-          FAIL_INSUFFICIENT_WATER: "&cこのレシピを作るのに水が足りません"
-          FAIL_NO_ICE: "&cこのレシピを作成するには氷が必要です"
-          FAIL_NO_LAVA: "&cこのレシピを作成するには溶岩が必要です"
-          FAIL_NO_WATER: "&cこのレシピを作成するには水が必要です"
-          FAIL_NO_RECIPE_FOUND: "&cこの温室に一致するレシピが見つかりませんでした"
-          FAIL_INSUFFICIENT_BLOCKS: "&cこのレシピを作成するには、さらに多くのブロックが必要です。"
-          FAIL_OVERLAPPING: "&c温室は壁を共有できません。申し訳ありません。"
-        success: "&2あなたは[biome]バイオーム温室を無事に作成しました！バイオームは次のテレポートまたはログインで同期します。"
-        missing-blocks: "&c欠落[material] x [number]"
-        unknown-recipe: "&c不明なレシピ"
-        try-these: "&c次のいずれかを試してください。"
-        recipe-format: "&3[name]"
+            <red>屋根に穴があるか、平らではありません！</red>
+            <red>赤いガラスブロックが問題を示しているはずです。</red>
+            <red>作成するには、温室の中にいることを確認してください。</red>
+          FAIL_HOLE_IN_WALL: "<red>壁に穴が開いています！</red>"
+          FAIL_NO_ROOF: "<red>屋根がないようです！作成するには温室の中にいることを確認してください。</red>"
+          FAIL_TOO_MANY_DOORS: "<red>温室には4つ以上のドアを置くことはできません！</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>壁または屋根に使用できるホッパーは1つだけです。</red>"
+          FAIL_UNEVEN_WALLS: "<red>壁が不均一です。赤いガラスブロックに問題のあるブロックが表示されます。</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>このレシピを作成するには氷が足りません</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>このレシピを作るには溶岩が足りません</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>このレシピを作るのに水が足りません</red>"
+          FAIL_NO_ICE: "<red>このレシピを作成するには氷が必要です</red>"
+          FAIL_NO_LAVA: "<red>このレシピを作成するには溶岩が必要です</red>"
+          FAIL_NO_WATER: "<red>このレシピを作成するには水が必要です</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>この温室に一致するレシピが見つかりませんでした</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>このレシピを作成するには、さらに多くのブロックが必要です。</red>"
+          FAIL_OVERLAPPING: "<red>温室は壁を共有できません。申し訳ありません。</red>"
+        success: "<dark_green>あなたは[biome]バイオーム温室を無事に作成しました！バイオームは次のテレポートまたはログインで同期します。</dark_green>"
+        missing-blocks: "<red>欠落[material] x [number]</red>"
+        unknown-recipe: "<red>不明なレシピ</red>"
+        try-these: "<red>次のいずれかを試してください。</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [温室の作り方]"
+        title: "<green>[温室の作り方]</green>"
         instructions: |-
-          &e 4つの壁と平らなガラス屋根でガラスから箱を作り、
-          &e 壁に最大 &f 4つのドア &e を追加します。
-          &e 1つのホッパーを壁または屋根に置き、水バケツを追加します。
-          &e 雪や骨粉を作り、植物を自動的に育てます。
-          &e バイオームレシピを確認して、温室内で正常にブロックするために
-          &e 必要なブロックを確認してください。
+          <yellow>4つの壁と平らなガラス屋根でガラスから箱を作り、</yellow>
+          <yellow>壁に最大 </yellow><white>4つのドア </white><yellow>を追加します。</yellow>
+          <yellow>1つのホッパーを壁または屋根に置き、水バケツを追加します。</yellow>
+          <yellow>雪や骨粉を作り、植物を自動的に育てます。</yellow>
+          <yellow>バイオームレシピを確認して、温室内で正常にブロックするために</yellow>
+          <yellow>必要なブロックを確認してください。</yellow>
+    admin:
+      description: "温室管理者コマンド"
+      errors:
+        unknown-id: "<red>ID [id]の温室が見つかりません。listコマンドでIDを確認してください。部分的なIDは1つだけ一致する場合に使用できます。</red>"
+        id-required: "<red>温室内からゲーム内で実行するか、温室IDを指定してください。</red>"
+        no-location: "<red>温室[id]には有効な位置がないか、ワールドが読み込まれていません。</red>"
+      list:
+        description: "温室をリスト表示、オプションで1人のプレイヤーのを表示"
+        parameters: "[player] [page]"
+        title: "<green>[温室] </green><gray>([number]個、ページ [page]/[pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>位置: </gray><white>[xyz] </white><gray>ワールド: </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(破損)</red>"
+        more: "<gray>詳細は</gray><white>/[label] greenhouses list [page] </white><gray>で確認</gray>"
+        none: "<red>温室が見つかりません。</red>"
+        unloaded-title: "<red>[読み込み失敗: [number]] </red><gray>これらのレコードはデータベースにありますがアクティブではありません:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>位置: </gray><white>[xyz] </white><gray>ワールド: </gray><white>[world]</white>"
+      info:
+        description: "温室の完全な詳細を表示"
+        parameters: "[id]"
+        title: "<green>[温室情報]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>レシピ: </gray><white>[recipe]</white>"
+        owner: "<gray>所有者: </gray><white>[owner]</white>"
+        world: "<gray>ワールド: </gray><white>[world]</white>"
+        location: "<gray>場所: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>範囲: </gray><white>[min] </white><gray>から</gray><white>[max]</white>"
+        area: "<gray>内部面積: </gray><white>[area]ブロック</white>"
+        original-biome: "<gray>元のバイオーム: </gray><white>[biome]</white>"
+        hopper: "<gray>ホッパー: </gray><white>[hopper]</white>"
+        broken: "<gray>破損: </gray><white>[broken]</white>"
+        not-loaded: "<red>読み込み失敗: [reason]</red>"
+      delete:
+        description: "温室レコードをIDで削除"
+        parameters: "<id>"
+        confirm: "<red>ID [id]の温室([owner]が所有、[xyz]に位置)を削除しますか? この操作は取り消せません。</red>"
+        success: "<green>温室[id]を削除しました。</green>"
+      tp:
+        description: "温室にテレポート"
+        parameters: "<id>"
+        success: "<green>温室[id]にテレポートしました</green>"
+      verify:
+        description: "温室がレシピを満たしているか再確認"
+        parameters: "[id]"
+        checking: "<gray>[number]個の温室を確認中...</gray>"
+        ok: "<green>[id] ([xyz]に位置) がレシピを満たしています</green>"
+        broken: "<red>[id] ([xyz]に位置) 失敗: [reasons]</red>"
+      reload:
+        description: "biomes.ymlを再読み込みして温室データベースを再読み込み"
+        success: "<green>リロード完了。[number]個の温室がアクティブです。</green>"
+        unloaded: "<red>[number]個のレコードを読み込めません - listコマンドで確認してください。</red>"
+      build:
+        description: "レシピのテスト温室を建造、あなたの周りまたは指定位置"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>座標は3つすべてのx、y、zが必要です(数字または~で指定、例: ~ ~ ~ または ~ ~-1 ~5)。</red>"
+        bad-argument: "<red>[description]はサイズ(例: 9x9または9x9x5)またはモード(keepまたはclear)ではありません。</red>"
+        too-small: "<red>レシピは[size]に合いません: [description]。より大きいサイズを試すか、指定を省略してください。</red>"
+        out-of-world: "<red>ワールドの上下を超えます。別の高さを選んでください。</red>"
+        not-on-island: "<red>温室全体が1つの島の上にある必要があります。</red>"
+        overlapping: "<red>温室[id]と重なります。</red>"
+        confirm-clear: "<red>ここの[size]の温室内のすべてが置き換えられます。</red>"
+        built: "<green>[size]の[recipe]テスト温室を建造しました([number]ブロック)。構築中...</green>"
+      edit:
+        description: "レシピエディタを開く、またはレシピのエディタを開く"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>温室管理画面</dark_green>"
+    close: "<white>閉じる</white>"
+    back: "<white>戻る</white>"
+    cancel: "キャンセル"
+    recipes:
+      name: "<green>レシピ</green>"
+      description: "<gray>[number]個の温室レシピを編集、追加、削除します</gray>"
+    greenhouses:
+      name: "<green>温室</green>"
+      description: "<gray>[number]個の温室が建造されています。テレポート、確認、検査、削除ができます。</gray>"
+      unloaded: "<red>[number]個が読み込めません</red>"
+    build:
+      name: "<green>テスト温室を建造</green>"
+      description: "<gray>あなたが立っている場所にレシピの温室を建造します。ドアはあなたが向いている方向に配置されます</gray>"
+      pick-title: "<dark_green>どのレシピを建造しますか?</dark_green>"
+      key: "<gray>キー: <white>[key]</white></gray>"
+      default-size: "<gray>デフォルトサイズ: <white>[size]</white></gray>"
+      click: "<yellow>クリックしてサイズを選択</yellow>"
+      title: "[name]を建造"
+      body: "温室は、あなたが立っている場所が床の中心になり、ドアはあなたが向いている側に建造されます。サイズは内部サイズです。"
+      width: "幅"
+      depth: "奥行き"
+      height: "高さ"
+      mode: "現在あるもの"
+      keep: "そのまま建造"
+      clear: "最初にクリア"
+      go: "<green>建造</green>"
+    verify:
+      name: "<green>すべての温室を確認</green>"
+      description: "<gray>すべての温室がレシピを満たしているかチェックし、チャットで報告します</gray>"
+    reload:
+      name: "<green>リロード</green>"
+      description: "<gray>biomes.ymlと温室データベースを再読み込みします</gray>"
+      confirm-title: "リロードしますか?"
+      confirm-body: "biomes.ymlと温室データベースを再読み込みしますか? 保存されていないレシピ編集は保持されますが、再読み込みされたレシピに上書きする必要があります。"
+      confirm: "<yellow>リロード</yellow>"
+  browser:
+    title: "<dark_green>温室</dark_green>"
+    title-owner: "<dark_green>温室</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>温室がありません</gray>"
+    back: "<white>戻る</white>"
+    cancel: "キャンセル"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>所有者: <white>[owner]</white></gray>"
+    where: "<gray>場所: <white>[xyz]</white> (ワールド: <white>[world]</white>)</gray>"
+    ok: "<green>正常</green>"
+    broken: "<red>破損</red>"
+    unloaded: "<red>読み込み失敗: [reason]</red>"
+    click:
+      tp: "<yellow>左クリック: テレポート</yellow>"
+      verify: "<yellow>右クリック: 確認</yellow>"
+      info: "<yellow>シフトクリック: 詳細をチャットに表示</yellow>"
+      delete: "<yellow>Q: 削除</yellow>"
+    filter:
+      name: "<white>所有者でフィルタ</white>"
+      all: "<gray>全員表示</gray>"
+      only: "<gray><white>[owner]</white>さんの温室のみ表示</gray>"
+      click: "<yellow>クリックして変更</yellow>"
+      title: "所有者でフィルタ"
+      label: "所有者の名前 (空欄で全員)"
+      apply: "<green>表示</green>"
+    delete:
+      title: "温室を削除しますか?"
+      body: "ID [id]の温室([owner]が所有、[xyz]に位置)を削除しますか? この操作は取り消せません。"
+      confirm: "<red>削除</red>"
+  editor:
+    needs-dialogs: "<red>レシピエディタはPaper 1.21.7以上が必要です。</red>"
+    unknown-recipe: "<red>[key]という名前のレシピはありません。</red>"
+    resuming: "<yellow>[name]への保存されていない変更を再開します<yellow>。</yellow>"
+    saved: "<green>[name]を保存しました<green>。[number]個の温室がすぐに新しいルールに従います。</green>"
+    save-failed: "<red>biomes.ymlが書き込めません - サーバーログを確認してください。変更は保存されていません。</red>"
+    deleted: "<green>[name]を削除しました<green>。[number]個の温室は削除またはレシピが戻るまで未読み込み状態になります。</green>"
+    title: "<dark_green>編集中</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(未保存)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>クリックして変更</yellow>"
+    click-open: "<yellow>クリックして開く</yellow>"
+    none: "なし"
+    entries: "<gray>エントリ: <white>[number]</white></gray>"
+    total-chance: "<gray>合計確率: <white>[value]%</white></gray>"
+    chance: "<gray>確率: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>レシピに戻る</white>"
+    help: "<white>このページの使い方</white>"
+    list:
+      title: "<dark_green>温室レシピ</dark_green>"
+      key: "<gray>キー: <white>[key]</white></gray>"
+      biome: "<gray>バイオーム: <white>[biome]</white></gray>"
+      priority: "<gray>優先度: <white>[number]</white></gray>"
+      used: "<gray><white>[number]</white>個の温室で使用中</gray>"
+      unsaved: "<gold>保存されていない変更があります</gold>"
+      click-edit: "<yellow>クリックして編集</yellow>"
+      back: "<white>戻る</white>"
+      new:
+        name: "<green>新規レシピ</green>"
+        description: "<gray>レシピを最初から作成</gray>"
+    pick:
+      biome: "<dark_green>バイオームを選択</dark_green>"
+      icon: "<dark_green>アイコンを選択</dark_green>"
+      block: "<dark_green>ブロックを選択</dark_green>"
+      plant: "<dark_green>植物を選択</dark_green>"
+      grows-on: "<dark_green>何に育ちますか?</dark_green>"
+      mob: "<dark_green>モブを選択</dark_green>"
+      spawns-on: "<dark_green>何の上に出現しますか?</dark_green>"
+      convert-from: "<dark_green>どのブロックが変化しますか?</dark_green>"
+      convert-to: "<dark_green>何に変化しますか?</dark_green>"
+      next-to: "<dark_green>何の隣にある必要がありますか?</dark_green>"
+    icon:
+      name: "<white>アイコン</white>"
+    general:
+      name: "<white>名前と説明</white>"
+      value-name: "<gray>名前: </gray>[value]"
+      value-priority: "<gray>優先度: <white>[number]</white></gray>"
+      value-permission: "<gray>権限: <white>[value]</white></gray>"
+      no-description: "<gray>説明がありません</gray>"
+      has-description: "<gray>説明があります</gray>"
+    biome:
+      name: "<white>バイオーム</white>"
+      value: "<gray>バイオーム: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>水、溶岩、氷</white>"
+      water: "<aqua>水: </aqua>[value]"
+      lava: "<gold>溶岩: </gold>[value]"
+      ice: "<aqua>氷: </aqua>[value]"
+      unchecked: "<gray>チェックなし</gray>"
+      none: "<red>許可しない</red>"
+      at-least: "<white>床の最低[number]%</white>"
+    mob-limits:
+      name: "<white>モブ制限</white>"
+      ground: "<gray>モブごとのブロック数: <white>[number]</white></gray>"
+      water: "<gray>水モブごとの水ブロック数: <white>[value]</white></gray>"
+      lava: "<gray>溶岩モブごとの溶岩ブロック数: <white>[value]</white></gray>"
+      air: "<gray>飛行モブごとの空気ブロック数: <white>[value]</white></gray>"
+      shared: "地上と同じ"
+      max: "<gray>最大モブ数: <white>[value]</white></gray>"
+      no-max: "制限なし"
+    blocks:
+      name: "<white>必須ブロック</white>"
+      add: "<green>ブロックを追加</green>"
+      help: "<gray>温室の内部にある必須の各ブロックの最小数。</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>左クリック: +1<newline>右クリック: -1<newline>シフトクリック: 数字を入力<newline>Q: 削除</yellow>"
+    plants:
+      name: "<white>植物</white>"
+      add: "<green>植物を追加</green>"
+      help: "<gray>屋根のホッパーから骨粉で育つ植物。</gray>"
+      grows-on: "<gray>育つ場所: <white>[block]</white></gray>"
+      entry-help: "<yellow>左クリック: 確率<newline>右クリック: 育つ場所<newline>Q: 削除</yellow>"
+    mobs:
+      name: "<white>モブ</white>"
+      add: "<green>モブを追加</green>"
+      help: "<gray>温室に出現するモブ。</gray>"
+      spawns-on: "<gray>出現場所: <white>[block]</white></gray>"
+      variant: "<gray>バリアント: <white>[value]</white></gray>"
+      entry-help: "<yellow>左クリック: 確率とバリアント<newline>右クリック: 出現場所<newline>Q: 削除</yellow>"
+    conversions:
+      name: "<white>ブロック変化</white>"
+      add: "<green>変化を追加</green>"
+      help: "<gray>ゆっくり別のブロックに変わるブロック。</gray>"
+      to: "<gray>変化先: <white>[block]</white></gray>"
+      anywhere: "<gray>どこでも</gray>"
+      next-to: "<gray>隣にのみ: <white>[block]</white></gray>"
+      entry-help: "<yellow>左クリック: 確率<newline>右クリック: 変化先<newline>シフト右クリック: ブロックの隣だけ<newline>シフト左クリック: どこでも<newline>Q: 削除</yellow>"
+    back:
+      name: "<white>レシピに戻る</white>"
+      description: "<gray>保存されていない変更は保持されます</gray>"
+    discard:
+      name: "<red>変更を破棄</red>"
+      description: "<gray>前回保存以降の変更を忘れます</gray>"
+    save:
+      name: "<green>保存</green>"
+      nothing: "<gray>保存する変更がありません</gray>"
+      description: "<gray>biomes.ymlに書き込みます; [number]個の温室がすぐに新しいルールに従います</gray>"
+      problems: "<red>先にこれらを修正してください:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>複製</white>"
+      description: "<gray>このレシピから新しいレシピを作成</gray>"
+    delete:
+      name: "<red>レシピを削除</red>"
+      description: "<gray>[number]個の温室がこのレシピを使用しています</gray>"
+    dialog:
+      cancel: "キャンセル"
+      switch:
+        title: "保存されていない変更"
+        body: "[name]への保存されていない変更があります。破棄してこのレシピを編集しますか?"
+        discard: "<red>破棄</red>"
+        keep: "[name]に戻る"
+      discard:
+        title: "変更を破棄しますか?"
+        body: "[name]への変更を忘れますか?"
+        confirm: "<red>破棄</red>"
+      conflict:
+        title: "他の人が変更しました"
+        body: "[name]は、あなたが編集を開始した後、他の人によって保存されたか、リロードされました。"
+        overwrite: "<red>自分の変更で上書き</red>"
+        theirs: "彼らの変更から再度開始"
+      delete:
+        title: "レシピを削除しますか?"
+        body: "[name]を削除しますか? [number]個の温室がこのレシピを使用しています。biomes.ymlはバックアップされます。"
+        confirm: "<red>削除</red>"
+    form:
+      ok: "<green>完了</green>"
+      cancel: "キャンセル"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value]は確率ではありません。0より大きく100以下のパーセンテージを使用してください。例: 5または0.5。"
+      general:
+        title: "名前と説明"
+        name: "名前 (MiniMessageカラーコード使用可)"
+        description: "レシピパネルに表示される説明"
+        priority: "優先度"
+        permission: "作成に必要な権限 (空欄で不要)"
+        no-name: "名前は空欄にできません。"
+        bad-permission: "権限には空白を含められません。"
+      coverage:
+        title: "水、溶岩、氷"
+        water: "水"
+        lava: "溶岩"
+        ice: "氷"
+        percent: "床のパーセンテージ"
+        unchecked: "チェックなし"
+        none: "許可しない"
+        atleast: "最低..."
+        too-much: "水、溶岩、氷を合わせて床全体より多くを必要としてはいけません。"
+      mobs:
+        title: "モブ制限"
+        ground: "モブごとのブロック数"
+        water: "水モブごとの水ブロック数 (0 = 同じ)"
+        lava: "溶岩モブごとの溶岩ブロック数 (0 = 同じ)"
+        air: "飛行モブごとの空気ブロック数 (0 = 同じ)"
+        max: "最大モブ数 (-1 = 無制限)"
+      chance:
+        title: "確率"
+        field: "[what]の%確率"
+      mob:
+        title: "モブ"
+        variant: "バリアント"
+        no-variant: "通常"
+      count:
+        title: "いくつ?"
+        field: "何個の[what]"
+      key:
+        title: "レシピキー"
+        field: "キー: 文字、数字、-と_(後で変更できません)"
+        bad: "1~32文字の文字、数字、-または_を使用してください。"
+        taken: "[key]という名前のレシピがすでにあります。"
 
 help:
   help: "help"
@@ -110,27 +420,25 @@ messages:
   ecolost: "[location]の温室はエコシステムを失い、撤去されました。"
 
 info:
-  title: "&a [温室の作り方]"
+  title: "<green>[温室の作り方]</green>"
   instructions: |-
-    &e 4つの壁と平らなガラスの屋根でガラスから箱を作り、
-    &e 壁に最大 &f 4つのドア &e を追加します。
-    &e 壁と屋根に &f 1ホッパー &e を配置し、ウォーターバケツを追加して
-    &e 雪や骨粉を作り、植物を自動的に成長させます。
-    &e バイオームレシピを確認して、温室内で正常に作成するために
-    &e 必要なブロックを確認します。
+    <yellow>4つの壁と平らなガラスの屋根でガラスから箱を作り、</yellow>
+    <yellow>壁に最大 </yellow><white>4つのドア </white><yellow>を追加します。</yellow>
+    <yellow>壁と屋根に </yellow><white>1ホッパー </white><yellow>を配置し、ウォーターバケツを追加して</yellow>
+    <yellow>雪や骨粉を作り、植物を自動的に成長させます。</yellow>
+    <yellow>バイオームレシピを確認して、温室内で正常に作成するために</yellow>
+    <yellow>必要なブロックを確認します。</yellow>
   info: "[温室情報]"
   none: "なし"
-  nomore: "&4これ以上温室を建設することはできません！"
-  onemore: "&6温室をもう1つ構築できます。"
-  youcanbuild: "&a温室を最大 [number] 個まで構築できます！"
-  unlimited: "&a温室を無制限に構築できます！"
-  welcome: "&b ようこそ！手順についてはここをクリックしてください"
+  nomore: "<dark_red>これ以上温室を建設することはできません！</dark_red>"
+  onemore: "<gold>温室をもう1つ構築できます。</gold>"
+  youcanbuild: "<green>温室を最大 [number] 個まで構築できます！</green>"
+  unlimited: "<green>温室を無制限に構築できます！</green>"
+  welcome: "<aqua>ようこそ！手順についてはここをクリックしてください</aqua>"
 
 recipe:
-  blockscolor: "&f"
   hint: "/greenhouse list を使用してレシピ番号のリストを表示します！"
   wrongnumber: "レシピ番号は1から[size]の間でなければなりません"
-  title: "[[biome]レシピ]"
   nowater: "水は許可されません。"
   noice: "氷は許可されていません。"
   nolava: "溶岩は許可されていません。"
@@ -167,4 +475,4 @@ news:
   headline: "[温室ニュース]"
 
 controlpanel:
-  title: "&a温室"
+  title: "<green>温室</green>"

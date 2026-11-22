@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Nhà kính
       description: |
-        &b Chỉnh cho ai có thể
-        &b điều khiển nhà kính
+        <aqua>Chỉnh cho ai có thể</aqua>
+        <aqua>điều khiển nhà kính</aqua>
 
 greenhouses:
   general:
@@ -17,9 +17,9 @@ greenhouses:
    
   errors:
     move: "Di chuyển đến nhà kính của bạn trước."
-    no-rank: "&c Bạn không có cấp bậc để làm điều đó."
+    no-rank: "<red>Bạn không có cấp bậc để làm điều đó.</red>"
     notyours: "Đây không phải nhà kính của bạn!"
-    not-inside: "&c Bạn không có ở trong nhà kính của bạn!"
+    not-inside: "<red>Bạn không có ở trong nhà kính của bạn!</red>"
     tooexpensive: "Bạn không có đủ [price]"
     alreadyexists: "Nhà kính đã tồn tại!"
     norecipe: "Không thể tạo nhà kính!"
@@ -30,14 +30,14 @@ greenhouses:
    leaving: "Đã rời nhà kính [biome]"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Công thức [biome]]"
    watermustbe: "Nước > [coverage]% trong một khu vực."
    icemustbe: "Băng > [coverage]% trong một khu vực."
    lavamustbe: "Nham thạch > [coverage]% trong một khu vực."
    minimumblockstitle: "[Cần số khối tối thiểu]"
    nootherblocks: "Không cần khối khác."
    missing: "Nhà kính đang bị thiếu"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,48 +48,358 @@ greenhouses:
         description: "Thử tạo một nhà kính"
         parameters: "<recipe>"
         error:
-          already: "&cĐã có một nhà kính ở đây!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Mái nhà chứa các khối không được phép!"
-          FAIL_BAD_WALL_BLOCKS: "&c Tường chứa các khối không được phép!"
-          FAIL_BELOW: "&c Bạn phải ở bên trong nhà kính để thử tạo nó"
-          FAIL_BLOCKS_ABOVE: "&c Không được có khối nào phía trên nhà kính! Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề."
+          already: "<red>Đã có một nhà kính ở đây!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Mái nhà chứa các khối không được phép!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Tường chứa các khối không được phép!</red>"
+          FAIL_BELOW: "<red>Bạn phải ở bên trong nhà kính để thử tạo nó</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Không được có khối nào phía trên nhà kính! Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Có một lỗ hổng trên mái nhà hoặc nó không phẳng!
-            &c Các khối kính đỏ sẽ hiển thị vấn đề.
-            &c Đảm bảo bạn đang ở bên trong nhà kính để tạo nó.
-          FAIL_HOLE_IN_WALL: "&c Có một lỗ hổng trên tường!"
-          FAIL_NO_ROOF: "&c Dường như không có mái nhà! Đảm bảo bạn đang ở bên trong nhà kính để tạo nó."
-          FAIL_TOO_MANY_DOORS: "&c Bạn không thể có quá 4 cánh cửa trong nhà kính!"
-          FAIL_TOO_MANY_HOPPERS: "&c Chỉ cho phép một phễu trong tường hoặc mái nhà."
-          FAIL_UNEVEN_WALLS: "&c Các bức tường không đều nhau. Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề."
-          FAIL_INSUFFICIENT_ICE: "&c Không đủ băng để thực hiện công thức này"
-          FAIL_INSUFFICIENT_LAVA: "&c Không đủ nham thạch để thực hiện công thức này"
-          FAIL_INSUFFICIENT_WATER: "&c Không đủ nước để thực hiện công thức này"
-          FAIL_NO_ICE: "&c Cần có băng để thực hiện công thức này"
-          FAIL_NO_LAVA: "&c Cần có nham thạch để thực hiện công thức này"
-          FAIL_NO_WATER: "&c Cần có nước để thực hiện công thức này"
-          FAIL_NO_RECIPE_FOUND: "&c Không tìm thấy công thức nào phù hợp với nhà kính này"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Cần thêm các khối để thực hiện công thức này!"
-          FAIL_OVERLAPPING: "&c Rất tiếc, các nhà kính không thể dùng chung tường."
-        success: "&2 Bạn đã tạo thành công nhà kính sinh thái [biome]! Hệ sinh thái sẽ đồng bộ hóa ở lần dịch chuyển hoặc đăng nhập tiếp theo."
-        missing-blocks: "&c Thiếu [material] x [number]"
-        unknown-recipe: "&c Công thức không xác định"
-        try-these: "&c Hãy thử một trong những cách sau:"
-        recipe-format: "&3[name]"
+            <red>Có một lỗ hổng trên mái nhà hoặc nó không phẳng!</red>
+            <red>Các khối kính đỏ sẽ hiển thị vấn đề.</red>
+            <red>Đảm bảo bạn đang ở bên trong nhà kính để tạo nó.</red>
+          FAIL_HOLE_IN_WALL: "<red>Có một lỗ hổng trên tường!</red>"
+          FAIL_NO_ROOF: "<red>Dường như không có mái nhà! Đảm bảo bạn đang ở bên trong nhà kính để tạo nó.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Bạn không thể có quá 4 cánh cửa trong nhà kính!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Chỉ cho phép một phễu trong tường hoặc mái nhà.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Các bức tường không đều nhau. Các khối kính đỏ sẽ hiển thị các khối gặp vấn đề.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Không đủ băng để thực hiện công thức này</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Không đủ nham thạch để thực hiện công thức này</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Không đủ nước để thực hiện công thức này</red>"
+          FAIL_NO_ICE: "<red>Cần có băng để thực hiện công thức này</red>"
+          FAIL_NO_LAVA: "<red>Cần có nham thạch để thực hiện công thức này</red>"
+          FAIL_NO_WATER: "<red>Cần có nước để thực hiện công thức này</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Không tìm thấy công thức nào phù hợp với nhà kính này</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Cần thêm các khối để thực hiện công thức này!</red>"
+          FAIL_OVERLAPPING: "<red>Rất tiếc, các nhà kính không thể dùng chung tường.</red>"
+        success: "<dark_green>Bạn đã tạo thành công nhà kính sinh thái [biome]! Hệ sinh thái sẽ đồng bộ hóa ở lần dịch chuyển hoặc đăng nhập tiếp theo.</dark_green>"
+        missing-blocks: "<red>Thiếu [material] x [number]</red>"
+        unknown-recipe: "<red>Công thức không xác định</red>"
+        try-these: "<red>Hãy thử một trong những cách sau:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Cách xây dựng nhà kính]"
+        title: "<green>[Cách xây dựng nhà kính]</green>"
         instructions: |
-          &e Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,
-          &e thêm tối đa &f 4 cánh cửa &e ở các bức tường.
-          &e Đặt &f 1 cái phễu &e vào tường hoặc mái nhà và thêm các xô nước.
-          &e để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.
-          &e Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong
-          &e nhà kính để tạo thành công.
+          <yellow>Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,</yellow>
+          <yellow>thêm tối đa </yellow><white>4 cánh cửa </white><yellow>ở các bức tường.</yellow>
+          <yellow>Đặt </yellow><white>1 cái phễu </white><yellow>vào tường hoặc mái nhà và thêm các xô nước.</yellow>
+          <yellow>để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.</yellow>
+          <yellow>Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong</yellow>
+          <yellow>nhà kính để tạo thành công.</yellow>
       help:
         help: "trợ giúp"
         make: "thử tạo một nhà kính"
         remove: "xóa nhà kính bạn đang đứng nếu bạn sở hữu nó"
         list: "liệt kê các công thức nhà kính"
+    admin:
+      description: "Lệnh quản trị viên nhà kính"
+      errors:
+        unknown-id: "<red>Không tìm thấy nhà kính nào với ID [id]. Sử dụng lệnh danh sách để xem ID. ID một phần hoạt động nếu nó chỉ khớp với một nhà kính.</red>"
+        id-required: "<red>Chạy cái này từ trong trò chơi bên trong nhà kính, hoặc cung cấp ID nhà kính.</red>"
+        no-location: "<red>Nhà kính [id] không có vị trí hợp lệ hoặc thế giới của nó không được tải.</red>"
+      list:
+        description: "Liệt kê nhà kính, tùy chọn cho một người chơi"
+        parameters: "[player] [page]"
+        title: "<green>[Nhà kính] </green><gray>([number] tổng cộng, trang [page] của [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>tại </gray><white>[xyz] </white><gray>trong </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(hỏng)</red>"
+        more: "<gray>Sử dụng </gray><white>/[label] greenhouses list [page] </white><gray>để xem thêm</gray>"
+        none: "<red>Không tìm thấy nhà kính nào.</red>"
+        unloaded-title: "<red>[Chưa tải: [number]] </red><gray>Những bản ghi này nằm trong cơ sở dữ liệu nhưng không hoạt động:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>tại </gray><white>[xyz] </white><gray>trong </gray><white>[world]</white>"
+      info:
+        description: "Hiển thị chi tiết đầy đủ của nhà kính"
+        parameters: "[id]"
+        title: "<green>[Thông tin nhà kính]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Công thức: </gray><white>[recipe]</white>"
+        owner: "<gray>Chủ sở hữu: </gray><white>[owner]</white>"
+        world: "<gray>Thế giới: </gray><white>[world]</white>"
+        location: "<gray>Vị trí: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Hộp giới hạn: </gray><white>[min] </white><gray>đến </gray><white>[max]</white>"
+        area: "<gray>Khu vực nội bộ: </gray><white>[area] khối</white>"
+        original-biome: "<gray>Sinh thái gốc: </gray><white>[biome]</white>"
+        hopper: "<gray>Phễu: </gray><white>[hopper]</white>"
+        broken: "<gray>Hỏng: </gray><white>[broken]</white>"
+        not-loaded: "<red>Chưa tải: [reason]</red>"
+      delete:
+        description: "Xóa bản ghi nhà kính theo ID, được tải hay không"
+        parameters: "<id>"
+        confirm: "<red>Xóa nhà kính [id] thuộc về [owner] tại [xyz]? Điều này không thể được hoàn tác.</red>"
+        success: "<green>Nhà kính [id] đã bị xóa.</green>"
+      tp:
+        description: "Dịch chuyển tức thời bạn đến nhà kính"
+        parameters: "<id>"
+        success: "<green>Dịch chuyển tức thời đến nhà kính [id]</green>"
+      verify:
+        description: "Kiểm tra lại nhà kính với công thức của chúng"
+        parameters: "[id]"
+        checking: "<gray>Kiểm tra [number] nhà kính...</gray>"
+        ok: "<green>[id] tại [xyz] đáp ứng công thức của nó</green>"
+        broken: "<red>[id] tại [xyz] thất bại: [reasons]</red>"
+      reload:
+        description: "Tải lại biomes.yml và đọc lại nhà kính từ cơ sở dữ liệu"
+        success: "<green>Đã tải lại. [number] nhà kính hoạt động.</green>"
+        unloaded: "<red>[number] bản ghi không thể tải - sử dụng lệnh danh sách để xem chúng.</red>"
+      build:
+        description: "Xây dựng nhà kính thử nghiệm cho công thức, xung quanh bạn hoặc tại trung tâm sàn được cấp"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Tọa độ cần cả ba x, y và z, dưới dạng số hoặc ~ (ví dụ ~ ~ ~ hoặc ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] không phải là kích thước (ví dụ 9x9 hoặc 9x9x5) hoặc chế độ (keep hoặc clear).</red>"
+        too-small: "<red>Công thức không phù hợp trong [size]: [description]. Thử kích thước lớn hơn, hoặc để trống để tự động lớp.</red>"
+        out-of-world: "<red>Điều đó sẽ vượt quá trên hoặc dưới thế giới. Chọn chiều cao khác.</red>"
+        not-on-island: "<red>Toàn bộ nhà kính phải nằm trên một hòn đảo.</red>"
+        overlapping: "<red>Điều đó sẽ trùng lặp nhà kính [id].</red>"
+        confirm-clear: "<red>Mọi thứ bên trong nhà kính [size] ở đây sẽ bị thay thế.</red>"
+        built: "<green>Xây dựng nhà kính thử nghiệm [size] [recipe] ([number] khối). Xây dựng nó ngay bây giờ...</green>"
+      edit:
+        description: "Mở trình chỉnh sửa công thức, hoặc trình chỉnh sửa công thức"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Nhà kính quản trị</dark_green>"
+    close: "<white>Đóng</white>"
+    back: "<white>Quay lại</white>"
+    cancel: "Hủy"
+    recipes:
+      name: "<green>Công thức</green>"
+      description: "<gray>Chỉnh sửa, thêm hoặc xóa [number] công thức nhà kính</gray>"
+    greenhouses:
+      name: "<green>Nhà kính</green>"
+      description: "<gray>[number] nhà kính được xây. Dịch chuyển tức thời, kiểm tra, kiểm tra hoặc xóa chúng.</gray>"
+      unloaded: "<red>[number] không thể tải được</red>"
+    build:
+      name: "<green>Xây dựng nhà kính thử nghiệm</green>"
+      description: "<gray>Xây dựng một nhà kính đang hoạt động cho một công thức nơi bạn đứng, với cánh cửa ở phía bạn hướng tới</gray>"
+      pick-title: "<dark_green>Xây dựng công thức nào?</dark_green>"
+      key: "<gray>Phím: <white>[key]</white></gray>"
+      default-size: "<gray>Kích thước mặc định: <white>[size]</white></gray>"
+      click: "<yellow>Nhấp để chọn kích thước</yellow>"
+      title: "Xây dựng [name]"
+      body: "Nhà kính được xây dựng với tâm sàn nơi bạn đứng và cánh cửa ở phía bạn hướng tới. Kích thước là phía trong."
+      width: "Chiều rộng"
+      depth: "Độ sâu"
+      height: "Chiều cao"
+      mode: "Cái gì đã có ở đó"
+      keep: "Giữ nó và xây dựng xung quanh nó"
+      clear: "Xóa nó trước"
+      go: "<green>Xây dựng</green>"
+    verify:
+      name: "<green>Kiểm tra tất cả nhà kính</green>"
+      description: "<gray>Kiểm tra mọi nhà kính với công thức của nó ngay bây giờ và báo cáo trong trò chuyện</gray>"
+    reload:
+      name: "<green>Tải lại</green>"
+      description: "<gray>Đọc lại biomes.yml và cơ sở dữ liệu nhà kính</gray>"
+      confirm-title: "Tải lại?"
+      confirm-body: "Đọc lại biomes.yml và cơ sở dữ liệu nhà kính? Các chỉnh sửa công thức chưa được lưu được giữ lại, nhưng sẽ cần lưu lên các công thức được tải lại."
+      confirm: "<yellow>Tải lại</yellow>"
+  browser:
+    title: "<dark_green>Nhà kính</dark_green>"
+    title-owner: "<dark_green>Nhà kính</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Không có nhà kính</gray>"
+    back: "<white>Quay lại</white>"
+    cancel: "Hủy"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Chủ sở hữu: <white>[owner]</white></gray>"
+    where: "<gray>Tại: <white>[xyz]</white> trong <white>[world]</white></gray>"
+    ok: "<green>Hoạt động</green>"
+    broken: "<red>Hỏng</red>"
+    unloaded: "<red>Không tải được: [reason]</red>"
+    click:
+      tp: "<yellow>Nhấp chuột trái: dịch chuyển tức thời</yellow>"
+      verify: "<yellow>Nhấp chuột phải: kiểm tra ngay bây giờ</yellow>"
+      info: "<yellow>Shift-nhấp: chi tiết trong trò chuyện</yellow>"
+      delete: "<yellow>Q: xóa</yellow>"
+    filter:
+      name: "<white>Lọc theo chủ sở hữu</white>"
+      all: "<gray>Hiển thị của tất cả mọi người</gray>"
+      only: "<gray>Hiển thị của <white>[owner]</white></gray>"
+      click: "<yellow>Nhấp để thay đổi</yellow>"
+      title: "Lọc theo chủ sở hữu"
+      label: "Tên chủ sở hữu (để trống cho tất cả mọi người)"
+      apply: "<green>Hiển thị</green>"
+    delete:
+      title: "Xóa nhà kính?"
+      body: "Xóa nhà kính [id] thuộc về [owner] tại [xyz]? Điều này không thể được hoàn tác."
+      confirm: "<red>Xóa</red>"
+  editor:
+    needs-dialogs: "<red>Trình chỉnh sửa công thức cần Paper 1.21.7 trở lên.</red>"
+    unknown-recipe: "<red>Không có công thức nào tên [key].</red>"
+    resuming: "<yellow>Tiếp tục các thay đổi chưa được lưu của bạn thành [name]<yellow>.</yellow>"
+    saved: "<green>Đã lưu [name]<green>. [number] nhà kính sử dụng nó và tuân theo các quy tắc mới từ bây giờ.</green>"
+    save-failed: "<red>biomes.yml không thể được viết - xem nhật ký máy chủ. Không có gì được lưu.</red>"
+    deleted: "<green>Đã xóa [name]<green>. [number] nhà kính của nó được liệt kê là chưa tải cho đến khi bị xóa hoặc công thức quay trở lại.</green>"
+    title: "<dark_green>Chỉnh sửa</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(chưa lưu)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Nhấp để thay đổi</yellow>"
+    click-open: "<yellow>Nhấp để mở</yellow>"
+    none: "không có"
+    entries: "<gray>Mục nhập: <white>[number]</white></gray>"
+    total-chance: "<gray>Cơ hội cộng lại <white>[value]%</white></gray>"
+    chance: "<gray>Cơ hội: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Quay lại công thức</white>"
+    help: "<white>Cách sử dụng trang này</white>"
+    list:
+      title: "<dark_green>Công thức nhà kính</dark_green>"
+      key: "<gray>Phím: <white>[key]</white></gray>"
+      biome: "<gray>Sinh thái: <white>[biome]</white></gray>"
+      priority: "<gray>Ưu tiên: <white>[number]</white></gray>"
+      used: "<gray>Được sử dụng bởi <white>[number]</white> nhà kính</gray>"
+      unsaved: "<gold>Bạn có các thay đổi chưa được lưu</gold>"
+      click-edit: "<yellow>Nhấp để chỉnh sửa</yellow>"
+      back: "<white>Quay lại</white>"
+      new:
+        name: "<green>Công thức mới</green>"
+        description: "<gray>Bắt đầu một công thức từ đầu</gray>"
+    pick:
+      biome: "<dark_green>Chọn sinh thái</dark_green>"
+      icon: "<dark_green>Chọn biểu tượng</dark_green>"
+      block: "<dark_green>Chọn khối</dark_green>"
+      plant: "<dark_green>Chọn cây</dark_green>"
+      grows-on: "<dark_green>Nó mọc ở đâu?</dark_green>"
+      mob: "<dark_green>Chọn mob</dark_green>"
+      spawns-on: "<dark_green>Nó xuất hiện trên cái gì?</dark_green>"
+      convert-from: "<dark_green>Khối nào thay đổi?</dark_green>"
+      convert-to: "<dark_green>Nó thay đổi thành cái gì?</dark_green>"
+      next-to: "<dark_green>Nó phải ở bên cạnh cái gì?</dark_green>"
+    icon:
+      name: "<white>Biểu tượng</white>"
+    general:
+      name: "<white>Tên và mô tả</white>"
+      value-name: "<gray>Tên: </gray>[value]"
+      value-priority: "<gray>Ưu tiên: <white>[number]</white></gray>"
+      value-permission: "<gray>Quyền: <white>[value]</white></gray>"
+      no-description: "<gray>Không có mô tả</gray>"
+      has-description: "<gray>Có mô tả</gray>"
+    biome:
+      name: "<white>Sinh thái</white>"
+      value: "<gray>Sinh thái: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Nước, dung nham và băng</white>"
+      water: "<aqua>Nước: </aqua>[value]"
+      lava: "<gold>Dung nham: </gold>[value]"
+      ice: "<aqua>Băng: </aqua>[value]"
+      unchecked: "<gray>chưa được kiểm tra</gray>"
+      none: "<red>không được phép</red>"
+      at-least: "<white>ít nhất [number]% của sàn</white>"
+    mob-limits:
+      name: "<white>Giới hạn mob</white>"
+      ground: "<gray>Khối trên mỗi mob: <white>[number]</white></gray>"
+      water: "<gray>Khối nước trên mỗi mob nước: <white>[value]</white></gray>"
+      lava: "<gray>Khối dung nham trên mỗi mob dung nham: <white>[value]</white></gray>"
+      air: "<gray>Khối không khí trên mỗi mob bay: <white>[value]</white></gray>"
+      shared: "giống như mặt đất"
+      max: "<gray>Hầu hết mobs cùng một lúc: <white>[value]</white></gray>"
+      no-max: "không giới hạn"
+    blocks:
+      name: "<white>Khối bắt buộc</white>"
+      add: "<green>Thêm khối</green>"
+      help: "<gray>Ít nhất mỗi khối mà nhà kính phải có bên trong.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Nhấp chuột trái: +1<newline>Nhấp chuột phải: -1<newline>Shift-nhấp: nhập một số<newline>Q: xóa</yellow>"
+    plants:
+      name: "<white>Cây</white>"
+      add: "<green>Thêm cây</green>"
+      help: "<gray>Cây được trồng bằng bột xương từ dụng hopper trên mái.</gray>"
+      grows-on: "<gray>Mọc trên: <white>[block]</white></gray>"
+      entry-help: "<yellow>Nhấp chuột trái: cơ hội<newline>Nhấp chuột phải: mọc ở đâu<newline>Q: xóa</yellow>"
+    mobs:
+      name: "<white>Mob</white>"
+      add: "<green>Thêm mob</green>"
+      help: "<gray>Mobs xuất hiện trong nhà kính.</gray>"
+      spawns-on: "<gray>Xuất hiện trên: <white>[block]</white></gray>"
+      variant: "<gray>Biến thể: <white>[value]</white></gray>"
+      entry-help: "<yellow>Nhấp chuột trái: cơ hội và biến thể<newline>Nhấp chuột phải: xuất hiện trên cái gì<newline>Q: xóa</yellow>"
+    conversions:
+      name: "<white>Chuyển đổi khối</white>"
+      add: "<green>Thêm chuyển đổi</green>"
+      help: "<gray>Khối thay đổi từng chút một thành các khối khác.</gray>"
+      to: "<gray>Trở thành: <white>[block]</white></gray>"
+      anywhere: "<gray>Ở bất kỳ đâu</gray>"
+      next-to: "<gray>Chỉ ở bên cạnh: <white>[block]</white></gray>"
+      entry-help: "<yellow>Nhấp chuột trái: cơ hội<newline>Nhấp chuột phải: trở thành cái gì<newline>Shift-phải: chỉ ở bên cạnh khối<newline>Shift-trái: ở bất kỳ đâu<newline>Q: xóa</yellow>"
+    back:
+      name: "<white>Quay lại công thức</white>"
+      description: "<gray>Các thay đổi chưa được lưu được giữ lại</gray>"
+    discard:
+      name: "<red>Hủy bỏ các thay đổi</red>"
+      description: "<gray>Quên các thay đổi kể từ lần lưu cuối cùng</gray>"
+    save:
+      name: "<green>Lưu</green>"
+      nothing: "<gray>Không có thay đổi để lưu</gray>"
+      description: "<gray>Ghi biomes.yml; [number] nhà kính tuân theo các quy tắc mới ngay lập tức</gray>"
+      problems: "<red>Sửa những cái này trước:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Nhân đôi</white>"
+      description: "<gray>Bắt đầu một công thức mới từ cái này</gray>"
+    delete:
+      name: "<red>Xóa công thức</red>"
+      description: "<gray>[number] nhà kính sử dụng công thức này</gray>"
+    dialog:
+      cancel: "Hủy"
+      switch:
+        title: "Các thay đổi chưa được lưu"
+        body: "Bạn có các thay đổi chưa được lưu thành [name]. Hủy bỏ chúng để chỉnh sửa công thức này?"
+        discard: "<red>Hủy bỏ chúng</red>"
+        keep: "Quay lại [name]"
+      discard:
+        title: "Hủy bỏ các thay đổi?"
+        body: "Quên các thay đổi của bạn thành [name]?"
+        confirm: "<red>Hủy bỏ</red>"
+      conflict:
+        title: "Được thay đổi bởi người khác"
+        body: "[name] được lưu bởi người khác, hoặc được tải lại, sau khi bạn bắt đầu chỉnh sửa nó."
+        overwrite: "<red>Lưu của tôi lên trên nó</red>"
+        theirs: "Bắt đầu lại từ của họ"
+      delete:
+        title: "Xóa công thức?"
+        body: "Xóa [name]? [number] nhà kính sử dụng nó. biomes.yml được sao lưu trước tiên."
+        confirm: "<red>Xóa</red>"
+    form:
+      ok: "<green>Xong</green>"
+      cancel: "Hủy"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] không phải là cơ hội. Sử dụng một tỷ lệ phần trăm trên 0 và lên tới 100, ví dụ 5 hoặc 0,5."
+      general:
+        title: "Tên và mô tả"
+        name: "Tên (MiniMessage colors được phép)"
+        description: "Mô tả hiển thị trong bảng công thức"
+        priority: "Ưu tiên"
+        permission: "Quyền cần thiết để tạo nó (để trống nếu không có)"
+        no-name: "Tên không được để trống."
+        bad-permission: "Quyền không được chứa khoảng trắng."
+      coverage:
+        title: "Nước, dung nham và băng"
+        water: "Nước"
+        lava: "Dung nham"
+        ice: "Băng"
+        percent: "Phần trăm sàn"
+        unchecked: "Chưa được kiểm tra"
+        none: "Không được phép"
+        atleast: "Ít nhất..."
+        too-much: "Nước, dung nham và băng cùng nhau không thể cần nhiều hơn toàn bộ sàn."
+      mobs:
+        title: "Giới hạn mob"
+        ground: "Khối trên mỗi mob"
+        water: "Khối nước trên mỗi mob nước (0 = giống nhau)"
+        lava: "Khối dung nham trên mỗi mob dung nham (0 = giống nhau)"
+        air: "Khối không khí trên mỗi mob bay (0 = giống nhau)"
+        max: "Hầu hết mobs cùng một lúc (-1 = không giới hạn)"
+      chance:
+        title: "Cơ hội"
+        field: "% cơ hội cho [what]"
+      mob:
+        title: "Mob"
+        variant: "Biến thể"
+        no-variant: "Bình thường"
+      count:
+        title: "Bao nhiêu?"
+        field: "Bao nhiêu [what]"
+      key:
+        title: "Khóa công thức"
+        field: "Khóa: chữ cái, số, - và _ (không thể thay đổi sau)"
+        bad: "Sử dụng 1 đến 32 chữ cái, số, - hoặc _."
+        taken: "Đã có một công thức tên [key]."
 
 messages:
    enter: "Bạn đã vào nhà kính [biome] của [owner]!"
@@ -100,27 +410,25 @@ messages:
    ecolost: "Nhà kính tại [location] đã mất hệ sinh thái và đã bị xóa."
 
 info:
-   title: "&a [Cách xây dựng nhà kính]"
+   title: "<green>[Cách xây dựng nhà kính]</green>"
    instructions: |
-     &e Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,
-     &e thêm tối đa &f 4 cánh cửa &e ở các bức tường.
-     &e Đặt &f 1 cái phễu &e vào tường hoặc mái nhà và thêm các xô nước.
-     &e để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.
-     &e Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong
-     &e nhà kính để tạo thành công.
+     <yellow>Làm một chiếc hộp bằng kính với 4 bức tường và mái kính phẳng,</yellow>
+     <yellow>thêm tối đa </yellow><white>4 cánh cửa </white><yellow>ở các bức tường.</yellow>
+     <yellow>Đặt </yellow><white>1 cái phễu </white><yellow>vào tường hoặc mái nhà và thêm các xô nước.</yellow>
+     <yellow>để tạo tuyết và/hoặc bột xương giúp cây trồng tự động phát triển.</yellow>
+     <yellow>Kiểm tra các công thức sinh thái để biết những khối nào phải có bên trong</yellow>
+     <yellow>nhà kính để tạo thành công.</yellow>
    info: "[Thông tin nhà kính]"
    none: "không có"
-   nomore: "&4Bạn không thể xây thêm bất kỳ nhà kính nào nữa!"
-   onemore: "&6Bạn có thể xây thêm một nhà kính nữa."
-   youcanbuild: "&aBạn có thể xây thêm tối đa [number] nhà kính!"
-   unlimited: "&aBạn có thể xây dựng số lượng nhà kính không giới hạn!"
-   welcome: "&bChào mừng! Nhấn vào đây để xem hướng dẫn"
+   nomore: "<dark_red>Bạn không thể xây thêm bất kỳ nhà kính nào nữa!</dark_red>"
+   onemore: "<gold>Bạn có thể xây thêm một nhà kính nữa.</gold>"
+   youcanbuild: "<green>Bạn có thể xây thêm tối đa [number] nhà kính!</green>"
+   unlimited: "<green>Bạn có thể xây dựng số lượng nhà kính không giới hạn!</green>"
+   welcome: "<aqua>Chào mừng! Nhấn vào đây để xem hướng dẫn</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Dùng /greenhouse list để xem số công thức!"
    wrongnumber: "Số công thức phải từ 1 đến [size]"
-   title: "[Công thức [biome]]"
    nowater: "Không cho phép có nước."
    noice: "Không cho phép có băng."
    nolava: "Không cho phép có nham thạch."
@@ -157,4 +465,4 @@ news:
    headline: "[Tin tức nhà kính]"
 
 controlpanel:
-   title: "&aNhà kính"
+   title: "<green>Nhà kính</green>"

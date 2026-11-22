@@ -9,8 +9,8 @@ protection:
     GREENHOUSE:
       name: Kassen
       description: |
-        &b Bepaal wie de kassen
-        &b mag beheren   
+        <aqua>Bepaal wie de kassen</aqua>
+        <aqua>mag beheren   </aqua>
 
 greenhouses:
   general:
@@ -18,27 +18,27 @@ greenhouses:
    
   errors:
     move: "Ga eerst naar een kas waarvan je de eigenaar bent."
-    no-rank: "&c Je hebt niet de juiste rang om dit te doen."
+    no-rank: "<red>Je hebt niet de juiste rang om dit te doen.</red>"
     notyours: "Dit is niet jouw kas!"
-    not-inside: "&c Je bevindt je niet in een kas!"
+    not-inside: "<red>Je bevindt je niet in een kas!</red>"
     tooexpensive: "Je kunt dit niet betalen [price]" 
     alreadyexists: "Kas bestaat al!"
     norecipe: "Kan geen kas maken!"
     
   event:
    broke: "Je hebt deze kas kapot gemaakt! Biome wordt teruggezet naar [biome]!"
-   entering: "Binnengaan van [biome]&f kas"
-   leaving: "Verlaten van [biome]&f kas"
+   entering: "Binnengaan van [biome]<white> kas</white>"
+   leaving: "Verlaten van [biome]<white> kas</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] recept]"
    watermustbe: "Water > [coverage]% van het vloeroppervlak."
    icemustbe: "Ijsblokken > [coverage]% van het vloeroppervlak."
    lavamustbe: "Lava > [coverage]% van het vloeroppervlak."
    minimumblockstitle: "[Minimaal aantal blokken vereist]"
    nootherblocks: "Geen andere blokken vereist."
    missing: "Kas ontbreekt"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -49,43 +49,353 @@ greenhouses:
         description: "Probeer een kas te maken"
         parameters: "<recept>"
         error:
-          already: "&cEr is hier al een kas!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Het dak bevat niet-toegestane blokken!"
-          FAIL_BAD_WALL_BLOCKS: "&c De muur bevat niet-toegestane blokken!"
-          FAIL_BELOW: "&c Je moet je in de kas bevinden om deze te kunnen maken"
-          FAIL_BLOCKS_ABOVE: "&c Er mogen geen blokken boven de kas staan! Rode glasblokken tonen de problematische blokken."
+          already: "<red>Er is hier al een kas!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Het dak bevat niet-toegestane blokken!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>De muur bevat niet-toegestane blokken!</red>"
+          FAIL_BELOW: "<red>Je moet je in de kas bevinden om deze te kunnen maken</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Er mogen geen blokken boven de kas staan! Rode glasblokken tonen de problematische blokken.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Er zit een gat in het dak of het dak is niet plat!
-            &c Rode glasblokken tonen het probleem.
-            &c Zorg dat je in de kas staat tijdens het maken.
-          FAIL_HOLE_IN_WALL: "&c Er zit een gat in de muur!"
-          FAIL_NO_ROOF: "&c Er lijkt geen dak te zijn! Zorg dat je in de kas staat."
-          FAIL_TOO_MANY_DOORS: "&c Je mag niet meer dan 4 deuren in de kas hebben!"
-          FAIL_TOO_MANY_HOPPERS: "&c Slechts één hopper is toegestaan in de muren of het dak."
-          FAIL_UNEVEN_WALLS: "&c De muren zijn ongelijk. Rode glasblokken tonen de problematische blokken."
-          FAIL_INSUFFICIENT_ICE: "&c Onvoldoende ijs om dit recept te maken"
-          FAIL_INSUFFICIENT_LAVA: "&c Onvoldoende lava om dit recept te maken"
-          FAIL_INSUFFICIENT_WATER: "&c Onvoldoende water om dit recept te maken"
-          FAIL_NO_ICE: "&c Ijs is vereist om dit recept te maken"
-          FAIL_NO_LAVA: "&c Lava is vereist om dit recept te maken"
-          FAIL_NO_WATER: "&c Water is vereist om dit recept te maken"
-          FAIL_NO_RECIPE_FOUND: "&c Geen passend recept gevonden voor deze kas"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Meer blokken zijn vereist om dit recept te maken!"
-          FAIL_OVERLAPPING: "&c Sorry, kassen mogen geen muren delen."
-        success: "&2 Je hebt met succes een [biome] biome kas gemaakt! De biome wordt gesynchroniseerd bij de volgende teleport of login."
-        missing-blocks: "&c Ontbrekend: [material] x [number]"
-        unknown-recipe: "&c Onbekend recept"
-        try-these: "&c Probeer een van deze:"
-        recipe-format: "&3[name]"
+            <red>Er zit een gat in het dak of het dak is niet plat!</red>
+            <red>Rode glasblokken tonen het probleem.</red>
+            <red>Zorg dat je in de kas staat tijdens het maken.</red>
+          FAIL_HOLE_IN_WALL: "<red>Er zit een gat in de muur!</red>"
+          FAIL_NO_ROOF: "<red>Er lijkt geen dak te zijn! Zorg dat je in de kas staat.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Je mag niet meer dan 4 deuren in de kas hebben!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Slechts één hopper is toegestaan in de muren of het dak.</red>"
+          FAIL_UNEVEN_WALLS: "<red>De muren zijn ongelijk. Rode glasblokken tonen de problematische blokken.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Onvoldoende ijs om dit recept te maken</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Onvoldoende lava om dit recept te maken</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Onvoldoende water om dit recept te maken</red>"
+          FAIL_NO_ICE: "<red>Ijs is vereist om dit recept te maken</red>"
+          FAIL_NO_LAVA: "<red>Lava is vereist om dit recept te maken</red>"
+          FAIL_NO_WATER: "<red>Water is vereist om dit recept te maken</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Geen passend recept gevonden voor deze kas</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Meer blokken zijn vereist om dit recept te maken!</red>"
+          FAIL_OVERLAPPING: "<red>Sorry, kassen mogen geen muren delen.</red>"
+        success: "<dark_green>Je hebt met succes een [biome] biome kas gemaakt! De biome wordt gesynchroniseerd bij de volgende teleport of login.</dark_green>"
+        missing-blocks: "<red>Ontbrekend: [material] x [number]</red>"
+        unknown-recipe: "<red>Onbekend recept</red>"
+        try-these: "<red>Probeer een van deze:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Hoe bouw je een kas]"
+        title: "<green>[Hoe bouw je een kas]</green>"
         instructions: |
-          &e Maak een doos van glas met 4 muren en een plat glazen
-          &e dak, en voeg tot &f 4 deuren &e toe in de muren.
-          &e Plaats &f 1 hopper &e in een muur of het dak en voeg emmers
-          &e water toe om automatisch sneeuw en/of bone meal te maken
-          &e om planten te laten groeien. Bekijk de biome recepten om
-          &e te zien welke blokken er in een kas moeten staan.
+          <yellow>Maak een doos van glas met 4 muren en een plat glazen</yellow>
+          <yellow>dak, en voeg tot </yellow><white>4 deuren </white><yellow>toe in de muren.</yellow>
+          <yellow>Plaats </yellow><white>1 hopper </white><yellow>in een muur of het dak en voeg emmers</yellow>
+          <yellow>water toe om automatisch sneeuw en/of bone meal te maken</yellow>
+          <yellow>om planten te laten groeien. Bekijk de biome recepten om</yellow>
+          <yellow>te zien welke blokken er in een kas moeten staan.</yellow>
+    admin:
+      description: "Kassen beheercommando's"
+      errors:
+        unknown-id: "<red>Geen kas gevonden met ID [id]. Gebruik de lijstcommando om ID's te zien. Een gedeeltelijke ID werkt als deze maar één kas overeenkomt.</red>"
+        id-required: "<red>Voer dit in-game uit in een kas of geef een kas-ID op.</red>"
+        no-location: "<red>Kas [id] heeft geen geldige locatie of de wereld ervan is niet geladen.</red>"
+      list:
+        description: "Toont kassen, optioneel voor één speler"
+        parameters: "[player] [page]"
+        title: "<green>[Kassen] </green><gray>([number] totaal, pagina [page] van [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>bij </gray><white>[xyz] </white><gray>in </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(beschadigd)</red>"
+        more: "<gray>Gebruik </gray><white>/[label] greenhouses list [page] </white><gray>voor meer</gray>"
+        none: "<red>Geen kassen gevonden.</red>"
+        unloaded-title: "<red>[Niet geladen: [number]] </red><gray>Deze records staan in de database maar zijn niet actief:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>bij </gray><white>[xyz] </white><gray>in </gray><white>[world]</white>"
+      info:
+        description: "Toont volledige details van een kas"
+        parameters: "[id]"
+        title: "<green>[Kasinfo]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Recept: </gray><white>[recipe]</white>"
+        owner: "<gray>Eigenaar: </gray><white>[owner]</white>"
+        world: "<gray>Wereld: </gray><white>[world]</white>"
+        location: "<gray>Locatie: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Begrenzingsvak: </gray><white>[min] </white><gray>tot </gray><white>[max]</white>"
+        area: "<gray>Binnenoppervlak: </gray><white>[area] blokken</white>"
+        original-biome: "<gray>Origineel bioom: </gray><white>[biome]</white>"
+        hopper: "<gray>Goot: </gray><white>[hopper]</white>"
+        broken: "<gray>Beschadigd: </gray><white>[broken]</white>"
+        not-loaded: "<red>Niet geladen: [reason]</red>"
+      delete:
+        description: "Verwijdert een kasrecord op ID, geladen of niet"
+        parameters: "<id>"
+        confirm: "<red>Verwijder kas [id] van [owner] bij [xyz]? Dit kan niet ongedaan gemaakt worden.</red>"
+        success: "<green>Kas [id] verwijderd.</green>"
+      tp:
+        description: "Teleporteert je naar een kas"
+        parameters: "<id>"
+        success: "<green>Getelefporteerd naar kas [id]</green>"
+      verify:
+        description: "Controleert kassen tegen hun recepten"
+        parameters: "[id]"
+        checking: "<gray>Controleren [number] kas(sen)...</gray>"
+        ok: "<green>[id] bij [xyz] voldoet aan zijn recept</green>"
+        broken: "<red>[id] bij [xyz] mislukt: [reasons]</red>"
+      reload:
+        description: "Herladen biomes.yml en lezen kassen opnieuw uit database"
+        success: "<green>Herladen. [number] kassen actief.</green>"
+        unloaded: "<red>[number] record(s) konden niet geladen worden - gebruik de lijstcommando om ze te zien.</red>"
+      build:
+        description: "Bouwt een testkkas voor een recept rond je of op het gegeven vloermiddelpunt"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Coördinaten hebben alle drie x, y en z nodig, als getallen of ~ (bijv. ~ ~ ~ of ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] is geen grootte (bijv. 9x9 of 9x9x5) en geen modus (keep of clear).</red>"
+        too-small: "<red>Het recept past niet in [size]: [description]. Probeer een grotere grootte of laat het weg om het automatisch in te stellen.</red>"
+        out-of-world: "<red>Dat zou boven of onder de wereld gaan. Kies een ander hoogte.</red>"
+        not-on-island: "<red>De hele kas moet op één eiland zijn.</red>"
+        overlapping: "<red>Dat zou kas [id] overlappen.</red>"
+        confirm-clear: "<red>Alles binnen een [size] kas hier zal vervangen worden.</red>"
+        built: "<green>Gebouwd een [size] [recipe] testkkas ([number] blokken). Maak het nu...</green>"
+      edit:
+        description: "Opent de recepteditor of een recepteditor"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Kassen beheer</dark_green>"
+    close: "<white>Sluiten</white>"
+    back: "<white>Terug</white>"
+    cancel: "Annuleren"
+    recipes:
+      name: "<green>Recepten</green>"
+      description: "<gray>Bewerk, voeg toe of verwijder de [number] kassenrecepten</gray>"
+    greenhouses:
+      name: "<green>Kassen</green>"
+      description: "<gray>[number] kas(sen) gebouwd. Teleporteer heen, controleer of verwijder ze.</gray>"
+      unloaded: "<red>[number] konden niet geladen worden</red>"
+    build:
+      name: "<green>Testkkas bouwen</green>"
+      description: "<gray>Bouwt een werkende kas voor een recept waar je staat, met een deur aan de kant waar je heen kijkt</gray>"
+      pick-title: "<dark_green>Welk recept bouwen?</dark_green>"
+      key: "<gray>Toets: <white>[key]</white></gray>"
+      default-size: "<gray>Standaardgrootte: <white>[size]</white></gray>"
+      click: "<yellow>Klik om de grootte te kiezen</yellow>"
+      title: "Bouw [name]"
+      body: "De kas wordt gebouwd met zijn vloer daar waar je staat en de deur aan de kant waar je heen kijkt. Maten zijn binnenin."
+      width: "Breedte"
+      depth: "Diepte"
+      height: "Hoogte"
+      mode: "Wat is er al"
+      keep: "Behoud het en bouw erombeen"
+      clear: "Ruim het eerst op"
+      go: "<green>Bouw</green>"
+    verify:
+      name: "<green>Controleer alle kassen</green>"
+      description: "<gray>Controleert elke kas nu tegen zijn recept en rapporteert in chat</gray>"
+    reload:
+      name: "<green>Herladen</green>"
+      description: "<gray>Leest biomes.yml en de kassendatabase opnieuw</gray>"
+      confirm-title: "Opnieuw laden?"
+      confirm-body: "biomes.yml en de kassendatabase opnieuw inlezen? Niet-opgeslagen receptbewerkingen blijven behouden, maar moeten over de herladen recepten opgeslagen worden."
+      confirm: "<yellow>Herladen</yellow>"
+  browser:
+    title: "<dark_green>Kassen</dark_green>"
+    title-owner: "<dark_green>Kassen</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Geen kassen</gray>"
+    back: "<white>Terug</white>"
+    cancel: "Annuleren"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Eigenaar: <white>[owner]</white></gray>"
+    where: "<gray>Bij: <white>[xyz]</white> in <white>[world]</white></gray>"
+    ok: "<green>Werkend</green>"
+    broken: "<red>Beschadigd</red>"
+    unloaded: "<red>Niet geladen: [reason]</red>"
+    click:
+      tp: "<yellow>Linksklik: teleporteer heen</yellow>"
+      verify: "<yellow>Rechtsklik: controleer het nu</yellow>"
+      info: "<yellow>Shift-klik: details in chat</yellow>"
+      delete: "<yellow>Q: verwijderen</yellow>"
+    filter:
+      name: "<white>Filteren op eigenaar</white>"
+      all: "<gray>Allemaal tonen</gray>"
+      only: "<gray>Alleen van <white>[owner]</white></gray>"
+      click: "<yellow>Klik om te wijzigen</yellow>"
+      title: "Filteren op eigenaar"
+      label: "Naam van eigenaar (leeg voor iedereen)"
+      apply: "<green>Tonen</green>"
+    delete:
+      title: "Kas verwijderen?"
+      body: "Verwijder kas [id] van [owner] bij [xyz]? Dit kan niet ongedaan gemaakt worden."
+      confirm: "<red>Verwijderen</red>"
+  editor:
+    needs-dialogs: "<red>De recepteditor vereist Paper 1.21.7 of later.</red>"
+    unknown-recipe: "<red>Er is geen recept genaamd [key].</red>"
+    resuming: "<yellow>Ik pak je niet-opgeslagen wijzigingen op in [name]<yellow>.</yellow>"
+    saved: "<green>Opgeslagen [name]<green>. [number] kassen gebruiken het en volgen nu onmiddellijk de nieuwe regels.</green>"
+    save-failed: "<red>biomes.yml kon niet geschreven worden - zie het serverlogboek. Niets is opgeslagen.</red>"
+    deleted: "<green>Verwijderd [name]<green>. Zijn [number] kassen staan tot ze verwijderd zijn of het recept terukomt op de ongeladen lijst.</green>"
+    title: "<dark_green>Bewerking</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(niet opgeslagen)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Klik om te wijzigen</yellow>"
+    click-open: "<yellow>Klik om te openen</yellow>"
+    none: "geen"
+    entries: "<gray>Invoeren: <white>[number]</white></gray>"
+    total-chance: "<gray>Kansen tellen op tot <white>[value]%</white></gray>"
+    chance: "<gray>Kans: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Terug naar het recept</white>"
+    help: "<white>Hoe gebruik ik deze pagina</white>"
+    list:
+      title: "<dark_green>Kassenrecepten</dark_green>"
+      key: "<gray>Toets: <white>[key]</white></gray>"
+      biome: "<gray>Bioom: <white>[biome]</white></gray>"
+      priority: "<gray>Prioriteit: <white>[number]</white></gray>"
+      used: "<gray>Gebruikt door <white>[number]</white> kas(sen)</gray>"
+      unsaved: "<gold>Je hebt niet-opgeslagen wijzigingen</gold>"
+      click-edit: "<yellow>Klik om te bewerken</yellow>"
+      back: "<white>Terug</white>"
+      new:
+        name: "<green>Nieuw recept</green>"
+        description: "<gray>Start een recept helemaal opnieuw</gray>"
+    pick:
+      biome: "<dark_green>Kies een bioom</dark_green>"
+      icon: "<dark_green>Kies een pictogram</dark_green>"
+      block: "<dark_green>Kies een blok</dark_green>"
+      plant: "<dark_green>Kies een plant</dark_green>"
+      grows-on: "<dark_green>Waar groeit het op?</dark_green>"
+      mob: "<dark_green>Kies een mob</dark_green>"
+      spawns-on: "<dark_green>Waar spawnt het?</dark_green>"
+      convert-from: "<dark_green>Welk blok verandert?</dark_green>"
+      convert-to: "<dark_green>Waar verandert het in?</dark_green>"
+      next-to: "<dark_green>Wat moet ernaast zijn?</dark_green>"
+    icon:
+      name: "<white>Pictogram</white>"
+    general:
+      name: "<white>Naam en beschrijving</white>"
+      value-name: "<gray>Naam: </gray>[value]"
+      value-priority: "<gray>Prioriteit: <white>[number]</white></gray>"
+      value-permission: "<gray>Toestemming: <white>[value]</white></gray>"
+      no-description: "<gray>Geen beschrijving</gray>"
+      has-description: "<gray>Heeft een beschrijving</gray>"
+    biome:
+      name: "<white>Bioom</white>"
+      value: "<gray>Bioom: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Water, lava en ijs</white>"
+      water: "<aqua>Water: </aqua>[value]"
+      lava: "<gold>Lava: </gold>[value]"
+      ice: "<aqua>Ijs: </aqua>[value]"
+      unchecked: "<gray>niet gecontroleerd</gray>"
+      none: "<red>geen toegestaan</red>"
+      at-least: "<white>minimaal [number]% van de vloer</white>"
+    mob-limits:
+      name: "<white>Mob-limieten</white>"
+      ground: "<gray>Blokken per mob: <white>[number]</white></gray>"
+      water: "<gray>Waterblokken per watermob: <white>[value]</white></gray>"
+      lava: "<gray>Lavablokken per lavamob: <white>[value]</white></gray>"
+      air: "<gray>Luchtblokken per vliegende mob: <white>[value]</white></gray>"
+      shared: "hetzelfde als grond"
+      max: "<gray>Meeste mobs tegelijk: <white>[value]</white></gray>"
+      no-max: "geen limiet"
+    blocks:
+      name: "<white>Vereiste blokken</white>"
+      add: "<green>Voeg een blok toe</green>"
+      help: "<gray>Het minimum van elk blok dat de kas binnenin moet hebben.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Linksklik: +1<newline>Rechtsklik: -1<newline>Shift-klik: typ een getal<newline>Q: verwijderen</yellow>"
+    plants:
+      name: "<white>Planten</white>"
+      add: "<green>Voeg een plant toe</green>"
+      help: "<gray>Planten geteeld met beenpoeder uit de dakgoot.</gray>"
+      grows-on: "<gray>Groeit op: <white>[block]</white></gray>"
+      entry-help: "<yellow>Linksklik: kans<newline>Rechtsklik: waar het op groeit<newline>Q: verwijderen</yellow>"
+    mobs:
+      name: "<white>Mobs</white>"
+      add: "<green>Voeg een mob toe</green>"
+      help: "<gray>Mobs die in de kas spawnen.</gray>"
+      spawns-on: "<gray>Spawnt op: <white>[block]</white></gray>"
+      variant: "<gray>Variant: <white>[value]</white></gray>"
+      entry-help: "<yellow>Linksklik: kans en variant<newline>Rechtsklik: waar het spawnt<newline>Q: verwijderen</yellow>"
+    conversions:
+      name: "<white>Blokconversies</white>"
+      add: "<green>Voeg een conversie toe</green>"
+      help: "<gray>Blokken die langzaam veranderen in andere blokken.</gray>"
+      to: "<gray>Wordt: <white>[block]</white></gray>"
+      anywhere: "<gray>Overal</gray>"
+      next-to: "<gray>Alleen ernaast: <white>[block]</white></gray>"
+      entry-help: "<yellow>Linksklik: kans<newline>Rechtsklik: waar het in verandert<newline>Shift-rechts: alleen ernaast een blok<newline>Shift-links: overal<newline>Q: verwijderen</yellow>"
+    back:
+      name: "<white>Terug naar recepten</white>"
+      description: "<gray>Niet-opgeslagen wijzigingen blijven behouden</gray>"
+    discard:
+      name: "<red>Wijzigingen verwijderen</red>"
+      description: "<gray>Vergeet wijzigingen sinds het laatste opslaan</gray>"
+    save:
+      name: "<green>Opslaan</green>"
+      nothing: "<gray>Geen wijzigingen om op te slaan</gray>"
+      description: "<gray>Schrijft biomes.yml; [number] kassen volgen onmiddellijk de nieuwe regels</gray>"
+      problems: "<red>Los deze eerst op:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Dupliceer</white>"
+      description: "<gray>Start een nieuw recept van dit</gray>"
+    delete:
+      name: "<red>Verwijder recept</red>"
+      description: "<gray>[number] kas(sen) gebruiken dit recept</gray>"
+    dialog:
+      cancel: "Annuleren"
+      switch:
+        title: "Niet-opgeslagen wijzigingen"
+        body: "Je hebt niet-opgeslagen wijzigingen in [name]. Verwijderen ze om dit recept te bewerken?"
+        discard: "<red>Verwijderen</red>"
+        keep: "Terug naar [name]"
+      discard:
+        title: "Wijzigingen verwijderen?"
+        body: "Je wijzigingen in [name] vergeten?"
+        confirm: "<red>Verwijderen</red>"
+      conflict:
+        title: "Gewijzigd door iemand anders"
+        body: "[name] is door iemand anders opgeslagen of herladen nadat je begon met bewerken."
+        overwrite: "<red>Sla de mijne erover op</red>"
+        theirs: "Begin opnieuw met die van hen"
+      delete:
+        title: "Recept verwijderen?"
+        body: "Verwijder [name]? [number] kas(sen) gebruiken het. biomes.yml wordt eerst geback-upt."
+        confirm: "<red>Verwijderen</red>"
+    form:
+      ok: "<green>Klaar</green>"
+      cancel: "Annuleren"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] is geen kans. Gebruik een percentage boven 0 en tot 100, bijv. 5 of 0,5."
+      general:
+        title: "Naam en beschrijving"
+        name: "Naam (MiniMessage-kleuren toegestaan)"
+        description: "Beschrijving weergegeven in het receptenpaneel"
+        priority: "Prioriteit"
+        permission: "Toestemming nodig om te maken (leeg voor geen)"
+        no-name: "De naam kan niet leeg zijn."
+        bad-permission: "Een toestemming kan geen spaties bevatten."
+      coverage:
+        title: "Water, lava en ijs"
+        water: "Water"
+        lava: "Lava"
+        ice: "Ijs"
+        percent: "Procent van de vloer"
+        unchecked: "Niet gecontroleerd"
+        none: "Geen toegestaan"
+        atleast: "Minimaal..."
+        too-much: "Water, lava en ijs samen kunnen niet meer dan de hele vloer nodig hebben."
+      mobs:
+        title: "Mob-limieten"
+        ground: "Blokken per mob"
+        water: "Waterblokken per watermob (0 = hetzelfde)"
+        lava: "Lavablokken per lavamob (0 = hetzelfde)"
+        air: "Luchtblokken per vliegende mob (0 = hetzelfde)"
+        max: "Meeste mobs tegelijk (-1 = geen limiet)"
+      chance:
+        title: "Kans"
+        field: "% kans voor [what]"
+      mob:
+        title: "Mob"
+        variant: "Variant"
+        no-variant: "Normaal"
+      count:
+        title: "Hoeveel?"
+        field: "Hoeveel [what]"
+      key:
+        title: "Recepttoets"
+        field: "Toets: letters, nummers, - en _ (kan later niet veranderd worden)"
+        bad: "Gebruik 1 tot 32 letters, nummers, - of _."
+        taken: "Er is al een recept genaamd [key]."
 
 help:
    help: "help"
@@ -112,35 +422,33 @@ error:
    norecipe: "Kan geen kas maken!"
    
 messages:
-   enter: "Binnengaan van de kas van [owner], biome: [biome]&f!"
+   enter: "Binnengaan van de kas van [owner], biome: [biome]<white>!</white>"
    leave: "Verlaten van de kas van [owner]."
-   youarein: "Je bent nu in de kas van [owner], biome: [biome]&f!"
+   youarein: "Je bent nu in de kas van [owner], biome: [biome]<white>!</white>"
    removed: "Deze kas bestaat niet meer..."
-   removedmessage: "Jouw [biome]&f kas is verwijderd!"
+   removedmessage: "Jouw [biome]<white> kas is verwijderd!</white>"
    ecolost: "Je kas op [location] is het ecosysteem verloren en is verwijderd."
 
 info:
-   title: "&a [Hoe bouw je een kas]"
+   title: "<green>[Hoe bouw je een kas]</green>"
    instructions: |
-     &e Maak een doos van glas met 4 muren en een plat glazen
-     &e dak, en voeg tot &f 4 deuren &e toe in de muren.
-     &e Plaats &f 1 hopper &e in een muur of het dak en voeg emmers
-     &e water toe om automatisch sneeuw en/of bone meal te maken
-     &e om planten te laten groeien. Bekijk de biome recepten om
-     &e te zien welke blokken er in een kas moeten staan.
+     <yellow>Maak een doos van glas met 4 muren en een plat glazen</yellow>
+     <yellow>dak, en voeg tot </yellow><white>4 deuren </white><yellow>toe in de muren.</yellow>
+     <yellow>Plaats </yellow><white>1 hopper </white><yellow>in een muur of het dak en voeg emmers</yellow>
+     <yellow>water toe om automatisch sneeuw en/of bone meal te maken</yellow>
+     <yellow>om planten te laten groeien. Bekijk de biome recepten om</yellow>
+     <yellow>te zien welke blokken er in een kas moeten staan.</yellow>
    info: "[Kas Info]"
    none: "Geen"
-   nomore: "&4 Je kunt niet meer kassen bouwen!"
-   onemore: "&6 Je kunt nog één kas bouwen."
-   youcanbuild: "&a Je kunt nog maximaal [number] kassen bouwen!"
-   unlimited: "&a Je kunt een onbeperkt aantal kassen bouwen!"
-   welcome: "&b Welkom! Klik hier voor instructies"
+   nomore: "<dark_red>Je kunt niet meer kassen bouwen!</dark_red>"
+   onemore: "<gold>Je kunt nog één kas bouwen.</gold>"
+   youcanbuild: "<green>Je kunt nog maximaal [number] kassen bouwen!</green>"
+   unlimited: "<green>Je kunt een onbeperkt aantal kassen bouwen!</green>"
+   welcome: "<aqua>Welkom! Klik hier voor instructies</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Gebruik /greenhouse list om een lijst met receptnummers te zien!"
    wrongnumber: "Receptnummer moet tussen 1 en [size] liggen"
-   title: "[[biome] recept]"
    nowater: "Geen water toegestaan."
    noice: "Geen ijs toegestaan."
    nolava: "Geen lava toegestaan."
@@ -177,4 +485,4 @@ news:
    headline: "[Kas Nieuws]"
 
 controlpanel:
-   title: "&aKassen"
+   title: "<green>Kassen</green>"

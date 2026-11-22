@@ -3,10 +3,13 @@ package world.bentobox.greenhouses.managers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -14,14 +17,18 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Hopper;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.NumberConversions;
+import org.eclipse.jdt.annotation.Nullable;
 
 import world.bentobox.greenhouses.Greenhouses;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.greenhouse.BiomeRecipe;
+import world.bentobox.greenhouses.greenhouse.GreenhouseMob;
+import world.bentobox.greenhouses.greenhouse.MobHabitat;
 
 /**
  * Runs the ecosystem for a greenhouse
@@ -32,6 +39,7 @@ public class EcoSystemManager {
 
     private static final int PLANTS_PER_BONEMEAL = 6;
     private static final String MINUTES = " minutes";
+    private static final String TICKS = " ticks";
     private final Greenhouses addon;
     private final GreenhouseManager g;
     private BukkitTask plantTask;
@@ -57,12 +65,19 @@ public class EcoSystemManager {
             addon.log("Flower growth disabled.");
         }
 
+        // Mob spawning and block conversion sample a few random spots every sampleTicks rather
+        // than scanning every block in one go (issue #121). The fraction is chosen so that, on
+        // average, each spot still gets one chance every blocktick / mobtick minutes.
+        long sampleTicks = Math.max(1, addon.getSettings().getSampleTicks());
         // Kick block conversion growing
         long blockTick = addon.getSettings().getBlockTick() * 60 * 20L; // In minutes
 
         if (blockTick > 0) {
-            addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + MINUTES);
-            blockTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::convertBlocks), 60L, blockTick);
+            addon.log("Kicking off block conversion scheduler every " + addon.getSettings().getBlockTick() + MINUTES
+                    + ", sampled every " + sampleTicks + TICKS);
+            double fraction = Math.min(1D, (double) sampleTicks / blockTick);
+            blockTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(),
+                    () -> g.getMap().getGreenhouses().forEach(gh -> convertBlocks(gh, fraction)), 60L, sampleTicks);
         } else {
             addon.log("Block conversion disabled.");
         }
@@ -78,21 +93,29 @@ public class EcoSystemManager {
         // Kick off mob population
         long mobTick = addon.getSettings().getMobTick() * 60 * 20L; // In minutes
         if (mobTick > 0) {
-            addon.log("Kicking off mob populator scheduler every " + addon.getSettings().getMobTick() + MINUTES);
-            mobTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(), () -> g.getMap().getGreenhouses().forEach(this::addMobs), 120L, mobTick);
+            addon.log("Kicking off mob populator scheduler every " + addon.getSettings().getMobTick() + MINUTES
+                    + ", sampled every " + sampleTicks + TICKS);
+            double fraction = Math.min(1D, (double) sampleTicks / mobTick);
+            mobTask = addon.getServer().getScheduler().runTaskTimer(addon.getPlugin(),
+                    () -> g.getMap().getGreenhouses().forEach(gh -> addMobs(gh, fraction)), 120L, sampleTicks);
         } else {
             addon.log("Mob disabled.");
         }
 
     }
 
-    private void convertBlocks(Greenhouse gh) {
-        final World world = gh.getWorld();
-        final BoundingBox bb = gh.getBoundingBox();
-        if(world == null || gh.getLocation() == null || gh.getLocation().getWorld() == null
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMaxX()) >> 4, ((int) bb.getMaxZ()) >> 4)
-                || !gh.getLocation().getWorld().isChunkLoaded(((int) bb.getMinX()) >> 4, ((int) bb.getMinZ()) >> 4)){
-            return;
+    /**
+     * Give a random sample of the blocks in the greenhouse a chance to convert. Each call picks,
+     * on average, {@code fraction} of the greenhouse's volume, so calling this every
+     * {@code fraction * blocktick} ticks gives every block one chance per blocktick on average -
+     * the same rate as the old full scan, without doing the whole scan in one tick (issue #121).
+     * @param gh - greenhouse
+     * @param fraction - fraction of the greenhouse's blocks to sample, 0 to 1
+     * @return number of blocks sampled
+     */
+    int convertBlocks(Greenhouse gh, double fraction) {
+        if (gh.getBiomeRecipe() == null || !gh.getBiomeRecipe().getBlockConvert()) {
+            return 0;
         }
         final BoundingBox ibb = gh.getInternalBoundingBox();
         int ghMinX = NumberConversions.floor(ibb.getMinX());
@@ -101,19 +124,44 @@ public class EcoSystemManager {
         int ghMaxY = NumberConversions.floor(ibb.getMaxY());
         int ghMinZ = NumberConversions.floor(ibb.getMinZ());
         int ghMaxZ = NumberConversions.floor(ibb.getMaxZ());
+        int sizeX = ghMaxX - ghMinX;
+        int sizeY = ghMaxY - ghMinY;
+        int sizeZ = ghMaxZ - ghMinZ;
+        if (sizeX <= 0 || sizeY <= 0 || sizeZ <= 0) {
+            return 0;
+        }
+        int samples = sampleCount(sizeX * sizeY * sizeZ, fraction, ThreadLocalRandom.current().nextDouble());
+        // Only check the chunks when there is something to do - most calls sample nothing
+        if (samples == 0 || !chunksLoaded(gh, gh.getBoundingBox())) {
+            return 0;
+        }
+        final World world = gh.getWorld();
         BiomeRecipe biomeRecipe = gh.getBiomeRecipe();
-
-        for (int x = ghMinX; x < ghMaxX; x++) {
-            for (int z = ghMinZ; z < ghMaxZ; z++) {
-                for (int y = ghMinY; y < ghMaxY; y++) {
-                    Block b = world.getBlockAt(x, y, z);
-
-                    if(!b.isEmpty()) {
-                        biomeRecipe.convertBlock(b);
-                    }
-                }
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+        for (int i = 0; i < samples; i++) {
+            Block b = world.getBlockAt(ghMinX + rand.nextInt(sizeX), ghMinY + rand.nextInt(sizeY), ghMinZ + rand.nextInt(sizeZ));
+            if (!b.isEmpty()) {
+                biomeRecipe.convertBlock(b);
             }
         }
+        return samples;
+    }
+
+    /**
+     * How many items to sample from a population so that, on average, {@code fraction} of it is
+     * sampled. The whole part is always sampled; the remainder is sampled with that probability.
+     * @param population - number of items
+     * @param fraction - fraction to sample, 0 to 1
+     * @param roll - random number in [0, 1)
+     * @return number to sample
+     */
+    static int sampleCount(int population, double fraction, double roll) {
+        if (population <= 0 || fraction <= 0) {
+            return 0;
+        }
+        double expected = population * Math.min(1D, fraction);
+        int whole = (int) expected;
+        return whole + (roll < expected - whole ? 1 : 0);
     }
 
     private void verify(Greenhouse gh) {
@@ -133,35 +181,134 @@ public class EcoSystemManager {
     }
 
     /**
-     * Try to spawn mobs in a greenhouse
+     * Try to spawn mobs on a random sample of the greenhouse's floor columns. Each call picks, on
+     * average, {@code fraction} of the columns and tries every spawn spot in them, so calling this
+     * every {@code fraction * mobtick} ticks gives every spot one chance per mobtick on average -
+     * the same rate as the old wave, but spread out so mobs arrive gradually instead of filling
+     * the greenhouse in one go (issue #121).
      * @param gh greenhouse
-     * @return true if mobs were spawned, false if not
+     * @param fraction - fraction of the greenhouse's columns to sample, 0 to 1
+     * @return true if any mobs were spawned, false if not
      */
-    boolean addMobs(Greenhouse gh) {
+    boolean addMobs(Greenhouse gh, double fraction) {
+        if (gh.getBiomeRecipe() == null || gh.getBiomeRecipe().noMobs()) {
+            return false;
+        }
         final BoundingBox bb = gh.getBoundingBox();
-        if (!chunksLoaded(gh, bb) || gh.getBiomeRecipe().noMobs()) {
+        final BoundingBox ibb = gh.getInternalBoundingBox();
+        int minX = NumberConversions.floor(ibb.getMinX());
+        int minZ = NumberConversions.floor(ibb.getMinZ());
+        int sizeX = NumberConversions.ceil(ibb.getMaxX()) - minX;
+        int sizeZ = NumberConversions.ceil(ibb.getMaxZ()) - minZ;
+        if (sizeX <= 0 || sizeZ <= 0) {
             return false;
         }
-        // Count the entities in the greenhouse
-        long sum = gh.getWorld().getEntities().stream()
-                .filter(e -> gh.getBiomeRecipe().getMobTypes().contains(e.getType()))
-                .filter(e -> gh.contains(e.getLocation())).count();
-        // Check if the greenhouse is full
-        if (gh.getBiomeRecipe().getMaxMob() > -1 && sum >= gh.getBiomeRecipe().getMaxMob()) {
+        int samples = sampleCount(sizeX * sizeZ, fraction, ThreadLocalRandom.current().nextDouble());
+        // Only check chunks and count entities when there is something to do
+        if (samples == 0 || !chunksLoaded(gh, bb)) {
             return false;
         }
-        // Get the blocks in the greenhouse where spawning could occur
-        List<GrowthBlock> list = new ArrayList<>(getAvailableBlocks(gh, false));
-        Collections.shuffle(list, new Random(System.currentTimeMillis()));
-        Iterator<GrowthBlock> it = list.iterator();
-        while (it.hasNext() && hasRoomForMore(gh, sum)) {
-            // Spawn something if chance says so
-            if (gh.getBiomeRecipe().spawnMob(it.next().block())) {
-                // Add a mob to the sum in the greenhouse
-                sum++;
+        final BiomeRecipe recipe = gh.getBiomeRecipe();
+        // Count the mobs in the greenhouse, by habitat - only look at the greenhouse, not the whole world
+        MobCounts counts = new MobCounts(gh, recipe);
+        gh.getWorld().getNearbyEntities(bb, e -> recipe.getMobTypes().contains(e.getType()) && gh.contains(e.getLocation()))
+        .forEach(e -> counts.add(e.getType()));
+        int spawned = 0;
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+        for (int i = 0; i < samples && counts.anyRoom(); i++) {
+            List<GrowthBlock> spots = new ArrayList<>();
+            getAvailableBlocks(gh, minX + rand.nextInt(sizeX), minZ + rand.nextInt(sizeZ), false, spots);
+            Collections.shuffle(spots);
+            for (GrowthBlock spot : spots) {
+                if (!counts.anyRoom()) {
+                    break;
+                }
+                // Spawn something if chance says so and its habitat has room
+                GreenhouseMob[] chosen = new GreenhouseMob[1];
+                if (recipe.spawnMob(spot.block(), m -> {
+                    chosen[0] = m;
+                    return counts.hasRoom(m.mobType());
+                })) {
+                    counts.add(chosen[0] == null ? null : chosen[0].mobType());
+                    spawned++;
+                }
             }
         }
-        return sum > 0;
+        return spawned > 0;
+    }
+
+    /**
+     * The mobs in a greenhouse, counted by the habitat whose limit they use (issue #8). Ground
+     * mobs are limited by floor area, water and lava mobs by the number of water or lava blocks,
+     * and flying mobs by the internal volume. The recipe's maxmobs caps the total.
+     */
+    static class MobCounts {
+        private final Greenhouse gh;
+        private final BiomeRecipe recipe;
+        private final Map<MobHabitat, Long> counts = new EnumMap<>(MobHabitat.class);
+        private final Set<MobHabitat> pools = EnumSet.noneOf(MobHabitat.class);
+        private long total;
+
+        MobCounts(Greenhouse gh, BiomeRecipe recipe) {
+            this.gh = gh;
+            this.recipe = recipe;
+            recipe.getMobTypes().forEach(t -> pools.add(pool(t)));
+            if (pools.isEmpty()) {
+                pools.add(MobHabitat.GROUND);
+            }
+        }
+
+        /**
+         * The habitat a mob type counts against. Water and lava fall back to the ground until
+         * the greenhouse's liquid has been measured, which happens at the first recipe check.
+         */
+        MobHabitat pool(@Nullable EntityType type) {
+            MobHabitat h = type == null ? MobHabitat.GROUND : recipe.getMobPool(type);
+            if (h == null || space(h) == null) {
+                return MobHabitat.GROUND;
+            }
+            return h;
+        }
+
+        @Nullable
+        private Integer space(MobHabitat h) {
+            return switch (h) {
+            case WATER -> gh.getWaterBlocks();
+            case LAVA -> gh.getLavaBlocks();
+            case AIR -> gh.getInternalVolume();
+            default -> gh.getArea();
+            };
+        }
+
+        void add(@Nullable EntityType type) {
+            counts.merge(pool(type), 1L, Long::sum);
+            total++;
+        }
+
+        /**
+         * Whether one more mob of this type may spawn. The absolute maxmobs cap is checked on
+         * every spawn, not just once (issue #127), alongside the habitat's density limit.
+         */
+        boolean hasRoom(@Nullable EntityType type) {
+            return underCap() && hasRoom(pool(type));
+        }
+
+        boolean anyRoom() {
+            return underCap() && pools.stream().anyMatch(this::hasRoom);
+        }
+
+        private boolean underCap() {
+            int maxMob = recipe.getMaxMob();
+            return maxMob <= -1 || total < maxMob;
+        }
+
+        private boolean hasRoom(MobHabitat h) {
+            int space = Objects.requireNonNullElse(space(h), 0);
+            long sum = counts.getOrDefault(h, 0L);
+            // The limit is blocks per mob, so one more fits if every mob, the new one included,
+            // still has that many blocks. A habitat with any space always gets its first mob.
+            return space > 0 && (sum == 0 || (sum + 1) * recipe.getMobLimit(h) <= space);
+        }
     }
 
     /**
@@ -186,18 +333,6 @@ public class EcoSystemManager {
             }
         }
         return true;
-    }
-
-    /**
-     * Whether another mob may be spawned. The absolute maxmobs cap is enforced on every
-     * iteration, not just before the loop (issue #127), alongside the per-area mob limit.
-     * @param gh - greenhouse
-     * @param sum - mobs currently in the greenhouse
-     * @return true if there is room for one more
-     */
-    private boolean hasRoomForMore(Greenhouse gh, long sum) {
-        int maxMob = gh.getBiomeRecipe().getMaxMob();
-        return (maxMob <= -1 || sum < maxMob) && (sum == 0 || gh.getArea() / sum >= gh.getBiomeRecipe().getMobLimit());
     }
 
     /**
@@ -257,20 +392,33 @@ public class EcoSystemManager {
      * @return List of blocks
      */
     protected List<GrowthBlock> getAvailableBlocks(Greenhouse gh, boolean ignoreLiquid) {
-        final BoundingBox bb = gh.getBoundingBox();
         final BoundingBox ibb = gh.getInternalBoundingBox();
         List<GrowthBlock> result = new ArrayList<>();
         if (gh.getWorld() == null) return result;
         // Block coordinates, so iterate as ints rather than incrementing doubles
         for (int x = NumberConversions.floor(ibb.getMinX()); x < ibb.getMaxX(); x++) {
             for (int z = NumberConversions.floor(ibb.getMinZ()); z < ibb.getMaxZ(); z++) {
-                for (int y = NumberConversions.floor(ibb.getMaxY()) - 1; y >= bb.getMinY(); y--) {
-                    Block b = gh.getWorld().getBlockAt(x, y, z);
-                    checkBlock(result, b, ignoreLiquid);
-                }
+                getAvailableBlocks(gh, x, z, ignoreLiquid, result);
             }
         }
         return result;
+    }
+
+    /**
+     * Add the available blocks in one column of the greenhouse to the result, top to bottom.
+     * @param gh - greenhouse
+     * @param x - block x
+     * @param z - block z
+     * @param ignoreLiquid - true if liquid blocks should be treated like air blocks
+     * @param result - list to add to
+     */
+    private void getAvailableBlocks(Greenhouse gh, int x, int z, boolean ignoreLiquid, List<GrowthBlock> result) {
+        final BoundingBox bb = gh.getBoundingBox();
+        final BoundingBox ibb = gh.getInternalBoundingBox();
+        for (int y = NumberConversions.floor(ibb.getMaxY()) - 1; y >= bb.getMinY(); y--) {
+            Block b = gh.getWorld().getBlockAt(x, y, z);
+            checkBlock(result, b, ignoreLiquid);
+        }
     }
 
     private void checkBlock(List<GrowthBlock> result, Block b, boolean ignoreLiquid) {
@@ -323,10 +471,12 @@ public class EcoSystemManager {
      * Cancel all the scheduled tasks
      */
     public void cancel() {
-        plantTask.cancel();
-        mobTask.cancel();
-        blockTask.cancel();
-        ecoTask.cancel();
+        // A task is null if its tick is set to 0 (disabled)
+        for (BukkitTask task : new BukkitTask[] {plantTask, mobTask, blockTask, ecoTask}) {
+            if (task != null) {
+                task.cancel();
+            }
+        }
     }
 
 }

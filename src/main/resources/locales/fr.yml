@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Serres
       description: |
-        &b Choisir qui peut
-        &b contrôler les serres   
+        <aqua>Choisir qui peut</aqua>
+        <aqua>contrôler les serres   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Déplacez-vous d'abord vers une serre qui vous appartient."
-    no-rank: "&c Vous n'avez pas le rang requis pour faire cela."
+    no-rank: "<red>Vous n'avez pas le rang requis pour faire cela.</red>"
     notyours: "Ce n'est pas votre serre !"
-    not-inside: "&c Vous n'êtes pas à l'intérieur d'une serre !"
+    not-inside: "<red>Vous n'êtes pas à l'intérieur d'une serre !</red>"
     tooexpensive: "Vous n'avez pas les moyens [price]" 
     alreadyexists: "La serre existe déjà !"
     norecipe: "Impossible de créer une serre !"
     
   event:
    broke: "Vous avez cassé cette serre ! Retour du biome en [biome] !"
-   entering: "Entrée dans la serre [biome]&f"
-   leaving: "Sortie de la serre [biome]&f"
+   entering: "Entrée dans la serre [biome]<white></white>"
+   leaving: "Sortie de la serre [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Recette [biome]]"
    watermustbe: "Eau > [coverage]% de la surface au sol."
    icemustbe: "Blocs de glace > [coverage]% de la surface au sol."
    lavamustbe: "Lave > [coverage]% de la surface au sol."
    minimumblockstitle: "[Blocs minimum requis]"
    nootherblocks: "Aucun autre bloc requis."
    missing: "La serre est manquante"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Tenter de créer une serre"
         parameters: "<recette>"
         error:
-          already: "&cIl y a déjà une serre ici !"
-          FAIL_BAD_ROOF_BLOCKS: "&c Le toit contient des blocs non autorisés !"
-          FAIL_BAD_WALL_BLOCKS: "&c Le mur contient des blocs non autorisés !"
-          FAIL_BELOW: "&c Vous devez être à l'intérieur de la serre pour essayer de la créer"
-          FAIL_BLOCKS_ABOVE: "&c Il ne peut y avoir aucun bloc au-dessus de la serre ! Des blocs de verre rouge devraient indiquer les blocs problématiques."
+          already: "<red>Il y a déjà une serre ici !</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Le toit contient des blocs non autorisés !</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Le mur contient des blocs non autorisés !</red>"
+          FAIL_BELOW: "<red>Vous devez être à l'intérieur de la serre pour essayer de la créer</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Il ne peut y avoir aucun bloc au-dessus de la serre ! Des blocs de verre rouge devraient indiquer les blocs problématiques.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Il y a un trou dans le toit ou il n'est pas plat !
-            &c Des blocs de verre rouge devraient indiquer le problème.
-            &c Assurez-vous d'être à l'intérieur de votre serre pour la créer.
-          FAIL_HOLE_IN_WALL: "&c Il y a un trou dans le mur !"
-          FAIL_NO_ROOF: "&c Il semble ne pas y avoir de toit ! Assurez-vous d'être à l'intérieur de la serre pour la créer."
-          FAIL_TOO_MANY_DOORS: "&c Vous ne pouvez pas avoir plus de 4 portes dans la serre !"
-          FAIL_TOO_MANY_HOPPERS: "&c Un seul entonnoir est autorisé dans les murs ou le toit."
-          FAIL_UNEVEN_WALLS: "&c Les murs sont inégaux. Des blocs de verre rouge devraient indiquer les blocs problématiques."
-          FAIL_INSUFFICIENT_ICE: "&c Glace insuffisante pour réaliser cette recette"
-          FAIL_INSUFFICIENT_LAVA: "&c Lave insuffisante pour réaliser cette recette"
-          FAIL_INSUFFICIENT_WATER: "&c Eau insuffisante pour réaliser cette recette"
-          FAIL_NO_ICE: "&c De la glace est requise pour cette recette"
-          FAIL_NO_LAVA: "&c De la lave est requise pour cette recette"
-          FAIL_NO_WATER: "&c De l'eau est requise pour cette recette"
-          FAIL_NO_RECIPE_FOUND: "&c Aucune recette correspondante à cette serre n'a été trouvée"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Plus de blocs sont requis pour réaliser cette recette !"
-          FAIL_OVERLAPPING: "&c Désolé, les serres ne peuvent pas partager de murs."
-        success: "&2 Vous avez créé avec succès une serre de biome [biome] ! Le biome se synchronisera lors de votre prochaine téléportation ou connexion."
-        missing-blocks: "&c Manquant : [material] x [number]"
-        unknown-recipe: "&c Recette inconnue"
-        try-these: "&c Essayez l'une de celles-ci :"
-        recipe-format: "&3[name]"
+            <red>Il y a un trou dans le toit ou il n'est pas plat !</red>
+            <red>Des blocs de verre rouge devraient indiquer le problème.</red>
+            <red>Assurez-vous d'être à l'intérieur de votre serre pour la créer.</red>
+          FAIL_HOLE_IN_WALL: "<red>Il y a un trou dans le mur !</red>"
+          FAIL_NO_ROOF: "<red>Il semble ne pas y avoir de toit ! Assurez-vous d'être à l'intérieur de la serre pour la créer.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Vous ne pouvez pas avoir plus de 4 portes dans la serre !</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Un seul entonnoir est autorisé dans les murs ou le toit.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Les murs sont inégaux. Des blocs de verre rouge devraient indiquer les blocs problématiques.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Glace insuffisante pour réaliser cette recette</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lave insuffisante pour réaliser cette recette</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Eau insuffisante pour réaliser cette recette</red>"
+          FAIL_NO_ICE: "<red>De la glace est requise pour cette recette</red>"
+          FAIL_NO_LAVA: "<red>De la lave est requise pour cette recette</red>"
+          FAIL_NO_WATER: "<red>De l'eau est requise pour cette recette</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Aucune recette correspondante à cette serre n'a été trouvée</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Plus de blocs sont requis pour réaliser cette recette !</red>"
+          FAIL_OVERLAPPING: "<red>Désolé, les serres ne peuvent pas partager de murs.</red>"
+        success: "<dark_green>Vous avez créé avec succès une serre de biome [biome] ! Le biome se synchronisera lors de votre prochaine téléportation ou connexion.</dark_green>"
+        missing-blocks: "<red>Manquant : [material] x [number]</red>"
+        unknown-recipe: "<red>Recette inconnue</red>"
+        try-these: "<red>Essayez l'une de celles-ci :</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Comment construire une serre]"
+        title: "<green>[Comment construire une serre]</green>"
         instructions: |
-          &e Fabriquez une boîte en verre avec 4 murs et un toit en verre
-          &e plat, puis ajoutez jusqu'à &f 4 portes &e dans les murs.
-          &e Placez &f 1 entonnoir &e dans un mur ou le toit et ajoutez des seaux d'eau
-          &e pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.
-          &e Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une
-          &e serre pour la créer avec succès.
+          <yellow>Fabriquez une boîte en verre avec 4 murs et un toit en verre</yellow>
+          <yellow>plat, puis ajoutez jusqu'à </yellow><white>4 portes </white><yellow>dans les murs.</yellow>
+          <yellow>Placez </yellow><white>1 entonnoir </white><yellow>dans un mur ou le toit et ajoutez des seaux d'eau</yellow>
+          <yellow>pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.</yellow>
+          <yellow>Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une</yellow>
+          <yellow>serre pour la créer avec succès.</yellow>
+    admin:
+      description: "Commandes d'administration des serres"
+      errors:
+        unknown-id: "<red>Aucune serre trouvée avec l'ID [id]. Utilisez la commande list pour voir les ID. Un ID partiel fonctionne s'il ne correspond qu'à une serre.</red>"
+        id-required: "<red>Exécutez ceci dans le jeu à l'intérieur d'une serre, ou donnez un ID de serre.</red>"
+        no-location: "<red>La serre [id] n'a pas d'emplacement valide ou son monde n'est pas chargé.</red>"
+      list:
+        description: "Répertorie les serres, éventuellement pour un joueur"
+        parameters: "[player] [page]"
+        title: "<green>[Serres] </green><gray>([number] total, page [page] de [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>à </gray><white>[xyz] </white><gray>dans </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(cassée)</red>"
+        more: "<gray>Utilisez </gray><white>/[label] greenhouses list [page] </white><gray>pour plus</gray>"
+        none: "<red>Aucune serre trouvée.</red>"
+        unloaded-title: "<red>[Non chargées: [number]] </red><gray>Ces enregistrements sont dans la base de données mais ne sont pas actifs:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>à </gray><white>[xyz] </white><gray>dans </gray><white>[world]</white>"
+      info:
+        description: "Affiche tous les détails d'une serre"
+        parameters: "[id]"
+        title: "<green>[Informations de serre]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Recette: </gray><white>[recipe]</white>"
+        owner: "<gray>Propriétaire: </gray><white>[owner]</white>"
+        world: "<gray>Monde: </gray><white>[world]</white>"
+        location: "<gray>Emplacement: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Boîte englobante: </gray><white>[min] </white><gray>à </gray><white>[max]</white>"
+        area: "<gray>Zone interne: </gray><white>[area] blocs</white>"
+        original-biome: "<gray>Biome d'origine: </gray><white>[biome]</white>"
+        hopper: "<gray>Trémie: </gray><white>[hopper]</white>"
+        broken: "<gray>Cassée: </gray><white>[broken]</white>"
+        not-loaded: "<red>Non chargée: [reason]</red>"
+      delete:
+        description: "Supprime un enregistrement de serre par ID, chargé ou non"
+        parameters: "<id>"
+        confirm: "<red>Supprimer la serre [id] appartenant à [owner] à [xyz]? Cela ne peut pas être annulé.</red>"
+        success: "<green>Serre [id] supprimée.</green>"
+      tp:
+        description: "Vous téléporte vers une serre"
+        parameters: "<id>"
+        success: "<green>Téléporté vers la serre [id]</green>"
+      verify:
+        description: "Revérifie les serres par rapport à leur recette"
+        parameters: "[id]"
+        checking: "<gray>Vérification de [number] serre(s)...</gray>"
+        ok: "<green>[id] à [xyz] respecte sa recette</green>"
+        broken: "<red>[id] à [xyz] échoue: [reasons]</red>"
+      reload:
+        description: "Recharge biomes.yml et relit les serres de la base de données"
+        success: "<green>Rechargé. [number] serres actives.</green>"
+        unloaded: "<red>[number] enregistrement(s) n'ont pas pu être chargés - utilisez la commande list pour les voir.</red>"
+      build:
+        description: "Construit une serre de test pour une recette, autour de vous ou au centre du plancher donné"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Les coordonnées doivent avoir x, y et z, en tant que nombres ou ~ (par exemple ~ ~ ~ ou ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] n'est pas une taille (par exemple 9x9 ou 9x9x5) ou un mode (keep ou clear).</red>"
+        too-small: "<red>La recette ne tient pas dans [size]: [description]. Essayez une plus grande taille, ou omettez-la pour dimensionner automatiquement.</red>"
+        out-of-world: "<red>Cela irait au-dessus ou au-dessous du monde. Choisissez une autre hauteur.</red>"
+        not-on-island: "<red>Toute la serre doit être sur une île.</red>"
+        overlapping: "<red>Cela chevaucherait la serre [id].</red>"
+        confirm-clear: "<red>Tout à l'intérieur d'une serre [size] ici sera remplacé.</red>"
+        built: "<green>Construction d'une serre de test [size] [recipe] ([number] blocs). En cours...</green>"
+      edit:
+        description: "Ouvre l'éditeur de recettes, ou l'éditeur d'une recette"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Administration des serres</dark_green>"
+    close: "<white>Fermer</white>"
+    back: "<white>Retour</white>"
+    cancel: "Annuler"
+    recipes:
+      name: "<green>Recettes</green>"
+      description: "<gray>Modifiez, ajoutez ou supprimez les [number] recettes de serres</gray>"
+    greenhouses:
+      name: "<green>Serres</green>"
+      description: "<gray>[number] serre(s) construite(s). Téléportez-vous, vérifiez, inspectez ou supprimez-les.</gray>"
+      unloaded: "<red>[number] n'ont pas pu être chargées</red>"
+    build:
+      name: "<green>Construire une serre de test</green>"
+      description: "<gray>Construit une serre fonctionnelle pour une recette où vous vous tenez, avec sa porte du côté que vous regardez</gray>"
+      pick-title: "<dark_green>Quelle recette construire?</dark_green>"
+      key: "<gray>Clé: <white>[key]</white></gray>"
+      default-size: "<gray>Taille par défaut: <white>[size]</white></gray>"
+      click: "<yellow>Cliquez pour choisir la taille</yellow>"
+      title: "Construire [name]"
+      body: "La serre est construite avec son centre de plancher où vous vous tenez et sa porte du côté que vous regardez. Les tailles sont intérieures."
+      width: "Largeur"
+      depth: "Profondeur"
+      height: "Hauteur"
+      mode: "Ce qui est déjà là"
+      keep: "Gardez-le et construisez autour"
+      clear: "Effacez-le d'abord"
+      go: "<green>Construire</green>"
+    verify:
+      name: "<green>Vérifier toutes les serres</green>"
+      description: "<gray>Vérifie chaque serre par rapport à sa recette maintenant et rapporte dans le chat</gray>"
+    reload:
+      name: "<green>Recharger</green>"
+      description: "<gray>Relit biomes.yml et la base de données des serres</gray>"
+      confirm-title: "Recharger?"
+      confirm-body: "Relire biomes.yml et la base de données des serres? Les modifications de recettes non enregistrées sont conservées, mais devront être enregistrées sur les recettes rechargées."
+      confirm: "<yellow>Recharger</yellow>"
+  browser:
+    title: "<dark_green>Serres</dark_green>"
+    title-owner: "<dark_green>Serres</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Pas de serres</gray>"
+    back: "<white>Retour</white>"
+    cancel: "Annuler"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Propriétaire: <white>[owner]</white></gray>"
+    where: "<gray>À: <white>[xyz]</white> dans <white>[world]</white></gray>"
+    ok: "<green>Fonctionnelle</green>"
+    broken: "<red>Cassée</red>"
+    unloaded: "<red>Non chargée: [reason]</red>"
+    click:
+      tp: "<yellow>Clic gauche: se téléporter là-bas</yellow>"
+      verify: "<yellow>Clic droit: la vérifier maintenant</yellow>"
+      info: "<yellow>Maj+Clic: détails dans le chat</yellow>"
+      delete: "<yellow>Q: supprimer</yellow>"
+    filter:
+      name: "<white>Filtrer par propriétaire</white>"
+      all: "<gray>Affichage de tout le monde</gray>"
+      only: "<gray>Affichage de <white>[owner]</white></gray>"
+      click: "<yellow>Cliquez pour changer</yellow>"
+      title: "Filtrer par propriétaire"
+      label: "Nom du propriétaire (vide pour tout le monde)"
+      apply: "<green>Afficher</green>"
+    delete:
+      title: "Supprimer la serre?"
+      body: "Supprimer la serre [id] appartenant à [owner] à [xyz]? Cela ne peut pas être annulé."
+      confirm: "<red>Supprimer</red>"
+  editor:
+    needs-dialogs: "<red>L'éditeur de recettes nécessite Paper 1.21.7 ou ultérieur.</red>"
+    unknown-recipe: "<red>Il n'y a pas de recette appelée [key].</red>"
+    resuming: "<yellow>Reprise de vos modifications non enregistrées pour [name]<yellow>.</yellow>"
+    saved: "<green>Enregistrée [name]<green>. [number] serre(s) l'utilise(nt) et suit(ent) les nouvelles règles à partir de maintenant.</green>"
+    save-failed: "<red>biomes.yml n'a pas pu être écrit - consultez le journal du serveur. Rien n'a été enregistré.</red>"
+    deleted: "<green>Supprimée [name]<green>. Ses [number] serre(s) sont listées comme non chargées jusqu'à suppression ou retour de la recette.</green>"
+    title: "<dark_green>Édition</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(non enregistré)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Cliquez pour changer</yellow>"
+    click-open: "<yellow>Cliquez pour ouvrir</yellow>"
+    none: "aucun"
+    entries: "<gray>Entrées: <white>[number]</white></gray>"
+    total-chance: "<gray>Les chances s'ajoutent à <white>[value]%</white></gray>"
+    chance: "<gray>Chance: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Retour à la recette</white>"
+    help: "<white>Comment utiliser cette page</white>"
+    list:
+      title: "<dark_green>Recettes de serres</dark_green>"
+      key: "<gray>Clé: <white>[key]</white></gray>"
+      biome: "<gray>Biome: <white>[biome]</white></gray>"
+      priority: "<gray>Priorité: <white>[number]</white></gray>"
+      used: "<gray>Utilisée par <white>[number]</white> serre(s)</gray>"
+      unsaved: "<gold>Vous avez des modifications non enregistrées</gold>"
+      click-edit: "<yellow>Cliquez pour modifier</yellow>"
+      back: "<white>Retour</white>"
+      new:
+        name: "<green>Nouvelle recette</green>"
+        description: "<gray>Commencer une recette à partir de zéro</gray>"
+    pick:
+      biome: "<dark_green>Choisir un biome</dark_green>"
+      icon: "<dark_green>Choisir une icône</dark_green>"
+      block: "<dark_green>Choisir un bloc</dark_green>"
+      plant: "<dark_green>Choisir une plante</dark_green>"
+      grows-on: "<dark_green>Sur quoi pousse-t-elle?</dark_green>"
+      mob: "<dark_green>Choisir un mob</dark_green>"
+      spawns-on: "<dark_green>Sur quoi apparaît-il?</dark_green>"
+      convert-from: "<dark_green>Quel bloc change?</dark_green>"
+      convert-to: "<dark_green>En quoi se change-t-il?</dark_green>"
+      next-to: "<dark_green>À côté de quoi doit-il être?</dark_green>"
+    icon:
+      name: "<white>Icône</white>"
+    general:
+      name: "<white>Nom et description</white>"
+      value-name: "<gray>Nom: </gray>[value]"
+      value-priority: "<gray>Priorité: <white>[number]</white></gray>"
+      value-permission: "<gray>Permission: <white>[value]</white></gray>"
+      no-description: "<gray>Pas de description</gray>"
+      has-description: "<gray>A une description</gray>"
+    biome:
+      name: "<white>Biome</white>"
+      value: "<gray>Biome: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Eau, lave et glace</white>"
+      water: "<aqua>Eau: </aqua>[value]"
+      lava: "<gold>Lave: </gold>[value]"
+      ice: "<aqua>Glace: </aqua>[value]"
+      unchecked: "<gray>non vérifiée</gray>"
+      none: "<red>aucun autorisé</red>"
+      at-least: "<white>au moins [number]% du plancher</white>"
+    mob-limits:
+      name: "<white>Limites de mobs</white>"
+      ground: "<gray>Blocs par mob: <white>[number]</white></gray>"
+      water: "<gray>Blocs d'eau par mob aquatique: <white>[value]</white></gray>"
+      lava: "<gray>Blocs de lave par mob de lave: <white>[value]</white></gray>"
+      air: "<gray>Blocs d'air par mob volant: <white>[value]</white></gray>"
+      shared: "identique au sol"
+      max: "<gray>Maximum de mobs à la fois: <white>[value]</white></gray>"
+      no-max: "pas de limite"
+    blocks:
+      name: "<white>Blocs requis</white>"
+      add: "<green>Ajouter un bloc</green>"
+      help: "<gray>Le minimum de chaque bloc que la serre doit avoir à l'intérieur.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Clic gauche: +1<newline>Clic droit: -1<newline>Maj+Clic: entrez un nombre<newline>Q: supprimer</yellow>"
+    plants:
+      name: "<white>Plantes</white>"
+      add: "<green>Ajouter une plante</green>"
+      help: "<gray>Plantes cultivées avec de la farine d'os de la trémie du toit.</gray>"
+      grows-on: "<gray>Pousse sur: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic gauche: chance<newline>Clic droit: sur quoi elle pousse<newline>Q: supprimer</yellow>"
+    mobs:
+      name: "<white>Mobs</white>"
+      add: "<green>Ajouter un mob</green>"
+      help: "<gray>Les mobs qui apparaissent dans la serre.</gray>"
+      spawns-on: "<gray>Apparaît sur: <white>[block]</white></gray>"
+      variant: "<gray>Variante: <white>[value]</white></gray>"
+      entry-help: "<yellow>Clic gauche: chance et variante<newline>Clic droit: sur quoi il apparaît<newline>Q: supprimer</yellow>"
+    conversions:
+      name: "<white>Conversions de blocs</white>"
+      add: "<green>Ajouter une conversion</green>"
+      help: "<gray>Blocs qui changent lentement en d'autres blocs.</gray>"
+      to: "<gray>Devient: <white>[block]</white></gray>"
+      anywhere: "<gray>N'importe où</gray>"
+      next-to: "<gray>Seulement à côté de: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clic gauche: chance<newline>Clic droit: ce qu'il devient<newline>Maj+Clic droit: seulement à côté d'un bloc<newline>Maj+Clic gauche: n'importe où<newline>Q: supprimer</yellow>"
+    back:
+      name: "<white>Retour aux recettes</white>"
+      description: "<gray>Les modifications non enregistrées sont conservées</gray>"
+    discard:
+      name: "<red>Annuler les modifications</red>"
+      description: "<gray>Oublier les modifications depuis le dernier enregistrement</gray>"
+    save:
+      name: "<green>Enregistrer</green>"
+      nothing: "<gray>Aucune modification à enregistrer</gray>"
+      description: "<gray>Écrit biomes.yml; [number] serre(s) suiv(ent) les nouvelles règles immédiatement</gray>"
+      problems: "<red>Corrigez d'abord ceci:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Dupliquer</white>"
+      description: "<gray>Commencer une nouvelle recette à partir de celle-ci</gray>"
+    delete:
+      name: "<red>Supprimer la recette</red>"
+      description: "<gray>[number] serre(s) utilise(nt) cette recette</gray>"
+    dialog:
+      cancel: "Annuler"
+      switch:
+        title: "Modifications non enregistrées"
+        body: "Vous avez des modifications non enregistrées à [name]. Les annuler pour modifier cette recette?"
+        discard: "<red>Les annuler</red>"
+        keep: "Retour à [name]"
+      discard:
+        title: "Annuler les modifications?"
+        body: "Oublier vos modifications à [name]?"
+        confirm: "<red>Annuler</red>"
+      conflict:
+        title: "Modifiée par quelqu'un d'autre"
+        body: "[name] a été enregistrée par quelqu'un d'autre, ou rechargée, après que vous ayez commencé à l'éditer."
+        overwrite: "<red>Enregistrer la mienne par-dessus</red>"
+        theirs: "Recommencer à partir de la leur"
+      delete:
+        title: "Supprimer la recette?"
+        body: "Supprimer [name]? [number] serre(s) l'utilise(nt). biomes.yml est d'abord sauvegardé."
+        confirm: "<red>Supprimer</red>"
+    form:
+      ok: "<green>Terminé</green>"
+      cancel: "Annuler"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] n'est pas une chance. Utilisez un pourcentage supérieur à 0 et jusqu'à 100, par exemple 5 ou 0,5."
+      general:
+        title: "Nom et description"
+        name: "Nom (couleurs MiniMessage autorisées)"
+        description: "Description affichée dans le panneau des recettes"
+        priority: "Priorité"
+        permission: "Permission requise pour le faire (vide pour aucune)"
+        no-name: "Le nom ne peut pas être vide."
+        bad-permission: "Une permission ne peut pas contenir d'espaces."
+      coverage:
+        title: "Eau, lave et glace"
+        water: "Eau"
+        lava: "Lave"
+        ice: "Glace"
+        percent: "Pourcentage du plancher"
+        unchecked: "Non vérifiée"
+        none: "Aucun autorisé"
+        atleast: "Au moins..."
+        too-much: "L'eau, la lave et la glace ensemble ne peuvent pas nécessiter plus que le plancher entier."
+      mobs:
+        title: "Limites de mobs"
+        ground: "Blocs par mob"
+        water: "Blocs d'eau par mob aquatique (0 = identique)"
+        lava: "Blocs de lave par mob de lave (0 = identique)"
+        air: "Blocs d'air par mob volant (0 = identique)"
+        max: "Maximum de mobs à la fois (-1 = pas de limite)"
+      chance:
+        title: "Chance"
+        field: "% de chance pour [what]"
+      mob:
+        title: "Mob"
+        variant: "Variante"
+        no-variant: "Normal"
+      count:
+        title: "Combien?"
+        field: "Combien [what]"
+      key:
+        title: "Clé de recette"
+        field: "Clé: lettres, chiffres, - et _ (ne peut pas être modifiée ultérieurement)"
+        bad: "Utilisez 1 à 32 lettres, chiffres, - ou _."
+        taken: "Il y a déjà une recette appelée [key]."
 
 help:
    help: "aide"
@@ -119,27 +429,25 @@ messages:
    ecolost: "Une serre à [location] a perdu son écosystème et a été supprimée."
 
 info:
-   title: "&a [Comment construire une serre]"
+   title: "<green>[Comment construire une serre]</green>"
    instructions: |
-     &e Fabriquez une boîte en verre avec 4 murs et un toit en verre
-     &e plat, puis ajoutez jusqu'à &f 4 portes &e dans les murs.
-     &e Placez &f 1 entonnoir &e dans un mur ou le toit et ajoutez des seaux d'eau
-     &e pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.
-     &e Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une
-     &e serre pour la créer avec succès.
+     <yellow>Fabriquez une boîte en verre avec 4 murs et un toit en verre</yellow>
+     <yellow>plat, puis ajoutez jusqu'à </yellow><white>4 portes </white><yellow>dans les murs.</yellow>
+     <yellow>Placez </yellow><white>1 entonnoir </white><yellow>dans un mur ou le toit et ajoutez des seaux d'eau</yellow>
+     <yellow>pour créer de la neige et/ou de la poudre d'os pour faire pousser les plantes automatiquement.</yellow>
+     <yellow>Consultez les recettes de biome pour savoir quels blocs doivent être à l'intérieur d'une</yellow>
+     <yellow>serre pour la créer avec succès.</yellow>
    info: "[Infos Serre]"
    none: "aucun"
-   nomore: "&4 Vous ne pouvez plus construire de serres !"
-   onemore: "&6 Vous pouvez construire une serre supplémentaire."
-   youcanbuild: "&a Vous pouvez construire jusqu'à [number] serres de plus !"
-   unlimited: "&a Vous pouvez construire un nombre illimité de serres !"
-   welcome: "&b Bienvenue ! Cliquez ici pour les instructions"
+   nomore: "<dark_red>Vous ne pouvez plus construire de serres !</dark_red>"
+   onemore: "<gold>Vous pouvez construire une serre supplémentaire.</gold>"
+   youcanbuild: "<green>Vous pouvez construire jusqu'à [number] serres de plus !</green>"
+   unlimited: "<green>Vous pouvez construire un nombre illimité de serres !</green>"
+   welcome: "<aqua>Bienvenue ! Cliquez ici pour les instructions</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Utilisez /greenhouse list pour voir la liste des numéros de recettes !"
    wrongnumber: "Le numéro de recette doit être compris entre 1 et [size]"
-   title: "[Recette [biome]]"
    nowater: "Eau non autorisée."
    noice: "Glace non autorisée."
    nolava: "Lave non autorisée."
@@ -176,4 +484,4 @@ news:
    headline: "[Nouvelles des Serres]"
 
 controlpanel:
-   title: "&aSerres"
+   title: "<green>Serres</green>"

@@ -1,7 +1,7 @@
 name: Greenhouses
 main: world.bentobox.greenhouses.Greenhouses
 version: ${version}${build.number}
-api-version: 2.7.1
+api-version: 3.24.0
 
 authors: tastybento
 
@@ -34,4 +34,10 @@ permissions:
      default: op
   '[gamemode].greenhouses.admin.reload':
      description: Allows reloading biomes.yml and the greenhouse database
+     default: op
+  '[gamemode].greenhouses.admin.build':
+     description: Allows building test greenhouses
+     default: op
+  '[gamemode].greenhouses.admin.edit':
+     description: Allows editing greenhouse recipes in game
      default: op

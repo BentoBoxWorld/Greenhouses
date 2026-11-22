@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: 온실
       description: |
-        &b 온실을 제어할 수 있는
-        &b 사용자를 설정합니다   
+        <aqua>온실을 제어할 수 있는</aqua>
+        <aqua>사용자를 설정합니다   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "먼저 본인 소유의 온실로 이동하십시오."
-    no-rank: "&c 그 작업을 수행할 권한이 없습니다."
+    no-rank: "<red>그 작업을 수행할 권한이 없습니다.</red>"
     notyours: "이것은 당신의 온실이 아닙니다!"
-    not-inside: "&c 온실 내부에 있지 않습니다!"
+    not-inside: "<red>온실 내부에 있지 않습니다!</red>"
     tooexpensive: "비용을 지불할 수 없습니다: [price]" 
     alreadyexists: "온실이 이미 존재합니다!"
     norecipe: "온실을 만들 수 없습니다!"
     
   event:
    broke: "온실이 파손되었습니다! 바이옴을 [biome](으)로 되돌립니다!"
-   entering: "[biome]&f 온실에 입장했습니다"
-   leaving: "[biome]&f 온실에서 나갔습니다"
+   entering: "[biome]<white> 온실에 입장했습니다</white>"
+   leaving: "[biome]<white> 온실에서 나갔습니다</white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[[biome] 레시피]"
    watermustbe: "물 > 바닥 면적의 [coverage]% 이상이어야 합니다."
    icemustbe: "얼음 블록 > 바닥 면적의 [coverage]% 이상이어야 합니다."
    lavamustbe: "용암 > 바닥 면적의 [coverage]% 이상이어야 합니다."
    minimumblockstitle: "[최소 필요 블록]"
    nootherblocks: "다른 블록은 필요하지 않습니다."
    missing: "온실이 유실되었습니다"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "온실 제작을 시도합니다"
         parameters: "<레시피>"
         error:
-          already: "&c이곳에는 이미 온실이 있습니다!"
-          FAIL_BAD_ROOF_BLOCKS: "&c 지붕에 허용되지 않는 블록이 포함되어 있습니다!"
-          FAIL_BAD_WALL_BLOCKS: "&c 벽에 허용되지 않는 블록이 포함되어 있습니다!"
-          FAIL_BELOW: "&c 온실 내부에서 제작을 시도해야 합니다"
-          FAIL_BLOCKS_ABOVE: "&c 온실 위에는 어떤 블록도 없어야 합니다! 빨간색 유리 블록이 문제 지점을 표시합니다."
+          already: "<red>이곳에는 이미 온실이 있습니다!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>지붕에 허용되지 않는 블록이 포함되어 있습니다!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>벽에 허용되지 않는 블록이 포함되어 있습니다!</red>"
+          FAIL_BELOW: "<red>온실 내부에서 제작을 시도해야 합니다</red>"
+          FAIL_BLOCKS_ABOVE: "<red>온실 위에는 어떤 블록도 없어야 합니다! 빨간색 유리 블록이 문제 지점을 표시합니다.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c 지붕에 구멍이 있거나 평평하지 않습니다!
-            &c 빨간색 유리 블록이 문제 지점을 표시합니다.
-            &c 제작 시 반드시 온실 내부에 있어야 합니다.
-          FAIL_HOLE_IN_WALL: "&c 벽에 구멍이 있습니다!"
-          FAIL_NO_ROOF: "&c 지붕이 없는 것 같습니다! 반드시 온실 내부에 있어야 합니다."
-          FAIL_TOO_MANY_DOORS: "&c 온실에는 문을 4개 이상 설치할 수 없습니다!"
-          FAIL_TOO_MANY_HOPPERS: "&c 벽이나 지붕에는 깔때기를 하나만 설치할 수 있습니다."
-          FAIL_UNEVEN_WALLS: "&c 벽이 고르지 않습니다. 빨간색 유리 블록이 문제 지점을 표시합니다."
-          FAIL_INSUFFICIENT_ICE: "&c 이 레시피를 위한 얼음이 부족합니다"
-          FAIL_INSUFFICIENT_LAVA: "&c 이 레시피를 위한 용암이 부족합니다"
-          FAIL_INSUFFICIENT_WATER: "&c 이 레시피를 위한 물이 부족합니다"
-          FAIL_NO_ICE: "&c 이 레시피에는 얼음이 필요합니다"
-          FAIL_NO_LAVA: "&c 이 레시피에는 용암이 필요합니다"
-          FAIL_NO_WATER: "&c 이 레시피에는 물이 필요합니다"
-          FAIL_NO_RECIPE_FOUND: "&c 이 온실과 일치하는 레시피를 찾을 수 없습니다"
-          FAIL_INSUFFICIENT_BLOCKS: "&c 이 레시피를 제작하려면 블록이 더 필요합니다!"
-          FAIL_OVERLAPPING: "&c 죄송합니다, 온실은 벽을 공유할 수 없습니다."
-        success: "&2 [biome] 바이옴 온실을 성공적으로 만들었습니다! 바이옴은 다음 텔레포트나 접속 시 동기화됩니다."
-        missing-blocks: "&c 부족함: [material] x [number]"
-        unknown-recipe: "&c 알 수 없는 레시피"
-        try-these: "&c 다음 중 하나를 시도해 보세요:"
-        recipe-format: "&3[name]"
+            <red>지붕에 구멍이 있거나 평평하지 않습니다!</red>
+            <red>빨간색 유리 블록이 문제 지점을 표시합니다.</red>
+            <red>제작 시 반드시 온실 내부에 있어야 합니다.</red>
+          FAIL_HOLE_IN_WALL: "<red>벽에 구멍이 있습니다!</red>"
+          FAIL_NO_ROOF: "<red>지붕이 없는 것 같습니다! 반드시 온실 내부에 있어야 합니다.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>온실에는 문을 4개 이상 설치할 수 없습니다!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>벽이나 지붕에는 깔때기를 하나만 설치할 수 있습니다.</red>"
+          FAIL_UNEVEN_WALLS: "<red>벽이 고르지 않습니다. 빨간색 유리 블록이 문제 지점을 표시합니다.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>이 레시피를 위한 얼음이 부족합니다</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>이 레시피를 위한 용암이 부족합니다</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>이 레시피를 위한 물이 부족합니다</red>"
+          FAIL_NO_ICE: "<red>이 레시피에는 얼음이 필요합니다</red>"
+          FAIL_NO_LAVA: "<red>이 레시피에는 용암이 필요합니다</red>"
+          FAIL_NO_WATER: "<red>이 레시피에는 물이 필요합니다</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>이 온실과 일치하는 레시피를 찾을 수 없습니다</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>이 레시피를 제작하려면 블록이 더 필요합니다!</red>"
+          FAIL_OVERLAPPING: "<red>죄송합니다, 온실은 벽을 공유할 수 없습니다.</red>"
+        success: "<dark_green>[biome] 바이옴 온실을 성공적으로 만들었습니다! 바이옴은 다음 텔레포트나 접속 시 동기화됩니다.</dark_green>"
+        missing-blocks: "<red>부족함: [material] x [number]</red>"
+        unknown-recipe: "<red>알 수 없는 레시피</red>"
+        try-these: "<red>다음 중 하나를 시도해 보세요:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [온실 짓는 방법]"
+        title: "<green>[온실 짓는 방법]</green>"
         instructions: |
-          &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
-          &e 벽에 최대 &f 4개의 문&e을 설치하세요.
-          &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
-          &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
-          &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
-          &e 바이옴 레시피를 확인하세요.
+          <yellow>4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,</yellow>
+          <yellow>벽에 최대 </yellow><white>4개의 문</white><yellow>을 설치하세요.</yellow>
+          <yellow>벽이나 지붕에 </yellow><white>1개의 깔때기</white><yellow>를 설치하고 물 양동이를 넣어</yellow>
+          <yellow>식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.</yellow>
+          <yellow>제작에 성공하려면 어떤 블록이 내부에 있어야 하는지</yellow>
+          <yellow>바이옴 레시피를 확인하세요.</yellow>
+    admin:
+      description: "온실 관리자 명령"
+      errors:
+        unknown-id: "<red>ID [id]인 온실을 찾을 수 없습니다. 목록 명령으로 ID를 확인하세요. 부분 ID는 하나만 일치하는 경우 작동합니다.</red>"
+        id-required: "<red>게임 내 온실에서 실행하거나 온실 ID를 제공하세요.</red>"
+        no-location: "<red>온실 [id]는 유효한 위치가 없거나 월드가 로드되지 않았습니다.</red>"
+      list:
+        description: "온실 목록, 선택적으로 한 플레이어의 온실"
+        parameters: "[player] [page]"
+        title: "<green>[온실] </green><gray>([number]개, 페이지 [page]/[pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>위치: </gray><white>[xyz] </white><gray>월드: </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(손상됨)</red>"
+        more: "<gray>더 보기:</gray><white>/[label] greenhouses list [page] </white><gray>-</gray>"
+        none: "<red>온실을 찾을 수 없습니다.</red>"
+        unloaded-title: "<red>[로드 실패: [number]] </red><gray>이 레코드는 데이터베이스에 있지만 활성화되지 않음:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>위치: </gray><white>[xyz] </white><gray>월드: </gray><white>[world]</white>"
+      info:
+        description: "온실의 전체 세부정보 표시"
+        parameters: "[id]"
+        title: "<green>[온실 정보]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>레시피: </gray><white>[recipe]</white>"
+        owner: "<gray>소유자: </gray><white>[owner]</white>"
+        world: "<gray>월드: </gray><white>[world]</white>"
+        location: "<gray>위치: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>범위: </gray><white>[min] </white><gray>~</gray><white>[max]</white>"
+        area: "<gray>내부 면적: </gray><white>[area] 블록</white>"
+        original-biome: "<gray>원래 바이옴: </gray><white>[biome]</white>"
+        hopper: "<gray>호퍼: </gray><white>[hopper]</white>"
+        broken: "<gray>손상됨: </gray><white>[broken]</white>"
+        not-loaded: "<red>로드 실패: [reason]</red>"
+      delete:
+        description: "ID로 온실 레코드 삭제"
+        parameters: "<id>"
+        confirm: "<red>ID [id] 온실([owner] 소유, [xyz]에 위치) 삭제? 취소할 수 없습니다.</red>"
+        success: "<green>온실 [id] 삭제됨.</green>"
+      tp:
+        description: "온실로 순간이동"
+        parameters: "<id>"
+        success: "<green>온실 [id]로 순간이동됨</green>"
+      verify:
+        description: "온실이 레시피를 만족하는지 재확인"
+        parameters: "[id]"
+        checking: "<gray>[number]개 온실 확인 중...</gray>"
+        ok: "<green>[id] ([xyz]에 위치) 레시피 충족</green>"
+        broken: "<red>[id] ([xyz]에 위치) 실패: [reasons]</red>"
+      reload:
+        description: "biomes.yml 재읽기 및 온실 데이터베이스 재로드"
+        success: "<green>다시 로드 완료. [number]개 온실 활성.</green>"
+        unloaded: "<red>[number]개 레코드를 로드할 수 없음 - 목록 명령으로 확인하세요.</red>"
+      build:
+        description: "레시피 테스트 온실 건설, 주변 또는 지정 위치"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>좌표는 x, y, z 세 개 모두 필요 (숫자 또는 ~ 사용, 예: ~ ~ ~ 또는 ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description]은(는) 크기 (예: 9x9 또는 9x9x5) 또는 모드 (keep 또는 clear)가 아닙니다.</red>"
+        too-small: "<red>레시피가 [size]에 맞지 않음: [description]. 더 큰 크기를 시도하거나 지정을 생략하세요.</red>"
+        out-of-world: "<red>월드 위 또는 아래로 갑니다. 다른 높이를 선택하세요.</red>"
+        not-on-island: "<red>전체 온실은 하나의 섬 위에 있어야 합니다.</red>"
+        overlapping: "<red>온실 [id]와 겹칩니다.</red>"
+        confirm-clear: "<red>여기의 [size] 온실 내부의 모든 것이 대체됩니다.</red>"
+        built: "<green>[size] [recipe] 테스트 온실 건설됨 ([number] 블록). 구성 중...</green>"
+      edit:
+        description: "레시피 에디터 열기, 또는 레시피 에디터 열기"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>온실 관리</dark_green>"
+    close: "<white>닫기</white>"
+    back: "<white>뒤로</white>"
+    cancel: "취소"
+    recipes:
+      name: "<green>레시피</green>"
+      description: "<gray>[number]개의 온실 레시피를 편집, 추가 또는 삭제하세요</gray>"
+    greenhouses:
+      name: "<green>온실</green>"
+      description: "<gray>[number]개의 온실이 건설됨. 순간이동, 확인, 검사 또는 삭제할 수 있습니다.</gray>"
+      unloaded: "<red>[number]개를 로드할 수 없음</red>"
+    build:
+      name: "<green>테스트 온실 건설</green>"
+      description: "<gray>당신이 서 있는 위치에 레시피 온실을 건설합니다. 문은 당신이 바라보는 방향에 배치됩니다</gray>"
+      pick-title: "<dark_green>어떤 레시피를 건설할까요?</dark_green>"
+      key: "<gray>키: <white>[key]</white></gray>"
+      default-size: "<gray>기본 크기: <white>[size]</white></gray>"
+      click: "<yellow>클릭하여 크기 선택</yellow>"
+      title: "[name] 건설"
+      body: "온실은 당신이 서 있는 위치가 바닥 중심이 되고 문은 당신이 바라보는 쪽에 건설됩니다. 크기는 내부 크기입니다."
+      width: "너비"
+      depth: "깊이"
+      height: "높이"
+      mode: "현재 있는 것"
+      keep: "그대로 두고 건설"
+      clear: "먼저 비우기"
+      go: "<green>건설</green>"
+    verify:
+      name: "<green>모든 온실 확인</green>"
+      description: "<gray>모든 온실이 레시피를 만족하는지 확인하고 채팅에 보고</gray>"
+    reload:
+      name: "<green>다시 로드</green>"
+      description: "<gray>biomes.yml 및 온실 데이터베이스 재읽기</gray>"
+      confirm-title: "다시 로드?"
+      confirm-body: "biomes.yml 및 온실 데이터베이스를 재읽기합니까? 저장되지 않은 레시피 편집은 유지되지만 다시 로드된 레시피에 저장해야 합니다."
+      confirm: "<yellow>다시 로드</yellow>"
+  browser:
+    title: "<dark_green>온실</dark_green>"
+    title-owner: "<dark_green>온실</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>온실 없음</gray>"
+    back: "<white>뒤로</white>"
+    cancel: "취소"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>소유자: <white>[owner]</white></gray>"
+    where: "<gray>위치: <white>[xyz]</white> (월드: <white>[world]</white>)</gray>"
+    ok: "<green>정상</green>"
+    broken: "<red>손상됨</red>"
+    unloaded: "<red>로드 실패: [reason]</red>"
+    click:
+      tp: "<yellow>왼쪽 클릭: 순간이동</yellow>"
+      verify: "<yellow>오른쪽 클릭: 확인</yellow>"
+      info: "<yellow>Shift 클릭: 채팅에 세부정보</yellow>"
+      delete: "<yellow>Q: 삭제</yellow>"
+    filter:
+      name: "<white>소유자로 필터</white>"
+      all: "<gray>모두 표시</gray>"
+      only: "<gray><white>[owner]</white>의 온실만 표시</gray>"
+      click: "<yellow>클릭하여 변경</yellow>"
+      title: "소유자로 필터"
+      label: "소유자 이름 (공백으로 모두)"
+      apply: "<green>표시</green>"
+    delete:
+      title: "온실을 삭제?"
+      body: "ID [id] 온실([owner] 소유, [xyz]에 위치)을 삭제? 취소할 수 없습니다."
+      confirm: "<red>삭제</red>"
+  editor:
+    needs-dialogs: "<red>레시피 에디터는 Paper 1.21.7 이상이 필요합니다.</red>"
+    unknown-recipe: "<red>[key]라는 레시피가 없습니다.</red>"
+    resuming: "<yellow>[name]에 대한 저장되지 않은 변경사항을 재개합니다<yellow>.</yellow>"
+    saved: "<green>[name] 저장됨<green>. [number]개의 온실이 즉시 새로운 규칙을 따릅니다.</green>"
+    save-failed: "<red>biomes.yml을 쓸 수 없음 - 서버 로그 참조. 저장되지 않음.</red>"
+    deleted: "<green>[name] 삭제됨<green>. [number]개의 온실은 삭제되거나 레시피가 돌아올 때까지 로드되지 않음 상태입니다.</green>"
+    title: "<dark_green>편집 중</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(저장 안 됨)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>클릭하여 변경</yellow>"
+    click-open: "<yellow>클릭하여 열기</yellow>"
+    none: "없음"
+    entries: "<gray>항목: <white>[number]</white></gray>"
+    total-chance: "<gray>확률 합계: <white>[value]%</white></gray>"
+    chance: "<gray>확률: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>레시피로 돌아가기</white>"
+    help: "<white>이 페이지 사용 방법</white>"
+    list:
+      title: "<dark_green>온실 레시피</dark_green>"
+      key: "<gray>키: <white>[key]</white></gray>"
+      biome: "<gray>바이옴: <white>[biome]</white></gray>"
+      priority: "<gray>우선순위: <white>[number]</white></gray>"
+      used: "<gray><white>[number]</white>개의 온실에서 사용 중</gray>"
+      unsaved: "<gold>저장되지 않은 변경사항 있음</gold>"
+      click-edit: "<yellow>클릭하여 편집</yellow>"
+      back: "<white>뒤로</white>"
+      new:
+        name: "<green>새 레시피</green>"
+        description: "<gray>레시피를 처음부터 작성</gray>"
+    pick:
+      biome: "<dark_green>바이옴 선택</dark_green>"
+      icon: "<dark_green>아이콘 선택</dark_green>"
+      block: "<dark_green>블록 선택</dark_green>"
+      plant: "<dark_green>식물 선택</dark_green>"
+      grows-on: "<dark_green>무엇에 자라나요?</dark_green>"
+      mob: "<dark_green>몹 선택</dark_green>"
+      spawns-on: "<dark_green>무엇 위에 스폰?</dark_green>"
+      convert-from: "<dark_green>어떤 블록이 변화?</dark_green>"
+      convert-to: "<dark_green>무엇으로 변화?</dark_green>"
+      next-to: "<dark_green>무엇 옆에 있어야?</dark_green>"
+    icon:
+      name: "<white>아이콘</white>"
+    general:
+      name: "<white>이름 및 설명</white>"
+      value-name: "<gray>이름: </gray>[value]"
+      value-priority: "<gray>우선순위: <white>[number]</white></gray>"
+      value-permission: "<gray>권한: <white>[value]</white></gray>"
+      no-description: "<gray>설명 없음</gray>"
+      has-description: "<gray>설명 있음</gray>"
+    biome:
+      name: "<white>바이옴</white>"
+      value: "<gray>바이옴: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>물, 용암, 얼음</white>"
+      water: "<aqua>물: </aqua>[value]"
+      lava: "<gold>용암: </gold>[value]"
+      ice: "<aqua>얼음: </aqua>[value]"
+      unchecked: "<gray>확인 안 함</gray>"
+      none: "<red>허용 안 함</red>"
+      at-least: "<white>바닥의 최소 [number]%</white>"
+    mob-limits:
+      name: "<white>몹 제한</white>"
+      ground: "<gray>몹당 블록: <white>[number]</white></gray>"
+      water: "<gray>물 몹당 물 블록: <white>[value]</white></gray>"
+      lava: "<gray>용암 몹당 용암 블록: <white>[value]</white></gray>"
+      air: "<gray>비행 몹당 공기 블록: <white>[value]</white></gray>"
+      shared: "지면과 동일"
+      max: "<gray>최대 몹 수: <white>[value]</white></gray>"
+      no-max: "제한 없음"
+    blocks:
+      name: "<white>필수 블록</white>"
+      add: "<green>블록 추가</green>"
+      help: "<gray>온실 내부에 있어야 할 각 블록의 최소 개수.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>왼쪽 클릭: +1<newline>오른쪽 클릭: -1<newline>Shift 클릭: 숫자 입력<newline>Q: 삭제</yellow>"
+    plants:
+      name: "<white>식물</white>"
+      add: "<green>식물 추가</green>"
+      help: "<gray>지붕 호퍼에서 뼛가루로 자라는 식물.</gray>"
+      grows-on: "<gray>자라는 곳: <white>[block]</white></gray>"
+      entry-help: "<yellow>왼쪽 클릭: 확률<newline>오른쪽 클릭: 자라는 곳<newline>Q: 삭제</yellow>"
+    mobs:
+      name: "<white>몹</white>"
+      add: "<green>몹 추가</green>"
+      help: "<gray>온실에 스폰되는 몹.</gray>"
+      spawns-on: "<gray>스폰되는 곳: <white>[block]</white></gray>"
+      variant: "<gray>변형: <white>[value]</white></gray>"
+      entry-help: "<yellow>왼쪽 클릭: 확률 및 변형<newline>오른쪽 클릭: 스폰되는 곳<newline>Q: 삭제</yellow>"
+    conversions:
+      name: "<white>블록 변환</white>"
+      add: "<green>변환 추가</green>"
+      help: "<gray>천천히 다른 블록으로 변하는 블록.</gray>"
+      to: "<gray>변환 대상: <white>[block]</white></gray>"
+      anywhere: "<gray>어디든</gray>"
+      next-to: "<gray>만 옆에: <white>[block]</white></gray>"
+      entry-help: "<yellow>왼쪽 클릭: 확률<newline>오른쪽 클릭: 변환 대상<newline>Shift 오른쪽: 블록 옆만<newline>Shift 왼쪽: 어디든<newline>Q: 삭제</yellow>"
+    back:
+      name: "<white>레시피로 돌아가기</white>"
+      description: "<gray>저장되지 않은 변경사항 유지</gray>"
+    discard:
+      name: "<red>변경사항 취소</red>"
+      description: "<gray>마지막 저장 이후의 변경사항 잊기</gray>"
+    save:
+      name: "<green>저장</green>"
+      nothing: "<gray>저장할 변경사항 없음</gray>"
+      description: "<gray>biomes.yml에 쓰기; [number]개의 온실이 즉시 새로운 규칙 따름</gray>"
+      problems: "<red>먼저 이것을 수정하세요:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>복제</white>"
+      description: "<gray>이 레시피에서 새 레시피 작성</gray>"
+    delete:
+      name: "<red>레시피 삭제</red>"
+      description: "<gray>[number]개의 온실이 이 레시피 사용</gray>"
+    dialog:
+      cancel: "취소"
+      switch:
+        title: "저장되지 않은 변경사항"
+        body: "[name]에 대한 저장되지 않은 변경사항이 있습니다. 취소하고 이 레시피를 편집?"
+        discard: "<red>취소</red>"
+        keep: "[name]으로 돌아가기"
+      discard:
+        title: "변경사항을 취소?"
+        body: "[name]에 대한 변경사항을 잊으시겠습니까?"
+        confirm: "<red>취소</red>"
+      conflict:
+        title: "다른 사람이 변경함"
+        body: "[name]은(는) 편집을 시작한 후 다른 사람에 의해 저장되었거나 다시 로드되었습니다."
+        overwrite: "<red>내 변경사항으로 덮어쓰기</red>"
+        theirs: "그들의 변경사항에서 다시 시작"
+      delete:
+        title: "레시피를 삭제?"
+        body: "[name]을(를) 삭제? [number]개의 온실이 이 레시피를 사용합니다. biomes.yml이 먼저 백업됩니다."
+        confirm: "<red>삭제</red>"
+    form:
+      ok: "<green>완료</green>"
+      cancel: "취소"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value]은(는) 확률이 아닙니다. 0보다 크고 100 이하의 백분율을 사용하세요. 예: 5 또는 0.5."
+      general:
+        title: "이름 및 설명"
+        name: "이름 (MiniMessage 색상 허용)"
+        description: "레시피 패널에 표시되는 설명"
+        priority: "우선순위"
+        permission: "만드는 데 필요한 권한 (공백으로 없음)"
+        no-name: "이름은 비어있을 수 없습니다."
+        bad-permission: "권한에는 공백이 포함될 수 없습니다."
+      coverage:
+        title: "물, 용암, 얼음"
+        water: "물"
+        lava: "용암"
+        ice: "얼음"
+        percent: "바닥의 백분율"
+        unchecked: "확인 안 함"
+        none: "허용 안 함"
+        atleast: "최소..."
+        too-much: "물, 용암, 얼음이 함께 전체 바닥보다 많을 수 없습니다."
+      mobs:
+        title: "몹 제한"
+        ground: "몹당 블록"
+        water: "물 몹당 물 블록 (0 = 동일)"
+        lava: "용암 몹당 용암 블록 (0 = 동일)"
+        air: "비행 몹당 공기 블록 (0 = 동일)"
+        max: "최대 몹 수 (-1 = 제한 없음)"
+      chance:
+        title: "확률"
+        field: "[what]의 % 확률"
+      mob:
+        title: "몹"
+        variant: "변형"
+        no-variant: "일반"
+      count:
+        title: "몇 개?"
+        field: "몇 개의 [what]"
+      key:
+        title: "레시피 키"
+        field: "키: 문자, 숫자, - 및 _ (나중에 변경 불가)"
+        bad: "1~32개 문자, 숫자, - 또는 _를 사용하세요."
+        taken: "[key]라는 레시피가 이미 있습니다."
 
 help:
    help: "도움말"
@@ -119,27 +429,25 @@ messages:
    ecolost: "[location]에 있는 온실이 생태계를 잃어 제거되었습니다."
 
 info:
-   title: "&a [온실 짓는 방법]"
+   title: "<green>[온실 짓는 방법]</green>"
    instructions: |
-     &e 4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,
-     &e 벽에 최대 &f 4개의 문&e을 설치하세요.
-     &e 벽이나 지붕에 &f 1개의 깔때기&e를 설치하고 물 양동이를 넣어
-     &e 식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.
-     &e 제작에 성공하려면 어떤 블록이 내부에 있어야 하는지
-     &e 바이옴 레시피를 확인하세요.
+     <yellow>4개의 벽과 평평한 유리 지붕으로 된 유리 상자를 만들고,</yellow>
+     <yellow>벽에 최대 </yellow><white>4개의 문</white><yellow>을 설치하세요.</yellow>
+     <yellow>벽이나 지붕에 </yellow><white>1개의 깔때기</white><yellow>를 설치하고 물 양동이를 넣어</yellow>
+     <yellow>식물이 자동으로 자랄 수 있도록 눈이나 골분을 생성하세요.</yellow>
+     <yellow>제작에 성공하려면 어떤 블록이 내부에 있어야 하는지</yellow>
+     <yellow>바이옴 레시피를 확인하세요.</yellow>
    info: "[온실 정보]"
    none: "없음"
-   nomore: "&4 더 이상 온실을 지을 수 없습니다!"
-   onemore: "&6 온실을 하나 더 지을 수 있습니다."
-   youcanbuild: "&a 앞으로 [number]개의 온실을 더 지을 수 있습니다!"
-   unlimited: "&a 무제한으로 온실을 지을 수 있습니다!"
-   welcome: "&b 환영합니다! 지침을 보려면 여기를 클릭하세요"
+   nomore: "<dark_red>더 이상 온실을 지을 수 없습니다!</dark_red>"
+   onemore: "<gold>온실을 하나 더 지을 수 있습니다.</gold>"
+   youcanbuild: "<green>앞으로 [number]개의 온실을 더 지을 수 있습니다!</green>"
+   unlimited: "<green>무제한으로 온실을 지을 수 있습니다!</green>"
+   welcome: "<aqua>환영합니다! 지침을 보려면 여기를 클릭하세요</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "/greenhouse list 명령어로 레시피 번호 목록을 확인하세요!"
    wrongnumber: "레시피 번호는 1에서 [size] 사이여야 합니다"
-   title: "[[biome] 레시피]"
    nowater: "물은 허용되지 않습니다."
    noice: "얼음은 허용되지 않습니다."
    nolava: "용암은 허용되지 않습니다."
@@ -176,4 +484,4 @@ news:
    headline: "[온실 뉴스]"
 
 controlpanel:
-   title: "&a온실"
+   title: "<green>온실</green>"

@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Estufas
       description: |
-        &b Alternar quem pode
-        &b controlar as estufas   
+        <aqua>Alternar quem pode</aqua>
+        <aqua>controlar as estufas   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Mova-se primeiro para uma estufa que você possua."
-    no-rank: "&c Você não tem o cargo necessário para fazer isso."
+    no-rank: "<red>Você não tem o cargo necessário para fazer isso.</red>"
     notyours: "Esta estufa não é sua!"
-    not-inside: "&c Você não está dentro de uma estufa!"
+    not-inside: "<red>Você não está dentro de uma estufa!</red>"
     tooexpensive: "Você não tem dinheiro suficiente para [price]" 
     alreadyexists: "A estufa já existe!"
     norecipe: "Não foi possível criar a estufa!"
     
   event:
    broke: "Você quebrou esta estufa! Revertendo o bioma para [biome]!"
-   entering: "Entrando na estufa [biome]&f"
-   leaving: "Saindo da estufa [biome]&f"
+   entering: "Entrando na estufa [biome]<white></white>"
+   leaving: "Saindo da estufa [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receita de [biome]]"
    watermustbe: "Água > [coverage]% da área do chão."
    icemustbe: "Blocos de gelo > [coverage]% da área do chão."
    lavamustbe: "Lava > [coverage]% da área do chão."
    minimumblockstitle: "[Blocos mínimos necessários]"
    nootherblocks: "Nenhum outro bloco é necessário."
    missing: "A estufa está faltando"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Tenta criar uma estufa"
         parameters: "<receita>"
         error:
-          already: "&cJá existe uma estufa aqui!"
-          FAIL_BAD_ROOF_BLOCKS: "&c O teto contém blocos não permitidos!"
-          FAIL_BAD_WALL_BLOCKS: "&c As paredes contêm blocos não permitidos!"
-          FAIL_BELOW: "&c Você deve estar dentro da estufa para tentar criá-la"
-          FAIL_BLOCKS_ABOVE: "&c Não pode haver blocos acima da estufa! Blocos de vidro vermelho mostrarão os blocos problemáticos."
+          already: "<red>Já existe uma estufa aqui!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>O teto contém blocos não permitidos!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>As paredes contêm blocos não permitidos!</red>"
+          FAIL_BELOW: "<red>Você deve estar dentro da estufa para tentar criá-la</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Não pode haver blocos acima da estufa! Blocos de vidro vermelho mostrarão os blocos problemáticos.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c Há um buraco no teto ou ele não é plano!
-            &c Blocos de vidro vermelho mostrarão o problema.
-            &c Certifique-se de estar dentro da sua estufa para criá-la.
-          FAIL_HOLE_IN_WALL: "&c Há um buraco na parede!"
-          FAIL_NO_ROOF: "&c Parece não haver teto! Certifique-se de estar dentro da estufa para criá-la."
-          FAIL_TOO_MANY_DOORS: "&c Você não pode ter mais de 4 portas na estufa!"
-          FAIL_TOO_MANY_HOPPERS: "&c Apenas um funil é permitido nas paredes ou no teto."
-          FAIL_UNEVEN_WALLS: "&c As paredes estão desiguais. Blocos de vidro vermelho mostrarão os blocos problemáticos."
-          FAIL_INSUFFICIENT_ICE: "&c Gelo insuficiente para criar esta receita"
-          FAIL_INSUFFICIENT_LAVA: "&c Lava insuficiente para criar esta receita"
-          FAIL_INSUFFICIENT_WATER: "&c Água insuficiente para criar esta receita"
-          FAIL_NO_ICE: "&c É necessário gelo para criar esta receita"
-          FAIL_NO_LAVA: "&c É necessária lava para criar esta receita"
-          FAIL_NO_WATER: "&c É necessária água para criar esta receita"
-          FAIL_NO_RECIPE_FOUND: "&c Nenhuma receita correspondente encontrada para esta estufa"
-          FAIL_INSUFFICIENT_BLOCKS: "&c São necessários mais blocos para criar esta receita!"
-          FAIL_OVERLAPPING: "&c Desculpe, as estufas não podem compartilhar paredes."
-        success: "&2 Você criou com sucesso uma estufa de bioma [biome]! O bioma será sincronizado no próximo teletransporte ou login."
-        missing-blocks: "&c Faltando [material] x [number]"
-        unknown-recipe: "&c Receita desconhecida"
-        try-these: "&c Tente uma destas:"
-        recipe-format: "&3[name]"
+            <red>Há um buraco no teto ou ele não é plano!</red>
+            <red>Blocos de vidro vermelho mostrarão o problema.</red>
+            <red>Certifique-se de estar dentro da sua estufa para criá-la.</red>
+          FAIL_HOLE_IN_WALL: "<red>Há um buraco na parede!</red>"
+          FAIL_NO_ROOF: "<red>Parece não haver teto! Certifique-se de estar dentro da estufa para criá-la.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Você não pode ter mais de 4 portas na estufa!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Apenas um funil é permitido nas paredes ou no teto.</red>"
+          FAIL_UNEVEN_WALLS: "<red>As paredes estão desiguais. Blocos de vidro vermelho mostrarão os blocos problemáticos.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Gelo insuficiente para criar esta receita</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Lava insuficiente para criar esta receita</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Água insuficiente para criar esta receita</red>"
+          FAIL_NO_ICE: "<red>É necessário gelo para criar esta receita</red>"
+          FAIL_NO_LAVA: "<red>É necessária lava para criar esta receita</red>"
+          FAIL_NO_WATER: "<red>É necessária água para criar esta receita</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nenhuma receita correspondente encontrada para esta estufa</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>São necessários mais blocos para criar esta receita!</red>"
+          FAIL_OVERLAPPING: "<red>Desculpe, as estufas não podem compartilhar paredes.</red>"
+        success: "<dark_green>Você criou com sucesso uma estufa de bioma [biome]! O bioma será sincronizado no próximo teletransporte ou login.</dark_green>"
+        missing-blocks: "<red>Faltando [material] x [number]</red>"
+        unknown-recipe: "<red>Receita desconhecida</red>"
+        try-these: "<red>Tente uma destas:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Como construir uma estufa]"
+        title: "<green>[Como construir uma estufa]</green>"
         instructions: |
-          &e Crie uma caixa de vidro com 4 paredes e um teto
-          &e de vidro plano, e adicione até &f 4 portas &e nas paredes.
-          &e Coloque &f 1 funil &e em uma parede ou teto e adicione baldes
-          &e de água para criar neve e/ou farinha de osso para cultivar
-          &e plantas automaticamente. Verifique as receitas de biomas
-          &e para ver quais blocos devem estar no interior para ter sucesso.
+          <yellow>Crie uma caixa de vidro com 4 paredes e um teto</yellow>
+          <yellow>de vidro plano, e adicione até </yellow><white>4 portas </white><yellow>nas paredes.</yellow>
+          <yellow>Coloque </yellow><white>1 funil </white><yellow>em uma parede ou teto e adicione baldes</yellow>
+          <yellow>de água para criar neve e/ou farinha de osso para cultivar</yellow>
+          <yellow>plantas automaticamente. Verifique as receitas de biomas</yellow>
+          <yellow>para ver quais blocos devem estar no interior para ter sucesso.</yellow>
+    admin:
+      description: "Comandos de administração de estufas"
+      errors:
+        unknown-id: "<red>Nenhuma estufa encontrada com ID [id]. Use o comando list para ver as IDs. Uma ID parcial funciona se corresponder apenas uma estufa.</red>"
+        id-required: "<red>Execute isso no jogo dentro de uma estufa, ou dê uma ID de estufa.</red>"
+        no-location: "<red>A estufa [id] não tem uma localização válida ou seu mundo não está carregado.</red>"
+      list:
+        description: "Lista estufas, opcionalmente para um jogador"
+        parameters: "[player] [page]"
+        title: "<green>[Estufas] </green><gray>([number] total, página [page] de [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>em </gray><white>[xyz] </white><gray>em </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(danificada)</red>"
+        more: "<gray>Use </gray><white>/[label] greenhouses list [page] </white><gray>para mais</gray>"
+        none: "<red>Nenhuma estufa encontrada.</red>"
+        unloaded-title: "<red>[Não carregadas: [number]] </red><gray>Esses registros estão no banco de dados mas não estão ativos:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>em </gray><white>[xyz] </white><gray>em </gray><white>[world]</white>"
+      info:
+        description: "Mostra detalhes completos de uma estufa"
+        parameters: "[id]"
+        title: "<green>[Informações de Estufa]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Receita: </gray><white>[recipe]</white>"
+        owner: "<gray>Proprietário: </gray><white>[owner]</white>"
+        world: "<gray>Mundo: </gray><white>[world]</white>"
+        location: "<gray>Localização: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Caixa delimitadora: </gray><white>[min] </white><gray>para </gray><white>[max]</white>"
+        area: "<gray>Área interna: </gray><white>[area] blocos</white>"
+        original-biome: "<gray>Bioma original: </gray><white>[biome]</white>"
+        hopper: "<gray>Silo: </gray><white>[hopper]</white>"
+        broken: "<gray>Danificada: </gray><white>[broken]</white>"
+        not-loaded: "<red>Não carregada: [reason]</red>"
+      delete:
+        description: "Deleta um registro de estufa por ID, carregado ou não"
+        parameters: "<id>"
+        confirm: "<red>Deletar estufa [id] de [owner] em [xyz]? Isso não pode ser desfeito.</red>"
+        success: "<green>Estufa [id] deletada.</green>"
+      tp:
+        description: "Teletransporta você para uma estufa"
+        parameters: "<id>"
+        success: "<green>Teletransportado para a estufa [id]</green>"
+      verify:
+        description: "Revalida estufas contra sua receita"
+        parameters: "[id]"
+        checking: "<gray>Verificando [number] estufa(s)...</gray>"
+        ok: "<green>[id] em [xyz] atende sua receita</green>"
+        broken: "<red>[id] em [xyz] falha: [reasons]</red>"
+      reload:
+        description: "Recarrega biomes.yml e relê estufas do banco de dados"
+        success: "<green>Recarregado. [number] estufas ativas.</green>"
+        unloaded: "<red>[number] registro(s) não conseguiu ser carregado - use o comando list para vê-los.</red>"
+      build:
+        description: "Constrói uma estufa de teste para uma receita, ao seu redor ou na localização de chão dada"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>As coordenadas precisam dos três x, y e z, como números ou ~ (ex. ~ ~ ~ ou ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] não é um tamanho (ex. 9x9 ou 9x9x5) ou um modo (keep ou clear).</red>"
+        too-small: "<red>A receita não cabe em [size]: [description]. Tente um tamanho maior, ou deixe em branco para o tamanho automático.</red>"
+        out-of-world: "<red>Isso iria acima ou abaixo do mundo. Escolha outra altura.</red>"
+        not-on-island: "<red>A estufa inteira deve estar em uma ilha.</red>"
+        overlapping: "<red>Isso sobreporia a estufa [id].</red>"
+        confirm-clear: "<red>Tudo dentro de uma estufa [size] aqui será substituído.</red>"
+        built: "<green>Construída uma estufa de teste [recipe] [size] ([number] blocos). Construindo agora...</green>"
+      edit:
+        description: "Abre o editor de receitas, ou o editor de uma receita"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Admin de Estufas</dark_green>"
+    close: "<white>Fechar</white>"
+    back: "<white>Voltar</white>"
+    cancel: "Cancelar"
+    recipes:
+      name: "<green>Receitas</green>"
+      description: "<gray>Editar, adicionar ou deletar as [number] receitas de estufas</gray>"
+    greenhouses:
+      name: "<green>Estufas</green>"
+      description: "<gray>[number] estufa(s) construída(s). Teletransporte-se, verifique, inspecione ou delete-as.</gray>"
+      unloaded: "<red>[number] não conseguiu ser carregada(s)</red>"
+    build:
+      name: "<green>Construir uma estufa de teste</green>"
+      description: "<gray>Constrói uma estufa funcional para uma receita onde você está, com a porta no lado que enfrenta</gray>"
+      pick-title: "<dark_green>Qual receita construir?</dark_green>"
+      key: "<gray>Chave: <white>[key]</white></gray>"
+      default-size: "<gray>Tamanho padrão: <white>[size]</white></gray>"
+      click: "<yellow>Clique para escolher o tamanho</yellow>"
+      title: "Construir [name]"
+      body: "A estufa é construída com o chão centrado onde você está e a porta no lado que enfrenta. Os tamanhos são do interior."
+      width: "Largura"
+      depth: "Profundidade"
+      height: "Altura"
+      mode: "O que já existe lá"
+      keep: "Manter e construir ao redor"
+      clear: "Limpar em primeiro lugar"
+      go: "<green>Construir</green>"
+    verify:
+      name: "<green>Verificar todas as estufas</green>"
+      description: "<gray>Verifica cada estufa contra sua receita agora e relata no chat</gray>"
+    reload:
+      name: "<green>Recarregar</green>"
+      description: "<gray>Relê biomes.yml e o banco de dados de estufas</gray>"
+      confirm-title: "Recarregar?"
+      confirm-body: "Relê biomes.yml e o banco de dados de estufas? As edições de receita não salvas são mantidas, mas precisarão ser salvas sobre as receitas recarregadas."
+      confirm: "<yellow>Recarregar</yellow>"
+  browser:
+    title: "<dark_green>Estufas</dark_green>"
+    title-owner: "<dark_green>Estufas</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Sem estufas</gray>"
+    back: "<white>Voltar</white>"
+    cancel: "Cancelar"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Proprietário: <white>[owner]</white></gray>"
+    where: "<gray>Em: <white>[xyz]</white> em <white>[world]</white></gray>"
+    ok: "<green>Funcional</green>"
+    broken: "<red>Danificada</red>"
+    unloaded: "<red>Não carregada: [reason]</red>"
+    click:
+      tp: "<yellow>Clique esquerdo: teletransporte-se</yellow>"
+      verify: "<yellow>Clique direito: verificar agora</yellow>"
+      info: "<yellow>Shift+clique: detalhes no chat</yellow>"
+      delete: "<yellow>Q: deletar</yellow>"
+    filter:
+      name: "<white>Filtrar por proprietário</white>"
+      all: "<gray>Mostrando de todos</gray>"
+      only: "<gray>Mostrando de <white>[owner]</white></gray>"
+      click: "<yellow>Clique para mudar</yellow>"
+      title: "Filtrar por proprietário"
+      label: "Nome do proprietário (vazio para todos)"
+      apply: "<green>Mostrar</green>"
+    delete:
+      title: "Deletar estufa?"
+      body: "Deletar estufa [id] de [owner] em [xyz]? Isso não pode ser desfeito."
+      confirm: "<red>Deletar</red>"
+  editor:
+    needs-dialogs: "<red>O editor de receitas precisa de Paper 1.21.7 ou posterior.</red>"
+    unknown-recipe: "<red>Não existe receita chamada [key].</red>"
+    resuming: "<yellow>Recuperando suas alterações não salvas para [name]<yellow>.</yellow>"
+    saved: "<green>Salvo [name]<green>. [number] estufa(s) a usa(m) e seguem as novas regras a partir de agora.</green>"
+    save-failed: "<red>biomes.yml não conseguiu ser escrito - veja o log do servidor. Nada foi salvo.</red>"
+    deleted: "<green>Deletada [name]<green>. Suas [number] estufa(s) são listadas como não carregadas até serem deletadas ou a receita retornar.</green>"
+    title: "<dark_green>Editando</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(não salvo)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Clique para mudar</yellow>"
+    click-open: "<yellow>Clique para abrir</yellow>"
+    none: "nenhum"
+    entries: "<gray>Entradas: <white>[number]</white></gray>"
+    total-chance: "<gray>As probabilidades somam <white>[value]%</white></gray>"
+    chance: "<gray>Probabilidade: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Voltar para a receita</white>"
+    help: "<white>Como usar esta página</white>"
+    list:
+      title: "<dark_green>Receitas de estufas</dark_green>"
+      key: "<gray>Chave: <white>[key]</white></gray>"
+      biome: "<gray>Bioma: <white>[biome]</white></gray>"
+      priority: "<gray>Prioridade: <white>[number]</white></gray>"
+      used: "<gray>Usada por <white>[number]</white> estufa(s)</gray>"
+      unsaved: "<gold>Você tem alterações não salvas</gold>"
+      click-edit: "<yellow>Clique para editar</yellow>"
+      back: "<white>Voltar</white>"
+      new:
+        name: "<green>Nova receita</green>"
+        description: "<gray>Começar uma receita do zero</gray>"
+    pick:
+      biome: "<dark_green>Escolher um bioma</dark_green>"
+      icon: "<dark_green>Escolher um ícone</dark_green>"
+      block: "<dark_green>Escolher um bloco</dark_green>"
+      plant: "<dark_green>Escolher uma planta</dark_green>"
+      grows-on: "<dark_green>Em que cresce?</dark_green>"
+      mob: "<dark_green>Escolher uma criatura</dark_green>"
+      spawns-on: "<dark_green>Em que nasce?</dark_green>"
+      convert-from: "<dark_green>Qual bloco muda?</dark_green>"
+      convert-to: "<dark_green>Em que muda?</dark_green>"
+      next-to: "<dark_green>Ao lado de quê?</dark_green>"
+    icon:
+      name: "<white>Ícone</white>"
+    general:
+      name: "<white>Nome e descrição</white>"
+      value-name: "<gray>Nome: </gray>[value]"
+      value-priority: "<gray>Prioridade: <white>[number]</white></gray>"
+      value-permission: "<gray>Permissão: <white>[value]</white></gray>"
+      no-description: "<gray>Sem descrição</gray>"
+      has-description: "<gray>Tem descrição</gray>"
+    biome:
+      name: "<white>Bioma</white>"
+      value: "<gray>Bioma: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Água, lava e gelo</white>"
+      water: "<aqua>Água: </aqua>[value]"
+      lava: "<gold>Lava: </gold>[value]"
+      ice: "<aqua>Gelo: </aqua>[value]"
+      unchecked: "<gray>não verificado</gray>"
+      none: "<red>nenhum permitido</red>"
+      at-least: "<white>pelo menos [number]% do chão</white>"
+    mob-limits:
+      name: "<white>Limites de criaturas</white>"
+      ground: "<gray>Blocos por criatura: <white>[number]</white></gray>"
+      water: "<gray>Blocos de água por criatura aquática: <white>[value]</white></gray>"
+      lava: "<gray>Blocos de lava por criatura de lava: <white>[value]</white></gray>"
+      air: "<gray>Blocos de ar por criatura aérea: <white>[value]</white></gray>"
+      shared: "igual ao terreno"
+      max: "<gray>Máximo de criaturas por vez: <white>[value]</white></gray>"
+      no-max: "sem limite"
+    blocks:
+      name: "<white>Blocos necessários</white>"
+      add: "<green>Adicionar um bloco</green>"
+      help: "<gray>O mínimo de cada bloco que a estufa deve ter dentro.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Clique esquerdo: +1<newline>Clique direito: -1<newline>Shift+clique: digitar um número<newline>Q: remover</yellow>"
+    plants:
+      name: "<white>Plantas</white>"
+      add: "<green>Adicionar uma planta</green>"
+      help: "<gray>Plantas crescidas com farinha de osso do silo do telhado.</gray>"
+      grows-on: "<gray>Cresce em: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clique esquerdo: probabilidade<newline>Clique direito: em que cresce<newline>Q: remover</yellow>"
+    mobs:
+      name: "<white>Criaturas</white>"
+      add: "<green>Adicionar uma criatura</green>"
+      help: "<gray>Criaturas que nascem na estufa.</gray>"
+      spawns-on: "<gray>Nasce em: <white>[block]</white></gray>"
+      variant: "<gray>Variante: <white>[value]</white></gray>"
+      entry-help: "<yellow>Clique esquerdo: probabilidade e variante<newline>Clique direito: em que nasce<newline>Q: remover</yellow>"
+    conversions:
+      name: "<white>Conversões de blocos</white>"
+      add: "<green>Adicionar uma conversão</green>"
+      help: "<gray>Blocos que mudam lentamente em outros blocos.</gray>"
+      to: "<gray>Muda em: <white>[block]</white></gray>"
+      anywhere: "<gray>Em qualquer lugar</gray>"
+      next-to: "<gray>Apenas ao lado de: <white>[block]</white></gray>"
+      entry-help: "<yellow>Clique esquerdo: probabilidade<newline>Clique direito: em que muda<newline>Shift+direito: apenas ao lado de um bloco<newline>Shift+esquerdo: em qualquer lugar<newline>Q: remover</yellow>"
+    back:
+      name: "<white>Voltar para as receitas</white>"
+      description: "<gray>As alterações não salvas são mantidas</gray>"
+    discard:
+      name: "<red>Descartar alterações</red>"
+      description: "<gray>Esquecer alterações desde o último salvamento</gray>"
+    save:
+      name: "<green>Salvar</green>"
+      nothing: "<gray>Sem alterações a salvar</gray>"
+      description: "<gray>Escreve biomes.yml; [number] estufa(s) seguem as novas regras imediatamente</gray>"
+      problems: "<red>Corrija primeiro:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplicar</white>"
+      description: "<gray>Começar uma nova receita a partir desta</gray>"
+    delete:
+      name: "<red>Deletar receita</red>"
+      description: "<gray>[number] estufa(s) usa(m) esta receita</gray>"
+    dialog:
+      cancel: "Cancelar"
+      switch:
+        title: "Alterações não salvas"
+        body: "Você tem alterações não salvas para [name]. Descartar para editar esta receita?"
+        discard: "<red>Descartar</red>"
+        keep: "Voltar para [name]"
+      discard:
+        title: "Descartar alterações?"
+        body: "Esquecer suas alterações para [name]?"
+        confirm: "<red>Descartar</red>"
+      conflict:
+        title: "Alterado por outro"
+        body: "[name] foi salvo por outro, ou recarregado, depois que você começou a editar."
+        overwrite: "<red>Salvar o meu sobre ele</red>"
+        theirs: "Começar de novo a partir do dele"
+      delete:
+        title: "Deletar receita?"
+        body: "Deletar [name]? [number] estufa(s) a usa(m). biomes.yml é copiado em primeiro lugar."
+        confirm: "<red>Deletar</red>"
+    form:
+      ok: "<green>Feito</green>"
+      cancel: "Cancelar"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] não é uma probabilidade. Use uma porcentagem acima de 0 e até 100, ex. 5 ou 0,5."
+      general:
+        title: "Nome e descrição"
+        name: "Nome (cores MiniMessage permitidas)"
+        description: "Descrição mostrada no painel de receitas"
+        priority: "Prioridade"
+        permission: "Permissão necessária para fazer isso (vazio para nenhuma)"
+        no-name: "O nome não pode estar vazio."
+        bad-permission: "Uma permissão não pode conter espaços."
+      coverage:
+        title: "Água, lava e gelo"
+        water: "Água"
+        lava: "Lava"
+        ice: "Gelo"
+        percent: "Porcentagem do chão"
+        unchecked: "Não verificado"
+        none: "Nenhum permitido"
+        atleast: "Pelo menos..."
+        too-much: "Água, lava e gelo em conjunto não podem precisar mais do que o chão inteiro."
+      mobs:
+        title: "Limites de criaturas"
+        ground: "Blocos por criatura"
+        water: "Blocos de água por criatura aquática (0 = igual)"
+        lava: "Blocos de lava por criatura de lava (0 = igual)"
+        air: "Blocos de ar por criatura aérea (0 = igual)"
+        max: "Máximo de criaturas por vez (-1 = sem limite)"
+      chance:
+        title: "Probabilidade"
+        field: "% de probabilidade para [what]"
+      mob:
+        title: "Criatura"
+        variant: "Variante"
+        no-variant: "Normal"
+      count:
+        title: "Quantos?"
+        field: "Quantos [what]"
+      key:
+        title: "Chave de receita"
+        field: "Chave: letras, números, - e _ (não pode ser alterado depois)"
+        bad: "Use 1 a 32 letras, números, - ou _."
+        taken: "Já existe uma receita chamada [key]."
 
 help:
    help: "ajuda"
@@ -111,35 +421,33 @@ error:
    norecipe: "Não foi possível criar a estufa!"
    
 messages:
-   enter: "Entrando na estufa de [owner] ([biome]&f)!"
+   enter: "Entrando na estufa de [owner] ([biome]<white>)!</white>"
    leave: "Saindo da estufa de [owner]."
-   youarein: "Você agora está na estufa de [owner] ([biome]&f)!"
+   youarein: "Você agora está na estufa de [owner] ([biome]<white>)!</white>"
    removed: "Esta estufa não existe mais..."
-   removedmessage: "Sua estufa ([biome]&f) foi removida!"
+   removedmessage: "Sua estufa ([biome]<white>) foi removida!</white>"
    ecolost: "Sua estufa em [location] perdeu o ecossistema e foi removida."
 
 info:
-   title: "&A[Como construir uma estufa]"
+   title: "<green>[Como construir uma estufa]</green>"
    instructions: |
-     &E Crie uma caixa de vidro com 4 paredes e um teto
-     &E de vidro plano, e adicione até &F 4 portas &E nas paredes.
-     &E Coloque &F 1 funil &E em uma parede ou teto e adicione baldes
-     &E de água para criar neve e/ou farinha de osso para cultivar
-     &E plantas automaticamente. Verifique as receitas de biomas
-     &E para ver quais blocos devem estar no interior para ter sucesso. 
+     <yellow>Crie uma caixa de vidro com 4 paredes e um teto</yellow>
+     <yellow>de vidro plano, e adicione até </yellow><white>4 portas </white><yellow>nas paredes.</yellow>
+     <yellow>Coloque </yellow><white>1 funil </white><yellow>em uma parede ou teto e adicione baldes</yellow>
+     <yellow>de água para criar neve e/ou farinha de osso para cultivar</yellow>
+     <yellow>plantas automaticamente. Verifique as receitas de biomas</yellow>
+     <yellow>para ver quais blocos devem estar no interior para ter sucesso. </yellow>
    info: "[Informação da Estufa]"
    none: "Nenhum"
-   nomore: "&4 Você não pode construir mais estufas!"
-   onemore: "&6 Você pode construir mais uma estufa."
-   youcanbuild: "&A Você pode construir até mais [number] estufas!"
-   unlimited: "&A Você pode construir estufas ilimitadas!"
-   welcome: "&B Bem-vindo! Clique aqui para instruções"
+   nomore: "<dark_red>Você não pode construir mais estufas!</dark_red>"
+   onemore: "<gold>Você pode construir mais uma estufa.</gold>"
+   youcanbuild: "<green>Você pode construir até mais [number] estufas!</green>"
+   unlimited: "<green>Você pode construir estufas ilimitadas!</green>"
+   welcome: "<aqua>Bem-vindo! Clique aqui para instruções</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Use /greenhouse list para ver uma lista de números de receitas!"
    wrongnumber: "O número da receita deve estar entre 1 e [size]"
-   title: "[Receita de [biome]]"
    nowater: "Água não permitida."
    noice: "Gelo não permitido."
    nolava: "Lava não permitida."
@@ -176,4 +484,4 @@ news:
    headline: "[Notícias da Estufa]"
 
 controlpanel:
-   title: "&AEstufas"
+   title: "<green>Estufas</green>"

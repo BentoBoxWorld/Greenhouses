@@ -8,8 +8,8 @@ protection:
     GREENHOUSE:
       name: Szklarnie
       description: |
-        &b Przełącz, kto może
-        &b zarządzać szklarniami   
+        <aqua>Przełącz, kto może</aqua>
+        <aqua>zarządzać szklarniami   </aqua>
 
 greenhouses:
   general:
@@ -17,27 +17,27 @@ greenhouses:
    
   errors:
     move: "Najpierw udaj się do szklarni, której jesteś właścicielem."
-    no-rank: "&c Nie masz uprawnień, aby to zrobić."
+    no-rank: "<red>Nie masz uprawnień, aby to zrobić.</red>"
     notyours: "To nie jest Twoja szklarnia!"
-    not-inside: "&c Nie jesteś wewnątrz szklarni!"
+    not-inside: "<red>Nie jesteś wewnątrz szklarni!</red>"
     tooexpensive: "Nie stać Cię na to [price]" 
     alreadyexists: "Szklarnia już istnieje!"
     norecipe: "Nie można utworzyć szklarni!"
     
   event:
    broke: "Zniszczyłeś tę szklarnię! Przywracanie biomu do [biome]!"
-   entering: "Wejście do szklarni [biome]&f"
-   leaving: "Opuszczenie szklarni [biome]&f"
+   entering: "Wejście do szklarni [biome]<white></white>"
+   leaving: "Opuszczenie szklarni [biome]<white></white>"
    
   recipe:
-   blockscolor: "&f"
-   title: "[Receptura [biome]]"
    watermustbe: "Woda > [coverage]% powierzchni podłogi."
    icemustbe: "Bloki lodu > [coverage]% powierzchni podłogi."
    lavamustbe: "Lawa > [coverage]% powierzchni podłogi."
    minimumblockstitle: "[Wymagane minimum bloków]"
    nootherblocks: "Inne bloki nie są wymagane."
    missing: "Brakuje szklarni"
+   description: "<gray>[text]</gray>"
+   block: "<white> • [block]</white>"
    
   commands:
     user:
@@ -48,43 +48,353 @@ greenhouses:
         description: "Spróbuj utworzyć szklarnię"
         parameters: "<receptura>"
         error:
-          already: "&cTu już jest szklarnia!"
-          FAIL_BAD_ROOF_BLOCKS: "&c Dach zawiera niedozwolone bloki!"
-          FAIL_BAD_WALL_BLOCKS: "&c Ściany zawierają niedozwolone bloki!"
-          FAIL_BELOW: "&c Musisz być wewnątrz szklarni, aby spróbować ją utworzyć"
-          FAIL_BLOCKS_ABOVE: "&c Nad szklarnią nie może być żadnych bloków! Czerwone szkło wskaże problematyczne bloki."
+          already: "<red>Tu już jest szklarnia!</red>"
+          FAIL_BAD_ROOF_BLOCKS: "<red>Dach zawiera niedozwolone bloki!</red>"
+          FAIL_BAD_WALL_BLOCKS: "<red>Ściany zawierają niedozwolone bloki!</red>"
+          FAIL_BELOW: "<red>Musisz być wewnątrz szklarni, aby spróbować ją utworzyć</red>"
+          FAIL_BLOCKS_ABOVE: "<red>Nad szklarnią nie może być żadnych bloków! Czerwone szkło wskaże problematyczne bloki.</red>"
           FAIL_HOLE_IN_ROOF: |
-            &c W dachu jest dziura lub nie jest on płaski!
-            &c Czerwone szkło wskaże problem.
-            &c Upewnij się, że jesteś wewnątrz swojej szklarni, aby ją utworzyć.
-          FAIL_HOLE_IN_WALL: "&c W ścianie jest dziura!"
-          FAIL_NO_ROOF: "&c Wygląda na to, że brakuje dachu! Upewnij się, że jesteś wewnątrz szklarni, aby ją utworzyć."
-          FAIL_TOO_MANY_DOORS: "&c Nie możesz mieć więcej niż 4 drzwi w szklarni!"
-          FAIL_TOO_MANY_HOPPERS: "&c Dozwolony jest tylko jeden lej w ścianach lub dachu."
-          FAIL_UNEVEN_WALLS: "&c Ściany są nierówne. Czerwone szkło wskaże problematyczne bloki."
-          FAIL_INSUFFICIENT_ICE: "&c Niewystarczająca ilość lodu dla tej receptury"
-          FAIL_INSUFFICIENT_LAVA: "&c Niewystarczająca ilość lawy dla tej receptury"
-          FAIL_INSUFFICIENT_WATER: "&c Niewystarczająca ilość wody dla tej receptury"
-          FAIL_NO_ICE: "&c Lód jest wymagany dla tej receptury"
-          FAIL_NO_LAVA: "&c Lawa jest wymagana dla tej receptury"
-          FAIL_NO_WATER: "&c Woda jest wymagana dla tej receptury"
-          FAIL_NO_RECIPE_FOUND: "&c Nie znaleziono receptury pasującej do tej szklarni"
-          FAIL_INSUFFICIENT_BLOCKS: "&c Wymagane jest więcej bloków dla tej receptury!"
-          FAIL_OVERLAPPING: "&c Niestety szklarnie nie mogą dzielić wspólnych ścian."
-        success: "&2 Pomyślnie utworzono szklarnię biomu [biome]! Biom zsynchronizuje się przy następnej teleportacji lub logowaniu."
-        missing-blocks: "&c Brakuje [material] x [number]"
-        unknown-recipe: "&c Nieznana receptura"
-        try-these: "&c Spróbuj jednej z tych:"
-        recipe-format: "&3[name]"
+            <red>W dachu jest dziura lub nie jest on płaski!</red>
+            <red>Czerwone szkło wskaże problem.</red>
+            <red>Upewnij się, że jesteś wewnątrz swojej szklarni, aby ją utworzyć.</red>
+          FAIL_HOLE_IN_WALL: "<red>W ścianie jest dziura!</red>"
+          FAIL_NO_ROOF: "<red>Wygląda na to, że brakuje dachu! Upewnij się, że jesteś wewnątrz szklarni, aby ją utworzyć.</red>"
+          FAIL_TOO_MANY_DOORS: "<red>Nie możesz mieć więcej niż 4 drzwi w szklarni!</red>"
+          FAIL_TOO_MANY_HOPPERS: "<red>Dozwolony jest tylko jeden lej w ścianach lub dachu.</red>"
+          FAIL_UNEVEN_WALLS: "<red>Ściany są nierówne. Czerwone szkło wskaże problematyczne bloki.</red>"
+          FAIL_INSUFFICIENT_ICE: "<red>Niewystarczająca ilość lodu dla tej receptury</red>"
+          FAIL_INSUFFICIENT_LAVA: "<red>Niewystarczająca ilość lawy dla tej receptury</red>"
+          FAIL_INSUFFICIENT_WATER: "<red>Niewystarczająca ilość wody dla tej receptury</red>"
+          FAIL_NO_ICE: "<red>Lód jest wymagany dla tej receptury</red>"
+          FAIL_NO_LAVA: "<red>Lawa jest wymagana dla tej receptury</red>"
+          FAIL_NO_WATER: "<red>Woda jest wymagana dla tej receptury</red>"
+          FAIL_NO_RECIPE_FOUND: "<red>Nie znaleziono receptury pasującej do tej szklarni</red>"
+          FAIL_INSUFFICIENT_BLOCKS: "<red>Wymagane jest więcej bloków dla tej receptury!</red>"
+          FAIL_OVERLAPPING: "<red>Niestety szklarnie nie mogą dzielić wspólnych ścian.</red>"
+        success: "<dark_green>Pomyślnie utworzono szklarnię biomu [biome]! Biom zsynchronizuje się przy następnej teleportacji lub logowaniu.</dark_green>"
+        missing-blocks: "<red>Brakuje [material] x [number]</red>"
+        unknown-recipe: "<red>Nieznana receptura</red>"
+        try-these: "<red>Spróbuj jednej z tych:</red>"
+        recipe-format: "<dark_aqua>[name]</dark_aqua>"
       info:
-        title: "&a [Jak zbudować szklarnię]"
+        title: "<green>[Jak zbudować szklarnię]</green>"
         instructions: |
-          &e Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
-          &e dachem oraz dodaj do &f 4 drzwi &e w ścianach.
-          &e Umieść &f 1 lej &e w ścianie lub dachu i dodaj wiadra z wodą,
-          &e aby automatycznie generować śnieg i/lub mączkę kostną
-          &e do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
-          &e jakie bloki muszą być wewnątrz dla sukcesu.
+          <yellow>Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym</yellow>
+          <yellow>dachem oraz dodaj do </yellow><white>4 drzwi </white><yellow>w ścianach.</yellow>
+          <yellow>Umieść </yellow><white>1 lej </white><yellow>w ścianie lub dachu i dodaj wiadra z wodą,</yellow>
+          <yellow>aby automatycznie generować śnieg i/lub mączkę kostną</yellow>
+          <yellow>do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,</yellow>
+          <yellow>jakie bloki muszą być wewnątrz dla sukcesu.</yellow>
+    admin:
+      description: "Polecenia zarządzania szklarnią"
+      errors:
+        unknown-id: "<red>Nie znaleziono szklarni z ID [id]. Użyj polecenia list, aby zobaczyć ID. Częściowy ID działa, jeśli pasuje tylko do jednej szklarni.</red>"
+        id-required: "<red>Uruchom to w grze wewnątrz szklarni lub podaj ID szklarni.</red>"
+        no-location: "<red>Szklarnia [id] nie ma ważnej lokalizacji lub jej świat nie jest załadowany.</red>"
+      list:
+        description: "Wylistuj szklarnie, opcjonalnie dla jednego gracza"
+        parameters: "[player] [page]"
+        title: "<green>[Szklarnie] </green><gray>([number] razem, strona [page] z [pages])</gray>"
+        entry: "<gray>[id] </gray><white>[recipe] </white><gray>w </gray><white>[xyz] </white><gray>w </gray><white>[world] </white><gray>- </gray><white>[owner][broken]</white>"
+        broken: " <red>(uszkodzony)</red>"
+        more: "<gray>Użyj </gray><white>/[label] greenhouses list [page] </white><gray>aby uzyskać więcej</gray>"
+        none: "<red>Nie znaleziono szklarni.</red>"
+        unloaded-title: "<red>[Nie załadowany: [number]] </red><gray>Te rekordy są w bazie danych, ale nie są aktywne:</gray>"
+        unloaded-entry: "<red>[id] </red><gray>[reason] </gray><gray>w </gray><white>[xyz] </white><gray>w </gray><white>[world]</white>"
+      info:
+        description: "Pokazuje pełne szczegóły szklarni"
+        parameters: "[id]"
+        title: "<green>[Informacje o szklarni]</green>"
+        id: "<gray>ID: </gray><white>[id]</white>"
+        recipe: "<gray>Przepis: </gray><white>[recipe]</white>"
+        owner: "<gray>Właściciel: </gray><white>[owner]</white>"
+        world: "<gray>Świat: </gray><white>[world]</white>"
+        location: "<gray>Lokacja: </gray><white>[xyz]</white>"
+        bounding-box: "<gray>Pole ograniczające: </gray><white>[min] </white><gray>do </gray><white>[max]</white>"
+        area: "<gray>Powierzchnia wewnętrzna: </gray><white>[area] bloki</white>"
+        original-biome: "<gray>Oryginalny biom: </gray><white>[biome]</white>"
+        hopper: "<gray>Pułapka: </gray><white>[hopper]</white>"
+        broken: "<gray>Uszkodzony: </gray><white>[broken]</white>"
+        not-loaded: "<red>Nie załadowany: [reason]</red>"
+      delete:
+        description: "Usuwa rekord szklarni po ID, załadowany lub nie"
+        parameters: "<id>"
+        confirm: "<red>Usunąć szklarnię [id] należącą do [owner] w [xyz]? Tego nie można cofnąć.</red>"
+        success: "<green>Szklarnia [id] usunięta.</green>"
+      tp:
+        description: "Teleportuje cię do szklarni"
+        parameters: "<id>"
+        success: "<green>Teleportowany do szklarni [id]</green>"
+      verify:
+        description: "Ponownie sprawdza szklarnie względem ich przepisów"
+        parameters: "[id]"
+        checking: "<gray>Sprawdzanie [number] szkarni(e)...</gray>"
+        ok: "<green>[id] w [xyz] spełnia swój przepis</green>"
+        broken: "<red>[id] w [xyz] nie powiódł się: [reasons]</red>"
+      reload:
+        description: "Przeładowuje biomes.yml i ponownie czyta szklarnie z bazy danych"
+        success: "<green>Przeładowano. [number] szkarni aktywna(ych).</green>"
+        unloaded: "<red>[number] rekord(y) nie mogło być załadowane - użyj polecenia list, aby je zobaczyć.</red>"
+      build:
+        description: "Buduje testową szklarnię dla przepisu wokół ciebie lub na danym środku podłogi"
+        parameters: "<recipe> [<x> <y> <z>] [<width>x<depth>x<height>] [keep|clear]"
+        bad-coordinates: "<red>Współrzędne muszą mieć wszystkie trzy x, y i z, jako liczby lub ~ (np. ~ ~ ~ lub ~ ~-1 ~5).</red>"
+        bad-argument: "<red>[description] nie jest rozmiarem (np. 9x9 lub 9x9x5) ani trybem (keep lub clear).</red>"
+        too-small: "<red>Przepis nie pasuje w [size]: [description]. Spróbuj większego rozmiaru lub pomiń go, aby zmienić rozmiar automatycznie.</red>"
+        out-of-world: "<red>To poszłoby powyżej lub poniżej świata. Wybierz inną wysokość.</red>"
+        not-on-island: "<red>Cała szklarnia musi być na jednej wyspie.</red>"
+        overlapping: "<red>To by pokrywało szklarnię [id].</red>"
+        confirm-clear: "<red>Wszystko wewnątrz [size] szklarni tutaj będzie zastąpione.</red>"
+        built: "<green>Zbudowana [size] [recipe] testowa szklarnia ([number] bloki). Rób to teraz...</green>"
+      edit:
+        description: "Otwiera edytor przepisów lub edytor przepisu"
+        parameters: "[recipe]"
+  hub:
+    title: "<dark_green>Zarządzanie szklarnią</dark_green>"
+    close: "<white>Zamknij</white>"
+    back: "<white>Wróć</white>"
+    cancel: "Anuluj"
+    recipes:
+      name: "<green>Przepisy</green>"
+      description: "<gray>Edytuj, dodaj lub usuń [number] przepisów szklarni</gray>"
+    greenhouses:
+      name: "<green>Szklarnie</green>"
+      description: "<gray>[number] szklarnia(e) zbudowana. Teleportuj się, sprawdź lub usuń je.</gray>"
+      unloaded: "<red>[number] nie mogło być załadowane</red>"
+    build:
+      name: "<green>Zbuduj testową szklarnię</green>"
+      description: "<gray>Buduje działającą szklarnię dla przepisu tam, gdzie stoisz, z drzwiami po stronie, w którą patrzysz</gray>"
+      pick-title: "<dark_green>Jaki przepis zbudować?</dark_green>"
+      key: "<gray>Klawisz: <white>[key]</white></gray>"
+      default-size: "<gray>Rozmiar domyślny: <white>[size]</white></gray>"
+      click: "<yellow>Kliknij, aby wybrać rozmiar</yellow>"
+      title: "Zbuduj [name]"
+      body: "Szklarnia jest budowana z podłogą tam, gdzie stoiszz i drzwi po stronie, w którą patrzysz. Rozmiary są wewnątrz."
+      width: "Szerokość"
+      depth: "Głębokość"
+      height: "Wysokość"
+      mode: "Co już tam jest"
+      keep: "Zatrzymaj to i buduj wokół niego"
+      clear: "Wyczyść je najpierw"
+      go: "<green>Buduj</green>"
+    verify:
+      name: "<green>Sprawdź wszystkie szklarnie</green>"
+      description: "<gray>Sprawdza teraz każdą szklarnię względem jej przepisu i raportuje na czacie</gray>"
+    reload:
+      name: "<green>Przeładuj</green>"
+      description: "<gray>Ponownie czyta biomes.yml i bazę danych szklarni</gray>"
+      confirm-title: "Przeładować?"
+      confirm-body: "Ponownie przeczytać biomes.yml i bazę danych szklarni? Nieznajomowe zmiany przepisów są zachowywane, ale muszą być zapisane nad przeładowanymi przepisami."
+      confirm: "<yellow>Przeładuj</yellow>"
+  browser:
+    title: "<dark_green>Szklarnie</dark_green>"
+    title-owner: "<dark_green>Szklarnie</dark_green> <dark_gray>-</dark_gray> [owner]"
+    none: "<gray>Brak szklarni</gray>"
+    back: "<white>Wróć</white>"
+    cancel: "Anuluj"
+    id: "<gray>ID: <white>[id]</white></gray>"
+    owner: "<gray>Właściciel: <white>[owner]</white></gray>"
+    where: "<gray>W: <white>[xyz]</white> w <white>[world]</white></gray>"
+    ok: "<green>Pracujący</green>"
+    broken: "<red>Uszkodzony</red>"
+    unloaded: "<red>Nie załadowany: [reason]</red>"
+    click:
+      tp: "<yellow>Lewy klik: teleportuj się tam</yellow>"
+      verify: "<yellow>Prawy klik: sprawdź teraz</yellow>"
+      info: "<yellow>Shift-klik: szczegóły na czacie</yellow>"
+      delete: "<yellow>Q: usuń</yellow>"
+    filter:
+      name: "<white>Filtruj po właścicielu</white>"
+      all: "<gray>Pokaż wszystkie</gray>"
+      only: "<gray>Pokaż tylko od <white>[owner]</white></gray>"
+      click: "<yellow>Kliknij, aby zmienić</yellow>"
+      title: "Filtruj po właścicielu"
+      label: "Nazwa właściciela (puste dla wszystkich)"
+      apply: "<green>Pokaż</green>"
+    delete:
+      title: "Usunąć szklarnię?"
+      body: "Usunąć szklarnię [id] należącą do [owner] w [xyz]? Tego nie można cofnąć."
+      confirm: "<red>Usuń</red>"
+  editor:
+    needs-dialogs: "<red>Edytor przepisów wymaga Paper 1.21.7 lub nowszego.</red>"
+    unknown-recipe: "<red>Nie ma przepisu o nazwie [key].</red>"
+    resuming: "<yellow>Wznawiam Twoje niezapisane zmiany do [name]<yellow>.</yellow>"
+    saved: "<green>Zapisane [name]<green>. [number] szkarnia(e) go używa(ją) i natychmiast podąża(ją) za nowymi zasadami.</green>"
+    save-failed: "<red>biomes.yml nie mogło być zapisane - zobacz dziennik serwera. Nic nie zostało zapisane.</red>"
+    deleted: "<green>Usunięte [name]<green>. Jego [number] szkarnia(e) są wylistowana(e) jako niezaładowane aż do usunięcia lub powrotu przepisu.</green>"
+    title: "<dark_green>Edycja</dark_green> [name][unsaved]"
+    unsaved-mark: " <gold>(niezapisane)</gold>"
+    list-title: "[what] <dark_gray>-</dark_gray> [name]"
+    click-change: "<yellow>Kliknij, aby zmienić</yellow>"
+    click-open: "<yellow>Kliknij, aby otworzyć</yellow>"
+    none: "żaden"
+    entries: "<gray>Wpisów: <white>[number]</white></gray>"
+    total-chance: "<gray>Szanse sumują się do <white>[value]%</white></gray>"
+    chance: "<gray>Szansa: <white>[value]%</white></gray>"
+    back-to-recipe: "<white>Wróć do przepisu</white>"
+    help: "<white>Jak korzystać z tej strony</white>"
+    list:
+      title: "<dark_green>Przepisy szklarni</dark_green>"
+      key: "<gray>Klawisz: <white>[key]</white></gray>"
+      biome: "<gray>Biom: <white>[biome]</white></gray>"
+      priority: "<gray>Priorytet: <white>[number]</white></gray>"
+      used: "<gray>Używane przez <white>[number]</white> szkarnie(ę)</gray>"
+      unsaved: "<gold>Masz niezapisane zmiany</gold>"
+      click-edit: "<yellow>Kliknij, aby edytować</yellow>"
+      back: "<white>Wróć</white>"
+      new:
+        name: "<green>Nowy przepis</green>"
+        description: "<gray>Zacznij przepis od zera</gray>"
+    pick:
+      biome: "<dark_green>Wybierz biom</dark_green>"
+      icon: "<dark_green>Wybierz ikonę</dark_green>"
+      block: "<dark_green>Wybierz blok</dark_green>"
+      plant: "<dark_green>Wybierz roślinę</dark_green>"
+      grows-on: "<dark_green>Na czym rośnie?</dark_green>"
+      mob: "<dark_green>Wybierz mobę</dark_green>"
+      spawns-on: "<dark_green>Na czym się pojawia?</dark_green>"
+      convert-from: "<dark_green>Jaki blok się zmienia?</dark_green>"
+      convert-to: "<dark_green>Na co się zmienia?</dark_green>"
+      next-to: "<dark_green>Co musi być obok?</dark_green>"
+    icon:
+      name: "<white>Ikona</white>"
+    general:
+      name: "<white>Nazwa i opis</white>"
+      value-name: "<gray>Nazwa: </gray>[value]"
+      value-priority: "<gray>Priorytet: <white>[number]</white></gray>"
+      value-permission: "<gray>Pozwolenie: <white>[value]</white></gray>"
+      no-description: "<gray>Brak opisu</gray>"
+      has-description: "<gray>Ma opis</gray>"
+    biome:
+      name: "<white>Biom</white>"
+      value: "<gray>Biom: <white>[biome]</white></gray>"
+    coverage:
+      name: "<white>Woda, lawa i lód</white>"
+      water: "<aqua>Woda: </aqua>[value]"
+      lava: "<gold>Lawa: </gold>[value]"
+      ice: "<aqua>Lód: </aqua>[value]"
+      unchecked: "<gray>nie sprawdzono</gray>"
+      none: "<red>nie dopuszczalny</red>"
+      at-least: "<white>co najmniej [number]% podłogi</white>"
+    mob-limits:
+      name: "<white>Limity mobów</white>"
+      ground: "<gray>Bloki na mobę: <white>[number]</white></gray>"
+      water: "<gray>Bloki wody na mobę wodną: <white>[value]</white></gray>"
+      lava: "<gray>Bloki lawy na mobę lawową: <white>[value]</white></gray>"
+      air: "<gray>Bloki powietrza na mobę latającą: <white>[value]</white></gray>"
+      shared: "tak samo jak ziemia"
+      max: "<gray>Najwięcej mobów naraz: <white>[value]</white></gray>"
+      no-max: "brak limitu"
+    blocks:
+      name: "<white>Wymagane bloki</white>"
+      add: "<green>Dodaj blok</green>"
+      help: "<gray>Co najmniej każdy blok, jaki szklarnia musi mieć wewnątrz.</gray>"
+      entry: "<white>[block] x [number]</white>"
+      entry-help: "<yellow>Lewy klik: +1<newline>Prawy klik: -1<newline>Shift-klik: wpisz liczbę<newline>Q: usuń</yellow>"
+    plants:
+      name: "<white>Rośliny</white>"
+      add: "<green>Dodaj roślinę</green>"
+      help: "<gray>Rośliny uprawiane z mąki kostnej ze środka dachu.</gray>"
+      grows-on: "<gray>Rośnie na: <white>[block]</white></gray>"
+      entry-help: "<yellow>Lewy klik: szansa<newline>Prawy klik: na czym rośnie<newline>Q: usuń</yellow>"
+    mobs:
+      name: "<white>Moby</white>"
+      add: "<green>Dodaj mobę</green>"
+      help: "<gray>Moby, które pojawią się w szklarni.</gray>"
+      spawns-on: "<gray>Pojawia się na: <white>[block]</white></gray>"
+      variant: "<gray>Wariant: <white>[value]</white></gray>"
+      entry-help: "<yellow>Lewy klik: szansa i wariant<newline>Prawy klik: na czym się pojawia<newline>Q: usuń</yellow>"
+    conversions:
+      name: "<white>Konwersje bloków</white>"
+      add: "<green>Dodaj konwersję</green>"
+      help: "<gray>Bloki, które powoli zmieniają się w inne bloki.</gray>"
+      to: "<gray>Zmienia się na: <white>[block]</white></gray>"
+      anywhere: "<gray>Wszędzie</gray>"
+      next-to: "<gray>Tylko obok: <white>[block]</white></gray>"
+      entry-help: "<yellow>Lewy klik: szansa<newline>Prawy klik: na co się zmienia<newline>Shift-prawy: tylko obok bloku<newline>Shift-lewy: wszędzie<newline>Q: usuń</yellow>"
+    back:
+      name: "<white>Wróć do przepisów</white>"
+      description: "<gray>Niezapisane zmiany są zachowywane</gray>"
+    discard:
+      name: "<red>Odrzuć zmiany</red>"
+      description: "<gray>Zapomnij zmiany od ostatniego zapisu</gray>"
+    save:
+      name: "<green>Zapisz</green>"
+      nothing: "<gray>Brak zmian do zapisania</gray>"
+      description: "<gray>Zapisuje biomes.yml; [number] szkarnie(ę) natychmiast podąża(ją) za nowymi zasadami</gray>"
+      problems: "<red>Napraw je najpierw:</red>"
+      problem: "<red> - [problem]</red>"
+    duplicate:
+      name: "<white>Duplikuj</white>"
+      description: "<gray>Zacznij nowy przepis od tego</gray>"
+    delete:
+      name: "<red>Usuń przepis</red>"
+      description: "<gray>[number] szkarnia(e) używa(ją) tego przepisu</gray>"
+    dialog:
+      cancel: "Anuluj"
+      switch:
+        title: "Niezapisane zmiany"
+        body: "Masz niezapisane zmiany do [name]. Odrzucić je, aby edytować ten przepis?"
+        discard: "<red>Odrzuć je</red>"
+        keep: "Wróć do [name]"
+      discard:
+        title: "Odrzucić zmiany?"
+        body: "Zapomnieć Twoje zmiany do [name]?"
+        confirm: "<red>Odrzuć</red>"
+      conflict:
+        title: "Zmienione przez kogoś innego"
+        body: "[name] został zapisany przez kogoś innego lub przeładowany po tym, jak zacząłeś edycję."
+        overwrite: "<red>Zapisz moje nad tym</red>"
+        theirs: "Zacznij od nowa ich"
+      delete:
+        title: "Usunąć przepis?"
+        body: "Usunąć [name]? [number] szkarnia(e) go używa(ją). biomes.yml jest najpierw kopią zapasową."
+        confirm: "<red>Usuń</red>"
+    form:
+      ok: "<green>Gotowe</green>"
+      cancel: "Anuluj"
+      problem: "<red>[problem]</red>"
+      bad-chance: "[what]: [value] nie jest szansą. Użyj procentu powyżej 0 i do 100, np. 5 lub 0,5."
+      general:
+        title: "Nazwa i opis"
+        name: "Nazwa (kolory MiniMessage dozwolone)"
+        description: "Opis pokazany w panelu przepisów"
+        priority: "Priorytet"
+        permission: "Pozwolenie wymagane do wykonania (puste dla żadnego)"
+        no-name: "Nazwa nie może być pusta."
+        bad-permission: "Pozwolenie nie może zawierać spacji."
+      coverage:
+        title: "Woda, lawa i lód"
+        water: "Woda"
+        lava: "Lawa"
+        ice: "Lód"
+        percent: "Procent podłogi"
+        unchecked: "Nie sprawdzono"
+        none: "Żaden nie jest dozwolony"
+        atleast: "Co najmniej..."
+        too-much: "Woda, lawa i lód razem nie mogą wymagać więcej niż cała podłoga."
+      mobs:
+        title: "Limity mobów"
+        ground: "Bloki na mobę"
+        water: "Bloki wody na mobę wodną (0 = tak samo)"
+        lava: "Bloki lawy na mobę lawową (0 = tak samo)"
+        air: "Bloki powietrza na mobę latającą (0 = tak samo)"
+        max: "Najwięcej mobów naraz (-1 = brak limitu)"
+      chance:
+        title: "Szansa"
+        field: "% szansa dla [what]"
+      mob:
+        title: "Moba"
+        variant: "Wariant"
+        no-variant: "Normalny"
+      count:
+        title: "Ile?"
+        field: "Ile [what]"
+      key:
+        title: "Klucz przepisu"
+        field: "Klawisz: litery, liczby, - i _ (nie można zmienić później)"
+        bad: "Użyj 1 do 32 liter, liczb, - lub _."
+        taken: "Jest już przepis o nazwie [key]."
 
 help:
    help: "pomoc"
@@ -111,35 +421,33 @@ error:
    norecipe: "Nie można utworzyć szklarni!"
    
 messages:
-   enter: "Wchodzisz do szklarni gracza [owner] ([biome]&f)!"
+   enter: "Wchodzisz do szklarni gracza [owner] ([biome]<white>)!</white>"
    leave: "Opuszczasz szklarnię gracza [owner]."
-   youarein: "Jesteś teraz w szklarni gracza [owner] ([biome]&f)!"
+   youarein: "Jesteś teraz w szklarni gracza [owner] ([biome]<white>)!</white>"
    removed: "Tej szklarni już nie ma..."
-   removedmessage: "Twoja szklarnia ([biome]&f) przestała istnieć!"
+   removedmessage: "Twoja szklarnia ([biome]<white>) przestała istnieć!</white>"
    ecolost: "Twoja szklarnia w lokalizacji [location] utraciła ekosystem i została usunięta."
 
 info:
-   title: "&A[Jak zbudować szklarnię]"
+   title: "<green>[Jak zbudować szklarnię]</green>"
    instructions: |
-     &E Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym
-     &E dachem oraz dodaj do &F 4 drzwi &E w ścianach.
-     &E Umieść &F 1 lej &E w ścianie lub dachu i dodaj wiadra z wodą,
-     &E aby automatycznie generować śnieg i/lub mączkę kostną
-     &E do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,
-     &E jakie bloki muszą być wewnątrz dla sukcesu. 
+     <yellow>Zbuduj pudełko ze szkła z 4 ścianami i płaskim szklanym</yellow>
+     <yellow>dachem oraz dodaj do </yellow><white>4 drzwi </white><yellow>w ścianach.</yellow>
+     <yellow>Umieść </yellow><white>1 lej </white><yellow>w ścianie lub dachu i dodaj wiadra z wodą,</yellow>
+     <yellow>aby automatycznie generować śnieg i/lub mączkę kostną</yellow>
+     <yellow>do uprawy roślin. Sprawdź receptury biomów, aby wiedzieć,</yellow>
+     <yellow>jakie bloki muszą być wewnątrz dla sukcesu. </yellow>
    info: "[Informacje o szklarni]"
    none: "Brak"
-   nomore: "&4 Nie możesz już budować więcej szklarni!"
-   onemore: "&6 Możesz zbudować jeszcze jedną szklarnię."
-   youcanbuild: "&A Możesz zbudować jeszcze do [number] szklarni!"
-   unlimited: "&A Możesz budować nieograniczoną liczbę szklarni!"
-   welcome: "&B Witaj! Kliknij tutaj po instrukcje"
+   nomore: "<dark_red>Nie możesz już budować więcej szklarni!</dark_red>"
+   onemore: "<gold>Możesz zbudować jeszcze jedną szklarnię.</gold>"
+   youcanbuild: "<green>Możesz zbudować jeszcze do [number] szklarni!</green>"
+   unlimited: "<green>Możesz budować nieograniczoną liczbę szklarni!</green>"
+   welcome: "<aqua>Witaj! Kliknij tutaj po instrukcje</aqua>"
 
 recipe:
-   blockscolor: "&f"
    hint: "Użyj /greenhouse list, aby zobaczyć listę numerów receptur!"
    wrongnumber: "Numer receptury musi mieścić się w przedziale od 1 do [size]"
-   title: "[Receptura [biome]]"
    nowater: "Woda niedozwolona."
    noice: "Lód niedozwolony."
    nolava: "Lawa niedozwolona."
@@ -176,4 +484,4 @@ news:
    headline: "[Wiadomości ze szklarni]"
 
 controlpanel:
-   title: "&ASzklarnie"
+   title: "<green>Szklarnie</green>"

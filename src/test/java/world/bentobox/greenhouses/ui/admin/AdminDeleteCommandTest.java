@@ -1,7 +1,7 @@
 package world.bentobox.greenhouses.ui.admin;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,15 +19,16 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoSession;
+import org.mockito.Mockito;
+import org.mockito.quality.Strictness;
 
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
@@ -37,16 +38,14 @@ import world.bentobox.bentobox.managers.IslandWorldManager;
 import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.greenhouses.Greenhouses;
+import world.bentobox.greenhouses.WhiteBox;
 import world.bentobox.greenhouses.data.Greenhouse;
 import world.bentobox.greenhouses.managers.GreenhouseManager;
-import world.bentobox.greenhouses.mocks.ServerMocks;
 
 /**
  * @author tastybento
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BentoBox.class })
-public class AdminDeleteCommandTest {
+class AdminDeleteCommandTest {
 
     private static final String ID = "aaaaaaaa-1111-1111-1111-111111111111";
 
@@ -74,11 +73,20 @@ public class AdminDeleteCommandTest {
 
     private AdminDeleteCommand cmd;
     private Greenhouse gh;
+    private MockitoSession mockSession;
 
-    @Before
-    public void setUp() {
-        ServerMocks.newServer();
-        Whitebox.setInternalState(BentoBox.class, "instance", plugin);
+    @BeforeEach
+    void setUp() {
+        mockSession = Mockito.mockitoSession()
+            .initMocks(this)
+            .strictness(Strictness.LENIENT)
+            .startMocking();
+        MockBukkit.mock();
+        @SuppressWarnings("unused")
+        var unusedTagRef = org.bukkit.Tag.LEAVES;
+
+        WhiteBox.setInternalState(BentoBox.class, "instance", plugin);
+
         // Help output and player lookups go through the plugin
         when(plugin.getIWM()).thenReturn(iwm);
         when(iwm.getFriendlyName(any())).thenReturn("BSkyBlock");
@@ -99,16 +107,21 @@ public class AdminDeleteCommandTest {
         cmd = spy(new AdminDeleteCommand(parent));
     }
 
-    @After
-    public void tearDown() {
-        ServerMocks.unsetBukkitServer();
+    @AfterEach
+    void tearDown() {
+        if (mockSession != null) {
+            mockSession.finishMocking();
+        }
+        MockBukkit.unmock();
+        User.clearUsers();
+        Mockito.framework().clearInlineMocks();
     }
 
     /**
      * Test method for {@link AdminDeleteCommand#setup()}.
      */
     @Test
-    public void testSetup() {
+    void testSetup() {
         assertTrue(cmd.getPermission().contains("greenhouses.admin.delete"));
     }
 
@@ -116,7 +129,7 @@ public class AdminDeleteCommandTest {
      * Test method for {@link AdminDeleteCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteNoArgsShowsHelp() {
+    void testCanExecuteNoArgsShowsHelp() {
         assertFalse(cmd.canExecute(user, "delete", Collections.emptyList()));
         verify(gm, never()).deleteById(anyString());
     }
@@ -125,7 +138,7 @@ public class AdminDeleteCommandTest {
      * Test method for {@link AdminDeleteCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteTooManyArgs() {
+    void testCanExecuteTooManyArgs() {
         assertFalse(cmd.canExecute(user, "delete", List.of(ID, "extra")));
     }
 
@@ -133,7 +146,7 @@ public class AdminDeleteCommandTest {
      * Test method for {@link AdminDeleteCommand#canExecute(User, String, List)}.
      */
     @Test
-    public void testCanExecuteUnknownId() {
+    void testCanExecuteUnknownId() {
         when(gm.getGreenhouseById(anyString())).thenReturn(Optional.empty());
         assertFalse(cmd.canExecute(user, "delete", List.of("nope")));
         verify(user).sendMessage("greenhouses.commands.admin.errors.unknown-id", "[id]", "nope");
@@ -143,7 +156,7 @@ public class AdminDeleteCommandTest {
      * Test method for {@link AdminDeleteCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteAsksForConfirmationBeforeDeleting() {
+    void testExecuteAsksForConfirmationBeforeDeleting() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         doNothing().when(cmd).askConfirmation(any(), any(), any(Runnable.class));
         assertTrue(cmd.canExecute(user, "delete", List.of(ID)));
@@ -163,7 +176,7 @@ public class AdminDeleteCommandTest {
      * Test method for {@link AdminDeleteCommand#execute(User, String, List)}.
      */
     @Test
-    public void testExecuteReportsFailedDelete() {
+    void testExecuteReportsFailedDelete() {
         when(gm.getGreenhouseById(ID)).thenReturn(Optional.of(gh));
         doNothing().when(cmd).askConfirmation(any(), any(), any(Runnable.class));
         assertTrue(cmd.canExecute(user, "delete", List.of(ID)));

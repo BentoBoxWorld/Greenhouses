@@ -2,10 +2,13 @@
 biomes:
   # Biome recipe name - can be anything you like, but must be unique
   beaches:
-    # The name of the icon. Can use & for color codes, e.g. &c
+    # The name shown on the icon. Can use MiniMessage colors, e.g. <red>Nether</red>
     friendlyname: "Beach"
     # The biome of the recipe. Allows multiple recipes for the same biome.
     biome: BEACH
+    # Shown under the name in the panel and word-wrapped to fit. Plain text or MiniMessage.
+    # A locale can replace it, for translations: greenhouses.recipes.<recipe name>.description
+    description: "Sun-bleached sand and warm shallows. Turtles come ashore to nest while squid drift just offshore."
     # The icon is shown in the panel. It must be a Bukkit Material
     icon: SAND
     # Priority is used if the greenhouse can be more than one biome. The highest
@@ -37,6 +40,14 @@ biomes:
       SQUID: 10:WATER
       GLOW_SQUID: 5:WATER
       TURTLE: 10:SAND
+    # Water, lava and flying mobs can have their own limits, measured against the
+    # number of water blocks, lava blocks, or the volume inside the greenhouse rather
+    # than the floor area. So a deeper ocean holds more fish. Each is the number of
+    # blocks each mob needs, like moblimit. A mob is a water or lava mob if it spawns
+    # on water or lava; allays, bats, bees, ghasts, parrots, phantoms and vexes fly.
+    # If a limit is not given, those mobs share moblimit with the ground mobs.
+    # Turtles here use moblimit; squid use moblimit-water.
+    moblimit-water: 9
     # The minimum number of blocks each mob requires.
     # Mobs will not spawn if there is more than 1 per this number of
     # blocks in the greenhouse. e.g., in this case only 2 mobs will spawn if the
@@ -50,6 +61,7 @@ biomes:
     # Credit: angelknight89
     friendlyname: "Mangrove Swamp"
     biome: MANGROVE_SWAMP
+    description: "Tangled roots over warm, muddy water. Grass slowly sinks into mud, moss creeps in, and frogs croak from the lily pads."
     icon: LILY_PAD
     priority: 19
     contents:
@@ -73,6 +85,7 @@ biomes:
   Snowy_beach:
     friendlyname: "Snowy beach"
     biome: SNOWY_BEACH
+    description: "A frosty shoreline where ice floes meet the tide. Squid glow faintly beneath the chilly water."
     icon: SNOW_BLOCK
     priority: 21
     contents:
@@ -82,10 +95,12 @@ biomes:
     mobs:
       SQUID: 10:WATER
       GLOW_SQUID: 10:WATER
+    moblimit-water: 9
   ThreeWolfMoon:
     friendlyname: "Three Wolf Moon Forest"
     # Could do with more wolves, but the magic works with 3.
     biome: TAIGA
+    description: "Moonlit spruce, frost and tall grass. Wolves prowl the snow, stalking foxes and rabbits."
     icon: SPRUCE_SAPLING
     priority: 20
     contents:
@@ -107,6 +122,7 @@ biomes:
   Cold_Rabbit:
     friendlyname: "Cold Taiga Forest"
     biome: OLD_GROWTH_SPRUCE_TAIGA
+    description: "Towering old spruces on frozen ground. Rabbits and foxes play hide-and-seek in the tall grass."
     icon: SPRUCE_SAPLING
     priority: 20
     contents:
@@ -127,6 +143,7 @@ biomes:
   DESERT:
     friendlyname: "Desert"
     biome: DESERT
+    description: "Bone dry and blazing hot. Dirt and grass slowly turn to sand, cacti sprout, and husks shamble about. Not a drop of water allowed!"
     icon: DEAD_BUSH
     priority: 3
     contents:
@@ -158,6 +175,7 @@ biomes:
   FOREST:
     friendlyname: "Flowery forest"
     biome: FLOWER_FOREST
+    description: "A riot of tulips and sunflowers under the oaks, busy with sheep, pigs, cows, chickens and the odd wolf."
     icon: RED_TULIP
     priority: 4
     contents:
@@ -181,8 +199,9 @@ biomes:
     # If this value is not given, there is no maximum.
     maxmobs: 20
   NETHER:
-    friendlyname: "&cNether"
+    friendlyname: "<red>Nether</red>"
     biome: NETHER_WASTES
+    description: "A slice of the Nether under glass. Keep a lava pool for the striders; piglins guard their gold. Water is not allowed."
     icon: LAVA_BUCKET
     priority: 5
     contents:
@@ -196,6 +215,7 @@ biomes:
       PIGLIN: 10:NETHERRACK
       STRIDER: 10:LAVA
       ENDERMAN: 5:NETHERRACK
+    moblimit-lava: 9
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -203,8 +223,9 @@ biomes:
     maxmobs: 50
     permission: greenhouses.biome.nether
   SOUL_SAND_VALLEY:
-    friendlyname: "&cSoul Sand Valley"
+    friendlyname: "<red>Soul Sand Valley</red>"
     biome: SOUL_SAND_VALLEY
+    description: "A haunted valley where netherrack crumbles into soul sand. Ghasts wail overhead and skeletons wander the dunes."
     icon: SOUL_SAND
     priority: 8
     contents:
@@ -218,6 +239,7 @@ biomes:
       GHAST: 10:SOUL_SAND
       ENDERMAN: 1:SOUL_SAND
       STRIDER: 20:LAVA
+    moblimit-air: 64
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -231,8 +253,9 @@ biomes:
     conversion-list:
     - NETHERRACK:20:SOUL_SAND:SOUL_SAND
   CRIMSON_FOREST:
-    friendlyname: "&cCrimson Forest"
+    friendlyname: "<red>Crimson Forest</red>"
     biome: CRIMSON_FOREST
+    description: "Red fungus and nylium beside a lava pool. Hoglins root about while piglins keep a wary eye on them."
     icon: CRIMSON_FUNGUS
     priority: 6
     contents:
@@ -253,8 +276,9 @@ biomes:
     maxmobs: 50
     permission: greenhouses.biome.nether
   WARPED_FOREST:
-    friendlyname: "&cWarped Forest"
+    friendlyname: "<red>Warped Forest</red>"
     biome: WARPED_FOREST
+    description: "An eerie teal forest, the calmest corner of the Nether. Endermen linger and striders wade through the lava."
     icon: WARPED_FUNGUS
     priority: 7
     contents:
@@ -267,6 +291,7 @@ biomes:
     mobs:
       STRIDER: 10:LAVA
       ENDERMAN: 20:WARPED_NYLIUM
+    moblimit-lava: 9
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -275,6 +300,7 @@ biomes:
     permission: greenhouses.biome.nether
   JUNGLE:
     biome: JUNGLE
+    description: "Hot, green and noisy. Melons, roses, ferns and cocoa beans grow fast, and parrots squawk above the pandas."
     icon: VINE
     priority: 6
     contents:
@@ -292,9 +318,11 @@ biomes:
       PARROT: 30:GRASS_BLOCK
       CHICKEN: 20:GRASS_BLOCK
       PANDA: 1:GRASS_BLOCK
+    moblimit-air: 27
   MUSHROOM_FIELDS:
     friendlyname: "Mushroom Fields"
     biome: MUSHROOM_FIELDS
+    description: "Spongy mycelium dotted with red and brown mushrooms, where mooshrooms graze in peace. Hostile mobs won't spawn here."
     icon: RED_MUSHROOM
     priority: 11
     contents:
@@ -305,7 +333,7 @@ biomes:
       BROWN_MUSHROOM: 10:MYCELIUM
       RED_MUSHROOM: 10:MYCELIUM
     mobs:
-      MUSHROOM_COW: 10:MYCELIUM
+      MOOSHROOM: 10:MYCELIUM
     moblimit: 9
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -313,6 +341,7 @@ biomes:
     maxmobs: 20
   OCEAN:
     biome: OCEAN
+    description: "Almost all water. Dolphins, cod and squid share the deep, but keep an eye out for the drowned."
     icon: WATER_BUCKET
     priority: 8
     # Lots of water required!
@@ -323,11 +352,13 @@ biomes:
       DOLPHIN: 20:WATER
       SQUID: 20:WATER
       GLOW_SQUID: 10:WATER
+    moblimit-water: 9
     moblimit: 9
     maxmobs: 20
   PLAINS:
     friendlyname: "Horse Plains"
     biome: PLAINS
+    description: "Rolling grassland for horses and donkeys, with cows, pigs, chickens and sheep for company."
     icon: GRASS_BLOCK
     priority: 1
     contents:
@@ -349,6 +380,7 @@ biomes:
   RIVER:
     friendlyname: "Clay river"
     biome: RIVER
+    description: "A slow, sandy river. Dirt beside the water slowly turns to clay, and salmon swim against the current."
     icon: CLAY
     priority: 10
     contents:
@@ -365,6 +397,7 @@ biomes:
       SALMON: 10:WATER
       SQUID: 10:WATER
       GLOW_SQUID: 5:WATER
+    moblimit-water: 1
     moblimit: 1
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
@@ -372,6 +405,7 @@ biomes:
     maxmobs: 10
   SAVANNA:
     biome: SAVANNA
+    description: "Dry acacia grassland under a blazing sun, home to horses, donkeys and plenty of farm animals."
     icon: ACACIA_LEAVES
     priority: 11
     contents:
@@ -393,8 +427,9 @@ biomes:
     # If this value is not given, there is no maximum.
     maxmobs: 10
   SWAMP:
-    friendlyname: "&2Slimy Swamp"
+    friendlyname: "<dark_green>Slimy Swamp</dark_green>"
     biome: SWAMP
+    description: "Murky water, blue orchids and mushrooms. Slimes bounce out of the gloom, and frogs are happy to eat the small ones."
     icon: LILY_PAD
     priority: 13
     contents:
@@ -417,8 +452,9 @@ biomes:
     # If this value is not given, there is no maximum.
     maxmobs: 10
   dripstone_caves:
-    friendlyname: "&6Drippy Drops"
+    friendlyname: "<gold>Drippy Drops</gold>"
     biome: dripstone_caves
+    description: "Damp stone and clay that drips its way into dripstone. Glow lichen creeps across the rock, and copper ore sometimes appears in the stone."
     icon: DRIPSTONE_BLOCK
     priority: 15
     contents:
@@ -435,6 +471,7 @@ biomes:
       skeleton: 5:STONE
       glow_squid: 5:WATER
       BAT: 10:STONE
+    moblimit-air: 27
     moblimit: 5
     # Maxmobs - this is the maximum number of greenhouse-spawed mobs allowed in 
     # the greenhouse at once. Spawning will stop when this limit is reached. 
