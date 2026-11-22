@@ -51,6 +51,12 @@ import org.eclipse.jdt.annotation.Nullable;
 
 public class BiomeRecipe implements Comparable<BiomeRecipe> {
     private static final String CHANCE_FOR = "% chance for ";
+    /**
+     * Chances are added up as fractions, which do not add exactly: 18% + 2% + 20% + 20% + 20%
+     * comes to a hair over 80%, so a final 20% would look like it went over 100%. Totals this
+     * close to 100% are taken as 100%.
+     */
+    private static final double ROUNDING = 1e-9;
     private Greenhouses addon;
     private Biome type;
     private Material icon; // Biome icon for control panel
@@ -164,7 +170,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         double probability = mobProbability/100;
         double lastProb = mobTree.isEmpty() ? 0D : mobTree.lastKey();
         // Add up all the probabilities in the list so far
-        if ((1D - lastProb) >= probability) {
+        if (fitsIn100Percent(lastProb, probability)) {
             // Add to probability tree
             mobTree.put(lastProb + probability, new GreenhouseMob(mobType, mobSpawnOn, customizer));
             return true;
@@ -176,6 +182,15 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
 
     public boolean addMobs(EntityType mobType, double mobProbability, Material mobSpawnOn) {
         return addMobs(mobType, mobProbability, mobSpawnOn, null);
+    }
+
+    /**
+     * @param total       the chances added so far, as a fraction
+     * @param probability the next chance, as a fraction
+     * @return true if adding it keeps the total at or under 100%, allowing for rounding
+     */
+    static boolean fitsIn100Percent(double total, double probability) {
+        return total + probability <= 1D + ROUNDING;
     }
 
     /**
@@ -191,7 +206,7 @@ public class BiomeRecipe implements Comparable<BiomeRecipe> {
         TreeMap<Double, GreenhousePlant> map = UNDERWATER_PLANTS.contains(plantMaterial) ? underwaterPlants : plantTree;
         // Add up all the probabilities in the list so far
         double lastProb = map.isEmpty() ? 0D : map.lastKey();
-        if ((1D - lastProb) >= probability) {
+        if (fitsIn100Percent(lastProb, probability)) {
             // Add to probability tree
             map.put(lastProb + probability, new GreenhousePlant(plantMaterial, plantGrowOn));
         } else {

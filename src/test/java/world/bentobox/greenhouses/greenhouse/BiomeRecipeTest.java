@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -1037,4 +1038,55 @@ class BiomeRecipeTest {
         assertTrue(result.contains(GreenhouseResult.FAIL_UNKNOWN_RECIPE));
     }
 
+
+    /**
+     * Chances that add up to exactly 100% must all load, even though the fractions do not add
+     * up exactly. This is the PLAINS recipe that used to skip SHEEP.
+     */
+    @Test
+    void testAddMobsExactly100Percent() {
+        assertTrue(br.addMobs(EntityType.HORSE, 18, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.DONKEY, 2, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.COW, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.CHICKEN, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.PIG, 20, Material.GRASS_BLOCK));
+        assertTrue(br.addMobs(EntityType.SHEEP, 20, Material.GRASS_BLOCK));
+        verify(addon, never()).logError(anyString());
+        assertTrue(br.getMobTypes().contains(EntityType.SHEEP));
+        // Anything more really is over 100%
+        assertFalse(br.addMobs(EntityType.CAT, 0.1, Material.GRASS_BLOCK));
+    }
+
+    /**
+     * A genuine overrun, however small in the YAML, is still refused.
+     */
+    @Test
+    void testAddMobsJustOver100Percent() {
+        assertTrue(br.addMobs(EntityType.COW, 50, Material.GRASS_BLOCK));
+        assertFalse(br.addMobs(EntityType.PIG, 50.1, Material.GRASS_BLOCK));
+        verify(addon).logError("Mob chances add up to > 100% in BADLANDS biome recipe! Skipping PIG");
+    }
+
+    /**
+     * Ten plants at 10% each add up to 100%, though 0.1 added ten times is not exactly 1.
+     */
+    @Test
+    void testAddPlantsExactly100Percent() {
+        for (int i = 0; i < 10; i++) {
+            assertTrue(br.addPlants(Material.POPPY, 10, Material.GRASS_BLOCK), "plant " + i);
+        }
+        verify(addon, never()).logError(anyString());
+        assertFalse(br.addPlants(Material.DANDELION, 1, Material.GRASS_BLOCK));
+    }
+
+    /**
+     * Test method for {@link world.bentobox.greenhouses.greenhouse.BiomeRecipe#fitsIn100Percent(double, double)}.
+     */
+    @Test
+    void testFitsIn100Percent() {
+        assertTrue(BiomeRecipe.fitsIn100Percent(0D, 1D));
+        assertTrue(BiomeRecipe.fitsIn100Percent(0.8000000000000002, 0.2));
+        assertFalse(BiomeRecipe.fitsIn100Percent(0.8, 0.201));
+        assertFalse(BiomeRecipe.fitsIn100Percent(1D, 0.001));
+    }
 }
