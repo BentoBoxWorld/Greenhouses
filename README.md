@@ -1,5 +1,8 @@
 # Greenhouses - an add-on for BentoBox
 
+<!-- BentoBox stats badges: https://download.bentobox.world/admin (Badges tab) -->
+[![Servers](https://download.bentobox.world/badge/Greenhouses/servers.svg)](https://download.bentobox.world/) [![Downloads](https://download.bentobox.world/badge/Greenhouses/downloads.svg)](https://download.bentobox.world/) [![Minecraft](https://download.bentobox.world/badge/Greenhouses/mc.svg)](https://download.bentobox.world/)
+
 [![Build Status](https://ci.codemc.org/buildStatus/icon?job=BentoBoxWorld/Greenhouses)](https://ci.codemc.org/job/BentoBoxWorld/job/Greenhouses/)[
 ![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Greenhouses&metric=bugs)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Greenhouses)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BentoBoxWorld_Greenhouses&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=BentoBoxWorld_Greenhouses)
